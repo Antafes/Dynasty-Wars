@@ -1,0 +1,1 @@
+ALTER TABLE `dw_game_menu` ADD `visible` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';

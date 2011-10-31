@@ -1,0 +1,196 @@
+ALTER TABLE `dw_build` CHANGE `bid` `bid` INT UNSIGNED NOT NULL ,
+CHANGE `upgrade` `upgrade` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `starttime` `starttime` INT UNSIGNED NOT NULL ,
+CHANGE `endtime` `endtime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_build_unit` CHANGE `tid` `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `kind` `kind` INT UNSIGNED NOT NULL ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `count` `count` INT UNSIGNED NOT NULL ,
+CHANGE `starttime` `starttime` INT UNSIGNED NOT NULL ,
+CHANGE `endtime` `endtime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_buildings` CHANGE `bid` `bid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `map_x` `map_x` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `map_y` `map_y` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `lvl` `lvl` INT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `upgrade_lvl` `upgrade_lvl` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `position` `position` TINYINT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_buildtimes` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `btime` `btime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_buildtimes_unit` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `btime` `btime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_buildtimes_upgr` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `upgrtime` `upgrtime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_clan` DROP `applications` ;
+ALTER TABLE `dw_clan` CHANGE `cid` `cid` INT UNSIGNED NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `dw_clan_applications` CHANGE `appid` `appid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `cid` `cid` INT UNSIGNED NOT NULL ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `apptime` `apptime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_clan_rank` CHANGE `cid` `cid` INT UNSIGNED NOT NULL ,
+CHANGE `rankid` `rankid` TINYINT UNSIGNED NOT NULL ,
+CHANGE `rnid` `rnid` INT UNSIGNED NOT NULL ,
+CHANGE `admin` `admin` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `standard` `standard` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_clan_rankname` CHANGE `rnid` `rnid` INT UNSIGNED NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `dw_costs_b` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `food` `food` INT UNSIGNED NOT NULL ,
+CHANGE `wood` `wood` INT UNSIGNED NOT NULL ,
+CHANGE `rock` `rock` INT UNSIGNED NOT NULL ,
+CHANGE `iron` `iron` INT UNSIGNED NOT NULL ,
+CHANGE `paper` `paper` INT UNSIGNED NOT NULL ,
+CHANGE `koku` `koku` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_costs_b_upgr` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `kind_u` `kind_u` TINYINT UNSIGNED NOT NULL ,
+CHANGE `food` `food` INT UNSIGNED NOT NULL ,
+CHANGE `wood` `wood` INT UNSIGNED NOT NULL ,
+CHANGE `rock` `rock` INT UNSIGNED NOT NULL ,
+CHANGE `iron` `iron` INT UNSIGNED NOT NULL ,
+CHANGE `paper` `paper` INT UNSIGNED NOT NULL ,
+CHANGE `koku` `koku` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_costs_u` CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `food` `food` INT UNSIGNED NOT NULL ,
+CHANGE `wood` `wood` INT UNSIGNED NOT NULL ,
+CHANGE `rock` `rock` INT UNSIGNED NOT NULL ,
+CHANGE `iron` `iron` INT UNSIGNED NOT NULL ,
+CHANGE `paper` `paper` INT UNSIGNED NOT NULL ,
+CHANGE `koku` `koku` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_game` CHANGE `login_closed` `login_closed` TINYINT UNSIGNED NOT NULL ,
+CHANGE `reg_closed` `reg_closed` TINYINT UNSIGNED NOT NULL ,
+CHANGE `show_board` `show_board` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',
+CHANGE `season` `season` TINYINT UNSIGNED NOT NULL ,
+CHANGE `error_report` `error_report` TINYINT UNSIGNED NOT NULL ,
+CHANGE `unitcosts` `unitcosts` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',
+CHANGE `canattack` `canattack` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1';
+
+ALTER TABLE `dw_game_menu` CHANGE `game_menu_id` `game_menu_id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `sort` `sort` TINYINT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_log` CHANGE `actid` `actid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `date` `date` INT UNSIGNED NOT NULL ,
+CHANGE `type` `type` TINYINT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_lostpw` CHANGE `lpid` `lpid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `sent_time` `sent_time` INT UNSIGNED NOT NULL ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_map` CHANGE `map_x` `map_x` INT( 3 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `map_y` `map_y` INT( 3 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `terrain` `terrain` TINYINT UNSIGNED NULL DEFAULT NULL ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `maincity` `maincity` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `isle` `isle` TINYINT UNSIGNED NOT NULL ,
+CHANGE `harbour` `harbour` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_market` CHANGE `mid` `mid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `sid` `sid` INT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `sx` `sx` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `sy` `sy` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `bid` `bid` INT UNSIGNED NULL DEFAULT NULL ,
+CHANGE `s_amount` `s_amount` INT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `e_amount` `e_amount` INT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `complete` `complete` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_message` CHANGE `msgid` `msgid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid_sender` `uid_sender` INT UNSIGNED NOT NULL ,
+CHANGE `uid_recipient` `uid_recipient` INT UNSIGNED NOT NULL ,
+CHANGE `date` `date` INT UNSIGNED NOT NULL ,
+CHANGE `unread` `unread` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',
+CHANGE `date_read` `date_read` INT UNSIGNED NOT NULL ,
+CHANGE `type` `type` TINYINT UNSIGNED NOT NULL ,
+CHANGE `archive` `archive` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `del_sender` `del_sender` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `del_recipient` `del_recipient` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_missionary` CHANGE `mid` `mid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_news` CHANGE `nid` `nid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `date` `date` INT UNSIGNED NOT NULL ,
+CHANGE `changed` `changed` TINYINT UNSIGNED NOT NULL ,
+CHANGE `last_changed` `last_changed` INT UNSIGNED NOT NULL ,
+CHANGE `changed_uid` `changed_uid` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_points` CHANGE `uid` `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `unit_points` `unit_points` INT UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `building_points` `building_points` INT UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_res` CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `map_x` `map_x` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `map_y` `map_y` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `last_time` `last_time` INT UNSIGNED NOT NULL ,
+CHANGE `paper_prod` `paper_prod` TINYINT UNSIGNED NOT NULL DEFAULT '100';
+
+ALTER TABLE `dw_tribunal` CHANGE `tid` `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `suitor` `suitor` INT UNSIGNED NOT NULL ,
+CHANGE `accused` `accused` INT UNSIGNED NOT NULL ,
+CHANGE `cause` `cause` INT UNSIGNED NOT NULL ,
+CHANGE `date` `date` INT UNSIGNED NOT NULL ,
+CHANGE `judge` `judge` INT UNSIGNED NOT NULL ,
+CHANGE `decision_date` `decision_date` INT UNSIGNED NOT NULL;
+
+ALTER TABLE `dw_tribunal_arguments` CHANGE `date_added` `date_added` INT NOT NULL ;
+
+ALTER TABLE `dw_tribunal_causes` CHANGE `tcid` `tcid` INT UNSIGNED NOT NULL ,
+CHANGE `language` `language` TINYINT( 1 ) NOT NULL ,
+CHANGE `sort` `sort` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_tribunal_comments` CHANGE `date_added` `date_added` INT UNSIGNED NOT NULL ,
+CHANGE `date_last_changed` `date_last_changed` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_tribunal_rules` CHANGE `ruid` `ruid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `paragraph` `paragraph` TINYINT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_tribunal_rules_texts` CHANGE `rutid` `rutid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `ruid` `ruid` INT UNSIGNED NOT NULL ,
+CHANGE `clause` `clause` TINYINT UNSIGNED NOT NULL ,
+CHANGE `subclause` `subclause` TINYINT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_troops` CHANGE `tid` `tid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `pos_x` `pos_x` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `pos_y` `pos_y` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `name` `name` CHAR( 20 ) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL ,
+CHANGE `res` `res` CHAR( 5 ) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL ,
+CHANGE `amount` `amount` INT UNSIGNED NOT NULL DEFAULT '0';
+
+ALTER TABLE `dw_troops_move` CHANGE `tmid` `tmid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `tid` `tid` INT UNSIGNED NOT NULL ,
+CHANGE `tx` `tx` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `ty` `ty` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `type` `type` TINYINT UNSIGNED NOT NULL ,
+CHANGE `endtime` `endtime` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_units` CHANGE `unid` `unid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `uid` `uid` INT UNSIGNED NOT NULL ,
+CHANGE `kind` `kind` TINYINT UNSIGNED NOT NULL ,
+CHANGE `count` `count` INT UNSIGNED NOT NULL ,
+CHANGE `pos_x` `pos_x` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `pos_y` `pos_y` INT( 3 ) UNSIGNED NOT NULL ,
+CHANGE `tid` `tid` INT UNSIGNED NOT NULL ;
+
+ALTER TABLE `dw_user` CHANGE `uid` `uid` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CHANGE `blocked` `blocked` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',
+CHANGE `regdate` `regdate` INT UNSIGNED NOT NULL ,
+CHANGE `game_rank` `game_rank` TINYINT UNSIGNED NOT NULL ,
+CHANGE `rankid` `rankid` TINYINT UNSIGNED NOT NULL ,
+CHANGE `cid` `cid` INT UNSIGNED NOT NULL ,
+CHANGE `last_login` `last_login` INT UNSIGNED NOT NULL ,
+CHANGE `language` `language` CHAR( 2 ) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL ,
+CHANGE `religion` `religion` TINYINT UNSIGNED NOT NULL DEFAULT '1',
+CHANGE `deactivated` `deactivated` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0';

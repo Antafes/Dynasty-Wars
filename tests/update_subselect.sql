@@ -1,0 +1,1 @@
+INSERT INTO `db27428x296451`.`dw_buildings_bak` SELECT * FROM `db27428x296451`.`dw_buildings`;

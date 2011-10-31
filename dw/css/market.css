@@ -1,0 +1,18 @@
+.sold {
+				background-color: #508f50;
+				color: #FFFFFF;
+}
+
+.buyed {
+				background-color: #494998;
+				color: #FFFF00;
+}
+
+.anulled {
+				background-color: #c64646;
+				color: #FFFF00;
+}
+
+.not_sold {
+				background-color: #CCCC33;
+}

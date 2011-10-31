@@ -1,0 +1,14 @@
+<?php
+include_once('lib/dal/unit.php');
+include_once('lib/dal/unit_train.php');
+include_once('lib/dal/general.php');
+include_once('lib/dal/user.php');
+include_once('lib/dal/troops.php');
+include_once('lib/dal/buildings.php');
+include_once('lib/bl/unit.php');
+include_once('lib/bl/unit_move.php');
+include_once('lib/bl/unit_train.php');
+include_once('lib/bl/general.php');
+include_once('lib/bl/troops.php');
+include_once('lib/bl/buildings.php');
+?>

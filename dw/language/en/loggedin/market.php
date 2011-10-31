@@ -1,0 +1,37 @@
+<?php
+	$lang["offers"] = "Offers";
+	$lang["log"] = "Marketlog";
+	$lang["offer"] = "Offer";
+	$lang["request"] = "Requested resource";
+	$lang["create"] = "Create Offer";
+	$lang["done"] = "Order placed.";
+	$lang["no_res"] = "You lack the required resources.";
+	$lang["seller"] = "Seller";
+	$lang["amount"] = "Amount";
+	$lang["tax"] = "Tax";
+	$lang["date"] = "Date";
+	$lang["buy"] = "Buy";
+	$lang["anull"] = "Delete";
+	$lang["from"] = "From";
+	$lang["to"] = "To";
+	$lang["item_sold"] = "Sold";
+	$lang["item_buyed"] = "Bought";
+	$lang["item_anulled"] = "deleted order";
+	$lang["item_not_sold"] = "open order";
+	$lang["search"] = "Search";
+	$lang["create"] = "Create order";
+	$lang["clear"] = "Clear";
+	$lang["not_yours"] = "This is not your order.";
+	$lang["not_open"] = "This order does not exist any more.";
+	$lang["anulled"] = "Order deleted.";
+	$lang["no_buy"] = "You may not accept your own offers";
+	$lang["no_requested"] = "You don't have enough resources to accept this offer.";
+	$lang["buyed"] = "Wares have been exchanged.";
+	$lang["filter"] = "Filter";
+	$lang["sortorder"] = "Sort";
+	$lang["buyer"] = "Buyers";
+	$lang["change"] = "Change";
+	$lang["all"] = "All";
+	$lang["asc"] = "Ascending";
+	$lang["desc"] = "Descending";
+?>
