@@ -353,21 +353,6 @@ function lib_bl_general_nick2uid($nick)
 }
 
 /**
- * get the specified message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_bl_general_getMessage($msgid)
-{
-	$parser = new wikiparser;
-	$msg = lib_dal_general_getMsgInfos($msgid);
-	$msg['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $msg['message']);
-	$msg['message'] = $parser->parseIt($msg['message']);
-	return $msg;
-}
-
-/**
  * generate pages
  * @author Neithan
  * @param string $chose

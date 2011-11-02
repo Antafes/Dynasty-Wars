@@ -5,4 +5,5 @@ $lang += array(
 	'acptimeformat' => 'd.m.Y H:i:s',
 	'decimal' => ',',
 	'thousands' => '.',
+	'emperor' => 'Kaiser',
 );

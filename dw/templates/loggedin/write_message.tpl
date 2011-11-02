@@ -23,7 +23,7 @@
 		</div>
 		<div class="clear"></div>
 		<div class="message">
-			<textarea name="message" rows="15" cols="67">{$message.oldMessage|htmlentities}</textarea>
+			<textarea name="message" rows="15" cols="67">{$message.message|htmlentities}</textarea>
 		</div>
 		<div class="button">
 			<input type="submit" value="{$lang.send|htmlentities}" />

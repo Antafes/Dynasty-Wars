@@ -1592,3 +1592,56 @@ textarea {
 {
 	text-align: center;
 }
+
+.messageContent .messageMenu
+{
+	width: 200px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.messageContent .messageList
+{
+	width: 400px;
+	margin: 0 auto;
+}
+
+.messageContent .messageList table
+{
+	width: 100%;
+}
+
+.messageContent .messageList table .sender
+{
+	width: 150px;
+}
+
+.messageContent .messageList table .delete
+{
+	width: 65px;
+	text-align: center;
+}
+
+.messageContent .readMessage,
+.messageContent .readEventMessage
+{
+	width: 350px;
+	margin: 0 auto;
+}
+
+.messageContent .readMessage table,
+.messageContent .readEventMessage table
+{
+	width: 100%;
+}
+
+.messageContent .readMessage .messageLinks .link
+{
+	float: left;
+	margin-right: 50px;
+}
+
+.messageContent .readMessage .messageLinks .lastLink
+{
+	margin-right: 0;
+}

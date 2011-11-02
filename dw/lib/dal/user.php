@@ -34,8 +34,11 @@ function lib_dal_user_userExists($user)
  * @param <int> $uid the uid of the user
  * @return <string> the nick
  */
-function lib_dal_user_uid2nick($uid) {
-    if ($uid == -1) return "Kaiser";
+function lib_dal_user_uid2nick($uid)
+{
+	global $lang;
+
+    if (!$uid) return $lang['emperor'];
     return
         lib_util_mysqlQuery(
             sprintf(

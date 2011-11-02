@@ -6,15 +6,35 @@
  * @param String $for possible values: sender, recipient
  * @return array
  */
-function lib_dal_messages_getMessages($uid, $type, $for)
+function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
 {
 	$sql = '
 		SELECT * FROM dw_message
 		WHERE uid_'.$for.' = '.mysql_real_escape_string($uid).'
 			AND type = '.mysql_real_escape_string($type).'
 			AND !del_'.$for.'
+			AND archive = '.mysql_real_escape_string($archived).'
+		ORDER BY date DESC
 	';
 	return lib_util_mysqlQuery($sql, true);
+}
+
+/**
+ * get the specified message
+ * @author Neithan
+ * @param int $msgid
+ * @param String $for
+ * @return array
+ */
+function lib_dal_message_getMessage($msgid, $for, $archived = 0)
+{
+	$sql = '
+		SELECT * FROM dw_message
+		WHERE msgid = '.mysql_real_escape_string($msgid).'
+			AND !del_'.$for.'
+			AND archive = '.mysql_real_escape_string($archived).'
+	';
+	return lib_util_mysqlQuery($sql);
 }
 
 /**
@@ -69,5 +89,28 @@ function lib_dal_messages_archive($msgid)
 		SET archive = 1
 		WHERE msgid = '.mysql_real_escape_string($msgid).'
 	';
+	return lib_util_mysqlQuery($sql);
+}
+
+/**
+ * get the recipient of the message
+ * @author Neithan
+ * @param int $msgid
+ * @return int
+ */
+function lib_dal_messages_checkRecipient($msgid)
+{
+	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
+	return lib_util_mysqlQuery($sql);
+}
+/**
+ * get the sender of the message
+ * @author Neithan
+ * @param int $msgid
+ * @return int
+ */
+function lib_dal_messages_checkSender($msgid)
+{
+	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
 	return lib_util_mysqlQuery($sql);
 }

@@ -72,18 +72,6 @@ function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title,
 }
 
 /**
- * get all information according to the message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_dal_general_getMsgInfos($msgid)
-{
-	$sql = 'SELECT * FROM dw_message WHERE msgid='.mysql_real_escape_string($msgid);
-	return lib_util_mysqlQuery($sql);
-}
-
-/**
  * deactivate user
  * @author Neithan
  * @param int $uid
