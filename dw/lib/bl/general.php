@@ -33,6 +33,17 @@ function lib_bl_general_getLanguage($uid = '')
 }
 
 /**
+ * get all languages
+ * @author Neithan
+ * @param boolean $active (default: true) if true, only usable languages are returned
+ * @return array
+ */
+function lib_bl_general_getLanguages($active = true)
+{
+	return lib_dal_general_getLanguages($active);
+}
+
+/**
  * formating the build times
  * @author Neithan
  * @param int $time

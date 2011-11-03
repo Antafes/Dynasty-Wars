@@ -87,37 +87,48 @@ class UserCls {
 		return $this->pw;
 	}
 
-	public function setPW($newPW){
-		$newPW = md5($newPW);
-		$PWResult = false;
+	public function setPW($newPW, $repeatedPassword = null)
+	{
+		if (!isset($repeatedPassword) || $newPW === $repeatedPassword)
+		{
+			$newPW = md5($newPW);
+			$PWResult = false;
 
-		lib_util_mysql_TransactionBegin();
-		$SQL = 'UPDATE dw_user SET password = "'.mysql_real_escape_string($newPW).'"
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"
-			AND password = "'.mysql_real_escape_string($this->pw).'"';
+			lib_util_mysql_TransactionBegin();
+			$SQL = 'UPDATE dw_user SET password = "'.mysql_real_escape_string($newPW).'"
+				WHERE uid = "'.mysql_real_escape_string($this->uid).'"
+				AND password = "'.mysql_real_escape_string($this->pw).'"';
 
-		$result = lib_util_mysqlQuery($SQL);
-
-		if($result){
-			$SQL = 'SELECT password FROM dw_user WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
 			$result = lib_util_mysqlQuery($SQL);
 
-			if ($result == $newPW){
-			lib_util_mysql_TransactionCommit();
-			$PWResult = True;
-			}else{
-			lib_util_mysql_TransactionRollback();
+			if($result)
+			{
+				$SQL = 'SELECT password FROM dw_user WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
+				$result = lib_util_mysqlQuery($SQL);
+
+				if ($result == $newPW)
+				{
+					lib_util_mysql_TransactionCommit();
+					$PWResult = True;
+				}
+				else
+					lib_util_mysql_TransactionRollback();
 			}
-		}else{
-			lib_util_mysql_TransactionRollback();
+			else
+			{
+				lib_util_mysql_TransactionRollback();
+			}
+
+			return $PWResult;
+			/*
+			* if ($_SESSION['lid'])
+			$_SESSION['lid'] = $id;
+			else
+			setcookie("lid", $id, time()+604800, "", ".dynasty-wars.de");
+			*/
 		}
-		return $PWResult;
-		/*
-		* if ($_SESSION['lid'])
-		$_SESSION['lid'] = $id;
 		else
-		setcookie("lid", $id, time()+604800, "", ".dynasty-wars.de");
-		*/
+			return false;
 	}
 
 	public function getEMail(){
@@ -125,9 +136,11 @@ class UserCls {
 	}
 
 	public function setMail($newMail){
-		$sql = 'UPDATE dw_user SET email = "'.mysql_real_escape_string($newMail).'"
+		$sql = '
+			UPDATE dw_user
+			SET email = "'.mysql_real_escape_string($newMail).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"
-			AND email = "'.mysql_real_escape_string($this->email).'"';
+				AND email = "'.mysql_real_escape_string($this->email).'"';
 		return (bool)(lib_util_mysqlQuery($sql));
 	}
 
@@ -220,7 +233,8 @@ class UserCls {
 	}
 
 	public function setDescription($NewValue){
-		$sql = 'UPDATE dw_user SET email = "'.mysql_real_escape_string($NewValue).'"
+		$sql = '
+			UPDATE dw_user SET description = "'.mysql_real_escape_string($NewValue).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
 		return (bool)(lib_util_mysqlQuery($sql));
 	}
@@ -302,7 +316,8 @@ class UserCls {
 	}
 
 	public function setLanguage($NewValue){
-		$sql = 'UPDATE dw_user SET language = "'.mysql_real_escape_string($NewValue).'"
+		$sql = '
+			UPDATE dw_user SET language = "'.mysql_real_escape_string($NewValue).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
 		return (bool)(lib_util_mysqlQuery($sql));
 	}

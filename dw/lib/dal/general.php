@@ -27,6 +27,30 @@ function lib_dal_general_getLanguage($uid)
 	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
 	return lib_util_mysqlQuery($sql);
 }
+
+/**
+ * get all languages
+ * @author Neithan
+ * @param boolean $active if true, only usable languages are returned
+ * @return array
+ */
+function lib_dal_general_getLanguages($active)
+{
+	$sql = '
+		SELECT
+			language,
+			name
+		FROM dw_languages
+	';
+
+	if ($active)
+		$sql .= '
+			WHERE active
+		';
+
+	return lib_util_mysqlQuery($sql, true);
+}
+
 /**
  * get the actual season
  * @author Neithan

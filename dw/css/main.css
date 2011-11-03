@@ -1655,20 +1655,41 @@ textarea {
 
 .ranking_content .left_head
 {
-    float: left; 
-    text-align: center; 
+    float: left;
+    text-align: center;
     width: 50%;
 }
 
 .ranking_content .right_head
 {
-    float: right; 
-    text-align: center; 
+    float: right;
+    text-align: center;
     width: 50%;
 }
 
 .ranking_content .div_breaker
 {
-    margin-top: 20px; 
+    margin-top: 20px;
     clear: both;
+}
+
+.options .optionsContent
+{
+	width: 350px;
+	margin: 0 auto;
+}
+
+.options .optionsContent .option
+{
+	margin-bottom: 10px;
+}
+
+.options .optionsContent .option table
+{
+	width: 100%;
+}
+
+.options .optionsContent .option table .title
+{
+	width: 165px;
 }
