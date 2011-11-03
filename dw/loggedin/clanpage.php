@@ -461,7 +461,7 @@ else //delete clan
 		';
 		$membersList = lib_util_mysqlQuery($sql, true);
 		$smarty->assign('membersListData', $membersList);
-		$usermapEntry = lib_bl_gameoptions_getEntry('usermap');
+		$usermapEntry = lib_bl_gameOptions_getMenuEntry('usermap');
 		$smarty->assign('usermapEnabled', $usermapEntry['active']);
 	}
 	elseif ($cmode == 3 && $_SESSION['user']->getCID() == $_GET['cid'] && !$own_uid) //message to all members

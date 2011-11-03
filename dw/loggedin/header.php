@@ -167,7 +167,7 @@ $smarty->assign('cities', $cities);
 foreach ($cities as &$cities_part)
 	$cities_part['city'] = htmlentities ($cities_part['city']);
 
-$menuEntries = lib_bl_gameoptions_getAllEntries();
+$menuEntries = lib_bl_gameOptions_getAllMenuEntries();
 $block_entry = $menuEntries[count($menuEntries)-3];
 $block = 1;
 

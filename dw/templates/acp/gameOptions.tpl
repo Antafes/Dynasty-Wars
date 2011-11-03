@@ -56,7 +56,7 @@
 			<tr>
 				<th>{$lang.errorReporting|htmlentities}:</th>
 				<td>
-					{html_checkboxes name='errorReporting' options=$lang.errorReportingArray separator='<br />' selected=$errorCodes}
+					{html_checkboxes name='errorReporting' options=$lang.errorReportingArray separator='<br />' selected=$gameOptions.errorReporting}
 				</td>
 				<td>
 					<input type="submit" value="{$lang.change|htmlentities}" />

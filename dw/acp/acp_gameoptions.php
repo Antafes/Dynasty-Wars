@@ -201,20 +201,18 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		$smarty->assign('message', $message);
 
 	//selection of the gameoptions
-	$sql = 'SELECT * FROM dw_game';
-	$gameOptionsArray = lib_util_mysqlQuery($sql);
-	$smarty->assign('gameOptions', $gameOptionsArray);
+	$smarty->assign('gameOptions', lib_bl_gameOptions_getGameOptions());
 }
 elseif ($_GET['gameOptionsSub'] == 'menu')
 {
 	if ($_POST['sort'] || $_POST['entries'])
 	{
-		lib_bl_gameoptions_setAllEntries($_POST['entries'], $_POST['sort'], $_POST['visible']);
+		lib_bl_gameOptions_setAllMenuEntries($_POST['entries'], $_POST['sort'], $_POST['visible']);
 		lib_bl_log_saveLog(34, $_SESSION['user']->getUID(), '', '');
 		lib_bl_general_redirect('index.php?chose=acp&sub=gameoptions&gameOptionsSub=menu');
 	}
 
-	$acpMenuEntries = lib_bl_gameoptions_getAllEntries(false);
+	$acpMenuEntries = lib_bl_gameOptions_getAllMenuEntries(false);
 	$count = count($acpMenuEntries) - 3;
 	$sortingArray = array_combine(range(2, $count), range(2, $count));
 	$smarty->assign('menuEntries', $acpMenuEntries);

@@ -27,7 +27,7 @@ $messages = '';
 if ($new_msg)
 {
 	$messages = htmlentities($lang['youhave']);
-	if (lib_bl_gameoptions_getEntry('messages'))
+	if (lib_bl_gameOptions_getMenuEntry('messages'))
 		$messages .= ' <a href="'.lib_util_html_createLink(array('chose' => 'messages')).'">';
 	if ($new_msg == 1)
 		$messages .= htmlentities($lang['newmsg']);
@@ -36,7 +36,7 @@ if ($new_msg)
 		$messages .= $new_msg;
 		$messages .= htmlentities($lang['newmsgs']);
 	}
-	if (lib_bl_gameoptions_getEntry('messages'))
+	if (lib_bl_gameOptions_getMenuEntry('messages'))
 		$messages .= '</a>';
 	$smarty->assign('messages_info', $messages);
 }
