@@ -47,13 +47,14 @@ if ($news_array)
 		}
 	}
 
-	$pages_array = array();
+	$pages_array = array();        
 	for ($m = 1; $m <= $pages; $m++)
 		$pages_array[$m] = 'index.php?chose=news&amp;page='.$m.'';
 
 	$smarty->assign('news_from', $lang['from']);
 	$smarty->assign('news', $news);
-	$smarty->assign('pages', $pages_array);
+        if (count($pages_array) > 1) 
+            $smarty->assign('pages', $pages_array);
 }
 else
 	$smarty->assign('no_news', htmlentities($lang['nonews']));

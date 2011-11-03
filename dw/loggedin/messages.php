@@ -1,6 +1,5 @@
 <?php
 require_once('loggedin/header.php');
-require_once('lib/bl/messages.inc.php');
 
 lib_bl_general_loadLanguageFile('messages');
 $smarty->assign('lang', $lang);

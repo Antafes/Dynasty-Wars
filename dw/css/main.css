@@ -1647,3 +1647,28 @@ textarea {
 {
 	margin-right: 0;
 }
+
+.ranking_content
+{
+    margin: 0 80px 100px;
+}
+
+.ranking_content .left_head
+{
+    float: left; 
+    text-align: center; 
+    width: 50%;
+}
+
+.ranking_content .right_head
+{
+    float: right; 
+    text-align: center; 
+    width: 50%;
+}
+
+.ranking_content .div_breaker
+{
+    margin-top: 20px; 
+    clear: both;
+}
