@@ -248,7 +248,7 @@ elseif ($con)
 				case 'usermap':
 					if (lib_bl_general_checkMenuEntry('usermap'))
 					{
-						require_once ('loggedin/usermap.php');
+						require_once ('loggedin/userDetails.php');
 						break;
 					}
 				case 'missionary':

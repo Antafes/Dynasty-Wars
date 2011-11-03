@@ -1623,14 +1623,16 @@ textarea {
 }
 
 .messageContent .readMessage,
-.messageContent .readEventMessage
+.messageContent .readEventMessage,
+.userDetails
 {
 	width: 350px;
 	margin: 0 auto;
 }
 
 .messageContent .readMessage table,
-.messageContent .readEventMessage table
+.messageContent .readEventMessage table,
+.userDetails table
 {
 	width: 100%;
 }

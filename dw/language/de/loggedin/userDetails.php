@@ -1,7 +1,7 @@
 <?php
 $lang += array(
-	'profilefrom' => 'Profil von %s',
-	'playssince' => 'Dabei seit',
+	'profileFrom' => 'Profil von %s',
+	'playsSince' => 'Dabei seit',
 	'position' => 'Position',
 	'points' => 'Punkte',
 	'description' => 'Beschreibung',

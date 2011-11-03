@@ -157,8 +157,11 @@ class UserCls {
 		return lib_util_mysqlQuery($sql);
 	}
 
-	public function getRegDate(){
-		return $this->regdate;
+	public function getRegDate()
+	{
+		global $lang;
+
+		return date($lang['timeformat'], $this->regdate);
 	}
 
 	public function getGameRank(){
@@ -319,7 +322,8 @@ class UserCls {
 	}
 
 	public function getPoints(){
-		$sql = 'SELECT unit_points, building_points FROM dw_user
+		$sql = '
+			SELECT unit_points, building_points FROM dw_points
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
 		return lib_util_mysqlQuery($sql);
 	}
