@@ -200,7 +200,10 @@ elseif ($_GET['mmode'] == "event") //event messages
 elseif ($_GET['mmode'] == "new") //write message
 {
 	if (!$_POST['sent'])
+	{
 		$smarty->assign('recipient', 1);
+		$smarty->assign('message', array('recipient' => lib_bl_general_uid2nick($_GET['recipient'])));
+	}
 	elseif ($_POST['sent'] == 1)
 	{
 		if (strcasecmp($_POST['recipient'], $lang['emperor']) != 0)
