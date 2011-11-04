@@ -1,6 +1,6 @@
 <?php
-//include_once ('/hp/ag/ad/pv/www/dw/htdocs/lib/config.php');
-include_once ('../dw/lib/config.php');
+include_once (dirname(__FILE__).'../dw/lib/config.php');
+
 $con = @mysql_connect($server, $seruser, $serpw);
 mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
 $erg1 = mysql_query('SELECT uid FROM dw_user WHERE religion=1', $con);
