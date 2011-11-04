@@ -1,5 +1,5 @@
 <?php
-include_once (dirname(__FILE__).'../dw/lib/config.php');
+include_once (dirname(__FILE__).'/../dw/lib/config.php');
 
 $con = @mysql_connect($server, $seruser, $serpw);
 mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
