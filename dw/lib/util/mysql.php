@@ -36,7 +36,8 @@ function lib_util_mysql_data2array($res)
  */
 function lib_util_mysqlQuery($sql, $noTransform = false)
 {
-	global $con, $debug;
+	global $con, $debug, $firePHP_debug, $smarty_debug;
+
 	$sql = ltrim($sql);
 	if ($debug == true)
 		$res = mysql_query($sql, $con);
