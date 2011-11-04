@@ -63,7 +63,7 @@ elseif ($con)
 	$sql = 'SELECT login_closed FROM dw_game';
 	$login_closed = lib_util_mysqlQuery($sql);
 
-	if ($user->getUID() and (($login_closed == 1 and $user->getGameRank() < 1) xor ($login_closed == 2 and $$user->getGameRank() != 2) xor !$checkid))
+	if ($user->getUID() and (($login_closed == 1 and $user->getGameRank() < 1) xor ($login_closed == 2 and $user->getGameRank() != 2) xor !$checkid))
 	{
 		setcookie('lid', $_COOKIE['lid'], time()-100, '', '.dynasty-wars.de');
 		setcookie('city', $city, time()-100, '', '.dynasty-wars.de');
