@@ -1,8 +1,9 @@
 <?php
-include_once (dirname(__FILE__)."/../dw/lib/config.php");
-include_once (dirname(__FILE__)."/../dw/lib/bl/unit.php");
-include_once (dirname(__FILE__)."/../dw/lib/dal/unit.php");
-include_once (dirname(__FILE__).'/../dw/lib/util/mysql.php');
+require_once(dirname(__FILE__)."/../dw/lib/config.php");
+require_once(dirname(__FILE__).'/../dw/lib/util/mysql.php');
+require_once(dirname(__FILE__)."/../dw/lib/dal/unit.php");
+require_once(dirname(__FILE__).'/../dw/lib/dal/login.php');
+require_once(dirname(__FILE__)."/../dw/lib/bl/unit.php");
 
 $con = @mysql_connect($server, $seruser, $serpw);
 mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");

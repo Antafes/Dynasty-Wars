@@ -194,8 +194,10 @@ function lib_bl_unit_getUnits($kind, $uid)
  */
 function lib_bl_unit_checkDaimyo($uid)
 {
-	if (!lib_dal_unit_checkDaimyo($uid)) {
+	if (!lib_dal_unit_checkDaimyo($uid))
+	{
 		$pos = lib_dal_login_getMainCity($uid);
+
 		if (count($pos) > 0)
 		{
 			$pos_x = $pos['map_x'];
