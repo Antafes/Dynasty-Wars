@@ -69,6 +69,7 @@ function lib_bl_tribunal_getAllMessages($uid)
 /**
  * returns an array with all rules
  * @author Neithan
+ * @global array $lang
  * @param string $language
  * @return array
  */
@@ -80,30 +81,35 @@ function lib_bl_tribunal_getAllRules($language = '')
 		$language = $lang['lang'];
 	}
 	$rules = lib_dal_tribunal_getAllRules($language);
+
 	$rules_array = array();
-	foreach ($rules as $rule)
+	if ($rules)
 	{
-		$ruletexts = lib_dal_tribunal_getAllRuleTexts($rule['ruid'], $language);
-		$texts = array();
-		foreach ($ruletexts as $text)
+		foreach ($rules as $rule)
 		{
-			if ($text['subclause'] > 0)
+			$ruletexts = lib_dal_tribunal_getAllRuleTexts($rule['ruid'], $language);
+			$texts = array();
+			foreach ($ruletexts as $text)
 			{
-				$texts[$text['clause']]['subclauses'][$text['subclause']]['rutid'] = (int)$text['rutid'];
-				$texts[$text['clause']]['subclauses'][$text['subclause']]['text'] = $text['description'];
+				if ($text['subclause'] > 0)
+				{
+					$texts[$text['clause']]['subclauses'][$text['subclause']]['rutid'] = (int)$text['rutid'];
+					$texts[$text['clause']]['subclauses'][$text['subclause']]['text'] = $text['description'];
+				}
+				else
+				{
+					$texts[$text['clause']]['rutid'] = (int)$text['rutid'];
+					$texts[$text['clause']]['text'] = $text['description'];
+				}
 			}
-			else
-			{
-				$texts[$text['clause']]['rutid'] = (int)$text['rutid'];
-				$texts[$text['clause']]['text'] = $text['description'];
-			}
+			$rules_array[$rule['paragraph']] = array(
+				'ruid' => (int)$rule['ruid'],
+				'title' => $rule['title'],
+				'texts' => $texts,
+			);
 		}
-		$rules_array[$rule['paragraph']] = array(
-			'ruid' => (int)$rule['ruid'],
-			'title' => $rule['title'],
-			'texts' => $texts,
-		);
 	}
+
 	return $rules_array;
 }
 

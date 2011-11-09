@@ -59,4 +59,5 @@ $lang += array(
 	'delete' => 'Löschen',
 	'last_changed' => '%s mal geändert, Zuletzt von %s am %s',
 	'one' => 'ein',
+	'noRulesDefined' => 'Keine Regeln vorhanden.',
 );

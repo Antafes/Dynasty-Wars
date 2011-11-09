@@ -671,6 +671,16 @@ textarea {
 	margin-top: 5px;
 }
 
+.sub_menu
+{
+	margin-bottom: 10px;
+}
+
+.sub_menu form
+{
+	margin-top: 5px;
+}
+
 .sub_menu,
 .sub_menu form
 {
@@ -1551,7 +1561,8 @@ textarea {
 }
 
 .acp_content .submenu,
-.acp_content .subheading
+.acp_content .subheading,
+.tribunal .subheading
 {
 	margin-bottom: 10px;
 }

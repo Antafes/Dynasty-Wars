@@ -389,6 +389,7 @@ function lib_bl_general_createPageLinks($chose, $pages, $parameters)
 function lib_bl_general_redirect($target)
 {
 	header('Location: '.$target);
+	die();
 }
 
 /**

@@ -1,7 +1,7 @@
 function showEditingDialog(element, target, path, saveButton, cancelButton, width)
 {
 	var submitButton;
-	
+
 	if (!width)
 		width = 300;
 
@@ -14,16 +14,15 @@ function showEditingDialog(element, target, path, saveButton, cancelButton, widt
 			'save': function()
 			{
 				var itemList = $('#' + target).children('form').serializeArray();
-				$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+				$.getJSON(path, {items: JSON.stringify(itemList)}, function(data)
 				{
-					data = JSON.parse(data);
-					if (data['status'] == 'ok')
+					if (data.status == 'ok')
 					{
-						$(element).parent().before(data['html']);
-						if (data['remove'].length > 0)
+						$(element).parent().before(data.html);
+						if (typeof data.remove != 'undefined' && data.remove.length > 0)
 						{
-							for (var i = 0; i < data['remove'].length; i++)
-								$(data['remove'][i]).remove();
+							for (var i = 0; i < data.remove.length; i++)
+								$(data.remove[i]).remove();
 						}
 						$('#' + target).dialog('close');
 					}
@@ -69,7 +68,7 @@ function argumentApproval(path, state, aid)
 	itemList[1] = new Object();
 	itemList[1]['name'] = 'aid';
 	itemList[1]['value'] = aid;
-	$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+	$.get(path, {items: JSON.stringify(itemList)}, function(data)
 	{
 		data = JSON.parse(data);
 		if (data['status'] == 'ok')
@@ -84,7 +83,7 @@ function argumentApproval(path, state, aid)
 function showDecisionDialog(element, target, path, saveButton, cancelButton, width)
 {
 	var submitButton;
-	
+
 	if (!width)
 		width = 300;
 
@@ -94,7 +93,7 @@ function showDecisionDialog(element, target, path, saveButton, cancelButton, wid
 		autoOpen: false,
 		width: width,
 		buttons: {
-			'save': function() 
+			'save': function()
 			{
 				var itemList = $('#' + target).children('form').serializeArray();
 				var err = false;
@@ -111,7 +110,7 @@ function showDecisionDialog(element, target, path, saveButton, cancelButton, wid
 				}
 				if (err == false)
 				{
-					$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+					$.get(path, {items: JSON.stringify(itemList)}, function(data)
 					{
 						data = JSON.parse(data);
 						if (data['status'] == 'ok')
@@ -169,30 +168,24 @@ function blockComments(element, path, state, tid)
 	itemList[1] = new Object();
 	itemList[1]['name'] = 'tid';
 	itemList[1]['value'] = tid;
-	$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+	$.get(path, {items: JSON.stringify(itemList)}, function(data)
 	{
 		data = JSON.parse(data);
 		if (data['status'] == 'ok')
 		{
 			$(element).parent().append(data['html']);
 			$(element).remove();
+			$('#comment').children('.comment:last').remove();
 		}
 	});
 }
 
 function showCommentList(target, tid)
 {
-	var itemList = new Array();
-	itemList[0] = new Object();
-	itemList[0]['name'] = 'tid';
-	itemList[0]['value'] = tid;
-	$.get('lib/ajax/comment_system.php', {items: JSON.stringify(itemList)}, function (data)
+	$.getJSON('lib/ajax/comment_system.php', {'tid': tid}, function (data)
 	{
-		data = JSON.parse(data);
 		if (data['status'] == 'ok')
-		{
 			$('#' + target).append(data['html']);
-		}
 	});
 }
 
@@ -215,7 +208,7 @@ function deleteComment(element, tcoid)
 function editComment(element, target, tcoid, path, saveButton, cancelButton, width)
 {
 var submitButton;
-	
+
 	if (!width)
 		width = 300;
 
@@ -228,7 +221,7 @@ var submitButton;
 			'save': function()
 			{
 				var itemList = $('#' + target).children('form').serializeArray();
-				$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+				$.get(path, {items: JSON.stringify(itemList)}, function(data)
 				{
 					data = JSON.parse(data);
 					if (data['status'] == 'ok')
@@ -260,12 +253,12 @@ var submitButton;
 					$(hidden_fields[i]).val(tcoid);
 				}
 			}
-			
+
 			var array = new Array();
 			array[0] = new Object();
 			array[0]['name'] = 'tcoid';
 			array[0]['value'] = tcoid;
-			
+
 			var form_elements = $('#' + target).find(':input[type!=hidden]');
 			$.get('lib/ajax/get_comment.php', {items: JSON.stringify(array)}, function (data)
 			{
@@ -281,7 +274,7 @@ var submitButton;
 					}
 				}
 			});
-			
+
 			var buttons = $('.ui-dialog-buttonpane').children();
 			for (var i = 0; i < buttons.length; i++)
 			{
