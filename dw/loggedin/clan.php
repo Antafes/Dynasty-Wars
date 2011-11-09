@@ -6,7 +6,7 @@ unset($foundation);
 //requesting of get and post variables
 $clantag = $_POST['clantag'];
 $clanname = $_POST['clan'];
-if (isset($_GET['cid']) and is_numeric($_GET['cid']))
+if (isset($_GET['cid']) && is_numeric($_GET['cid']))
 	$cid = $_GET['cid'];
 
 $smarty->assign('lang', $lang);
@@ -67,7 +67,7 @@ else //search for clans
 	}
 	elseif ($_GET['newclan']) //clan foundation
 	{
-		if ($clanname and $clantag)
+		if ($clanname && $clantag)
 		{
 			$sql = '
 				INSERT INTO dw_clan (

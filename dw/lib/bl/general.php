@@ -215,7 +215,7 @@ function lib_bl_general_delUser($reguid)
 	$erg7 = lib_dal_general_deleteFrom('dw_clan_applications', 'uid = '.$reguid);
 	$erg8 = lib_dal_general_deleteFrom('dw_research', 'uid = '.$reguid);
 
-	if ($erg1 and $erg2 and $erg3 and $erg4 and $erg5 and $erg6 and $erg7 and $erg8)
+	if ($erg1 && $erg2 && $erg3 && $erg4 && $erg5 && $erg6 && $erg7 && $erg8)
 		return 1;
 	else
 		return 0;
@@ -245,7 +245,7 @@ function lib_bl_general_deactivateUser($uid, $state)
 		}
 	}
 	$erg1 = lib_dal_general_deactivateUser($uid, $state);
-	if ($erg1 > 0 and $leaderg > 0)
+	if ($erg1 > 0 && $leaderg > 0)
 		return 1;
 	else
 		return 0;
@@ -265,7 +265,7 @@ function lib_bl_general_deactivateUser($uid, $state)
  */
 function lib_bl_general_changePos($uid, $x, $y, $city)
 {
-	if ($x < 293 and $y < 91)
+	if ($x < 293 && $y < 91)
 		return 3;
 	else
 	{
@@ -275,12 +275,12 @@ function lib_bl_general_changePos($uid, $x, $y, $city)
 		else
 		{
 			$terrain = lib_dal_map_getTerrain($x, $y);
-			if ($terrain != 1 and $terrain != 5)
+			if ($terrain != 1 && $terrain != 5)
 			{
 				$erg3 = lib_dal_general_changePosition('uid = '.$uid);
 				$where = 'map_x='.mysql_real_escape_string($x).' AND map_y='.mysql_real_escape_string($y);
 				$erg4 = lib_dal_general_changePosition($where, $uid, $city);
-				if ($erg3 and $erg4)
+				if ($erg3 && $erg4)
 					return 1;
 				else
 					return 4;

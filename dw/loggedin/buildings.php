@@ -8,7 +8,7 @@ $template_file = '';
 
 if (!$_GET['buildplace'])
 {
-	if ($_POST['sub_build'] or $_POST['sub_upgrade'])
+	if ($_POST['sub_build'] || $_POST['sub_upgrade'])
 	{
 		if ($_POST['sub_upgrade'])
 			$upgrade = 1;
@@ -96,7 +96,7 @@ elseif (is_numeric($_GET['buildplace']))
 	$paper = $ressources['paper'];
 	$koku = $ressources['koku'];
 
-	if ($building['lvl'] or ($building['lvl'] == 0 and $_GET['buildplace'] < 8))
+	if ($building['lvl'] || ($building['lvl'] == 0 && $_GET['buildplace'] < 8))
 	{
 		$has_upgrades = lib_bl_buildings_getUpgradeable($building['kind']);
 		$has_harbour = lib_bl_buildings_getHarbour($cityexp[0], $cityexp[1]);
@@ -122,7 +122,7 @@ elseif (is_numeric($_GET['buildplace']))
 		{
 			if ($building['lvl'])
 				$smarty->assign('buildingPicture', lib_bl_buildings_getPic($city, $building));
-			elseif ($building['lvl'] == 0 and $_GET['buildplace'] < 8)
+			elseif ($building['lvl'] == 0 && $_GET['buildplace'] < 8)
 				$smarty->assign('buildingPicture', lib_bl_buildings_getPic($city, $building, 1));
 
 			if ($building['kind'] != 6)
@@ -234,7 +234,7 @@ elseif (is_numeric($_GET['buildplace']))
 				{
 					$has_upgrades = lib_bl_buildings_getUpgradeable($buildable['kind']);
 
-					if (!$has_upgrades or $buildable['ulvl'])
+					if (!$has_upgrades || $buildable['ulvl'])
 					{
 						$prices = lib_bl_buildings_prices($buildable['kind'], $buildable['lvl'], $buildable['ulvl'], $has_harbour, $city);
 						$time = lib_bl_buildings_buildTime($buildable['kind'], $buildable['lvl']);
@@ -245,7 +245,7 @@ elseif (is_numeric($_GET['buildplace']))
 						$time = lib_bl_buildings_buildTime($buildable['kind'], $buildable['lvl'], 1, $buildable['ulvl']);
 					}
 
-					if (lib_bl_buildings_getUpgradeable($buildable['kind']) and $buildable['ulvl'] == 0)
+					if (lib_bl_buildings_getUpgradeable($buildable['kind']) && $buildable['ulvl'] == 0)
 						$buildable['ulvl'] = 1;
 
 					$prices_formatted = array(

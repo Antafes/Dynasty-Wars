@@ -81,12 +81,12 @@ function lib_util_mysqlQuery($sql, $noTransform = false)
 		if (substr($sql,0,6) == "SELECT")
 		{
 			$out = array();
-			if (mysql_num_rows($res) > 1 or ($noTransform && mysql_num_rows($res) > 0))
+			if (mysql_num_rows($res) > 1 || ($noTransform && mysql_num_rows($res) > 0))
 			{
 				while($line = mysql_fetch_array($res,MYSQL_ASSOC))
 					$out[] = $line;
 			}
-			elseif (mysql_num_rows($res) == 1 and !$noTransform)
+			elseif (mysql_num_rows($res) == 1 && !$noTransform)
 			{
 				$out = mysql_fetch_array($res,MYSQL_ASSOC);
 				if (count($out) == 1)

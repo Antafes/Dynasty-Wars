@@ -41,7 +41,7 @@ function ClosePopUp() {
 	$oldy = $_GET["oldy"];
 //db: con zur datenbank
 	$con = @mysql_connect($server, $seruser, $serpw);
-	mysql_select_db($serdb, $con) or die($lang["nodb"]);
+	mysql_select_db($serdb, $con) || die($lang["nodb"]);
 //db: auslesen von nick und insel
 	$erg1 = mysql_query("SELECT nick FROM dw_user WHERE uid='$reguid'", $con);
 	if ($erg1) {

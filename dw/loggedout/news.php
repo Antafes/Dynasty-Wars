@@ -15,7 +15,7 @@ if ($news_array)
 	if (!$page)
 		$page = 1;
 	$news = array();
-	for ($i = 0, $n = 5 * $page - 5, $p = 5 * $page; $n < $p and $n < $lines; $n++, $i++)
+	for ($i = 0, $n = 5 * $page - 5, $p = 5 * $page; $n < $p && $n < $lines; $n++, $i++)
 	{
 		$news[$i]['title'] = htmlentities($news_array[$n]['title']);
 
@@ -47,13 +47,13 @@ if ($news_array)
 		}
 	}
 
-	$pages_array = array();        
+	$pages_array = array();
 	for ($m = 1; $m <= $pages; $m++)
 		$pages_array[$m] = 'index.php?chose=news&amp;page='.$m.'';
 
 	$smarty->assign('news_from', $lang['from']);
 	$smarty->assign('news', $news);
-        if (count($pages_array) > 1) 
+        if (count($pages_array) > 1)
             $smarty->assign('pages', $pages_array);
 }
 else

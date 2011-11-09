@@ -2,7 +2,7 @@
 include_once (dirname(__FILE__).'/../dw/lib/config.php');
 
 $con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
+mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 $erg1 = mysql_query('SELECT uid FROM dw_user WHERE religion=1', $con);
 if ($erg1)
 	$user = mysql_num_rows($erg1);

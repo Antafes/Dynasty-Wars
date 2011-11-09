@@ -16,7 +16,7 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 	// place on market
 	if ($_POST['type'] == 'offer_create' && isset($_POST['s_amount']) && isset($_POST['e_amount']))
 	{
-		if (is_numeric($_POST['s_amount']) and is_numeric($_POST['e_amount']))
+		if (is_numeric($_POST['s_amount']) && is_numeric($_POST['e_amount']))
 		{
 			if ($_POST['s_amount'] < 0)
 				$_POST['s_amount'] = $_POST['s_amount']*-1;
@@ -171,11 +171,11 @@ elseif ($_GET['sub'] == 'log')
 		foreach ($offers as $offer)
 		{
 			$class = 'table_tc';
-			if ($offer['sid'] == $_SESSION['user']->getUID() and $offer['bid'] == $_SESSION['user']->getUID())
+			if ($offer['sid'] == $_SESSION['user']->getUID() && $offer['bid'] == $_SESSION['user']->getUID())
 				$class = 'anulled';
 			else
 			{
-				if ($offer['sid'] == $_SESSION['user']->getUID() and !lib_dal_market_isOpen($offer['mid']))
+				if ($offer['sid'] == $_SESSION['user']->getUID() && !lib_dal_market_isOpen($offer['mid']))
 					$class = 'sold';
 				elseif ($offer['bid'] == 1)
 					$class = 'buyed';

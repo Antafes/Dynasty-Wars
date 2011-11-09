@@ -27,16 +27,16 @@ if ($login == 1)
 		$err['status'] = 1;
 	if ($blocked)
 		$err['blocked'] = 1;
-	if (($login_closed == 1) and ($_SESSION['user']->getGameRank() < 1))
+	if (($login_closed == 1) && ($_SESSION['user']->getGameRank() < 1))
 		$err['login_closed'] = 1;
-	elseif (($login_closed == 2) and ($_SESSION['user']->getGameRank() < 2))
+	elseif (($login_closed == 2) && ($_SESSION['user']->getGameRank() < 2))
 		$err['login_closed'] = 2;
 	if (
-		(strcasecmp($user, $reguser) == 0 and $pws === $regpw)
-		and !$err['status']
-		and !$err['blocked']
-		and !$err['login_closed']
-		and !$deactivated
+		(strcasecmp($user, $reguser) == 0 && $pws === $regpw)
+		&& !$err['status']
+		&& !$err['blocked']
+		&& !$err['login_closed']
+		&& !$deactivated
 	)
 	{
 		lib_bl_login_setLastLogin($uid);
@@ -57,7 +57,7 @@ if ($login == 1)
 	}
 	else
 	{
-		if (strcasecmp($user, $reguser) != 0 or $pws !== $regpw)
+		if (strcasecmp($user, $reguser) != 0 || $pws !== $regpw)
 			$err['failed_login'] = true;
 
 		if ($err['failed_login'])

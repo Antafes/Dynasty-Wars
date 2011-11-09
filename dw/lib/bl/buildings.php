@@ -90,11 +90,11 @@ function lib_bl_buildings_getPic($city, $building, $new_building = 0)
 	elseif ($season == 2)
 		$path = 'pictures/city/grass/winter/';*/
 	$path = 'pictures/city/grass/summer/'; //this is a temporary solution
-	if (is_array($building) or !$building)
+	if (is_array($building) || !$building)
 	{
-		if (($building['lvl'] == 0 or !$building) and $new_building == 0)
+		if (($building['lvl'] == 0 || !$building) && $new_building == 0)
 			$html = '<img src="'.$path.'buildplace.gif" alt="'.$lang['buildplace'].'" title="'.$lang['buildplace'].'" />';
-		elseif ($new_building == 1 or $building['lvl'])
+		elseif ($new_building == 1 || $building['lvl'])
 		{
 			if ($building['kind'] != 6)
 				$name = htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]);
@@ -128,7 +128,7 @@ function lib_bl_buildings_selectBuilding($x, $y, $pos)
 	if ($res)
 	{
 		$count = count($res);
-		if ($count > 0 and $pos)
+		if ($count > 0 && $pos)
 		{
 			unset($building);
 			$n = 0;
@@ -141,7 +141,7 @@ function lib_bl_buildings_selectBuilding($x, $y, $pos)
 				$n++;
 			}
 		}
-		elseif ($count > 0 and !$pos)
+		elseif ($count > 0 && !$pos)
 		{
 			unset($building);
 			$n = 0;
@@ -338,9 +338,9 @@ function lib_bl_buildings_getNotBuilt($x, $y, $uid, $def=0)
 				}
 			}
 		}
-		if ((!$ulvl or $ulvl == 0) and lib_bl_buildings_getUpgradeable($i))
+		if ((!$ulvl || $ulvl == 0) && lib_bl_buildings_getUpgradeable($i))
 			$ulvl = 1;
-		if (($allready_built == 0 or ($allready_built == 1 and !$position)) and ($i != 19 or $i != 11 or $i != 15 or ($religion == 1 and $i != 21)))
+		if (($allready_built == 0 || ($allready_built == 1 && !$position)) && ($i != 19 || $i != 11 || $i != 15 || ($religion == 1 && $i != 21)))
 			$buildable[] = array('kind' => $i, 'lvl' => $lvl, 'ulvl' => $ulvl);
 	}
 	return $buildable;
@@ -375,7 +375,7 @@ function lib_bl_buildings_checkBuildable($uid, $kind, $x, $y)
 		{
 			case 1:
 			{
-				if ($kind == 1 or $kind == 2 or $kind == 3 or $kind == 4 or $kind == 7 or $kind == 8 or $kind == 9 or $kind == 22)
+				if ($kind == 1 || $kind == 2 || $kind == 3 || $kind == 4 || $kind == 7 || $kind == 8 || $kind == 9 || $kind == 22)
 					return 1;
 				else
 					return 0;
@@ -383,8 +383,8 @@ function lib_bl_buildings_checkBuildable($uid, $kind, $x, $y)
 			}
 			case 2:
 			{
-				if ($kind == 1 or $kind == 2 or $kind == 3 or $kind == 4 or $kind == 5 or $kind == 6 or $kind == 7 or $kind == 8
-					or $kind == 9 or $kind == 10 or $kind == 12 or $kind == 22 or $kind == 23 or $kind == 24)
+				if ($kind == 1 || $kind == 2 || $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
+					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 22 || $kind == 23 || $kind == 24)
 					return 1;
 				else
 					return 0;
@@ -392,9 +392,9 @@ function lib_bl_buildings_checkBuildable($uid, $kind, $x, $y)
 			}
 			case 3:
 			{
-				if ($kind == 1 or $kind == 2 or $kind == 3 or $kind == 4 or $kind == 5 or $kind == 6 or $kind == 7 or $kind == 8
-					or $kind == 9 or $kind == 10 or $kind == 12 or $kind == 13 or $kind == 14 or $kind == 16 or $kind == 17
-					or $kind == 18 or $kind == 22 or $kind == 23 or $kind == 24 or $kind == 25)
+				if ($kind == 1 || $kind == 2 || $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
+					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 13 || $kind == 14 || $kind == 16 || $kind == 17
+					|| $kind == 18 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
 					return 1;
 				else
 					return 0;
@@ -403,9 +403,9 @@ function lib_bl_buildings_checkBuildable($uid, $kind, $x, $y)
 			case 4:
 			case 5:
 			{
-				if ($kind == 1 or $kind == 2 or $kind == 3 or $kind == 4 or $kind == 5 or $kind == 6 or $kind == 7 or $kind == 8
-					or $kind == 9 or $kind == 10 or $kind == 12 or $kind == 13 or $kind == 14 or $kind == 16 or $kind == 17
-					or $kind == 18 or $kind == 20 or $kind == 21 or $kind == 22 or $kind == 23 or $kind == 24 or $kind == 25)
+				if ($kind == 1 || $kind == 2 or $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
+					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 13 || $kind == 14 || $kind == 16 || $kind == 17
+					|| $kind == 18 || $kind == 20 || $kind == 21 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
 					return 1;
 				else
 					return 0;
@@ -454,7 +454,7 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 			}
 			case 2:
 			{
-				if (($kind == 7 or $kind == 9) and floor($building['lvl']/10) >= $building['ulvl'])
+				if (($kind == 7 || $kind == 9) && floor($building['lvl']/10) >= $building['ulvl'])
 					return 1;
 				else
 					return 0;
@@ -462,7 +462,7 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 			}
 			case 3:
 			{
-				if (($kind == 8 or $kind == 9 or $kind == 10 or $kind == 24) and floor($building['lvl']/10) >= $building['ulvl'])
+				if (($kind == 8 || $kind == 9 || $kind == 10 || $kind == 24) && floor($building['lvl']/10) >= $building['ulvl'])
 					return 1;
 				else
 					return 0;
@@ -470,8 +470,8 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 			}
 			case 4:
 			{
-				if (($kind == 7 or $kind == 14 or $kind == 16 or $kind == 17 or $kind == 23 or $kind == 25)
-					and floor($building['lvl']/10) >= $building['ulvl'])
+				if (($kind == 7 || $kind == 14 || $kind == 16 || $kind == 17 || $kind == 23 || $kind == 25)
+					&& floor($building['lvl']/10) >= $building['ulvl'])
 					return 1;
 				else
 					return 0;
@@ -479,8 +479,8 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 			}
 			case 5:
 			{
-				if (($kind == 8 or $kind == 9 or $kind == 10 or $kind == 14 or $kind == 16 or $kind == 17 or $kind == 18 or $kind == 20 or $kind == 23 or $kind == 24)
-					and floor($building['lvl']/10) >= $building['ulvl'])
+				if (($kind == 8 || $kind == 9 || $kind == 10 || $kind == 14 || $kind == 16 || $kind == 17 || $kind == 18 || $kind == 20 || $kind == 23 || $kind == 24)
+					&& floor($building['lvl']/10) >= $building['ulvl'])
 					return 1;
 				else
 					return 0;
@@ -488,8 +488,8 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 			}
 			case 6:
 			{
-				if (($kind == 7 or $kind == 8 or $kind == 16 or $kind == 17 or $kind == 18 or $kind == 20 or $kind == 21 or $kind == 23 or $kind == 24 or $kind == 25)
-					and floor($building['lvl']/10) >= $building['ulvl'])
+				if (($kind == 7 || $kind == 8 || $kind == 16 || $kind == 17 || $kind == 18 || $kind == 20 || $kind == 21 || $kind == 23 || $kind == 24 || $kind == 25)
+					&& floor($building['lvl']/10) >= $building['ulvl'])
 					return 1;
 				else
 					return 0;
@@ -514,7 +514,7 @@ function lib_bl_buildings_resCheck($valuelist)
 	$iron_n = $valuelist['res_iron'] - $valuelist['iron'];
 	$paper_n = $valuelist['res_paper'] - $valuelist['paper'];
 	$koku_n = $valuelist['res_koku'] - $valuelist['koku'];
-	if (($food_n >= 0) and ($wood_n >= 0) and ($rock_n >= 0) and ($iron_n >= 0) and ($paper_n >= 0) and ($koku_n >= 0))
+	if (($food_n >= 0) && ($wood_n >= 0) && ($rock_n >= 0) && ($iron_n >= 0) && ($paper_n >= 0) && ($koku_n >= 0))
 		return 1;
 	else
 		return 0;
@@ -531,7 +531,7 @@ function lib_bl_buildings_resCheck($valuelist)
  */
 function lib_bl_buildings_buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
 {
-	if (is_integer($kind) and $upgrade == 0)
+	if (is_integer($kind) && $upgrade == 0)
 	{
 		$btime = (int)lib_dal_buildings_getTime($kind, $upgrade, $u_lvl);
 		if ($lvl)
@@ -623,7 +623,7 @@ $GLOBALS['firePHP']->log($building, 'building array');
 		if ($building['bid'] == 0)
 			$building['bid'] = lib_dal_buildings_insertBuilding($uid, $x, $y, $building['kind'], $buildplace);
 		$erg2 = lib_dal_buildings_startBuilding($building['bid'], $upgrade, $endtime);
-		if ($building['bid'] and !$building['position'])
+		if ($building['bid'] && !$building['position'])
 			lib_dal_buildings_insertBuildPlace($building['bid'], $buildplace);
 		if (!$upgrade)
 		{
@@ -645,7 +645,7 @@ $GLOBALS['firePHP']->log($building, 'building array');
 			$res['koku'] = $helpres['koku'] - $prices_upgr['koku'];
 			$erg3 = lib_bl_resource_updateAll($res, $city);
 		}
-		if ($erg2 and $erg3)
+		if ($erg2 && $erg3)
 			return 1;
 		else
 			return 0;
@@ -680,7 +680,7 @@ $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 				$running[$x]['endtime'] = $parts['endtime'];
 				$running[$x]['kind'] = $parts['kind'];
 				$running[$x]['ulvl'] = $parts['ulvl'];
-				if ($running[$x]['ulvl'] == 0 and lib_bl_buildings_getUpgradeable($running[$x]['kind']))
+				if ($running[$x]['ulvl'] == 0 && lib_bl_buildings_getUpgradeable($running[$x]['kind']))
 					$running[$x]['ulvl'] = 1;
 				$running[$x]['bid'] = $parts['bid'];
 				$running[$x]['position'] = $parts['position'];
@@ -703,7 +703,7 @@ function lib_bl_buildings_buildComplete($bid)
 	$build['bid'] = $bid;
 	$build = lib_dal_buildings_getBuildInfo($build['bid']);
 	$is_upgradeable = lib_bl_buildings_getUpgradeable($build['kind']);
-	if (($build['lvl'] == 0 or !$build['lvl']) and ($build['ulvl'] == 0 or !$build['ulvl']) and $is_upgradeable)
+	if (($build['lvl'] == 0 || !$build['lvl']) && ($build['ulvl'] == 0 || !$build['ulvl']) && $is_upgradeable)
 		$build['lvl'] = $build['ulvl'] = 1;
 	elseif (!$build['upgrade'])
 		$build['lvl']++;
@@ -734,11 +734,11 @@ $GLOBALS['firePHP']->log(count($res), 'checkBuild result rows');
 $GLOBALS['firePHP']->log('greater 0', 'checkBuild result rows');
 		foreach ($res as $parts)
 		{
-			if ((($kind >= 1 and $kind <= 6) or $kind == 22) and (($parts['kind'] >= 1 and $parts['kind'] <= 6) or $parts['kind'] == 22))
+			if ((($kind >= 1 && $kind <= 6) || $kind == 22) && (($parts['kind'] >= 1 && $parts['kind'] <= 6) || $parts['kind'] == 22))
 				return 0;
-			elseif (($kind >= 7 and $kind <= 21) and ($parts['kind'] >= 7 and $parts['kind'] <= 21))
+			elseif (($kind >= 7 && $kind <= 21) && ($parts['kind'] >= 7 && $parts['kind'] <= 21))
 				return 0;
-			elseif (($kind >= 23 and $kind <= 25) and ($parts['kind'] >= 23 and $parts['kind'] <= 25))
+			elseif (($kind >= 23 && $kind <= 25) && ($parts['kind'] >= 23 && $parts['kind'] <= 25))
 				return 0;
 		}
 	}
@@ -760,7 +760,7 @@ function lib_bl_buildings_checkGeishaFactory($city)
 	$ninja = lib_dal_buildings_getBuildingByKind(10, $x, $y);
 	$blacksmith = lib_dal_buildings_getBuildingByKind(14, $x, $y);
 	$return['factory'] = $return['geisha'] = 0;
-	if ($teahouse['ulvl'] == 4 and $ninja['ulvl'] == 3)
+	if ($teahouse['ulvl'] == 4 && $ninja['ulvl'] == 3)
 		$return['geisha'] = 1;
 	if ($blacksmith['ulvl'] == 3)
 		$return['factory'] = 1;

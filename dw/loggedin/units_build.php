@@ -7,7 +7,7 @@ $unit = $_GET['unit'];
 $build = $_POST['build'];
 $count = $_POST['count'];
 
-if ($build and $unit and $count)
+if ($build && $unit && $count)
 {
 	$train = lib_bl_unit_train_train($unit, $count, $_SESSION['user']->getUID(), $city);
 	$ressources = lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
@@ -20,7 +20,7 @@ if ($build and $unit and $count)
 	$train_check = lib_bl_unit_train_checkTraining($_SESSION['user']->getUID(), $city);
 }
 
-if ($train_check['ok'] and $build)
+if ($train_check['ok'] && $build)
 	lib_bl_general_redirect ('index.php?chose=units');
 
 $buildings = lib_bl_unit_train_checkBuildings($city);

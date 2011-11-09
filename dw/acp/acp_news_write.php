@@ -10,7 +10,7 @@ if (!$_GET['nmode'] || $_GET['nmode'] == 1)
 		$smarty->assign('newsEntries', lib_bl_news_getAllEntries());
 	else
 	{
-		if ($_POST['title'] and $_POST['news'])
+		if ($_POST['title'] && $_POST['news'])
 		{
 			if (lib_bl_news_update($_GET['nid'], $_POST['title'], $_POST['news'], $_SESSION['user']))
 			{
@@ -24,7 +24,7 @@ if (!$_GET['nmode'] || $_GET['nmode'] == 1)
 }
 elseif ($_GET['nmode'] == 2)
 {
-	if ($_POST['title'] and $_POST['news'])
+	if ($_POST['title'] && $_POST['news'])
 	{
 		if (lib_bl_news_save($_POST['title'], $_POST['news'], $_SESSION['user']))
 		{

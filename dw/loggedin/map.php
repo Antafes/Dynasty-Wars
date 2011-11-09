@@ -12,24 +12,24 @@ $x = $_GET['x'];
 $y = $_GET['y'];
 $ox = $_GET['ox'];
 $oy = $_GET['oy'];
-if ($_POST['x'] and $_POST['y'] and !$x and !$y) {
+if ($_POST['x'] && $_POST['y'] && !$x && !$y) {
 	$x = $_POST['x'];
 	$y = $_POST['y'];
-} elseif (!$_POST['x'] and !$_POST['y'] and !$x and !$y) {
+} elseif (!$_POST['x'] && !$_POST['y'] && !$x && !$y) {
 	$city_exp = explode(':', $city);
 	$x = $city_exp[0];
 	$y = $city_exp[1];
 }
 if ($x > 394)
 	$x = 394;
-elseif ($y <= 90 and $x < 299)
+elseif ($y <= 90 && $x < 299)
 	$x = 299;
 elseif ($x < 6)
 	$x = 6;
 
 if ($y > 244)
 	$y = 244;
-elseif ($x <= 293 and $y < 96)
+elseif ($x <= 293 && $y < 96)
 	$y = 96;
 elseif ($y < 6)
 	$y = 6;

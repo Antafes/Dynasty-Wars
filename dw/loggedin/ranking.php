@@ -12,7 +12,7 @@ $smarty->assign('heading', htmlentities($lang['ranking']));
 $smarty->assign('link_player', '<a href="index.php?chose=ranking&amp;rank_tab=1">'.htmlentities($lang['player']).'</a>');
 $smarty->assign('link_clans', '<a href="index.php?chose=ranking&amp;rank_tab=2">'.htmlentities($lang['clans']).'</a>');
 
-if (($rank_tab == 1) or (!$rank_tab))
+if (($rank_tab == 1) || (!$rank_tab))
 {
 	$rankerg1 = lib_bl_ranking_getUserRanking();
 	$smarty->assign('user_info_since',htmlentities($lang['since']));

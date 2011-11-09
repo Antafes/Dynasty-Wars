@@ -10,7 +10,7 @@ function lib_bl_ajax_buildArray($valuelist, $is_recursion = false)
 	{
 		if ($part->name)
 		{
-			if (is_array($part->value) or is_object($part->value))
+			if (is_array($part->value) || is_object($part->value))
 			{
 				$value = lib_bl_ajax_buildArray($part->value, true);
 				$new_valuelist[$part->name] = $value;
@@ -20,7 +20,7 @@ function lib_bl_ajax_buildArray($valuelist, $is_recursion = false)
 		}
 		else
 		{
-			if (is_array($part) or is_object($part))
+			if (is_array($part) || is_object($part))
 			{
 				$value = lib_bl_ajax_buildArray($part, true);
 				$new_valuelist[$key] = $value;
@@ -38,7 +38,7 @@ function lib_bl_ajax_prepareOutput($valuelist, $is_recursion = false)
 	$new_valuelist = array();
 	foreach ($valuelist as $key => $part)
 	{
-		if (is_array($part) or is_object($part))
+		if (is_array($part) || is_object($part))
 			$value = lib_bl_ajax_prepareOutput($part, true);
 		else
 			$value = utf8_encode($part);

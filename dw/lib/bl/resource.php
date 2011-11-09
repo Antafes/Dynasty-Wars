@@ -75,14 +75,14 @@ function lib_bl_resource_incomeUpgrades($type, $city) {
 	$palace = lib_bl_resource_getLvl(13, $x, $y);
 	if ($palace)
 	{
-		if ($type == 1 or  $type == 2 or $type == 3 or $type == 4)
+		if ($type == 1 ||  $type == 2 || $type == 3 || $type == 4)
 		{
 			if ($lvl <= 5)
 				return (int)($lvl * 20);
 			else
 				return 0;
 
-		} elseif ($type == 5 or $type == 6)
+		} elseif ($type == 5 || $type == 6)
 		{
 			if ($lvl < 3)
 				return (int)($lvl * 20);

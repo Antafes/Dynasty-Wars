@@ -69,7 +69,7 @@ if ($_GET['reguid'])
 			$deact = lib_bl_general_deactivateUser($regUser->getUID(), $_POST["deactivation"]);
 		}
 
-		if ($regUser and !$_GET["del"])
+		if ($regUser && !$_GET["del"])
 		{
 			//selection of the positiondata
 			$smarty->assign('regUser', $regUser);

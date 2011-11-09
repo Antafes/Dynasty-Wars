@@ -84,7 +84,7 @@ elseif ($_GET['chose'] == 'tribunal')
 
 //actualising the ressources
 $res_buildings = lib_bl_resource_getResourceBuildings($city);
-if (count($res_buildings) > 0)
+if ($res_buildings)
 {
 	foreach ($res_buildings as $res_building)
 	{
@@ -174,9 +174,9 @@ $block = 1;
 $menu = '';
 foreach ($menuEntries as $menu_entry)
 {
-	if (($menu_entry['menu_name'] == 'home' or $menu_entry['menu_name'] == 'logout' or $menu_entry['menu_name'] == 'acp'))
+	if (($menu_entry['menu_name'] == 'home' || $menu_entry['menu_name'] == 'logout' || $menu_entry['menu_name'] == 'acp'))
 	{
-		if (($menu_entry['menu_name'] == 'acp' and ($_SESSION['user']->getGameRank() == 1 or $_SESSION['user']->getGameRank() == 2) and !$own_uid) or $menu_entry['menu_name'] != 'acp')
+		if (($menu_entry['menu_name'] == 'acp' && ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2) && !$own_uid) || $menu_entry['menu_name'] != 'acp')
 		{
 			$menu .= '<div class="menu3';
 			if ($menu_entry['menu_name'] == 'home')
@@ -228,7 +228,7 @@ foreach ($menuEntries as $menu_entry)
 	}
 }
 $smarty->assign('menu', $menu);
-if ($own_uid or $_SESSION['user']->getGameRank())
+if ($own_uid || $_SESSION['user']->getGameRank())
 {
 	$special_line = '<div class="add_info">';
 	if ($own_uid)

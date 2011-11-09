@@ -15,7 +15,7 @@ function image2map($filePath) {
 
         $imageHeight = imagesy($im);
         $imageWidth = imagesx($im);
-	
+
         for ($x = 0; $x < $imageWidth; $x++) {
                 for ($y = 0; $y < $imageHeight; $y++) {
 			if ($x > 0 && $x < 293 && $y > 0 && $y < 90) continue; // skip 1:1 to 293:90
@@ -25,6 +25,6 @@ function image2map($filePath) {
 }
 
 $con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 ?>

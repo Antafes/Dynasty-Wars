@@ -32,7 +32,7 @@ function lib_util_html_createLink($valuelist = '', $for_readirect = false)
 	else
 		$link = $valuelist['file'];
 
-	if (is_array($valuelist['parameter']) or isset($valuelist['chose']))
+	if (is_array($valuelist['parameter']) || isset($valuelist['chose']))
 	{
 		$link .= '?chose='.$valuelist['chose'];
 		if (is_array($valuelist['parameter']))

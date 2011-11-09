@@ -141,16 +141,16 @@ else //delete clan
 			WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 		';
 		$usererg = lib_util_mysqlQuery($sql);
-		if ($delerg and $delerg2 and $usererg)
+		if ($delerg && $delerg2 && $usererg)
 		{
 			lib_bl_log_saveLog(6, $_SESSION['user']->getUID(), 0, '');
 			$del = 3;
 		}
 	}
-	elseif (($cmode != 1) and ($cmode != 2) and ($cmode != 3) and ($enter != 1)) //showing of own clan
+	elseif (($cmode != 1) && ($cmode != 2) && ($cmode != 3) && ($enter != 1)) //showing of own clan
 	{
 		//showing of new applications (only clan leader)
-		if ($clan['applications'] == 1 and $_GET['cid'] == $_SESSION['user']->getCID() and !$own_uid) {
+		if ($clan['applications'] == 1 && $_GET['cid'] == $_SESSION['user']->getCID() && !$own_uid) {
 			$apps = $lang['one'];
 			$ending = '';
 		} elseif ( $clan['applications'] > 1) {
@@ -161,13 +161,13 @@ else //delete clan
 		$smarty->assign('applicationCount', $apps);
 		$smarty->assign('applicationEnding', $ending);
 	}
-	elseif ($cmode == 2 and $_SESSION['user']->getCID() == $_GET['cid'] and !$own_uid)
+	elseif ($cmode == 2 && $_SESSION['user']->getCID() == $_GET['cid'] && !$own_uid)
 	{
-		if (($umode != 1) and ($umode != 2) and ($umode != 3))
+		if (($umode != 1) && ($umode != 2) && ($umode != 3))
 		{
 			//only clan leader
 			//changing of the clan description, the clan internal text, the clan ranks, deletion of the clan, member management, applications
-			if ($newpublic_text or $_POST['changing'])
+			if ($newpublic_text || $_POST['changing'])
 			{
 				//changing of the clan description
 				$sql = '
@@ -178,7 +178,7 @@ else //delete clan
 				if (lib_util_mysqlQuery($sql))
 					$clan['public_text'] = $newpublic_text;
 			}
-			if ($newinternal_text or $_POST['changing'])
+			if ($newinternal_text || $_POST['changing'])
 			{
 				//changing of the clan internal text
 				$sql = '

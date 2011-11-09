@@ -141,7 +141,7 @@ function lib_bl_unit_calcTotalFoodCost($uid)
     elseif (count($result) == 1)
     	$total = lib_bl_unit_calcFoodOrKoku($result['kind'], $result['count'], true);
 
-	if ($total > 0 and $total < 1)
+	if ($total > 0 && $total < 1)
 		$total = ceil($total);
 
     return $total;
@@ -168,7 +168,7 @@ $uid)
     elseif (count($result) == 1)
     	$total = lib_bl_unit_calcFoodOrKoku($result['kind'], $result['count'], false);
 
-	if ($total > 0 and $total < 1)
+	if ($total > 0 && $total < 1)
 		$total = ceil($total);
 
     return $total;

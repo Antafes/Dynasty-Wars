@@ -52,7 +52,7 @@ if (!$reg_closed)
 				$err['email'] = 1;
 			else
 			{
-				if ((!$nick and !$err['name']) or !$pw or !$pww or !$email or !$city)
+				if ((!$nick && !$err['name']) || !$pw || !$pww || !$email || !$city)
 				{
 					if (!$nick)
 						$err['noname'] = 1;
@@ -93,7 +93,7 @@ if (!$reg_closed)
 								$n = $n + 1;
 							}
 						}
-						if ($nick and $pw and $pww and $email and $city)
+						if ($nick && $pw && $pww && $email && $city)
 							$err['registration'] = lib_bl_registerNew($nick, $pws, $email, $city);
 					}
 					else
@@ -105,28 +105,28 @@ if (!$reg_closed)
 			$err['wrong_captcha'] = 1;
 	}
 
-	if ($err['name'] or $err['city'] or $err['email'] or $err['noname'] or $err['nopw'] or $err['nopww'] or $err['noemail']
-			or $err['nocity'] or $err['doublename'] or $err['registration'] or $err['pw<>pww'] or $err['wrong_captcha'])
+	if ($err['name'] || $err['city'] || $err['email'] || $err['noname'] || $err['nopw'] || $err['nopww'] || $err['noemail']
+			|| $err['nocity'] || $err['doublename'] || $err['registration'] || $err['pw<>pww'] || $err['wrong_captcha'])
 	{
-		if ($err['noname'] or $err['nopw'] or $err['nopww'] or $err['noemail'] or $err['nocity'])
+		if ($err['noname'] || $err['nopw'] || $err['nopww'] || $err['noemail'] || $err['nocity'])
 		{
 			$err['missing'] = $lang['missing'];
 			if ($err['noname'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['name'];
-				if ($err['nopw'] or $err['nopww'] or $err['noemail'] or $err['nocity'])
+				if ($err['nopw'] || $err['nopww'] || $err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['nopw'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['password'];
-				if ($err['nopww'] or $err['noemail'] or $err['nocity'])
+				if ($err['nopww'] || $err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['nopww'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['rep_password'];
-				if ($err['noemail'] or $err['nocity'])
+				if ($err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['noemail'])

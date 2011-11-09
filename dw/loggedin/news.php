@@ -4,9 +4,9 @@
     //db: auslesen der news
     $parser = new wikiparser();
     $news_array = lib_util_mysqlQuery('SELECT * FROM dw_news ORDER BY nid DESC', true);
-    
+
     $smarty->assign('heading', htmlentities($lang['news']));
-    
+
 if ($news_array)
 {
 	$lines = count($news_array);
@@ -15,7 +15,7 @@ if ($news_array)
 	if (!$page)
 		$page = 1;
 	$news = array();
-	for ($i = 0, $n = 5 * $page - 5, $p = 5 * $page; $n < $p and $n < $lines; $n++, $i++)
+	for ($i = 0, $n = 5 * $page - 5, $p = 5 * $page; $n < $p && $n < $lines; $n++, $i++)
 	{
 		$news[$i]['title'] = htmlentities($news_array[$n]['title']);
 
@@ -53,11 +53,11 @@ if ($news_array)
 
 	$smarty->assign('news_from', $lang['from']);
 	$smarty->assign('news', $news);
-        if (count($pages_array) > 1) 
+        if (count($pages_array) > 1)
             $smarty->assign('pages', $pages_array);
 }
 else
 	$smarty->assign('no_news', htmlentities($lang['nonews']));
-    
+
     include ("loggedin/footer.php");
     $smarty->display($smarty->template_dir[0].'news.tpl');

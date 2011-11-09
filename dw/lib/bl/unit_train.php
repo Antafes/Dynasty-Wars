@@ -113,7 +113,7 @@ function lib_bl_unit_train_train($kind, $count, $uid, $city)
 		$endtime = time()+(lib_bl_unit_train_trainTime($kind)*$count);
 		$erg1 = lib_dal_unit_train_removeRes($sum_prices, $uid);
 		$erg2 = lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city);
-		if ($erg1 and $erg2)
+		if ($erg1 && $erg2)
 			return 1;
 		else
 			return 0;
@@ -182,7 +182,7 @@ function lib_bl_unit_train_trainComplete($valuelist)
 		$erg3 = lib_dal_unit_train_addUnit($valuelist['count'], $unid);
 	else
 		$erg3 = lib_dal_unit_train_newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
-	if ($erg1 and $erg3)
+	if ($erg1 && $erg3)
 		return 1;
 	else
 		return 0;

@@ -5,7 +5,7 @@
 
 	$religion = $_GET["religion"];
 	$ruid = $_GET["uid"];
-	if (!$ruid or !$religion) {
+	if (!$ruid || !$religion) {
 ?>
 											<meta http-equiv="refresh" content="0;URL=index.php?chose=home" />
 <?php

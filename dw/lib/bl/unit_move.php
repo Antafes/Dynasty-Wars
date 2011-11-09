@@ -82,7 +82,7 @@ function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
    		$openlist = lib_bl_unit_move_removeFromList($openlist, $sf);
    		$c_count = $closedlist->getLength();
 		//check whether the target is reached
-   		if ($target_x == $closedlist->x[$c_count-1] and $target_y == $closedlist->y[$c_count-1])
+   		if ($target_x == $closedlist->x[$c_count-1] && $target_y == $closedlist->y[$c_count-1])
    		{
     		$finish = 1;
 			//sum up the g values of all coordinates in the closedlist
@@ -136,7 +136,7 @@ function lib_bl_unit_moveSearchF($openlist, $x, $y)
 		$small_f = $keys[0];
 	  	for ($n = 0; $n < $count; $n++)
 	  	{
-			if (($x-1 <= $openlist->x[$keys[$n]] and $x+1 >= $openlist->y[$keys[$n]]) and ($y-1 <= $openlist->y[$keys[$n]] and $y+1 >= $openlist->y[$keys[$n]]))
+			if (($x-1 <= $openlist->x[$keys[$n]] && $x+1 >= $openlist->y[$keys[$n]]) && ($y-1 <= $openlist->y[$keys[$n]] && $y+1 >= $openlist->y[$keys[$n]]))
 				if ($openlist->f[$keys[$small_f]] > $openlist->f[$keys[$n]])
 		    		$small_f = $keys[$n];
 	  	}
@@ -199,8 +199,8 @@ function lib_bl_unit_move_checkClosedList($add, $closedlist)
   	{
    		for ($m = 0; $m < $c_count; $m++)
    		{
-    		if (($part['x'] == $closedlist->x[$keys[$m]]) or ($part['y'] == $closedlist->y[$keys[$m]]))
-				if (($part['x'] == $return[$r_count-1]["x"]) or ($part['y'] == $return[$r_count-1]["y"]))
+    		if (($part['x'] == $closedlist->x[$keys[$m]]) || ($part['y'] == $closedlist->y[$keys[$m]]))
+				if (($part['x'] == $return[$r_count-1]["x"]) || ($part['y'] == $return[$r_count-1]["y"]))
 					unset($part);
     		else
      			$m = $m+$c_count;
@@ -229,7 +229,7 @@ function lib_bl_unit_move_checkOpenList($add, $openlist, $cx, $cy, $o_count)
    		$r_count = count($return);
    		for ($m = 0; $m < $o_count; $m++)
    		{
-			if (($part["x"] == $openlist->x[$o_keys[$m]]) and ($part["y"] == $openlist->y[$o_keys[$m]]))
+			if (($part["x"] == $openlist->x[$o_keys[$m]]) && ($part["y"] == $openlist->y[$o_keys[$m]]))
 			{
 				$openlist->px[$o_keys[$m]] = $cx;
      			$openlist->py[$o_keys[$m]] = $cy;

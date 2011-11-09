@@ -18,7 +18,7 @@ class wikiparser {
 		$length = strlen($layer);
 		for ($i = 0; $i <= $length; $i++)
 		{
-			if (substr($layer, $i+1, 1) != \'*\' and $stars > $i)
+			if (substr($layer, $i+1, 1) != \'*\' && $stars > $i)
 			{
 				while ($stars >= $i+1)
 				{
@@ -26,12 +26,12 @@ class wikiparser {
 					$stars--;
 				}
 			}
-			if (substr($layer, $i, 1) == \'*\' and $stars < $i)
+			if (substr($layer, $i, 1) == \'*\' && $stars < $i)
 			{
 				$stars++;
 				$new_text .= "<ul>\n";
 			}
-			if ($i == $stars and substr($layer, $i+1, 1) != \'*\')
+			if ($i == $stars && substr($layer, $i+1, 1) != \'*\')
 				$new_text .= "<li>";
 			if (substr($layer, $i+1, 1) != \'*\')
 			{
@@ -146,7 +146,7 @@ class wikiparser {
 
 			if ($length > 0)
 			{
-				if (substr_compare($part, '[code]', 0, $length, true) != 0 and substr_compare($part, '[html]', 0, $length, true) != 0)
+				if (substr_compare($part, '[code]', 0, $length, true) != 0 && substr_compare($part, '[html]', 0, $length, true) != 0)
 					$part = htmlentities($part);
 
 				$string .= $part;

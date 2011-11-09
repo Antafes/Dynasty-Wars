@@ -6,7 +6,22 @@
  */
 function lib_bl_tribunal_getAllHearings()
 {
-	return lib_dal_tribunal_getAllHearings();
+	$parser = new wikiparser;
+	$hearings = lib_dal_tribunal_getAllHearings();
+
+	if ($hearings)
+	{
+		foreach ($hearings as &$hearing)
+		{
+			$hearing['cause'] = lib_bl_tribunal_getCause($hearing['cause']);
+			$hearing['suitorNick'] = lib_bl_general_uid2nick($hearing['suitor']);
+			$hearing['accusedNick'] = lib_bl_general_uid2nick($hearing['accused']);
+			$hearing['parsedCutOffDescription'] = $parser->parseIt(lib_bl_general_cutOffText($hearing['description'], 100));
+		}
+		unset($hearing);
+	}
+
+	return $hearings;
 }
 
 /**
@@ -157,7 +172,7 @@ function lib_bl_tribunal_insertHearing($suitor, $accused, $cause, $description, 
 		$error['accused'] = true;
 	if ($cause == 0)
 		$error['cause'] = true;
-	if (!is_array($arguments) and count($arguments) < 1)
+	if (!is_array($arguments) && count($arguments) < 1)
 		$error['arguments'] = true;
 	if ($suitor == $accused_uid)
 		$error['suitor'] = true;
@@ -211,8 +226,25 @@ function lib_bl_tribunal_getCause($tcid)
 function lib_bl_tribunal_getHearing($tid)
 {
 	global $own_uid;
+
+	$parser = new wikiparser;
 	$hearing = lib_dal_tribunal_getHearing($tid);
-	$hearing['arguments'] = lib_dal_tribunal_getArguments($tid, (($admin > 1 and !$own_uid) ? true : false));
+
+	if ($hearing)
+	{
+		$getAllArguments = false;
+		if ($_SESSION['user']->getGameRank() > 1 && $_SESSION['user']->getUID() != $hearing['accused']
+			&& $_SESSION['user']->getUID() != $hearing['suitor'] && !$own_uid)
+			$getAllArguments = true;
+
+		$hearing['arguments'] = lib_bl_tribunal_getArguments($tid, $getAllArguments);
+		$hearing['cause'] = lib_bl_tribunal_getCause($hearing['cause']);
+		$hearing['suitorNick'] = lib_bl_general_uid2nick($hearing['suitor']);
+		$hearing['accusedNick'] = lib_bl_general_uid2nick($hearing['accused']);
+		$hearing['parsedDescription'] = $parser->parseIt($hearing['description']);
+		$hearing['parsedReason'] = $parser->parseIt($hearing['reason']);
+		$hearing['messages'] = lib_bl_tribunal_getAllMessages($_SESSION['user']->getUID());
+	}
 	return $hearing;
 }
 
@@ -237,6 +269,40 @@ function lib_bl_tribunal_approveArgument($aid, $approved)
 function lib_bl_tribunal_recallHearing($tid, $uid)
 {
 	return lib_dal_tribunal_recallHearing($tid, $uid);
+}
+
+/**
+ * get all arguments for the current hearing
+ * @author Neithan
+ * @global array $lang
+ * @param int $tid
+ * @param int $approved
+ * @return array
+ */
+function lib_bl_tribunal_getArguments($tid, $approved)
+{
+	global $lang;
+
+	$arguments = lib_dal_tribunal_getArguments($tid, $approved);
+
+	foreach ($arguments as &$argument)
+	{
+		if ($_SESSION['user']->getGameRank() > 1 && !$own_uid)
+		{
+			if ($argument['approved'] == 1)
+				$approved = ' ['.$lang['approved'].']';
+			elseif ($argument['approved'] == -1)
+				$approved = ' ['.$lang['not_approved'].']';
+			else
+				$approved = ' ['.$lang['no_approve'].']';
+		}
+		$argument['approvedText'] = $approved;
+		$argument['message'] = lib_bl_messages_getMessage($argument['msgid']);
+		$argument['formattedDateAdded'] = date($lang['acptimeformat'], $argument['date_added']);
+		$argument['fromNick'] = lib_bl_general_uid2nick($argument['from']);
+	}
+
+	return $arguments;
 }
 
 /**
@@ -332,4 +398,3 @@ function lib_bl_tribunal_getComment($tcoid)
 {
 	return lib_dal_tribunal_getComment($tcoid);
 }
-?>

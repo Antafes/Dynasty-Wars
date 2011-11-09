@@ -6,7 +6,7 @@ require_once(dirname(__FILE__).'/../dw/lib/dal/login.php');
 require_once(dirname(__FILE__)."/../dw/lib/bl/unit.php");
 
 $con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
+mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 $sql = 'SELECT uid FROM dw_user WHERE !deactivated';
 $users = lib_util_mysqlQuery($sql, true);
 $lines = count($users);

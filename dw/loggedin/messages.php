@@ -243,7 +243,7 @@ elseif ($_GET['mmode'] == "aw") //answer
 
 			for ($n = 0; $n < count($exp_msg); $n++)
 			{
-				if (substr($exp_msg[$n], 0, 1) == ">" or substr($exp_msg[$n], 1, 1) == ">")
+				if (substr($exp_msg[$n], 0, 1) == ">" || substr($exp_msg[$n], 1, 1) == ">")
 					$old = ">";
 				else
 					$old = "> ";

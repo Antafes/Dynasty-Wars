@@ -11,7 +11,7 @@ include($path.'language/de/ingame/units.php');
 //echo '<pre>'; var_dump($lang); echo '</pre>';
 
 $con = mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb) or die('bäh kein bock');
+mysql_select_db($serdb) || die('bäh kein bock');
 
 for ($x = 0; $x < 20; $x++)
 {
@@ -85,7 +85,7 @@ function lib_bl_troops_fight($tid, $target)
 		$grouped_units['attacker']->$key = $r['attacker'];
 		$grouped_units['target']->$attack_order[$key][0] = $r['target'];
 */
-		for($i = 0; $i <= 2 and !$r['out']; $i++)
+		for($i = 0; $i <= 2 && !$r['out']; $i++)
 		{
 			$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
 			$grouped_units['attacker']->$key = $r['attacker'];
@@ -119,7 +119,7 @@ function lib_bl_troops_fight($tid, $target)
 		);
 		$all_escaping_target = false;
 
-		for($i = 0; $i <= 2 and !$r['out']; $i++)
+		for($i = 0; $i <= 2 && !$r['out']; $i++)
 		{
 			$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
 			$grouped_units['target']->$key = $r['target'];
@@ -148,7 +148,7 @@ function lib_bl_troops_fight($tid, $target)
 		$all_escaping_attacker = $grouped_units['attacker']->checkForAllEscaping();
 	}
 
-	if (!$all_escaping_target and !$all_escaping_attacker)
+	if (!$all_escaping_target && !$all_escaping_attacker)
 	{
 		//round based attacking
 		$old_init = $init;
@@ -165,7 +165,7 @@ function lib_bl_troops_fight($tid, $target)
 						'defense' => $grouped_units['target']->getCityDefense(),
 					);
 
-					for($i = 0; $i <= 2 and !$r['out']; $i++)
+					for($i = 0; $i <= 2 && !$r['out']; $i++)
 					{
 						$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
 						$grouped_units['attacker']->$key = $r['attacker'];
@@ -208,7 +208,7 @@ function lib_bl_troops_fight($tid, $target)
 						'defense' => 0,
 					);
 
-					for($i = 0; $i <= 2 and !$r['out']; $i++)
+					for($i = 0; $i <= 2 && !$r['out']; $i++)
 					{
 						$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
 						$grouped_units['target']->$key = $r['target'];
@@ -347,9 +347,9 @@ function lib_bl_troops_unitFight($attacker, $target, $city)
 	$out = false;
 	$lost_units_history = array();
 
-	if (is_array($attacker) and count($attacker) > 0)
+	if (is_array($attacker) && count($attacker) > 0)
 	{
-		if (is_array($target) and count($target) > 0)
+		if (is_array($target) && count($target) > 0)
 		{
 			foreach ($attacker as $attacker_key => &$attacker_unit)
 			{
@@ -398,7 +398,7 @@ function lib_bl_troops_unitFight($attacker, $target, $city)
 						$lost_units = 0;
 						foreach ($target as $key => &$target_unit)
 						{
-							if ($key !== 'total_count' and $target_unit['count'] > 0)
+							if ($key !== 'total_count' && $target_unit['count'] > 0)
 							{
 								$stats = lib_dal_troops_getUnitStats($target_unit['kind']);
 

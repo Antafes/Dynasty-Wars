@@ -11,7 +11,7 @@ include "../dw/lib/bl/spy.php";
 include "../dw/lib/config.php";
 include "../dw/lib/util/mysql.php";
 $con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
+mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 
 $lookFor = array(LOOKFOR_UNITS, LOOKFOR_BUILDINGS_ECONOMY, LOOKFOR_BUILDINGS_MILITARY);
 /*
@@ -49,7 +49,7 @@ if ($i < 5) {
 
 	echo "<br />Risk checking (returns attacking spies alive after attack)<br />";
 	echo doRiskChecks($attackerNoSpies, $victimNoSpies, $lookFor);
-	
+
 	echo "<br /><br /><br />";
 
 }

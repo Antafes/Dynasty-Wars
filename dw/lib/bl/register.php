@@ -88,7 +88,7 @@ function lib_bl_registerNew($nick, $pws, $email, $city)
 	$erg2 = lib_dal_register_insertRes($new_uid, $map_x, $map_y);
 	$erg4 = lib_dal_register_insertBuildings($new_uid, $map_x, $map_y);
 	$erg5 = lib_dal_register_insertPoints($new_uid);
-	if ($new_uid and $erg2 and $erg3 and $erg4 and $erg5)
+	if ($new_uid && $erg2 && $erg3 && $erg4 && $erg5)
 	{
 		$random2 = $new_uid;
 		$random2 .= "/";

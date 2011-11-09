@@ -69,7 +69,7 @@ function lib_bl_market_buy($uid, $mid, $city)
 	if (!lib_dal_market_isOpen($mid)) // check if the offer is still open
 		return -1;
 	$offerDetails = lib_dal_market_getOfferDetails($mid);
-	if (!$offerDetails['sx'] or !$offerDetails['sy'])
+	if (!$offerDetails['sx'] || !$offerDetails['sy'])
 	{
 		$seller = lib_dal_map_getUsersMainCity($offerDetails['sid']);
 		$offerDetails['sx'] = $seller['map_x'];

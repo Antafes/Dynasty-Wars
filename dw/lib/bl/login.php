@@ -8,7 +8,7 @@
 function lib_bl_login_getAllData($nick)
 {
 	$uid = lib_dal_user_nick2uid($nick);
-	if (isset($uid) and $uid > 0)
+	if (isset($uid) && $uid > 0)
 		return lib_dal_login_getAllData($uid);
 	else
 		return false;
