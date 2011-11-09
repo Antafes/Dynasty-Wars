@@ -46,8 +46,8 @@ if ($_POST['accept'] && $_GET['cid'] == $_SESSION['user']->getCID()) //accepting
 		WHERE uid = '.mysql_real_escape_string($_POST['entuid']).'
 	');
 }
-elseif ($_POST['decline'] && ($_GET['cid'] == $_SESSION['user']->getCID()))
-{ //member not accepted
+elseif ($_POST['decline'] && ($_GET['cid'] == $_SESSION['user']->getCID())) //member not accepted
+{
 	$clanname = lib_util_mysqlQuery('
 		SELECT clanname FROM dw_clan
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
@@ -104,9 +104,9 @@ if ($_GET['cid'] != $_SESSION['user']->getCID()) //clan applications
 			$smarty->assign('applicationSaved', 1);
 	}
 }
-else //delete clan
+else
 {
-	if ($del && !$umode)
+	if ($del && !$umode) //delete clan
 	{
 		$sql = '
 			DELETE FROM dw_clan
@@ -463,6 +463,7 @@ else //delete clan
 		$smarty->assign('membersListData', $membersList);
 		$usermapEntry = lib_bl_gameOptions_getMenuEntry('usermap');
 		$smarty->assign('usermapEnabled', $usermapEntry['active']);
+		$smarty->assign('encodeString', urlencode('clan§cid='.$_GET['cid'].'§cmode=1'));
 	}
 	elseif ($cmode == 3 && $_SESSION['user']->getCID() == $_GET['cid'] && !$own_uid) //message to all members
 	{

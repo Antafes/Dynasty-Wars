@@ -112,10 +112,8 @@
 					<tr>
 						<td style="width: 30px;">{$smarty.foreach.foreachMembersList.iteration}</td>
 						<td style="width: 150px;">
-							{assign var=encodeString value='clan§cid='|cat: $smarty.get.cid}
-							{assign var=encodeString value=$encodeString|cat: '§cmode=1'}
 							{if $usermapEnabled == 1}
-							<a href="index.php?chose=usermap&amp;reguid={$member.uid}&amp;fromc={$encodeString|rawurlencode}">
+							<a href="index.php?chose=usermap&amp;reguid={$member.uid}&amp;fromc={$encodeString}">
 							{/if}
 								{$member.nick|htmlentities}
 							{if $usermapEnabled == 1}

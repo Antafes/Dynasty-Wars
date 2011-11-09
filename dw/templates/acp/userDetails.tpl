@@ -25,8 +25,7 @@
 		<tr>
 			<th>{$lang.name|htmlentities}:</th>
 			<td>
-				{assign var='fromc' value='acpÃ‚Â§sub=userlistÃ‚Â§reguid='}
-				<a href="index.php?chose=usermap&amp;reguid={$regUser->getUID()}&amp;fromc={$fromc|cat:$regUser->getUID()|rawurlencode}">{$regUser->getNick()|htmlentities}</a>
+				<a href="index.php?chose=usermap&amp;reguid={$regUser->getUID()}&amp;fromc={$fromc|cat:$regUser->getUID()}">{$regUser->getNick()|htmlentities}</a>
 			</td>
 		</tr>
 		<tr>
