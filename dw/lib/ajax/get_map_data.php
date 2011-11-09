@@ -7,7 +7,7 @@ header('Content-type: text/json');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../dal/tribunal.php');
 	include_once('../dal/map.php');

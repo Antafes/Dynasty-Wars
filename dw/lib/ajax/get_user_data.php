@@ -9,7 +9,7 @@ header('Content-type: text/html');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	$firePHP = FirePHP::getInstance(true);
 
@@ -23,9 +23,9 @@ if ($con)
 		$firePHP->registerAssertionHandler($convertAssertionErrorsToExceptions=true, $throwAssertionExceptions=false);
 	}
 
+
 	$_SESSION['user'] = new UserCls();
-	$uid = $_SESSION['user']->getUIDFromId($_SESSION['lid']);
-	$_SESSION['user']->loadByUID($uid);
+	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
 	lib_bl_general_loadLanguageFile('map', 'loggedin', true);

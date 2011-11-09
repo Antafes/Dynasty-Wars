@@ -5,7 +5,7 @@ include_once('../config.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../bl/general.ajax.inc.php');
 	include_once('../bl/login.php');
@@ -19,11 +19,15 @@ if ($con)
 	foreach ($item_list as $part)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
-	$insert_id = lib_bl_tribunal_saveComment($item_list['ajax_id'], $_SESSION['user']->getUID(), $item_list['comment_text']);
 
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
-	include('../../language/'.$lang['lang'].'/ingame/tribunal.php');
-	include('../../language/'.$lang['lang'].'/general.php');
+	$_SESSION['user'] = new UserCls();
+	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
+
+	$lang['lang'] = $_SESSION['user']->getLanguage();
+	lib_bl_general_loadLanguageFile('general', '', true);
+	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+
+	$insert_id = lib_bl_tribunal_saveComment($item_list['ajax_id'], $_SESSION['user']->getUID(), $item_list['comment_text']);
 
 	$array['status'] = 'ok';
 	$array['html'] = '<div class="comment">

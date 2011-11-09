@@ -5,7 +5,7 @@ include_once('../config.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../bl/general.ajax.inc.php');
 	include_once('../bl/login.php');

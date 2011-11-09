@@ -5,7 +5,7 @@ include_once('../config.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../bl/general.ajax.inc.php');
 	include_once('../bl/login.php');
@@ -17,8 +17,13 @@ if ($con)
 	foreach ($item_list as $part)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
-	include('../../language/'.$lang['lang'].'/ingame/tribunal.php');
+
+	$_SESSION['user'] = new UserCls();
+	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
+
+	$lang['lang'] = $_SESSION['user']->getLanguage();
+	lib_bl_general_loadLanguageFile('general', '', true);
+	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
 
 	$check = lib_bl_tribunal_approveArgument($item_list['aid'], $item_list['state']);
 	$argument = lib_bl_tribunal_getArgument($item_list['aid']);
@@ -31,17 +36,17 @@ if ($con)
 		$approved = ' ['.$lang['no_approve'].']';
 
 	$links = '';
-	if ($argument['approved'] == -1 or !$argument['approved'])
+	if ($argument['approved'] == -1 || !$argument['approved'])
 	{
 		$links .= '<a href="javascript:;" onclick="';
 		$links .= htmlentities('argument_approval("lib/ajax/argument_approval.php", "accept", '.$argument['aid'].');');
 		$links .= '">';
 	}
 	$links .= htmlentities($lang['accept']);
-	if ($argument['approved'] == -1 or !$argument['approved'])
+	if ($argument['approved'] == -1 || !$argument['approved'])
 		$links .= '</a>';
 	$links .= ' ';
-	if ($argument['approved'] == 1 or !$argument['approved'])
+	if ($argument['approved'] == 1 || !$argument['approved'])
 	{
 		$links .= '<a href="javascript:;" onclick="';
 		$links .= htmlentities('argument_approval("lib/ajax/argument_approval.php", "decline", '.$argument['aid'].');');

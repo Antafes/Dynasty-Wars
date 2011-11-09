@@ -5,15 +5,19 @@ include_once('../config.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../dal/general.ajax.inc.php');
 
 	$item_list = lib_bl_ajax_buildArray($_GET['items']);
 	$target = new UserCls();
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
-	include('../../language/'.$lang['lang'].'/general.php');
-	include('../../language/'.$lang['lang'].'/ingame/units.php');
+
+	$_SESSION['user'] = new UserCls();
+	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
+
+	$lang['lang'] = $_SESSION['user']->getLanguage();
+	lib_bl_general_loadLanguageFile('general', '', true);
+	lib_bl_general_loadLanguageFile('units', 'loggedin', true);
 
 	$error_text = '';
 	$error_type = 0;

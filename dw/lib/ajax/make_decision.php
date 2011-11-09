@@ -5,7 +5,7 @@ include_once('../config.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
-	mysql_select_db($serdb, $con) or die('Fehler, keine Datenbank!');
+	mysql_select_db($serdb, $con) || die('Fehler, keine Datenbank!');
 
 	include_once('../bl/general.ajax.inc.php');
 	include_once('../bl/login.php');
@@ -19,8 +19,13 @@ if ($con)
 	foreach ($item_list as $part)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
-	include('../../language/'.$lang['lang'].'/ingame/tribunal.php');
+
+	$_SESSION['user'] = new UserCls();
+	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
+
+	$lang['lang'] = $_SESSION['user']->getLanguage();
+	lib_bl_general_loadLanguageFile('general', '', true);
+	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
 
 	$result = lib_bl_tribunal_makeDecision($item_list['ajax_id'], $item_list['decision'], $item_list['reason']);
 	if ($result > 0)
