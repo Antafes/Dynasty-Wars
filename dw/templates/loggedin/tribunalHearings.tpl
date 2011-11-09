@@ -1,5 +1,5 @@
 <div class="subheading">{$lang.hearings|htmlentities}</div>
-{counter name='hearings' assign=i start=1 print=false}
+{counter name='hearingCounter' assign=i start=1 print=false}
 {foreach from=$hearings item=hearing}
 	{if $i == 0}
 	<div class="row">
