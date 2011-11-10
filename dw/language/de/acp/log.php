@@ -34,6 +34,7 @@ $lang += array(
 	't32' => 'Angreifen wurde von %USER% deaktiviert.',
 	't33' => 'Version wurde von %USER% auf %EXTRA% geändert.',
 	't34' => 'Menüpunkte von %USER% geändert.',
+	't35' => '%USER% hat %CONCERNED% zum Richter ernannt.',
 	'action' => 'Aktion',
 	'date' => 'Datum',
 );

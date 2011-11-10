@@ -13,11 +13,14 @@ if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() ==
 {
 	$smarty->assign('fromc', urlencode('acp§sub=userlist§reguid='));
 
-	if ($_POST['nregadmin'])
+	if (isset($_POST['nregadmin']))
 	{
 		//setting of user status
 		$regUser->setGameRank($_POST['nregadmin']);
-		if ($_POST['nregadmin'] == 2)
+
+		if ($_POST['nregadmin'] == 3)
+			$status = 35;
+		elseif ($_POST['nregadmin'] == 2)
 			$status = 11;
 		elseif ($_POST['nregadmin'] == 1)
 			$status = 12;

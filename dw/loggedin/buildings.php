@@ -14,9 +14,11 @@ if (!$_GET['buildplace'])
 			$upgrade = 1;
 		else
 			$upgrade = 0;
+
 		lib_bl_buildings_build((int) $_POST['buildplace'], $_SESSION['user']->getUID(), $city, $upgrade, $_POST['kind']);
 		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'buildings'), true));
 	}
+
 	$cityexp = explode(':', $city);
 	$buildings = lib_bl_buildings_selectAll($cityexp[0], $cityexp[1]);
 	$religion = lib_bl_buildings_checkReligion($_SESSION['user']->getUID());
@@ -102,14 +104,18 @@ elseif (is_numeric($_GET['buildplace']))
 		$has_harbour = lib_bl_buildings_getHarbour($cityexp[0], $cityexp[1]);
 		$prices = lib_bl_buildings_prices($building['kind'], $building['lvl'], $building['ulvl'], $has_harbour, $city);
 		$time = lib_bl_buildings_buildTime($building['kind'], $building['lvl']);
+
 		if ($has_upgrades > 0)
 			$u_time = lib_bl_buildings_buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
+
 		if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
 			$smarty->assign('notBuildable', 1);
+
 		if ($building['kind'] != 6)
 			$smarty->assign('buildingName', htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]));
 		elseif ($building['kind'] == 6)
 			$smarty->assign('buildingName', htmlentities($lang['building_names'][$building['kind']][$has_harbour]));
+
 		if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
 		{
 			$smarty->assign('levelInfo', htmlentities($lang['level']));
@@ -152,8 +158,9 @@ elseif (is_numeric($_GET['buildplace']))
 				$res_values += $prices;
 
 			$can_build = lib_bl_buildings_resCheck($res_values);
-			if ($building['kind'] == 19 && $building['lvl'] % 10 == 0 && $building['lvl'] / 10 >= $building['ulvl'])
+			if ($building['kind'] == 19 && $building['lvl'] > 0 && $building['lvl'] % 10 == 0 && $building['lvl'] / 10 >= $building['ulvl'])
 				$can_build = 0;
+
 			$smarty->assign('canBuild', $can_build);
 			$smarty->assign('freeBuildPosition', lib_bl_buildings_checkFreeBuildPosition($city, $building['kind']));
 			$smarty->assign('build', htmlentities($lang['build']));

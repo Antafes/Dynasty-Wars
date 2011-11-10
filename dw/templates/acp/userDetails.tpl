@@ -39,7 +39,7 @@
 			<td>
 				<form method="post" action="index.php?chose=acp&amp;sub=userlist&amp;reguid={$regUser->getUID()}">
 					<select name="nregadmin"{if $smarty.session.user->getUID() == $regUser->getUID() || $smarty.session.user->getGameRank() == 1} disabled="disabled"{/if}>
-						<option value="2"{if $regUser->getGameRank() == 3} selected="selected"{/if}>{$lang.gameRanks.judge|htmlentities}</option>
+						<option value="3"{if $regUser->getGameRank() == 3} selected="selected"{/if}>{$lang.gameRanks.judge|htmlentities}</option>
 						<option value="2"{if $regUser->getGameRank() == 2} selected="selected"{/if}>{$lang.gameRanks.sadmin|htmlentities}</option>
 						<option value="1"{if $regUser->getGameRank() == 1} selected="selected"{/if}>{$lang.gameRanks.admin|htmlentities}</option>
 						<option value="0"{if $regUser->getGameRank() == 0} selected="selected"{/if}>{$lang.gameRanks.user|htmlentities}</option>
@@ -61,7 +61,7 @@
 					<form method="post" action="index.php?chose=acp&amp;sub=userlist&amp;reguid={$regUser->getUID()}">
 						<select name="blocked">
 							<option value="1"{if $regUser->getBlocked()} selected="selected"{/if}>{$lang.blocked|htmlentities}</option>
-							<option value="0"{if !$regUser->getBlocked()} selected="selected"{/if}>{$lang.notblocked|htmlentities}</option>
+							<option value="0"{if !$regUser->getBlocked()} selected="selected"{/if}>{$lang.notBlocked|htmlentities}</option>
 						</select>
 						<input type="submit" value="{$lang.change|htmlentities}" />
 					</form>
