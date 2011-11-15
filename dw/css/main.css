@@ -1322,7 +1322,7 @@ textarea {
 	margin: 20px auto 0;
 }
 
-.backlink
+.backlink, .center_text
 {
 	text-align: center;
 }
