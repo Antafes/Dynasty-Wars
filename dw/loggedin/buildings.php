@@ -91,12 +91,6 @@ elseif (is_numeric($_GET['buildplace']))
 	$cityexp = explode(':', $city);
 	$building = lib_bl_buildings_selectBuilding($cityexp[0], $cityexp[1], $_GET['buildplace']);
 	$ressources = lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
-	$food = $ressources['food'];
-	$wood = $ressources['wood'];
-	$rock = $ressources['rock'];
-	$iron = $ressources['iron'];
-	$paper = $ressources['paper'];
-	$koku = $ressources['koku'];
 
 	if ($building['lvl'] || ($building['lvl'] == 0 && $_GET['buildplace'] < 8))
 	{
@@ -147,12 +141,12 @@ elseif (is_numeric($_GET['buildplace']))
 			));
 
 			$res_values = array(
-				'res_food' => $food,
-				'res_wood' => $wood,
-				'res_rock' => $rock,
-				'res_iron' => $iron,
-				'res_paper' => $paper,
-				'res_koku' => $koku,
+				'res_food' => $ressources['food'],
+				'res_wood' => $ressources['wood'],
+				'res_rock' => $ressources['rock'],
+				'res_iron' => $ressources['iron'],
+				'res_paper' => $ressources['paper'],
+				'res_koku' => $ressources['koku'],
 			);
 			if (is_array($prices))
 				$res_values += $prices;
@@ -181,12 +175,12 @@ elseif (is_numeric($_GET['buildplace']))
 					$upgrade_price = lib_util_math_numberFormat($upgrade_price, 0);
 				$smarty->assign('upgradePrices', $upgrade_prices);
 				$res_values = array(
-					'res_food' => $food,
-					'res_wood' => $wood,
-					'res_rock' => $rock,
-					'res_iron' => $iron,
-					'res_paper' => $paper,
-					'res_koku' => $koku,
+					'res_food' => $ressources['food'],
+					'res_wood' => $ressources['wood'],
+					'res_rock' => $ressources['rock'],
+					'res_iron' => $ressources['iron'],
+					'res_paper' => $ressources['paper'],
+					'res_koku' => $ressources['koku'],
 				);
 				if (is_array($prices_upgr))
 					$res_values += $prices_upgr;
@@ -264,12 +258,12 @@ elseif (is_numeric($_GET['buildplace']))
 						'koku' => lib_util_math_numberFormat($prices['koku'], 0),
 					);
 					$res_values = array(
-						'res_food' => $food,
-						'res_wood' => $wood,
-						'res_rock' => $rock,
-						'res_iron' => $iron,
-						'res_paper' => $paper,
-						'res_koku' => $koku,
+						'res_food' => $ressources['food'],
+						'res_wood' => $ressources['wood'],
+						'res_rock' => $ressources['rock'],
+						'res_iron' => $ressources['iron'],
+						'res_paper' => $ressources['paper'],
+						'res_koku' => $ressources['koku'],
 					);
 
 					if (is_array($prices))
