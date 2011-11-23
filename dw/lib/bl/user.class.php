@@ -239,8 +239,11 @@ class UserCls {
 		return (bool)(lib_util_mysqlQuery($sql));
 	}
 
-	public function getLastLogin(){
-		return $this->last_login;
+	public function getLastLogin()
+	{
+		global $lang;
+		
+		return date($lang['timeformat'], $this->last_login);
 	}
 
 	public function setLastLogin()
