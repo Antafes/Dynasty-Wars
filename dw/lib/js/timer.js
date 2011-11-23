@@ -31,7 +31,7 @@ function timer(datetime, nowDatetime, target)
 	var d = (h - helper) / 24;
 	h = helper;
 
-    $('#' + target).text((d > 0 ? d + ' ' : '') + (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s));
+    $('#' + target).text((d > 0 ? d + 'd ' : '') + (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s));
 
 	now.setSeconds(now.getSeconds() + 1);
 	nowDatetime = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear() + ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();

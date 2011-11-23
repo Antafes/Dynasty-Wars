@@ -235,10 +235,13 @@ function lib_bl_buildings_prices($kind, $lvl, $upgrade_lvl, $has_harbour, $city)
 	$mainbuilding = lib_dal_buildings_getBuildingByKind(19, $x, $y);
 	$paper = lib_dal_buildings_getBuildingByKind(5, $x, $y);
 	$koku = lib_dal_buildings_getBuildingByKind(6, $x, $y);
+
 	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['paper'] = 0;
+
 	if ($koku['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['koku'] = 0;
+
 	if (!$lvl)
 	{
 		if ($kind == 6 && $has_harbour)
