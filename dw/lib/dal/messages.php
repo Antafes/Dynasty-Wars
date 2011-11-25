@@ -1,217 +1,63 @@
 <?php
 /**
- * get all messages of the specified type(s)
+ * get all messages of the specified type
  * @author Neithan
- * @param int/array $type
+ * @param int $type
+ * @param String $for possible values: sender, recipient
  * @return array
  */
-function lib_bl_messages_getMessages($uid, $type)
+function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
 {
-	$messagesArray = array();
-	if (is_array($type))
-	{
-		foreach ($type as $t)
-		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'recipient');
-			if ($messages)
-				$messagesArray += $messages;
-		}
-	}
-	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'recipient');
-
-	if ($messagesArray)
-	{
-		foreach ($messagesArray as &$message)
-			$message['sender'] = lib_bl_general_uid2nick($message['uid_sender']);
-		unset($message);
-	}
-
-	return $messagesArray;
+	$sql = '
+		SELECT * FROM dw_message
+		WHERE uid_'.$for.' = '.mysql_real_escape_string($uid).'
+			AND type = '.mysql_real_escape_string($type).'
+			AND !del_'.$for.'
+			AND archive = '.mysql_real_escape_string($archived).'
+		ORDER BY date DESC
+	';
+	return lib_util_mysqlQuery($sql, true);
 }
 
 /**
  * get the specified message
  * @author Neithan
  * @param int $msgid
+ * @param String $for
  * @return array
  */
-function lib_bl_messages_getMessage($msgid)
+function lib_dal_message_getMessage($msgid, $for, $archived = 0)
 {
-	global $lang;
-
-	$message = lib_dal_message_getMessage($msgid, 'recipient');
-
-	if ($message)
-	{
-		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
-	}
-
-	$parser = new wikiparser;
-	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
-	$message['message'] = $parser->parseIt($message['message']);
-
-	return $message;
+	$sql = '
+		SELECT * FROM dw_message
+		WHERE msgid = '.mysql_real_escape_string($msgid).'
+			AND !del_'.$for.'
+			AND archive = '.mysql_real_escape_string($archived).'
+	';
+	return lib_util_mysqlQuery($sql);
 }
 
 /**
- * get all sent messages of the specified type(s)
+ * mark the specified message either for the sender or the recipient as deleted
  * @author Neithan
- * @param int $uid
- * @param int/array $type
- * @return array
+ * @param int $msgid
+ * @param String $deleteFor possible values: sender, recipient
+ * @return int
  */
-function lib_bl_messages_getSentMessages($uid, $type)
+function lib_dal_messages_markAsDeleted($msgid, $deleteFor)
 {
-	$messagesArray = array();
-	if (is_array($type))
+	if ($deleteFor == 'sender' || $deleteFor == 'recipient')
 	{
-		foreach ($type as $t)
-		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'sender');
-			if ($messages)
-				$messagesArray += $messages;
-		}
+		$sql = '
+			UPDATE dw_message
+			SET del_'.$deleteFor.' = 1
+			WHERE msgid = '.mysql_real_escape_string($msgid).'
+				AND !unread
+		';
+		return lib_util_mysqlQuery($sql);
 	}
 	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'sender');
-
-	if ($messagesArray)
-	{
-		foreach ($messagesArray as &$message)
-			$message['recipient'] = lib_bl_general_uid2nick($message['uid_recipient']);
-		unset($message);
-	}
-
-	return $messagesArray;
-}
-
-/**
- * get the specified message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_bl_messages_getSentMessage($msgid)
-{
-	global $lang;
-
-	$message = lib_dal_message_getMessage($msgid, 'sender');
-
-	if ($message)
-	{
-		$message['recipient'] = lib_bl_general_uid2nick ($message['uid_recipient']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
-	}
-
-	$parser = new wikiparser;
-	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
-	$message['message'] = $parser->parseIt($message['message']);
-
-	return $message;
-}
-
-/**
- * get all messages of the specified type(s)
- * @author Neithan
- * @param int/array $type
- * @return array
- */
-function lib_bl_messages_getArchivedMessages($uid, $type)
-{
-	$messagesArray = array();
-	if (is_array($type))
-	{
-		foreach ($type as $t)
-		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'recipient', 1);
-			if ($messages)
-				$messagesArray += $messages;
-		}
-	}
-	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'recipient', 1);
-
-	if ($messagesArray)
-	{
-		foreach ($messagesArray as &$message)
-			$message['sender'] = lib_bl_general_uid2nick($message['uid_sender']);
-		unset($message);
-	}
-
-	return $messagesArray;
-}
-
-/**
- * get the specified message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_bl_messages_getArchivedMessage($msgid)
-{
-	global $lang;
-
-	$message = lib_dal_message_getMessage($msgid, 'recipient', 1);
-
-	if ($message)
-	{
-		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
-	}
-
-	$parser = new wikiparser;
-	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
-	$message['message'] = $parser->parseIt($message['message']);
-
-	return $message;
-}
-
-/**
- * return the amount of read and unread messages
- * @author Neithan
- * @param array $messages
- * @return int
- */
-function lib_bl_messages_getCounts($messages)
-{
-	$counter = array(
-		'readMessages' => 0,
-		'unreadMessages' => 0,
-	);
-
-	foreach ($messages as $message)
-	{
-		if ($message['unread'])
-			$counter['unreadMessages']++;
-		else
-			$counter['readMessages']++;
-	}
-
-	return $counter;
-}
-
-/**
- * mark the specified message as deleted for the sender
- * @author Neithan
- * @param int $msgid
- * @return int
- */
-function lib_bl_messages_markAsDeletedSender($msgid)
-{
-	return lib_dal_messages_markAsDeleted($msgid, 'sender');
-}
-
-/**
- * mark the specified message as deleted for the recipient
- * @author Neithan
- * @param int $msgid
- * @return int
- */
-function lib_bl_messages_markAsDeletedRecipient($msgid)
-{
-	return lib_dal_messages_markAsDeleted($msgid, 'recipient');
+		return 0;
 }
 
 /**
@@ -220,35 +66,14 @@ function lib_bl_messages_markAsDeletedRecipient($msgid)
  * @param int $msgid
  * @return int
  */
-function lib_bl_messages_markRead($msgid)
+function lib_dal_messages_markRead($msgid)
 {
-	if (is_int($msgid))
-		return lib_dal_messages_markRead ($msgid);
-	else
-		return 0;
-}
-
-/**
- * check if there are read messages that are older than 14 days and mark them
- * as deleted.
- * @author Neithan
- */
-function lib_bl_messages_checkReadMessages($uid)
-{
-	$messages = lib_bl_messages_getMessages($uid, array(1, 2, 3, 4));
-
-	foreach ($messages as $message)
-	{
-		if (!$message['unread'])
-		{
-			$messageDate = new DateTime(date('Y-m-d H:i:s', $message['date_read']));
-			$currentDate = new DateTime();
-			$dateDiff = $currentDate->diff($messageDate);
-
-			if ($dateDiff->d >= 14 || $dateDiff->m || $dateDiff->y)
-				lib_bl_messages_markAsDeletedRecipient($message['msgid']);
-		}
-	}
+	$sql = '
+		UPDATE dw_message
+		SET unread = 0
+		WHERE msgid = '.mysql_real_escape_string($msgid).'
+	';
+	return lib_util_mysqlQuery($sql);
 }
 
 /**
@@ -257,28 +82,35 @@ function lib_bl_messages_checkReadMessages($uid)
  * @param int $msgid
  * @return int
  */
-function lib_bl_messages_archive($msgid)
+function lib_dal_messages_archive($msgid)
 {
-	return lib_dal_messages_archive($msgid);
+	$sql = '
+		UPDATE dw_message
+		SET archive = 1
+		WHERE msgid = '.mysql_real_escape_string($msgid).'
+	';
+	return lib_util_mysqlQuery($sql);
 }
 
 /**
- * check if the message is for this user
+ * get the recipient of the message
  * @author Neithan
  * @param int $msgid
- * @param int $uid
- * @param int $mode 1 for check recipient, 2 for check sender
- * @return <int> returns 1 if the message is for this user, otherwise 0
+ * @return int
  */
-function lib_bl_messages_checkUser($msgid, $uid, $mode)
+function lib_dal_messages_checkRecipient($msgid)
 {
-	if ($mode == 1)
-		$checkuid = lib_dal_messages_checkRecipient($msgid);
-	elseif ($mode == 2)
-		$checkuid = lib_dal_messages_checkSender($msgid);
-
-	if ($uid == $checkuid)
-		return 1;
-	else
-		return 0;
+	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
+	return lib_util_mysqlQuery($sql);
+}
+/**
+ * get the sender of the message
+ * @author Neithan
+ * @param int $msgid
+ * @return int
+ */
+function lib_dal_messages_checkSender($msgid)
+{
+	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
+	return lib_util_mysqlQuery($sql);
 }
