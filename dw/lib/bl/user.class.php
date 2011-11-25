@@ -174,7 +174,9 @@ class UserCls {
 	{
 		global $lang;
 
-		return date($lang['timeformat'], $this->regdate);
+		$date = date_create_from_format('Y-m-d H:i:s', $this->regdate);
+
+		return $date->format($lang['timeformat']);
 	}
 
 	public function getGameRank(){
@@ -242,8 +244,10 @@ class UserCls {
 	public function getLastLogin()
 	{
 		global $lang;
-		
-		return date($lang['timeformat'], $this->last_login);
+
+		$date = date_create_from_format('Y-m-d H:i:s', $this->last_login);
+
+		return $date->format($lang['timeformat']);
 	}
 
 	public function setLastLogin()

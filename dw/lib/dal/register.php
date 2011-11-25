@@ -57,14 +57,14 @@ function lib_dal_register_insertUser($nick, $pws, $email, $random, $language)
 			nick,
 			password,
 			email,
-			regdate,
+			registration_datetime,
 			status,
 			language
 		) VALUES (
 			"'.mysql_real_escape_string($nick).'",
 			"'.mysql_real_escape_string($pws).'",
 			"'.mysql_real_escape_string($email).'",
-			'.time().',
+			NOW(),
 			"'.mysql_real_escape_string($random).'",
 			"'.mysql_real_escape_string($language).'"
 		)
