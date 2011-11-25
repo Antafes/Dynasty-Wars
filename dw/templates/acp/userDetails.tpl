@@ -31,7 +31,7 @@
 		<tr>
 			<th>{$lang.registrationDate|htmlentities}:</th>
 			<td>
-				{$regUser->getRegDate()|date:$lang.acptimeformat}
+				{$regUser->getRegDate()}
 			</td>
 		</tr>
 		<tr>
@@ -126,7 +126,7 @@
 		<tr>
 			<th>{$lang.lastLogin|htmlentities}</th>
 			<td>
-				{$regUser->getLastLogin()|date:$lang.acptimeformat}
+				{$regUser->getLastLogin()}
 				<img src="pictures/{$regUser->checkLastLogin()}.gif" title="{$lang.loginCheck[$regUser->checkLastLogin()]|htmlentities}" />
 			</td>
 		</tr>
