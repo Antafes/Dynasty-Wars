@@ -5,16 +5,27 @@
  * @return array
  */
 function lib_dal_ranking_getUserRanking(){
-	$SQL = 'SELECT dw_points.uid, user.regdate, unit_points, building_points,
-			unit_points+building_points points, nick, blocked,
-			CONCAT("[" , map.map_x, ":", map.map_y, "] " , map.city) city, dw_clan.clanname
-			FROM dw_points
-			INNER JOIN dw_user user ON dw_points.uid=user.uid
-			INNER JOIN dw_map map ON map.uid = user.uid
-			LEFT JOIN dw_clan ON dw_clan.cid = user.cid
-			WHERE !deactivated ORDER BY points DESC';
+	$sql = '
+		SELECT
+			dw_points.uid,
+			user.registration_datetime,
+			unit_points,
+			building_points,
+			unit_points + building_points points,
+			nick,
+			blocked,
+			map.map_x,
+			map.map_y,
+			dw_clan.clanname
+		FROM dw_points
+		JOIN dw_user user ON dw_points.uid=user.uid
+		JOIN dw_map map ON map.uid = user.uid
+		LEFT JOIN dw_clan ON dw_clan.cid = user.cid
+		WHERE !deactivated
+		ORDER BY points DESC
+	';
 
-	return lib_util_mysqlQuery($SQL,True);
+	return lib_util_mysqlQuery($sql, true);
 }
 
 /**

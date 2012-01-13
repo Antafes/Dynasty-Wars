@@ -9,11 +9,17 @@
 function lib_bl_general_getRes($x, $y)
 {
 	$resources = lib_dal_general_getRes($x, $y);
-	foreach ($resources as $key => $res)
+
+	$resource = array();
+	if ($resources)
 	{
-		if (!is_numeric($key))
-			$resource[$key] = $res;
+		foreach ($resources as $key => $res)
+		{
+			if (!is_numeric($key))
+				$resource[$key] = $res;
+		}
 	}
+
 	return $resource;
 }
 

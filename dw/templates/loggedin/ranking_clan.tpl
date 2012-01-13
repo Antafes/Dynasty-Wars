@@ -1,10 +1,9 @@
 <table width="100%">
-<tr><td width="90" class="table_tc">{$table_rank}</td>
-<td width="140" class="table_tc">{$table_player}</td>
-<td width="90" class="table_tc">{$table_units}</td>
-<td width="90" class="table_tc">{$table_buildings}</td>
-<td width="90" class="table_tc">{$table_total}</td>
-<td width="85" class="table_tc">&nbsp;</td></tr>
+<tr><td width="90" class="table_tc">{$lang.rank|htmlentities}</td>
+<td width="140" class="table_tc">{$lang.player|htmlentities}</td>
+<td width="90" class="table_tc">{$lang.units|htmlentities}</td>
+<td width="90" class="table_tc">{$lang.buildings|htmlentities}</td>
+<td width="90" class="table_tc">{$lang.total|htmlentities}</td>
 
 {foreach from=$rank_list item=value key=nr}
     <tr><td width="90" class="table_tc">{$nr+1}</td>

@@ -25,9 +25,10 @@ function lib_bl_unit_train_unitPrices($kind)
 	global $lang;
 	$prices = lib_dal_unit_train_unitPrices($kind);
 
-	$mainbuilding = lib_dal_buildings_getBuildingByKind(19, $x, $y);
-	$paper = lib_dal_buildings_getBuildingByKind(5, $x, $y);
-	$koku = lib_dal_buildings_getBuildingByKind(6, $x, $y);
+	$mainCity = $_SESSION['user']->getMainCity();
+	$mainbuilding = lib_dal_buildings_getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
+	$paper = lib_dal_buildings_getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
+	$koku = lib_dal_buildings_getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
 
 	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['paper'] = 0;

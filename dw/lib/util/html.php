@@ -17,14 +17,14 @@ function lib_util_html_createReadyScript($script)
 /**
  * creates a link for hyperlinks or redirects
  * @author Neithan
- * @param array $valuelist
- * @param boolean $for_readirect
+ * @param array $valuelist array([chose, ][parameter, ][file])
+ * @param boolean $for_redirect
  * @return string
  */
-function lib_util_html_createLink($valuelist = '', $for_readirect = false)
+function lib_util_html_createLink($valuelist = '', $for_redirect = false)
 {
 	$separator = '&amp;';
-	if ($for_readirect)
+	if ($for_redirect)
 		$separator = '&';
 
 	if (!$valuelist['file'])

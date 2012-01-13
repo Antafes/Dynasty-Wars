@@ -6,8 +6,8 @@
 		<div class="messageMenu">
 			<a href="index.php?chose=messages&amp;mmode=new">{$lang.writeMessage|htmlentities}</a><br />
 			<a href="index.php?chose=messages&amp;mmode=newall">{$lang.writeToAll|htmlentities}</a><br />
-			<a href="index.php?chose=messages&amp;mmode=received">{$lang.received|htmlentities} ({$messageCount.unreadMessages}/{$messageCount.readMessages})</a><br />
-			<a href="index.php?chose=messages&amp;mmode=event">{$lang.events|htmlentities} ({$eventMessageCount.unreadMessages}/{$eventMessageCount.readMessages})</a><br />
+			<a href="index.php?chose=messages&amp;mmode=received">{$lang.received|htmlentities} ({$messageCount.unreadMessages}/{$messageCount.totalMessages})</a><br />
+			<a href="index.php?chose=messages&amp;mmode=event">{$lang.events|htmlentities} ({$eventMessageCount.unreadMessages}/{$eventMessageCount.totalMessages})</a><br />
 			<a href="index.php?chose=messages&amp;mmode=sent">{$lang.sent|htmlentities}</a><br />
 			<a href="index.php?chose=messages&amp;mmode=archive">{$lang.archive|htmlentities}</a>
 		</div>
