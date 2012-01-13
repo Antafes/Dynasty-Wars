@@ -2,6 +2,8 @@
 session_start();
 require_once('../config.php');
 
+header('Content-Type: application/json');
+
 $con = @mysql_connect($server, $seruser, $serpw);
 if ($con)
 {
