@@ -26,7 +26,7 @@ elseif ($_GET['mmode'] == 'received') //received messages
 			$msgid = $_POST['delete'][$i];
 
 			if (lib_bl_messages_checkUser($msgid, $_SESSION['user']->getUID(), 1))
-				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
+				lib_bl_messages_markAsDeletedRecipient($msgid, true);
 			else
 				$n = $msgids;
 		}

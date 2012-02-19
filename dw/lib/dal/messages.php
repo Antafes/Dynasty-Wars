@@ -42,9 +42,10 @@ function lib_dal_message_getMessage($msgid, $for, $archived = 0)
  * @author Neithan
  * @param int $msgid
  * @param String $deleteFor possible values: sender, recipient
+ * @param boolean $forceDeletion will force the deletion of unread messages
  * @return int
  */
-function lib_dal_messages_markAsDeleted($msgid, $deleteFor)
+function lib_dal_messages_markAsDeleted($msgid, $deleteFor, $forceDeletion)
 {
 	if ($deleteFor == 'sender' || $deleteFor == 'recipient')
 	{
@@ -52,8 +53,11 @@ function lib_dal_messages_markAsDeleted($msgid, $deleteFor)
 			UPDATE dw_message
 			SET del_'.$deleteFor.' = 1
 			WHERE msgid = '.mysql_real_escape_string($msgid).'
-				AND !unread
 		';
+
+		if (!$forceDeletion)
+			$sql .= 'AND !unread';
+
 		return lib_util_mysqlQuery($sql);
 	}
 	else

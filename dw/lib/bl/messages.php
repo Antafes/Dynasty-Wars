@@ -195,22 +195,24 @@ function lib_bl_messages_getCounts($messages)
  * mark the specified message as deleted for the sender
  * @author Neithan
  * @param int $msgid
+ * @param boolean $forceDeletion (default: false) will force the deletion of unread messages
  * @return int
  */
-function lib_bl_messages_markAsDeletedSender($msgid)
+function lib_bl_messages_markAsDeletedSender($msgid, $forceDeletion = false)
 {
-	return lib_dal_messages_markAsDeleted($msgid, 'sender');
+	return lib_dal_messages_markAsDeleted($msgid, 'sender', $forceDeletion);
 }
 
 /**
  * mark the specified message as deleted for the recipient
  * @author Neithan
  * @param int $msgid
+ * @param boolean $forceDeletion (default: false) will force the deletion of unread messages
  * @return int
  */
-function lib_bl_messages_markAsDeletedRecipient($msgid)
+function lib_bl_messages_markAsDeletedRecipient($msgid, $forceDeletion = false)
 {
-	return lib_dal_messages_markAsDeleted($msgid, 'recipient');
+	return lib_dal_messages_markAsDeleted($msgid, 'recipient', $forceDeletion);
 }
 
 /**

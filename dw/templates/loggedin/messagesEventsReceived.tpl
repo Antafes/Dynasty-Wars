@@ -4,7 +4,7 @@
 		{if $infoMessage}
 			<div class="infoMessage">{$infoMessage|htmlentities}</div>
 		{/if}
-		<form method="post" action="index.php?chose=messages&amp;mmode=received">
+		<form method="post" action="index.php?chose=messages&amp;mmode=event">
 			<table>
 				<tr>
 					<th class="message">{$lang.message|htmlentities}</th>
