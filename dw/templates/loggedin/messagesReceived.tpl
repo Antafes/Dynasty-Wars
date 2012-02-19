@@ -18,7 +18,7 @@
 					<tr>
 						<td class="message">
 							<a href="index.php?chose=messages&amp;mmode=received&amp;msgid={$message.msgid}">
-								<img src="pictures/msg_{if $message.unread}un{/if}read.gif" alt="{$lang.unread|htmlentities}" title="{$lang.unread|htmlentities}" border="0"/>
+								<img src="pictures/msg_{if $message.unread}un{/if}read.gif" alt="{if $message.unread}{$lang.unread|htmlentities}{else}{$lang.read|htmlentities}{/if}" title="{if $message.unread}{$lang.unread|htmlentities}{else}{$lang.read|htmlentities}{/if}" border="0"/>
 								{$message.title|htmlentities}
 							</a>
 						</td>
