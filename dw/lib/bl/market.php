@@ -110,8 +110,9 @@ function lib_bl_market_buy($uid, $mid, $city)
 
 	// send a message to the seller
 	$userlang = lib_bl_general_getLanguage($offerDetails['sid']);
-	include("language/".$userlang."/ingame/event_messages.php");
-	include("language/".$userlang."/ingame/main.php");
+	$lang = array();
+	$lang += lib_bl_general_loadLanguageFile('event_messages', 'loggedin', false, $userlang);
+	$lang += lib_bl_general_loadLanguageFile('main', 'loggedin', false, $userlang);
 	lib_bl_general_sendMessage(
 		0,
 		$offerDetails['sid'],

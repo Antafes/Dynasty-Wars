@@ -461,13 +461,26 @@ function lib_bl_general_getMissionary($uid)
  * @param String $page
  * @param String $location
  * @param boolean $isAjax
+ * @param String $userLang if set, $lang will be returned
+ * @return void/array
  */
-function lib_bl_general_loadLanguageFile($page, $location = 'loggedin', $isAjax = false)
+function lib_bl_general_loadLanguageFile($page, $location = 'loggedin', $isAjax = false, $userLang = null)
 {
 	global $lang;
+
+	$usedLang = $lang['lang'];
+
+	if($userLang)
+		$usedLang = $userLang;
+
 	$path = '';
+
 	if ($isAjax)
 		$path .= '../../';
-	$path .= 'language/'.$lang['lang'].'/'.($location ? $location.'/' : '');
+
+	$path .= 'language/'.$usedLang.'/'.($location ? $location.'/' : '');
 	include_once($path.$page.'.php');
+
+	if ($userLang)
+		return $lang;
 }
