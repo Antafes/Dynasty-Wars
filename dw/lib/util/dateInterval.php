@@ -6,7 +6,7 @@ class DWDateInterval extends DateInterval
 	 * Had to use a private variable, because the public days isn't writeable
 	 * @var int
 	 */
-	private $days;
+	private $dwDays;
 
 	/**
 	 * @param int $y
@@ -25,10 +25,7 @@ class DWDateInterval extends DateInterval
 		if ($invert)
 			$this->invert = $invert;
 
-		if ($days)
-			$this->days = $days;
-		else
-			$this->days = 0;
+		$this->dwDays = $days;
 	}
 
 	/**
@@ -40,7 +37,7 @@ class DWDateInterval extends DateInterval
 		$seconds = $this->s;
 		$seconds += $this->i * 60;
 		$seconds += $this->h * 3600;
-		$seconds += $this->days * 3600 * 24;
+		$seconds += $this->dwDays * 3600 * 24;
 
 		return ($this->invert ? $seconds * -1 : $seconds);
 	}
