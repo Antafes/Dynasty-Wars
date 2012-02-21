@@ -50,14 +50,14 @@ ALTER TABLE `dw_news`
 	ADD COLUMN `create_datetime` DATETIME NOT NULL AFTER `date`,
 	ADD COLUMN `changed_datetime` DATETIME NOT NULL AFTER `last_changed`;
 /* next: use timestamp2datetime/news.php */
-ALTER TABLE `dw_message`
+ALTER TABLE `dw_news`
 	DROP COLUMN `date`,
 	DROP COLUMN `last_changed`;
 
 ALTER TABLE `dw_res`
 	ADD COLUMN `last_datetime` DATETIME NOT NULL AFTER `last_time`;
 /* next: use timestamp2datetime/resources.php */
-ALTER TABLE `dw_market`
+ALTER TABLE `dw_res`
 	DROP COLUMN `last_time`;
 
 ALTER TABLE `dw_research`
@@ -94,3 +94,6 @@ ALTER TABLE `dw_troops_move`
 	DROP COLUMN `endtime`;
 	
 /* next: use timestamp2datetime/users.php */
+ALTER TABLE `dw_user`
+	DROP COLUMN `regdate`,
+	DROP COLUMN `last_login`;

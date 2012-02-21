@@ -25,7 +25,10 @@ class DWDateInterval extends DateInterval
 		if ($invert)
 			$this->invert = $invert;
 
-		$this->days = $days;
+		if ($days)
+			$this->days = $days;
+		else
+			$this->days = 0;
 	}
 
 	/**
