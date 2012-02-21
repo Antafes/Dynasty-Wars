@@ -234,11 +234,12 @@ function lib_bl_troops_sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
 	else
 //not yet implemented
 */
-	$endtime = intval(time()+$sendtime);
+	$endtime = new DWDateTime();
+	$endtime->add(new DateInterval('PT'.$sendtime.'S'));
 	$erg1 = lib_dal_troops_sendTroop(intval($tid), intval($tx), intval($ty), intval($type), $endtime);
-	if ($res && $count) {
-		$erg2 = lib_dal_troops_addResToTroop(intval($tid), $res, intval($count));
-	}
+	if ($res && $count)
+		lib_dal_troops_addResToTroop(intval($tid), $res, intval($count));
+
 	if ($erg1)
 		return 1;
 	else
@@ -291,7 +292,11 @@ function lib_bl_troops_checkTroops($tuid)
  */
 function lib_bl_troops_checkTroop($tid)
 {
-	return lib_dal_troops_checkTroop($tid);
+	$troop = lib_dal_troops_checkTroop($tid);
+
+	$troop['end_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $troop['end_datetime']);
+
+	return $troop;
 }
 
 /**
@@ -320,12 +325,12 @@ function lib_bl_troops_timerFormat($time, $tid)
 function lib_bl_troops_checkMoving($tuid)
 {
 	$tids = lib_bl_troops_checkTroops($tuid);
-	$time = time();
+	$now = new DWDateTime();
 	if (count($tids) > 0)
 	{
 		foreach ($tids as $tid) {
 			$moveinfo = lib_bl_troops_checkTroop($tid);
-			if ($moveinfo["endtime"] < $time && count($moveinfo) > 0) {
+			if ($moveinfo["end_datetime"] < $now && count($moveinfo) > 0) {
 				lib_dal_troops_changeTroopPosition($tid, $moveinfo["tx"], $moveinfo["ty"]);
 				lib_dal_troops_changeUnitsPosition($tid, $moveinfo["tx"], $moveinfo["tx"]);
 				lib_bl_troops_endMoving($tid);

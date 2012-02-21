@@ -45,7 +45,8 @@ function lib_bl_messages_getMessage($msgid)
 	if ($message)
 	{
 		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
+		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
 	$parser = new wikiparser;
@@ -102,7 +103,8 @@ function lib_bl_messages_getSentMessage($msgid)
 	if ($message)
 	{
 		$message['recipient'] = lib_bl_general_uid2nick ($message['uid_recipient']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
+		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
 	$parser = new wikiparser;
@@ -158,7 +160,8 @@ function lib_bl_messages_getArchivedMessage($msgid)
 	if ($message)
 	{
 		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$message['sentDate'] = date($lang['messageTimeFormat'], $message['date']);
+		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
 	$parser = new wikiparser;
@@ -242,8 +245,8 @@ function lib_bl_messages_checkReadMessages($uid)
 	{
 		if (!$message['unread'])
 		{
-			$messageDate = new DateTime(date('Y-m-d H:i:s', $message['date_read']));
-			$currentDate = new DateTime();
+			$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['read_datetime']);
+			$currentDate = new DWDateTime();
 			$dateDiff = $currentDate->diff($messageDate);
 
 			if ($dateDiff->d >= 14 || $dateDiff->m || $dateDiff->y)

@@ -97,7 +97,7 @@ if ($_GET['cid'] != $_SESSION['user']->getCID()) //clan applications
 				'.mysql_real_escape_string($_GET['cid']).',
 				'.mysql_real_escape_string($_SESSION['user']->getUID()).',
 				"'.mysql_real_escape_string($applicationtext).'",
-				'.time().'
+				NOW()
 			)
 		';
 		if (lib_util_mysqlQuery($sql))
@@ -405,7 +405,7 @@ else
 				$sql = '
 					SELECT
 						ca.appid,
-						ca.apptime,
+						ca.create_datetime,
 						u.nick
 					FROM dw_clan_applications ca
 					JOIN dw_user u USING(uid)
@@ -417,7 +417,10 @@ else
 				if ($applications)
 				{
 					foreach ($applications as &$application)
-						$application['apptime'] = date($lang['timeformat'], $application['apptime']);
+					{
+						$applicationTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $application['create_datetime']);
+						$application['create_datetime'] = $applicationTime->format($lang['timeformat']);
+					}
 					unset($application);
 				}
 
@@ -431,7 +434,7 @@ else
 					SELECT
 						u.uid,
 						ca.applicationtext,
-						ca.apptime,
+						ca.create_datetime,
 						u.nick
 					FROM dw_clan_applications ca
 					JOIN dw_user u USING (uid)
@@ -439,7 +442,8 @@ else
 				';
 				$app = lib_util_mysqlQuery($sql);
 				$GLOBALS['firePHP']->log($app, 'application');
-				$app['apptime'] = date($lang['timeformat'], $app['apptime']);
+				$applicationTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $app['create_datetime']);
+				$app['create_datetime'] = $applicationTime->format($lang['timeformat']);
 				$smarty->assign('application', $app);
 			}
 		}

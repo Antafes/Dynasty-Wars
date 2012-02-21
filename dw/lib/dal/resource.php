@@ -108,7 +108,7 @@ function lib_dal_resource_updateAll($res, $time, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
-		SET `last_time` = "'.mysql_real_escape_string($time).'",
+		SET `last_datetime` = NOW(),
 			`food` = "'.mysql_real_escape_string($res['food']).'",
 			`wood` = "'.mysql_real_escape_string($res['wood']).'",
 			`rock` = "'.mysql_real_escape_string($res['rock']).'",
@@ -149,7 +149,8 @@ function lib_dal_resource_getPaperPercent($x, $y)
 function lib_dal_resource_changePaperPercent($percent, $x, $y)
 {
 	$sql = '
-		UPDATE dw_res SET paper_prod="'.mysql_real_escape_string($percent).'"
+		UPDATE dw_res
+		SET paper_prod="'.mysql_real_escape_string($percent).'"
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';

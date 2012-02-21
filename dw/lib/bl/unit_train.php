@@ -106,9 +106,6 @@ function lib_bl_unit_train_trainTime($kind)
  */
 function lib_bl_unit_train_train($kind, $count, $uid, $city)
 {
-	$cityexp = explode(":", $city);
-	$map_x = intval($cityexp[0]);
-	$map_y = intval($cityexp[1]);
 	if ($count)
 	{
 		$max_units = lib_bl_unit_train_maxUnits($kind, $city);
@@ -121,9 +118,10 @@ function lib_bl_unit_train_train($kind, $count, $uid, $city)
 		$sum_prices["iron"] = $prices["iron"]*$count;
 		$sum_prices["paper"] = $prices["paper"]*$count;
 		$sum_prices["koku"] = $prices["koku"]*$count;
-		$endtime = time()+(lib_bl_unit_train_trainTime($kind)*$count);
+		$endTime = new DWDateTime();
+		$endTime->add(new DateInterval('PT'.(lib_bl_unit_train_trainTime($kind) * $count)));
 		$erg1 = lib_dal_unit_train_removeRes($sum_prices, $uid);
-		$erg2 = lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city);
+		$erg2 = lib_dal_unit_train_startTrain($kind, $uid, $count, $endTime, $city);
 		if ($erg1 && $erg2)
 			return 1;
 		else
@@ -148,7 +146,8 @@ function lib_bl_unit_train_checkTraining($uid, $city)
 	{
 		foreach ($units as $unit)
 		{
-			if (time() >= $unit['endtime'])
+			$now = new DWDateTime();
+			if ($now >= $unit['endtime'])
 			{
 				$unit['uid'] = $uid;
 				lib_bl_unit_train_trainComplete($unit);

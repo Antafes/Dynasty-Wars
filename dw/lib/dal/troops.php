@@ -232,10 +232,10 @@ function lib_dal_troops_checkTargetClan($tuid)
  * @param int $tx
  * @param int $ty
  * @param int $type
- * @param int $endtime
+ * @param DWDateTime $endtime
  * @return int
  */
-function lib_dal_troops_sendTroop($tid, $tx, $ty, $type, $endtime)
+function lib_dal_troops_sendTroop($tid, $tx, $ty, $type, DWDateTime $endtime)
 {
 	$sql = '
 		INSERT INTO dw_troops_move (
@@ -243,13 +243,13 @@ function lib_dal_troops_sendTroop($tid, $tx, $ty, $type, $endtime)
 			tx,
 			ty,
 			type,
-			endtime
+			end_datetime
 		) VALUES (
 			'.mysql_real_escape_string($tid).',
 			'.mysql_real_escape_string($tx).',
 			'.mysql_real_escape_string($ty).',
 			'.mysql_real_escape_string($type).',
-			'.$endtime.'
+			"'.mysql_real_escape_string($endtime->format()).'"
 		)
 	';
 	return lib_util_mysqlQuery($sql);
@@ -300,7 +300,15 @@ function lib_dal_troops_checkTroops($tuid)
  */
 function lib_dal_troops_checkTroop($tid)
 {
-	$sql = 'SELECT endtime, tx, ty, type FROM dw_troops_move WHERE tid = '.mysql_real_escape_string($tid);
+	$sql = '
+		SELECT
+			end_datetime,
+			tx,
+			ty,
+			type
+		FROM dw_troops_move
+		WHERE tid = '.mysql_real_escape_string($tid).'
+	';
 	return lib_util_mysqlQuery($sql);
 }
 

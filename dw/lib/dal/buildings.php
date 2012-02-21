@@ -195,10 +195,10 @@ function lib_dal_buildings_insertBuilding($uid, $x, $y, $kind, $position)
  * @author Neithan
  * @param int $bid
  * @param int $upgrade
- * @param int $endtime
+ * @param DWDateTime $endTime
  * @return int
  */
-function lib_dal_buildings_startBuilding($bid, $upgrade, $endtime)
+function lib_dal_buildings_startBuilding($bid, $upgrade, DWDateTime $endTime)
 {
 	$sql = '
 		INSERT INTO `dw_build` (
@@ -209,8 +209,8 @@ function lib_dal_buildings_startBuilding($bid, $upgrade, $endtime)
 		) VALUES (
 			"'.mysql_real_escape_string($bid).'",
 			"'.mysql_real_escape_string($upgrade).'",
-			"'.time().'",
-			"'.mysql_real_escape_string($endtime).'"
+			NOW(),
+			"'.mysql_real_escape_string($endTime->format('Y-m-d H:i:s')).'"
 		)
 	';
 	return lib_util_mysqlQuery($sql);

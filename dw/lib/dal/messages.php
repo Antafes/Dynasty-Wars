@@ -74,7 +74,8 @@ function lib_dal_messages_markRead($msgid)
 {
 	$sql = '
 		UPDATE dw_message
-		SET unread = 0
+		SET unread = 0,
+			read_datetime = NOW()
 		WHERE msgid = '.mysql_real_escape_string($msgid).'
 	';
 	return lib_util_mysqlQuery($sql);

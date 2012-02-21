@@ -67,13 +67,12 @@ function lib_dal_general_getSeason()
  * @author Neithan
  * @param int $uid_sender
  * @param int $uid_recipient
- * @param int $date
  * @param string $title
  * @param string $message
  * @param int $type
  * @return int
  */
-function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title, $message, $type)
+function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
 	$sql = '
 		INSERT INTO dw_message (
@@ -86,7 +85,7 @@ function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title,
 		) VALUES (
 			'.mysql_real_escape_string($uid_sender).',
 			'.mysql_real_escape_string($uid_recipient).',
-			'.mysql_real_escape_string($date).',
+			NOW(),
 			"'.mysql_real_escape_string($title).'",
 			"'.mysql_real_escape_string($message).'",
 			'.mysql_real_escape_string($type).'

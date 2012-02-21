@@ -80,8 +80,14 @@ function lib_dal_register_insertUser($nick, $pws, $email, $random, $language)
  */
 function lib_dal_register_insertRes($uid, $x, $y)
 {
-	$sql = 'INSERT INTO dw_res (uid, last_time, map_x, map_y) VALUES ('.$uid.', '.time().', '.$x.', '.$y.')';
-	return lib_util_mysqlQuery($sql, true);
+	$sql = '
+		INSERT INTO dw_res
+		SET uid = '.mysql_real_escape_string($uid).',
+			last_datetime = NOW(),
+			map_x = '.mysql_real_escape_string($x).',
+			map_y = '.mysql_real_escape_string($y).'
+	';
+	return lib_util_mysqlQuery($sql, true); //with the second parameter an insert returns the number of affected rows
 }
 
 /**

@@ -17,4 +17,6 @@ require_once('lib/bl/messages.php');
 require_once('lib/util/mysql.php');
 require_once('lib/util/html.php');
 require_once('lib/util/math.php');
+require_once('lib/util/dateTime.php');
+require_once('lib/util/dateInterval.php');
 require_once('lib/smarty/Smarty.class.php');

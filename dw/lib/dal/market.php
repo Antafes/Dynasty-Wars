@@ -31,7 +31,7 @@ function lib_dal_market_placeOnMarket(
 				`e_amount`,
 				`tax`,
 				`complete`,
-				`timestamp`
+				`create_datetime`
 			) VALUES (
 				'%d',
 				'%d',
@@ -42,7 +42,7 @@ function lib_dal_market_placeOnMarket(
 				'%f',
 				'%d',
 				'%d',
-				'%d'
+				NOW()
 			)
 			",
 			mysql_real_escape_string($uid),
@@ -53,8 +53,7 @@ function lib_dal_market_placeOnMarket(
 			mysql_real_escape_string($exchangeResource),
 			mysql_real_escape_string($exchangeAmount),
 			mysql_real_escape_string($tax),
-			0,
-			mysql_real_escape_string(time())
+			0
 		)
 	);
 }
@@ -176,10 +175,10 @@ function lib_dal_market_userOffers($uid, $filter, $order = "DESC")
 		$join = "JOIN dw_user ON dw_user.uid = dw_market.sid";
 	$sql = sprintf(
 		"
-		SELECT sid, bid, s_resource, s_amount, e_resource, e_amount, tax, timestamp, mid FROM dw_market
+		SELECT sid, bid, s_resource, s_amount, e_resource, e_amount, tax, create_datetime, mid FROM dw_market
 		%s
 		WHERE dw_user.uid = %d
-		ORDER BY timestamp %s
+		ORDER BY create_datetime %s
 		",
 		mysql_real_escape_string($join),
 		mysql_real_escape_string($uid),

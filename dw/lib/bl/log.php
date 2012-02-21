@@ -49,14 +49,14 @@ function lib_bl_log_translateFailed($text, $user, $concerned, $type)
 
 /**
  * translage log texts
- * @author Neithan
- * @param string $text
- * @param string $user
- * @param string $concerned
- * @param string $extra
- * @return string
+ * @param String $text
+ * @param String $user
+ * @param String $concerned
+ * @param String $extra
+ * @param DWDateTime $dateTime
+ * @return String
  */
-function lib_bl_log_translateLog($text, $user, $concerned, $extra, $timestamp)
+function lib_bl_log_translateLog($text, $user, $concerned, $extra, DWDateTime $dateTime)
 {
 	return str_replace(array(
 		'%DATE%',
@@ -65,8 +65,8 @@ function lib_bl_log_translateLog($text, $user, $concerned, $extra, $timestamp)
 		'%CONCERNED%',
 		'%EXTRA%',
 	), array(
-		date('d.m.Y', $timestamp),
-		date('H:i:s', $timestamp),
+		$dateTime->format('d.m.Y'),
+		$dateTime->format('H:i:s'),
 		$user,
 		$concerned,
 		$extra,
@@ -108,18 +108,19 @@ function lib_bl_log_newReg($uid_actor)
 
 /**
  * returns the log message
- * @author Neithan
- * @param string $actor
- * @param string $concerned
- * @param string $extra
+ * @global array $lang
  * @param int $type
- * @return string
+ * @param String $actor
+ * @param String $concerned
+ * @param String $extra
+ * @param DWDateTime $dateTime
+ * @return String
  */
-function lib_bl_log_types($type, $actor, $concerned, $extra, $timestamp)
+function lib_bl_log_types($type, $actor, $concerned, $extra, DWDateTime $dateTime)
 {
 	global $lang;
 	lib_bl_general_loadLanguageFile('log', 'acp');
-	return lib_bl_log_translateLog($lang["t".$type], $actor, $concerned, $extra, $timestamp);
+	return lib_bl_log_translateLog($lang["t".$type], $actor, $concerned, $extra, $dateTime);
 }
 
 /**
@@ -140,6 +141,8 @@ function lib_bl_log_getLogEntries()
  */
 function lib_bl_log_prepareEntries($page)
 {
+	global $lang;
+
 	$entries = lib_bl_log_getLogEntries();
 
 	$html = '';
@@ -150,13 +153,14 @@ function lib_bl_log_prepareEntries($page)
 		$n < $p && $n < count($entries);
 		$n++)
 	{
+		$logDateTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $entries[$n]['log_datetime']);
 		$html .= '
 			<tr>
 				<td class="logAction">
-					'.htmlentities(lib_bl_log_types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $entries[$n]['date'])).'
+					'.htmlentities(lib_bl_log_types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $logDateTime)).'
 				</td>
 				<td class="logDate">
-					'.date('d.m.Y H:i:s', $entries[$n]['date']).'
+					'.$logDateTime->format($lang['acptimeformat']).'
 				</td>
 		   </tr>
 	   ';

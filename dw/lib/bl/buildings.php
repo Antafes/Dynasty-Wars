@@ -616,16 +616,19 @@ $GLOBALS['firePHP']->log($building, 'building array');
 		if ($upgrade)
 		{
 			$btime = lib_bl_buildings_buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
-			$endtime = time()+$btime;
+			$endTime = new DWDateTime();
+			$endTime->add(new DateInterval('PT'.$btime.'S'));
+//			$endtime = time()+$btime;
 		}
 		else
 		{
 			$btime = lib_bl_buildings_buildTime($building['kind'], $building['lvl']);
-			$endtime = time()+$btime;
+			$endTime = new DWDateTime();
+			$endTime->add(new DateInterval('PT'.$btime.'S'));
 		}
 		if ($building['bid'] == 0)
 			$building['bid'] = lib_dal_buildings_insertBuilding($uid, $x, $y, $building['kind'], $buildplace);
-		$erg2 = lib_dal_buildings_startBuilding($building['bid'], $upgrade, $endtime);
+		$erg2 = lib_dal_buildings_startBuilding($building['bid'], $upgrade, $endTime);
 		if ($building['bid'] && !$building['position'])
 			lib_dal_buildings_insertBuildPlace($building['bid'], $buildplace);
 		if (!$upgrade)
@@ -680,7 +683,7 @@ $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 				lib_bl_buildings_buildComplete($parts['bid']);
 			else
 			{
-				$running[$x]['endtime'] = $parts['endtime'];
+				$running[$x]['endtime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['endtime']);
 				$running[$x]['kind'] = $parts['kind'];
 				$running[$x]['ulvl'] = $parts['ulvl'];
 				if ($running[$x]['ulvl'] == 0 && lib_bl_buildings_getUpgradeable($running[$x]['kind']))

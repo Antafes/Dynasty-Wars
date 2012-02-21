@@ -193,22 +193,22 @@ function lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $paperm
 {
 	$cityexp = explode(':', $city);
 	$res = lib_bl_general_getRes($cityexp[0], $cityexp[1]);
-	if ($res) {
-		$food = (float)$res['food'];
-		$wood = (float)$res['wood'];
-		$rock = (float)$res['rock'];
-		$iron = (float)$res['iron'];
-		$paper = (float)$res['paper'];
-		$koku = (float)$res['koku'];
-		$last_time = (int)$res['last_time'];
-	}
-	$past_time = time()-$last_time;
-	$newres['food'] = $food+($past_time*lib_bl_resource_income(1, 's', $range, $city));
-	$newres['wood'] = $wood+($past_time*lib_bl_resource_income(2, 's', $lumberjack, $city));
-	$newres['rock'] = $rock+($past_time*lib_bl_resource_income(3, 's', $quarry, $city));
-	$newres['iron'] = $iron+($past_time*lib_bl_resource_income(4, 's', $ironmine, $city));
-	$newres['paper'] = $paper+($past_time*lib_bl_resource_income(5, 's', $papermill, $city));
-	$newres['koku'] = $koku+($past_time*lib_bl_resource_income(6, 's', $tradepost, $city));
+
+	$food = (float)$res['food'];
+	$wood = (float)$res['wood'];
+	$rock = (float)$res['rock'];
+	$iron = (float)$res['iron'];
+	$paper = (float)$res['paper'];
+	$koku = (float)$res['koku'];
+	$lastDateTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $res['last_datetime']);
+	$diff = $lastDateTime->diff(new DWDateTime());
+	$past_time = $diff->getSeconds();
+	$newres['food'] = $food + ($past_time * lib_bl_resource_income(1, 's', $range, $city));
+	$newres['wood'] = $wood + ($past_time * lib_bl_resource_income(2, 's', $lumberjack, $city));
+	$newres['rock'] = $rock + ($past_time * lib_bl_resource_income(3, 's', $quarry, $city));
+	$newres['iron'] = $iron + ($past_time * lib_bl_resource_income(4, 's', $ironmine, $city));
+	$newres['paper'] = $paper + ($past_time * lib_bl_resource_income(5, 's', $papermill, $city));
+	$newres['koku'] = $koku + ($past_time * lib_bl_resource_income(6, 's', $tradepost, $city));
 	$storage = lib_bl_general_getMaxStorage($city);
 	if ($food >= $storage)
 		$newres['food'] = $food;

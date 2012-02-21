@@ -183,6 +183,7 @@ elseif ($_GET['sub'] == 'log')
 					$class = 'not_sold';
 			}
 
+			$offerDateTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $offer['create_datetime']);
 			$offersArray[] = array(
 				'class' => $class,
 				'title' => $lang['item_'.$class],
@@ -193,7 +194,7 @@ elseif ($_GET['sub'] == 'log')
 				'request' => $lang[$offer['e_resource']],
 				'request_amount' => lib_util_math_numberFormat($offer['e_amount'], 0),
 				'tax' => lib_util_math_numberFormat($offer['tax'], 0),
-				'date' => ($offer['timestamp'] == 1 ? 'N/A' : date($lang['timeformat'], $offer['timestampt'])),
+				'date' => ($offer['create_datetime'] == '0000-00-00 00:00:00' ? 'N/A' : $offerDateTime->format($lang['timeformat'])),
 			);
 		}
 	}

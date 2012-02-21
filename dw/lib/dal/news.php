@@ -45,13 +45,13 @@ function lib_dal_news_save($title, $content, $uid, $nick)
 			nick,
 			title,
 			text,
-			date
+			create_datetime
 		) VALUES (
 			'.mysql_real_escape_string($uid).',
 			"'.mysql_real_escape_string($nick).'",
 			"'.mysql_real_escape_string($title).'",
 			"'.mysql_real_escape_string($content).'",
-			'.mysql_real_escape_string(time()).'
+			NOW()
 		)
 	';
 	return lib_util_mysqlQuery($sql);
@@ -76,7 +76,7 @@ function lib_dal_news_update($nid, $title, $content, $changerUID, $changerNick)
 			changed_uid = '.mysql_real_escape_string($changerUID).',
 			changed_nick = "'.mysql_real_escape_string($changerNick).'",
 			changed = changed + 1,
-			last_changed = '.mysql_real_escape_string(time()).'
+			changed_datetime = NOW()
 		WHERE nid = '.mysql_real_escape_string($nid).'
 	';
 	return lib_util_mysqlQuery($sql);

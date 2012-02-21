@@ -1,22 +1,25 @@
 <?php
-include_once (dirname(__FILE__)."/../dw/lib/config.php");
-include_once (dirname(__FILE__).'/../dw/lib/util/mysql.php');
-include_once (dirname(__FILE__)."/../dw/lib/dal/unit.php");
-include_once (dirname(__FILE__)."/../dw/lib/dal/troops.php");
-include_once (dirname(__FILE__)."/../dw/lib/bl/unit.php");
-include_once (dirname(__FILE__)."/../dw/lib/bl/troops.php");
+require_once(dirname(__FILE__).'/../dw/lib/config.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/mysql.php');
+require_once(dirname(__FILE__).'/../dw/lib/dal/unit.php');
+require_once(dirname(__FILE__).'/../dw/lib/dal/troops.php');
+require_once(dirname(__FILE__).'/../dw/lib/bl/unit.php');
+require_once(dirname(__FILE__).'/../dw/lib/bl/troops.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/dateTime.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/dateInterval.php');
 
 $con = @mysql_connect($server, $seruser, $serpw);
 mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 
 $moving_troops = lib_dal_troops_getAllMovingTroops();
-$time = time();
 
 if ($moving_troops)
 {
 	foreach ($moving_troops as $moving_troop)
 	{
-		if ($moving_troop['endtime'] <= $time)
+		$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $moving_troop['endtime']);
+		$now = new DWDateTime();
+		if ($endtime <= $now)
 		{
 			lib_bl_troops_endMoving ($moving_troop['tid']);
 

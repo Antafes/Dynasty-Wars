@@ -8,19 +8,7 @@
  */
 function lib_bl_general_getRes($x, $y)
 {
-	$resources = lib_dal_general_getRes($x, $y);
-
-	$resource = array();
-	if ($resources)
-	{
-		foreach ($resources as $key => $res)
-		{
-			if (!is_numeric($key))
-				$resource[$key] = $res;
-		}
-	}
-
-	return $resource;
+	return lib_dal_general_getRes($x, $y);
 }
 
 /**
@@ -177,8 +165,7 @@ function lib_bl_general_sendMessage($uid_sender, $uid_recipient, $title, $messag
 {
 	if (is_numeric($uid_recipient) && is_numeric($uid_sender))
 	{
-		$date = time();
-		$msgerg = lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title, $message, $type);
+		$msgerg = lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
 		if ($msgerg) {
 			return 1;
 		} else {

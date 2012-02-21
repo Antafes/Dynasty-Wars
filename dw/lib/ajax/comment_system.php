@@ -34,7 +34,7 @@ if ($con)
 			$html .= '
 				<div class="comment">
 					'.htmlentities(sprintf($lang['comment_from'], lib_bl_general_uid2nick($comment['writer']))).'
-					<div class="comment_at">'.htmlentities(sprintf($lang['comment_at'], date($lang['acptimeformat'], $comment['date_added']))).'</div>
+					<div class="comment_at">'.htmlentities(sprintf($lang['comment_at'], $comment['create_datetime']->format($lang['acptimeformat']))).'</div>
 					<div class="comment_content">
 						'.nl2br($parser->parseIt($comment['comment'])).'
 					</div>';
@@ -46,7 +46,7 @@ if ($con)
 					$changed_count = $comment['changed_count'];
 				$html .= '
 					<div class="comment_changed">
-						'.htmlentities(sprintf($lang['last_changed'], $changed_count, lib_bl_general_uid2nick($comment['last_changed_from']), date($lang['acptimeformat'], $comment['date_last_changed']))).'
+						'.htmlentities(sprintf($lang['last_changed'], $changed_count, lib_bl_general_uid2nick($comment['last_changed_from']), $comment['changed_datetime']->format($lang['acptimeformat']))).'
 					</div>';
 			}
 			if ($comment['writer'] == $_SESSION['user']->getUID() || lib_bl_general_getGameRank($_SESSION['user']->getUID()) > 0)

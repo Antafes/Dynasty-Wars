@@ -305,7 +305,7 @@
 								<td class="applicant">
 									<a href="index.php?chose=clan&amp;cid={$smarty.get.cid}&amp;cmode=2&amp;umode=3&amp;appid={$application.appid}">{$application.nick|htmlentities}</a>
 								</td>
-								<td class="date">{$application.apptime}</td>
+								<td class="date">{$application.create_datetime}</td>
 							</tr>
 							{/foreach}
 						</table>
@@ -319,7 +319,7 @@
 				<div class="application">
 					<form method='post' action='index.php?chose=clan&amp;cid={$smarty.get.cid}&amp;cmode=2&amp;umode=3'>
 						<strong>{$lang.appfrom|htmlentities}{$application.nick|htmlentities}</strong><br />
-						{$lang.date}: {$application.apptime}<br />
+						{$lang.date}: {$application.create_datetime}<br />
 						<br />
 						{$application.applicationtext|htmlentities|nl2br}
 						<div class="buttons">

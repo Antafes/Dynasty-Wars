@@ -8,7 +8,7 @@ function lib_dal_tribunal_getAllHearings()
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
-		WHERE decision_date = 0
+		WHERE decision_datetime = 0
 			AND !deleted
 	';
 	return lib_util_mysqlQuery($sql, true);
@@ -38,11 +38,12 @@ function lib_dal_tribunal_getAllCauses($lang)
  */
 function lib_dal_tribunal_getAllMessages($uid)
 {
+	$now = new DWDateTime();
 	$sql = '
 		SELECT msgid, title FROM dw_message
 		WHERE uid_recipient = '.mysql_real_escape_string($uid).'
-			AND ((date_read >= '.(time()-(14*24*60*60)).'
-				OR date_read = 0)
+			AND ((read_datetime >= "'.mysql_real_escape_string($now->format()).'"
+				OR read_datetime = 0)
 				OR archive = 1)
 	';
 	return lib_util_mysqlQuery($sql, true);
@@ -177,13 +178,13 @@ function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
 			accused,
 			cause,
 			description,
-			date
+			create_datetime
 		) VALUES (
 			'.mysql_real_escape_string($suitor).',
 			'.mysql_real_escape_string($accused).',
 			"'.mysql_real_escape_string($cause).'",
 			"'.mysql_real_escape_string($description).'",
-			'.time().'
+			NOW()
 		)
 	';
 	return lib_util_mysqlQuery($sql);
@@ -204,12 +205,12 @@ function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
 			tid,
 			msgid,
 			`from`,
-			date_added
+			added_datetime
 		) VALUES (
 			'.mysql_real_escape_string($tid).',
 			'.mysql_real_escape_string($msgid).',
 			"'.mysql_real_escape_string($from).'",
-			'.time().'
+			NOW()
 		)
 	';
 	return lib_util_mysqlQuery($sql);
@@ -329,7 +330,7 @@ function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
 		UPDATE dw_tribunal
 		SET decision = "'.mysql_real_escape_string($decision).'",
 			reason = "'.mysql_real_escape_string($reason).'",
-			decision_date = '.time().'
+			decision_datetime = NOW()
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
 	return lib_util_mysqlQuery($sql);
@@ -365,14 +366,14 @@ function lib_dal_tribunal_getComments($tid)
 			tcoid,
 			writer,
 			comment,
-			date_added,
+			create_datetime,
 			last_changed_from,
-			date_last_changed,
+			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
 		WHERE tid = '.mysql_real_escape_string($tid).'
 			AND !deleted
-		ORDER BY date_added
+		ORDER BY create_datetime
 	';
 	return lib_util_mysqlQuery($sql, true);
 }
@@ -392,12 +393,12 @@ function lib_dal_tribunal_saveComment($tid, $uid, $comment)
 			tid,
 			writer,
 			comment,
-			date_added
+			create_datetime
 		) VALUES (
 			'.mysql_real_escape_string($tid).',
 			'.mysql_real_escape_string($uid).',
 			"'.mysql_real_escape_string($comment).'",
-			'.time().'
+			NOW()
 		)
 	';
 	return lib_util_mysqlQuery($sql);
@@ -433,7 +434,7 @@ function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
 		UPDATE dw_tribunal_comments
 		SET comment = "'.mysql_real_escape_string($comment).'",
 			last_changed_from = '.mysql_real_escape_string($uid).',
-			date_last_changed = '.time().',
+			changed_datetime = NOW(),
 			changed_count = changed_count + 1
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 	';
@@ -452,14 +453,14 @@ function lib_dal_tribunal_getComment($tcoid)
 			tcoid,
 			writer,
 			comment,
-			date_added,
+			create_datetime,
 			last_changed_from,
-			date_last_changed,
+			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 			AND !deleted
-		ORDER BY date_added
+		ORDER BY create_datetime
 	';
 	return lib_util_mysqlQuery($sql);
 }

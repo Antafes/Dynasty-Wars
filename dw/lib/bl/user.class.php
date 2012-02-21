@@ -174,7 +174,7 @@ class UserCls {
 	{
 		global $lang;
 
-		$date = date_create_from_format('Y-m-d H:i:s', $this->regdate);
+		$date = DWDateTime::createFromFormat('Y-m-d H:i:s', $this->regdate);
 
 		return $date->format($lang['timeformat']);
 	}
@@ -270,13 +270,11 @@ class UserCls {
 	 */
 	public function checkLastLogin()
 	{
-		$lastLogin = new DateTime($this->last_login);
-		$interval5 = new DateInterval('P5D');
-		$interval14 = new DateInterval('P14D');
-		$tmp = new DateTime();
-		$sub1 = $tmp->sub($interval5);
-		$tmp = new DateTime();
-		$sub2 = $tmp->sub($interval14);
+		$lastLogin = new DWDateTime($this->last_login);
+		$tmp = new DWDateTime();
+		$sub1 = $tmp->sub(new DateInterval('P5D'));
+		$tmp = new DWDateTime();
+		$sub2 = $tmp->sub(new DateInterval('P14D'));
 
 		if ($lastLogin < $sub2)
 			return 'red';

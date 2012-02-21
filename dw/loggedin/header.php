@@ -139,16 +139,16 @@ $bodyonload = sprintf('r(%d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f);'."
 );
 if ($is_building)
 	foreach ($is_building as $build)
-		$bodyonload .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", date('F d, Y H:i:s', $build['endtime']), date('F d, Y H:i:s'), $build['bid']);
+		$bodyonload .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", $build['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $build['bid']);
 
 if ($_GET['chose'] == 'units' && $train_check['ok'] && $_GET['sub'] != 'move')
-	$bodyonload .= sprintf('timer(\'%s\', \'%s\', %u);'."\n", date('F d, Y H:i:s', $train_check['endtime']), date('F d, Y H:i:s'), $train_check['kind']);
+	$bodyonload .= sprintf('timer(\'%s\', \'%s\', %u);'."\n", $train_check['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $train_check['kind']);
 elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving && !$_GET['mode'])
 {
 	foreach ($tids as $tid)
 	{
 		$troop = lib_bl_troops_checkTroop($tid);
-		$bodyonload .= sprintf('timer(%u, %u);'."\n", date('F d, Y H:i:s', $troop['endtime']), date('F d, Y H:i:s'), $tid);
+		$bodyonload .= sprintf('timer(%u, %u);'."\n", $troop['end_datetime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $tid);
 	}
 }
 

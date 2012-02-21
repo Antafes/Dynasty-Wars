@@ -319,7 +319,9 @@ function lib_bl_tribunal_getArguments($tid, $approved)
  */
 function lib_bl_tribunal_getArgument($aid)
 {
-	return lib_dal_tribunal_getArgument($aid);
+	$argument = lib_dal_tribunal_getArgument($aid);
+	$argument['added_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $argument['added_datetime']);
+	return $argument;
 }
 
 /**
@@ -355,7 +357,16 @@ function lib_bl_tribunal_blockComments($tid, $block)
  */
 function lib_bl_tribunal_getComments($tid)
 {
-	return lib_dal_tribunal_getComments($tid);
+	$comments = lib_dal_tribunal_getComments($tid);
+
+	foreach ($comments as &$comment)
+	{
+		$comment['create_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
+		$comment['changed_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
+	}
+	unset($comment);
+
+	return $comments;
 }
 
 /**
@@ -402,5 +413,10 @@ function lib_bl_tribunal_editComment($tcoid, $comment, $uid)
  */
 function lib_bl_tribunal_getComment($tcoid)
 {
-	return lib_dal_tribunal_getComment($tcoid);
+	$comment = lib_dal_tribunal_getComment($tcoid);
+
+	$comment['create_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
+	$comment['changed_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
+
+	return $comment;
 }

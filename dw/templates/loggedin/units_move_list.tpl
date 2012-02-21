@@ -41,9 +41,9 @@
 			{$troop.count}
 		</div>
 		<div class="right">
-			{if $troop.onmoving.endtime && $troop.onmoving.type < 5}
+			{if $troop.onmoving.tmid && $troop.onmoving.type < 5}
 			{$textOnMoving}
-			{elseif $troop.onmoving.endtime && $troop.onmoving.type == 5}
+			{elseif $troop.onmoving.tmid && $troop.onmoving.type == 5}
 			{$textComingBack}
 			{else}
 			{strip}

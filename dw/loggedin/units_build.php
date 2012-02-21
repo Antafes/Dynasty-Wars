@@ -157,4 +157,4 @@ else
 	$unitSmarty->assign('unitList', $unitList);
 }
 
-$smarty->assign('unitContent', $unitSmarty->fetch($smarty->template_dir[0].'units_build.tpl'));
+$smarty->assign('unitContent', $unitSmarty->fetch('units_build.tpl'));

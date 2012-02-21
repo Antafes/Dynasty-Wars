@@ -51,11 +51,11 @@ function lib_dal_unit_train_removeRes($valuelist, $uid)
  * @param int $kind
  * @param int $uid
  * @param int $count
- * @param int $endtime datetim in seconds
+ * @param DWDateTime $endTime
  * @param string $city
  * @return int
  */
-function lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city)
+function lib_dal_unit_train_startTrain($kind, $uid, $count, DWDateTime $endTime, $city)
 {
 	$sql = '
 		INSERT INTO dw_build_unit (
@@ -66,11 +66,11 @@ function lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city)
 			endtime,
 			city
 		) VALUES (
-			'.$kind.',
+			'.mysql_real_escape_string($kind).',
 			'.mysql_real_escape_string($uid).',
-			'.$count.',
-			'.time().',
-			'.$endtime.',
+			'.mysql_real_escape_string($count).',
+			NOW(),
+			"'.mysql_real_escape_string($endTime->format()).'",
 			"'.mysql_real_escape_string($city).'"
 		)
 	';

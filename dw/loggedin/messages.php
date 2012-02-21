@@ -50,7 +50,7 @@ elseif ($_GET['mmode'] == 'received') //received messages
 		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
 			$smarty->assign('message', lib_bl_messages_getMessage($_GET['msgid']));
-			$readerg = @mysql_query('UPDATE dw_message SET unread="0", date_read="'.time().'" WHERE msgid='.$_GET['msgid'].'', $con);
+			$readerg = lib_bl_messages_markRead($_GET['msgid']);
 			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
@@ -93,7 +93,7 @@ elseif ($_GET['mmode'] == "sent") //sent messages
 		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 2))
 		{
 			$smarty->assign('message', lib_bl_messages_getSentMessage($_GET['msgid']));
-			$readerg = @mysql_query('UPDATE dw_message SET unread="0", date_read="'.time().'" WHERE msgid='.$_GET['msgid'].'', $con);
+			$readerg = lib_bl_messages_markRead($_GET['msgid']);
 			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
@@ -136,7 +136,7 @@ elseif ($_GET['mmode'] == "archive") //archived messages
 		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
 			$smarty->assign('message', lib_bl_messages_getArchivedMessage($_GET['msgid']));
-			$readerg = @mysql_query('UPDATE dw_message SET unread="0", date_read="'.time().'" WHERE msgid='.$_GET['msgid'].'', $con);
+			$readerg = lib_bl_messages_markRead($_GET['msgid']);
 			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
@@ -179,7 +179,7 @@ elseif ($_GET['mmode'] == "event") //event messages
 		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
 			$smarty->assign('message', lib_bl_messages_getMessage($_GET['msgid']));
-			$readerg = @mysql_query('UPDATE dw_message SET unread="0", date_read="'.time().'" WHERE msgid='.$_GET['msgid'].'', $con);
+			$readerg = lib_bl_messages_markRead($_GET['msgid']);
 			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
