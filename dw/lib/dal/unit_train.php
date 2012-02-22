@@ -62,8 +62,8 @@ function lib_dal_unit_train_startTrain($kind, $uid, $count, DWDateTime $endTime,
 			kind,
 			uid,
 			count,
-			starttime,
-			endtime,
+			start_datetime,
+			end_datetime,
 			city
 		) VALUES (
 			'.mysql_real_escape_string($kind).',
@@ -90,7 +90,7 @@ function lib_dal_unit_train_checkTraining($uid, $city)
 		SELECT
 			tid,
 			count,
-			endtime,
+			end_datetime,
 			city,
 			kind
 		FROM dw_build_unit
@@ -176,6 +176,11 @@ function lib_dal_unit_train_newUnit($uid, $kind, $count, $map_x, $map_y)
 	return lib_util_mysqlQuery($sql);
 }
 
+/**
+ * delete a unit
+ * @author Neithan
+ * @param int $unid
+ */
 function lib_dal_unit_deleteUnit($unid)
 {
 	$sql = '

@@ -146,8 +146,9 @@ function lib_bl_unit_train_checkTraining($uid, $city)
 	{
 		foreach ($units as $unit)
 		{
+			$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $unit['end_datetime']);
 			$now = new DWDateTime();
-			if ($now >= $unit['endtime'])
+			if ($now >= $endtime)
 			{
 				$unit['uid'] = $uid;
 				lib_bl_unit_train_trainComplete($unit);
@@ -156,7 +157,6 @@ function lib_bl_unit_train_checkTraining($uid, $city)
 			{
 				if ($city == $unit['city'])
 				{
-					$endtime = $unit['endtime'];
 					$running = array(
 						'endtime' => $endtime,
 						'kind' => $unit['kind'],
@@ -165,10 +165,12 @@ function lib_bl_unit_train_checkTraining($uid, $city)
 				}
 			}
 		}
+
 		if ($running["kind"])
 			$running["ok"] = 1;
 		else
 			$running["ok"] = 0;
+
 		return $running;
 	}
 	else
