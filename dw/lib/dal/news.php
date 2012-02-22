@@ -8,7 +8,7 @@ function lib_dal_news_getAllEntries()
 {
 	$sql = '
 		SELECT * FROM dw_news
-		ORDER BY date DESC
+		ORDER BY create_datetime DESC
 	';
 	return lib_util_mysqlQuery($sql, true);
 }
