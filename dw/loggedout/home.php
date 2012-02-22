@@ -13,8 +13,8 @@ $news_home = lib_util_mysqlQuery('
 		u1.email AS creator_email,
 		u2.nick AS changer
 	FROM dw_news n
-	LEFT JOIN dw_users u1 ON (u1.uid = n.uid)
-	LEFT JOIN dw_users u2 ON (u2.uid = n.changed_uid)
+	LEFT JOIN dw_user u1 ON (u1.uid = n.uid)
+	LEFT JOIN dw_user u2 ON (u2.uid = n.changed_uid)
 	ORDER BY nid DESC
 	LIMIT 1
 ');
