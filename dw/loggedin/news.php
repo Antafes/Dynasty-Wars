@@ -1,11 +1,21 @@
 <?php
-    include ("loggedin/header.php");
-    lib_bl_general_loadLanguageFile('news' );
-    //db: auslesen der news
-    $parser = new wikiparser();
-    $news_array = lib_util_mysqlQuery('SELECT * FROM dw_news ORDER BY nid DESC', true);
+include ('loggedin/header.php');
+lib_bl_general_loadLanguageFile('news');
+//db: auslesen der news
+$parser = new wikiparser();
+$news_array = lib_util_mysqlQuery('
+	SELECT
+		n.*,
+		u1.nick AS creator,
+		u1.email AS creator_email,
+		u2.nick AS changer
+	FROM dw_news n
+	LEFT JOIN dw_users u1 ON (u1.uid = n.uid)
+	LEFT JOIN dw_users u2 ON (u2.uid = n.changed_uid)
+	ORDER BY nid DESC
+', true);
 
-    $smarty->assign('heading', htmlentities($lang['news']));
+$smarty->assign('heading', htmlentities($lang['news']));
 
 if ($news_array)
 {
@@ -19,31 +29,25 @@ if ($news_array)
 	{
 		$news[$i]['title'] = htmlentities($news_array[$n]['title']);
 
-		//auslesen des nicks und der email des verfassers
-		$sql = '
-			SELECT
-				nick,
-				email
-			FROM dw_user
-			WHERE uid = '.mysql_real_escape_string($news_array[$n]['uid']).'
-		';
-		$nicks = lib_util_mysqlQuery($sql, true);
-		if (count($nicks) > 0)
+		if ($news_array[$n]['creator'])
 		{
-			$news[$i]['nick'] = $nicks['nick'];
-			$news[$i]['email'] = $nicks['email'];
+			$news[$i]['nick'] = $news_array[$n]['creator'];
+			$news[$i]['email'] = $news_array[$n]['creator_email'];
 		}
-		$news[$i]['time'] = date($lang['acptimeformat'], $news_array[$n]['date']);
+
+		$createDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['create_datetime']);
+		$news[$i]['time'] = $createDate->format($lang['acptimeformat']);
 		$news[$i]['text'] = nl2br($parser->parseIt($news_array[$n]['text']));
 
 		if ($news[$n]['changed'])
 		{
-			$changer = lib_util_mysqlQuery('SELECT nick FROM dw_user WHERE uid='.mysql_real_escape_string($news_array[$n]['changed_uid']).'');
 			if ($news[$n]['changed'] > 1)
 				$count = $news[$n]['changed'];
 			else
 				$count = 'ein';
-			$news[$i]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, date($lang['timeformat'], $news_array[$n]['last_changed']), $changer));
+
+			$dateChanged = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['changed_datetime']);
+			$news[$i]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, $dateChanged->format($lang['timeformat']), $news_array[$n]['changer']));
 		}
 	}
 
@@ -59,5 +63,5 @@ if ($news_array)
 else
 	$smarty->assign('no_news', htmlentities($lang['nonews']));
 
-    include ("loggedin/footer.php");
-    $smarty->display($smarty->template_dir[0].'news.tpl');
+include ('loggedin/footer.php');
+$smarty->display($smarty->template_dir[0].'news.tpl');
