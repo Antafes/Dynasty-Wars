@@ -1,32 +1,18 @@
 <?php
-class DWDateInterval extends DateInterval
+class DWDateInterval
 {
 	/**
-	 * Contains the total number of days between the starting and ending dates.
-	 * Had to use a private variable, because the public days isn't writeable
-	 * @var int
+	 * The given DateInterval
+	 * @var DateInterval
 	 */
-	private $dwDays = 0;
+	private $interval;
 
 	/**
-	 * @param int $y
-	 * @param int $m
-	 * @param int $d
-	 * @param int $h
-	 * @param int $i
-	 * @param int $s
-	 * @param int $invert defaults to null
-	 * @param int $days defaults to null
+	 * @param DateInterval $interval
 	 */
-	public function __construct($y, $m, $d, $h, $i, $s, $invert = null, $days = null)
+	public function __construct(DateInterval $interval)
 	{
-		parent::__construct('P'.$y.'Y'.$m.'M'.$d.'DT'.$h.'H'.$i.'M'.$s.'S');
-
-		if ($invert)
-			$this->invert = $invert;
-
-		if ($days)
-			$this->dwDays = $days;
+		$this->interval = $interval;
 	}
 
 	/**
@@ -38,18 +24,38 @@ class DWDateInterval extends DateInterval
 		$seconds = $this->s;
 		$seconds += $this->i * 60;
 		$seconds += $this->h * 3600;
-		$seconds += $this->dwDays * 3600 * 24;
+		$seconds += $this->interval->days * 3600 * 24;
 
-		return ($this->invert ? $seconds * -1 : $seconds);
+		return ($this->interval->days ? $seconds * -1 : $seconds);
 	}
 
-	public function setDays($days)
+	/**
+	 * magic get function
+	 * @param String $name
+	 * @return mixed
+	 */
+	public function __get($name)
 	{
-		$this->dwDays = $days;
+		return $this->interval->$name;
 	}
 
-	public function getDays()
+	/**
+	 * magic set function
+	 * @param String $name
+	 * @param mixed $value
+	 */
+	public function __set($name, $value)
 	{
-		return $this->dwDays;
+		$this->interval->$name = $value;
 	}
+
+	/**
+	 * wrapper for DateInterval::format()
+	 * @param String $format
+	 * @return String
+	 */
+	public function format($format)
+	{
+		return $this->interval->format($format);
+    }
 }

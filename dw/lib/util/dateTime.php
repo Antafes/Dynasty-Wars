@@ -30,7 +30,7 @@ class DWDateTime extends DateTime
 	public function diff(DateTime $datetime)
 	{
 		$diff = parent::diff($datetime);
-		return new DWDateInterval($diff->y, $diff->m, $diff->d, $diff->h, $diff->i, $diff->s, $diff->invert, $diff->days);
+		return new DWDateInterval($diff);
 	}
 
 	/**
