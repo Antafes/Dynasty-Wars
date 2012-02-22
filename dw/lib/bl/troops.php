@@ -294,7 +294,8 @@ function lib_bl_troops_checkTroop($tid)
 {
 	$troop = lib_dal_troops_checkTroop($tid);
 
-	$troop['end_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $troop['end_datetime']);
+	if ($troop)
+		$troop['end_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $troop['end_datetime']);
 
 	return $troop;
 }

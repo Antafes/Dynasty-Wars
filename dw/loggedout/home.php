@@ -29,7 +29,7 @@ if ($news_home)
 		$news[0]['email'] = $news_home['creator_email'];
 	}
 
-	$newsDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['date']);
+	$newsDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['create_datetime']);
 	$news[0]['time'] = $newsDate->format($lang['acptimeformat']);
 	$news[0]['text'] = nl2br($parser->parseIt($news_home['text']));
 

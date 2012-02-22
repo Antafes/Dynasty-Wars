@@ -14,7 +14,7 @@ function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
 			AND type = '.mysql_real_escape_string($type).'
 			AND !del_'.$for.'
 			AND archive = '.mysql_real_escape_string($archived).'
-		ORDER BY date DESC
+		ORDER BY create_datetime DESC
 	';
 	return lib_util_mysqlQuery($sql, true);
 }

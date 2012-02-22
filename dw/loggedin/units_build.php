@@ -1,5 +1,6 @@
 <?php
 $unitSmarty = new Smarty();
+$unitSmarty->setTemplateDir('templates/loggedin/');
 
 $unitSmarty->assign('lang', $lang);
 

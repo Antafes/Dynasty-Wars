@@ -46,6 +46,7 @@ class DWDateTime extends DateTime
 			$object = new DateTimeZone(date_default_timezone_get());
 
 		$date = parent::createFromFormat($format, $time, $object);
+
 		return new DWDateTime($date->format('Y-m-d H:i:s'));
 	}
 
