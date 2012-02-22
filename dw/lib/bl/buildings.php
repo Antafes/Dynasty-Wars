@@ -11,13 +11,16 @@ function lib_bl_buildings_selectAll($x, $y, $not_built = 0)
 {
 	$res = lib_dal_buildings_selectAll($x, $y);
 	$count = count($res);
-	unset($buildings);
+
+	$buildings = array();
 	$n = 0;
-	while ($n < $count) {
+	while ($n < $count)
+	{
 		if ($not_built)
 			$pos = $n;
 		else
 			$pos = $res[$n]['position'];
+
 		$buildings[$pos]['bid'] = $res[$n]['bid'];
 		$buildings[$pos]['kind'] = $res[$n]['kind'];
 		$buildings[$pos]['lvl'] = $res[$n]['lvl'];
@@ -25,6 +28,7 @@ function lib_bl_buildings_selectAll($x, $y, $not_built = 0)
 		$buildings[$pos]['position'] = $res[$n]['position'];
 		$n++;
 	}
+
 	return $buildings;
 }
 
@@ -679,11 +683,13 @@ $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 		$x = 0;
 		foreach ($buildlist as $parts)
 		{
-			if (time() >= $parts['endtime'])
+			$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['end_datetime']);
+			$now = new DWDateTime();
+			if ($now >= $endtime)
 				lib_bl_buildings_buildComplete($parts['bid']);
 			else
 			{
-				$running[$x]['endtime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['endtime']);
+				$running[$x]['endtime'] = $endtime;
 				$running[$x]['kind'] = $parts['kind'];
 				$running[$x]['ulvl'] = $parts['ulvl'];
 				if ($running[$x]['ulvl'] == 0 && lib_bl_buildings_getUpgradeable($running[$x]['kind']))
@@ -694,8 +700,10 @@ $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 			}
 		}
 	}
+
 	if (count($buildlist) <= 0)
 		$running = 0;
+
 	return $running;
 }
 

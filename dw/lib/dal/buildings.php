@@ -148,7 +148,7 @@ function lib_dal_buildings_checkBuild($x, $y)
 	$sql = '
 		SELECT
 			`dw_buildings`.`bid`,
-			`endtime`,
+			`end_datetime`,
 			`kind`,
 			`dw_buildings`.`upgrade_lvl` AS `ulvl`,
 			`dw_buildings`.`position`
@@ -156,7 +156,7 @@ function lib_dal_buildings_checkBuild($x, $y)
 		INNER JOIN `dw_build` USING (`bid`)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
-		ORDER BY `endtime` ASC
+		ORDER BY `end_datetime` ASC
 	';
 $GLOBALS['firePHP']->log($sql, 'checkBuild sql');
 	return lib_util_mysqlQuery($sql, true);
@@ -204,8 +204,8 @@ function lib_dal_buildings_startBuilding($bid, $upgrade, DWDateTime $endTime)
 		INSERT INTO `dw_build` (
 			`bid`,
 			`upgrade`,
-			`starttime`,
-			`endtime`
+			`start_datetime`,
+			`end_datetime`
 		) VALUES (
 			"'.mysql_real_escape_string($bid).'",
 			"'.mysql_real_escape_string($upgrade).'",
