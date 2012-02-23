@@ -443,7 +443,8 @@ function lib_bl_general_getMissionary($uid)
 
 /**
  * loads a language file depending on the chosen language using the given page
- * and the location (default = ingame)
+ * and the location (default = ingame), if the chosen language is not active or
+ * not existing, the fallback language will be loaded
  * @author Neithan
  * @param String $page
  * @param String $location
@@ -459,6 +460,9 @@ function lib_bl_general_loadLanguageFile($page, $location = 'loggedin', $isAjax 
 
 	if($userLang)
 		$usedLang = $userLang;
+
+	if (!lib_dal_general_checkLanguageIsActive($usedLang))
+		$usedLang = lib_dal_general_getFallbackLanguage();
 
 	$path = '';
 

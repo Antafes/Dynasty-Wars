@@ -231,7 +231,7 @@ function lib_dal_general_getMissionary($uid)
 }
 
 /**
- * check if the users language is active
+ * check if the users language is existing and active
  * @param string $language
  * @return boolean
  */
