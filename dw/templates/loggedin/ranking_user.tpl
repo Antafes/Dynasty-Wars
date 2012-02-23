@@ -38,7 +38,7 @@
 			<td width="90" class="table_tc">{$value['points']}</td>
 			<td width="85" class="table_tc">
 			{if $smarty.session.user->getUID() != $value.uid}
-				<a href="index.php?chose=messages&amp;mmode=new&amp;recipient={$value.uid}">
+				<a class="message" href="index.php?chose=messages&amp;mmode=new&amp;recipient={$value.uid}">
 					<div style="" class="send_msg">&nbsp;</div>
 				</a>
 			{/if}

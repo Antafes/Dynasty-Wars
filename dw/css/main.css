@@ -1684,6 +1684,11 @@ textarea {
     clear: both;
 }
 
+.ranking_content a.message
+{
+	text-decoration: none;
+}
+
 .options .optionsContent
 {
 	width: 350px;
