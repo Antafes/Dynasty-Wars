@@ -9,7 +9,7 @@ $x = $cityexp[0];
 $y = $cityexp[1];
 if ($_POST['changeprod'])
 {
-	$erg1 = lib_dal_resource_changePaperPercent($_POST['prodfactor'], $x, $y);
+	$erg1 = lib_bl_resource_changePaperPercent($_POST['prodfactor'], $x, $y);
 	if ($erg1)
 		$smarty->assign('textRateChanged', $lang['prodchanged']);
 }
@@ -81,7 +81,7 @@ $smarty->assign('ressourceList', array(
 ));
 $smarty->assign('textPaperProduction', $lang['paperprod']);
 $smarty->assign('textWoodCosts', $lang['woodcosts']);
-$smarty->assign('woodCosts', lib_util_math_numberFormat(lib_bl_resource_woodCosts($x, $y), 0));
+$smarty->assign('woodCosts', util\math\numberFormat(lib_bl_resource_woodCosts($x, $y), 0));
 $smarty->assign('textProductionFactor', $lang['prodfactor']);
 $smarty->assign('productionFactor', lib_bl_resource_getPaperPercent($x, $y));
 $smarty->assign('productionFactorList', array(

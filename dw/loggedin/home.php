@@ -7,7 +7,7 @@ $smarty->assign('missionary', lib_bl_general_getMissionary($_SESSION['user']->ge
 $smarty->assign('welcome_message', htmlentities($lang['welcome']));
 $smarty->assign('nick', $_SESSION['user']->getNick());
 $smarty->assign('missionary_info', htmlentities($lang['missionary']));
-$smarty->assign('missionary_accept_link', lib_util_html_createLink(array(
+$smarty->assign('missionary_accept_link', util\html\createLink(array(
 	'chose' => 'missionary',
 	'parameter' => array(
 		'religion' => 'accept',
@@ -15,7 +15,7 @@ $smarty->assign('missionary_accept_link', lib_util_html_createLink(array(
 	),
 )));
 $smarty->assign('missionary_accept', htmlentities($lang['accept']));
-$smarty->assign('missionary_decline_link', lib_util_html_createLink(array(
+$smarty->assign('missionary_decline_link', util\html\createLink(array(
 	'chose' => 'missionary',
 	'parameter' => array(
 		'religion' => 'decline',
@@ -28,7 +28,7 @@ if ($new_msg)
 {
 	$messages = htmlentities($lang['youhave']);
 	if (lib_bl_gameOptions_getMenuEntry('messages'))
-		$messages .= ' <a href="'.lib_util_html_createLink(array('chose' => 'messages')).'">';
+		$messages .= ' <a href="'.util\html\createLink(array('chose' => 'messages')).'">';
 	if ($new_msg == 1)
 		$messages .= htmlentities($lang['newmsg']);
 	elseif ($new_msg > 1)

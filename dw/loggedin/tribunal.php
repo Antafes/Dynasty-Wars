@@ -32,7 +32,7 @@ if ($_GET['sub'] == 'hearings' || !$_GET['sub'])
 		}
 
 		$smarty->assign('hearing', lib_bl_tribunal_getHearing($_GET['id']));
-		$smarty->assign('commentReadyScript', lib_util_html_createReadyScript('showCommentList("comments", '.$_GET['id'].')'));
+		$smarty->assign('commentReadyScript', util\html\createReadyScript('showCommentList("comments", '.$_GET['id'].')'));
 	}
 }
 elseif ($_GET['sub'] == 'newhearing')

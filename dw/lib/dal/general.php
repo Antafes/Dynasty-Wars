@@ -1,4 +1,6 @@
 <?php
+namespace dal\general;
+
 /**
  * get the ressource amounts of the defined user
  * @author Neithan
@@ -6,7 +8,7 @@
  * @param int $y
  * @return array
  */
-function lib_dal_general_getRes($x, $y)
+function getRes($x, $y)
 {
 	$sql = '
 		SELECT * FROM `dw_res`
@@ -22,7 +24,7 @@ function lib_dal_general_getRes($x, $y)
  * @param int $uid
  * @return string
  */
-function lib_dal_general_getLanguage($uid)
+function getLanguage($uid)
 {
 	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
 	return util\mysql\query($sql);
@@ -34,7 +36,7 @@ function lib_dal_general_getLanguage($uid)
  * @param boolean $active if true, only usable languages are returned
  * @return array
  */
-function lib_dal_general_getLanguages($active)
+function getLanguages($active)
 {
 	$sql = '
 		SELECT
@@ -56,7 +58,7 @@ function lib_dal_general_getLanguages($active)
  * @author Neithan
  * @return int
  */
-function lib_dal_general_getSeason()
+function getSeason()
 {
 	$sql = 'SELECT season FROM dw_game';
 	return util\mysql\query($sql);
@@ -72,7 +74,7 @@ function lib_dal_general_getSeason()
  * @param int $type
  * @return int
  */
-function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
+function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
 	$sql = '
 		INSERT INTO dw_message (
@@ -101,7 +103,7 @@ function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $messa
  * @param int $state
  * @return int
  */
-function lib_dal_general_deactivateUser($uid, $state)
+function deactivateUser($uid, $state)
 {
 	$sql = 'UPDATE dw_user SET deactivated = '.mysql_real_escape_string($state).' WHERE uid = '.mysql_real_escape_string($uid).'';
 	return util\mysql\query($sql);
@@ -113,7 +115,7 @@ function lib_dal_general_deactivateUser($uid, $state)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_setClanLeader($uid)
+function setClanLeader($uid)
 {
 	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.mysql_real_escape_string($uid).'';
 	return util\mysql\query($sql);
@@ -126,7 +128,7 @@ function lib_dal_general_setClanLeader($uid)
  * @param string $where
  * @return int
  */
-function lib_dal_general_deleteFrom($table, $where)
+function deleteFrom($table, $where)
 {
 	$sql = '
 		DELETE FROM '.mysql_real_escape_string($table).'
@@ -141,7 +143,7 @@ function lib_dal_general_deleteFrom($table, $where)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_updateMap($uid)
+function updateMap($uid)
 {
 	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.mysql_real_escape_string($uid).'';
 	return util\mysql\query($sql);
@@ -153,7 +155,7 @@ function lib_dal_general_updateMap($uid)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_deleteBuildings($uid)
+function deleteBuildings($uid)
 {
 	$sql = '
 		DELETE FROM dw_buildings, dw_build
@@ -171,7 +173,7 @@ function lib_dal_general_deleteBuildings($uid)
  * @param string $city default = ''
  * @return int
  */
-function lib_dal_general_changePosition($where, $uid = 0, $city = '')
+function changePosition($where, $uid = 0, $city = '')
 {
 	$sql = '
 		UPDATE dw_map
@@ -187,7 +189,7 @@ function lib_dal_general_changePosition($where, $uid = 0, $city = '')
  * @param string $entry_name
  * @return int
  */
-function lib_dal_general_checkMenuEntry($entry_name)
+function checkMenuEntry($entry_name)
 {
 	$sql = '
 		SELECT active FROM dw_game_menu
@@ -202,7 +204,7 @@ function lib_dal_general_checkMenuEntry($entry_name)
  * @param int $recipient
  * @return int
  */
-function lib_dal_general_getUnreadMessagesCount($recipient)
+function getUnreadMessagesCount($recipient)
 {
 	$sql = '
 		SELECT COUNT(msgid) msg_count
@@ -220,7 +222,7 @@ function lib_dal_general_getUnreadMessagesCount($recipient)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_getMissionary($uid)
+function getMissionary($uid)
 {
 	$sql = '
 		SELECT COUNT(*)
@@ -235,7 +237,7 @@ function lib_dal_general_getMissionary($uid)
  * @param string $language
  * @return boolean
  */
-function lib_dal_general_checkLanguageIsActive($language)
+function checkLanguageIsActive($language)
 {
 	$sql = '
 		SELECT language
@@ -250,7 +252,7 @@ function lib_dal_general_checkLanguageIsActive($language)
  * get the fallback language
  * @return string
  */
-function lib_dal_general_getFallbackLanguage()
+function getFallbackLanguage()
 {
 	$sql = '
 		SELECT language

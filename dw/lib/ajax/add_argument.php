@@ -58,7 +58,7 @@ if ($con)
 			<div id="argument_'.$argument['aid'].'" class="argument_text">
 				'.nl2br($message['message']).'
 			</div>
-			'.htmlentities(sprintf($lang['added_by'], $argument['added_datetime']->format($lang['acptimeformat']), lib_dal_user_uid2nick($_SESSION['user']->getUID()))).'
+			'.htmlentities(sprintf($lang['added_by'], $argument['added_datetime']->format($lang['acptimeformat']), dal\user\uid2nick($_SESSION['user']->getUID()))).'
 			<br />
 		';
 

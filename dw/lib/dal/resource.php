@@ -6,16 +6,19 @@
  *
  */
 
+namespace dal\resource;
+
 /**
- * Will add the amout specified as $value to $uid's resource inventory of
- * $resource. This function accepts negative values as well so that it can be
- * used to remove units from the resource stock as well.
+ * Will add the amout specified as $value to the user at position $x:$y resource
+ * inventory of $resource. This function accepts negative values as well so that
+ * it can be used to remove units from the resource stock as well.
  * @author siyb
- * @param <int> $uid
  * @param <String> $resource
  * @param <float> $value
+ * @param <int> $x
+ * @param <int> $y
  */
-function lib_dal_resource_addToResources($resource, $value, $x, $y)
+function addToResources($resource, $value, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
@@ -28,12 +31,13 @@ function lib_dal_resource_addToResources($resource, $value, $x, $y)
 
 /**
  * Returns the amount of $resource that is currently in the stock of the user
- * whose id is $uid
- * @param <type> $uid
- * @param <type> $resource
+ * whose position is $x:$y
+ * @param <int> $x
+ * @param <int> $y
+ * @param <int> $resource
  * @return float
  */
-function lib_dal_resource_returnResourceAmount($x, $y, $resource)
+function returnResourceAmount($x, $y, $resource)
 {
 	$sql = '
 		SELECT `'.mysql_real_escape_string($resource).'` FROM `dw_res`
@@ -51,7 +55,7 @@ function lib_dal_resource_returnResourceAmount($x, $y, $resource)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getUpgrLvl($kind, $x, $y)
+function getUpgradeLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `upgrade_lvl` FROM `dw_buildings`
 		WHERE `kind` = "'.mysql_real_escape_string($kind).'"
@@ -68,7 +72,7 @@ function lib_dal_resource_getUpgrLvl($kind, $x, $y)
  * @param int $type
  * @return int
  */
-function lib_dal_resource_getResearchLvl($uid, $type)
+function getResearchLevel($uid, $type)
 {
 	$sql = 'SELECT `lvl` FROM `dw_research`
 		WHERE `uid` = "'.mysql_real_escape_string($uid).'"
@@ -85,7 +89,7 @@ function lib_dal_resource_getResearchLvl($uid, $type)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getLvl($kind, $x, $y)
+function getLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `lvl` FROM `dw_buildings`
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
@@ -99,12 +103,11 @@ function lib_dal_resource_getLvl($kind, $x, $y)
  * update the users resources
  * @author Neithan
  * @param array $res array([food], [wood], [rock], [iron], [paper], [koku])
- * @param int $time datetime in seconds
  * @param int $x
  * @param int $y
  * @return int
  */
-function lib_dal_resource_updateAll($res, $time, $x, $y)
+function updateAll($res, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
@@ -128,7 +131,7 @@ function lib_dal_resource_updateAll($res, $time, $x, $y)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getPaperPercent($x, $y)
+function getPaperPercent($x, $y)
 {
 	$sql = '
 		SELECT paper_prod FROM dw_res
@@ -146,7 +149,7 @@ function lib_dal_resource_getPaperPercent($x, $y)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_changePaperPercent($percent, $x, $y)
+function changePaperPercent($percent, $x, $y)
 {
 	$sql = '
 		UPDATE dw_res
@@ -164,7 +167,7 @@ function lib_dal_resource_changePaperPercent($percent, $x, $y)
  * @param int $y
  * @return array
  */
-function lib_dal_resource_getResourceBuildings($x, $y)
+function getResourceBuildings($x, $y)
 {
 	$sql = '
 		SELECT kind, lvl FROM dw_buildings
@@ -174,4 +177,3 @@ function lib_dal_resource_getResourceBuildings($x, $y)
 	';
 	return util\mysql\query($sql, true);
 }
-?>

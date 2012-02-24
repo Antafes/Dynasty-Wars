@@ -16,7 +16,7 @@ if (!$_GET['buildplace'])
 			$upgrade = 0;
 
 		lib_bl_buildings_build((int) $_POST['buildplace'], $_SESSION['user']->getUID(), $city, $upgrade, $_POST['kind']);
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'buildings'), true));
+		lib_bl_general_redirect(util\html\createLink(array('chose' => 'buildings'), true));
 	}
 
 	$cityexp = explode(':', $city);
@@ -63,7 +63,7 @@ if (!$_GET['buildplace'])
 	$terrain = 'grass';
 
 	$smarty->assign('buildings', $lang['buildings']);
-	$smarty->assign('cityBackground', lib_util_html_createLink(array(
+	$smarty->assign('cityBackground', util\html\createLink(array(
 		'file' => 'pictures/city/'.$terrain.'/'.$season.'/city.jpg',
 	)));
 	$smarty->assign('maxBuildplaces', $max_buildplaces + 1); // + 1 for the loop in smarty
@@ -132,12 +132,12 @@ elseif (is_numeric($_GET['buildplace']))
 
 			$smarty->assign('lvlup', htmlentities($lang['lvlup']));
 			$smarty->assign('buildingRessources', array(
-				'food' => lib_util_math_numberFormat($prices['food'], 0),
-				'wood' => lib_util_math_numberFormat($prices['wood'], 0),
-				'rock' => lib_util_math_numberFormat($prices['rock'], 0),
-				'iron' => lib_util_math_numberFormat($prices['iron'], 0),
-				'paper' => lib_util_math_numberFormat($prices['paper'], 0),
-				'koku' => lib_util_math_numberFormat($prices['koku'], 0),
+				'food' => util\math\numberFormat($prices['food'], 0),
+				'wood' => util\math\numberFormat($prices['wood'], 0),
+				'rock' => util\math\numberFormat($prices['rock'], 0),
+				'iron' => util\math\numberFormat($prices['iron'], 0),
+				'paper' => util\math\numberFormat($prices['paper'], 0),
+				'koku' => util\math\numberFormat($prices['koku'], 0),
 			));
 
 			$res_values = array(
@@ -172,7 +172,7 @@ elseif (is_numeric($_GET['buildplace']))
 				//moved here, because there is no upgrade posibility, if the building has reached it's maximum upgrade
 				$smarty->assign('hasUpgrades', $has_upgrades);
 				foreach ($upgrade_prices as &$upgrade_price)
-					$upgrade_price = lib_util_math_numberFormat($upgrade_price, 0);
+					$upgrade_price = util\math\numberFormat($upgrade_price, 0);
 				$smarty->assign('upgradePrices', $upgrade_prices);
 				$res_values = array(
 					'res_food' => $ressources['food'],
@@ -250,12 +250,12 @@ elseif (is_numeric($_GET['buildplace']))
 						$buildable['ulvl'] = 1;
 
 					$prices_formatted = array(
-						'food' => lib_util_math_numberFormat($prices['food'], 0),
-						'wood' => lib_util_math_numberFormat($prices['wood'], 0),
-						'rock' => lib_util_math_numberFormat($prices['rock'], 0),
-						'iron' => lib_util_math_numberFormat($prices['iron'], 0),
-						'paper' => lib_util_math_numberFormat($prices['paper'], 0),
-						'koku' => lib_util_math_numberFormat($prices['koku'], 0),
+						'food' => util\math\numberFormat($prices['food'], 0),
+						'wood' => util\math\numberFormat($prices['wood'], 0),
+						'rock' => util\math\numberFormat($prices['rock'], 0),
+						'iron' => util\math\numberFormat($prices['iron'], 0),
+						'paper' => util\math\numberFormat($prices['paper'], 0),
+						'koku' => util\math\numberFormat($prices['koku'], 0),
 					);
 					$res_values = array(
 						'res_food' => $ressources['food'],

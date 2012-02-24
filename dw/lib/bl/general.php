@@ -8,7 +8,7 @@
  */
 function lib_bl_general_getRes($x, $y)
 {
-	return lib_dal_general_getRes($x, $y);
+	return dal\general\getRes($x, $y);
 }
 
 /**
@@ -20,7 +20,7 @@ function lib_bl_general_getRes($x, $y)
 function lib_bl_general_getLanguage($uid = '')
 {
 	if ($uid)
-		$language = lib_dal_general_getLanguage($uid);
+		$language = dal\general\getLanguage($uid);
 	else
 		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	return $language;
@@ -34,7 +34,7 @@ function lib_bl_general_getLanguage($uid = '')
  */
 function lib_bl_general_getLanguages($active = true)
 {
-	return lib_dal_general_getLanguages($active);
+	return dal\general\getLanguages($active);
 }
 
 /**
@@ -103,7 +103,7 @@ function lib_bl_general_formatTime($time, $format)
  */
 function lib_bl_general_getSeason()
 {
-	return lib_dal_general_getSeason();
+	return dal\general\getSeason();
 }
 
 /**
@@ -115,7 +115,7 @@ function lib_bl_general_getSeason()
 function lib_bl_general_getMaxStorage($city)
 {
 	$cityexp = explode(':', $city);
-	$storage_building = lib_dal_buildings_getBuildingByKind(22, $cityexp[0], $cityexp[1]);
+	$storage_building = dal\buildings\getBuildingByKind(22, $cityexp[0], $cityexp[1]);
 	$storage_lvl = $storage_building['lvl'];
 	$storage = 10000;
 	for ($i = 1; $i <= $storage_lvl; $i++)
@@ -165,7 +165,7 @@ function lib_bl_general_sendMessage($uid_sender, $uid_recipient, $title, $messag
 {
 	if (is_numeric($uid_recipient) && is_numeric($uid_sender))
 	{
-		$msgerg = lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
+		$msgerg = dal\general\sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
 		if ($msgerg) {
 			return 1;
 		} else {
@@ -182,7 +182,7 @@ function lib_bl_general_sendMessage($uid_sender, $uid_recipient, $title, $messag
  */
 function lib_bl_general_delUser($reguid)
 {
-	$helperg = lib_dal_user_getClanRank($reguid);
+	$helperg = dal\user\getClanRank($reguid);
 
 	if (count($helperg) > 0) {
 		$regcid = $helperg['cid'];
@@ -190,23 +190,23 @@ function lib_bl_general_delUser($reguid)
 	}
 
 	if ($rankid == 1) {
-		$helperg = lib_dal_user_getUIDFromCID($regcid);
+		$helperg = dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = lib_dal_clan_getAllUser($regcid);
+			$clan_user = dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = lib_dal_general_setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
 
-	$erg1 = lib_dal_general_deleteFrom('dw_user', 'uid = '.$reguid);
-	$erg2 = lib_dal_general_deleteFrom('dw_res', 'uid = '.$reguid);
-	$erg3 = lib_dal_general_updateMap($reguid);
-	$erg4 = lib_dal_general_deleteBuildings($reguid);
-	$erg5 = lib_dal_general_deleteFrom('dw_message', 'uid_recipient = '.$reguid);
-	$erg6 = lib_dal_general_deleteFrom('dw_points', 'uid = '.$reguid);
-	$erg7 = lib_dal_general_deleteFrom('dw_clan_applications', 'uid = '.$reguid);
-	$erg8 = lib_dal_general_deleteFrom('dw_research', 'uid = '.$reguid);
+	$erg1 = dal\general\deleteFrom('dw_user', 'uid = '.$reguid);
+	$erg2 = dal\general\deleteFrom('dw_res', 'uid = '.$reguid);
+	$erg3 = dal\general\updateMap($reguid);
+	$erg4 = dal\general\deleteBuildings($reguid);
+	$erg5 = dal\general\deleteFrom('dw_message', 'uid_recipient = '.$reguid);
+	$erg6 = dal\general\deleteFrom('dw_points', 'uid = '.$reguid);
+	$erg7 = dal\general\deleteFrom('dw_clan_applications', 'uid = '.$reguid);
+	$erg8 = dal\general\deleteFrom('dw_research', 'uid = '.$reguid);
 
 	if ($erg1 && $erg2 && $erg3 && $erg4 && $erg5 && $erg6 && $erg7 && $erg8)
 		return 1;
@@ -223,21 +223,21 @@ function lib_bl_general_delUser($reguid)
  */
 function lib_bl_general_deactivateUser($uid, $state)
 {
-	$helperg = lib_dal_user_getClanRank($reguid);
+	$helperg = dal\user\getClanRank($reguid);
 	if (count($helperg) > 0) {
 		$regcid = $helperg['cid'];
 		$rankid = $helperg['rankid'];
 	}
 	if ($rankid == 1) {
-		$helperg = lib_dal_user_getUIDFromCID($regcid);
+		$helperg = dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = lib_dal_clan_getAllUser($regcid);
+			$clan_user = dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = lib_dal_general_setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
-	$erg1 = lib_dal_general_deactivateUser($uid, $state);
+	$erg1 = dal\general\deactivateUser($uid, $state);
 	if ($erg1 > 0 && $leaderg > 0)
 		return 1;
 	else
@@ -262,17 +262,17 @@ function lib_bl_general_changePos($uid, $x, $y, $city)
 		return 3;
 	else
 	{
-		$reguid = lib_dal_user_getUIDFromMapPosition($x, $y);
+		$reguid = dal\user\getUIDFromMapPosition($x, $y);
 		if ($reguid != $uid)
 			return 2;
 		else
 		{
-			$terrain = lib_dal_map_getTerrain($x, $y);
+			$terrain = dal\map\getTerrain($x, $y);
 			if ($terrain != 1 && $terrain != 5)
 			{
-				$erg3 = lib_dal_general_changePosition('uid = '.$uid);
+				$erg3 = dal\general\changePosition('uid = '.$uid);
 				$where = 'map_x='.mysql_real_escape_string($x).' AND map_y='.mysql_real_escape_string($y);
-				$erg4 = lib_dal_general_changePosition($where, $uid, $city);
+				$erg4 = dal\general\changePosition($where, $uid, $city);
 				if ($erg3 && $erg4)
 					return 1;
 				else
@@ -315,7 +315,7 @@ function lib_bl_general_sendMail($recipient, $subject, $message, $sender = 'supp
  */
 function lib_bl_general_checkMenuEntry($entry_name)
 {
-	$check = lib_dal_general_checkMenuEntry($entry_name);
+	$check = dal\general\checkMenuEntry($entry_name);
 	if ($check < 1)
 		header('Location: index.php?chose=home');
 	else
@@ -330,7 +330,7 @@ function lib_bl_general_checkMenuEntry($entry_name)
  */
 function lib_bl_general_getGameRank($uid)
 {
-	$user = lib_dal_login_getAllData($uid);
+	$user = dal\login\getAllData($uid);
 	return $user['game_rank'];
 }
 
@@ -342,7 +342,7 @@ function lib_bl_general_getGameRank($uid)
  */
 function lib_bl_general_uid2nick($uid)
 {
-	return lib_dal_user_uid2nick($uid);
+	return dal\user\uid2nick($uid);
 }
 
 /**
@@ -353,7 +353,7 @@ function lib_bl_general_uid2nick($uid)
  */
 function lib_bl_general_nick2uid($nick)
 {
-	return lib_dal_user_nick2uid($nick);
+	return dal\user\nick2uid($nick);
 }
 
 /**
@@ -420,7 +420,7 @@ function lib_bl_general_cutOffText($text, $signs)
  */
 function lib_bl_general_getUnreadMessageCount($recipient)
 {
-	$msgs = lib_dal_general_getUnreadMessagesCount($recipient);
+	$msgs = dal\general\getUnreadMessagesCount($recipient);
 	if (!$msgs)
 		$msgs = 0;
 	return (int)$msgs;
@@ -434,7 +434,7 @@ function lib_bl_general_getUnreadMessageCount($recipient)
  */
 function lib_bl_general_getMissionary($uid)
 {
-	$missionary = lib_dal_general_getMissionary($uid);
+	$missionary = dal\general\getMissionary($uid);
 	if ($missionary > 0)
 		return true;
 	else
@@ -461,8 +461,8 @@ function lib_bl_general_loadLanguageFile($page, $location = 'loggedin', $isAjax 
 	if($userLang)
 		$usedLang = $userLang;
 
-	if (!lib_dal_general_checkLanguageIsActive($usedLang))
-		$usedLang = lib_dal_general_getFallbackLanguage();
+	if (!dal\general\checkLanguageIsActive($usedLang))
+		$usedLang = dal\general\getFallbackLanguage();
 
 	$path = '';
 

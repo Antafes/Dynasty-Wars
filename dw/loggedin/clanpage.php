@@ -418,7 +418,7 @@ else
 				{
 					foreach ($applications as &$application)
 					{
-						$applicationTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $application['create_datetime']);
+						$applicationTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $application['create_datetime']);
 						$application['create_datetime'] = $applicationTime->format($lang['timeformat']);
 					}
 					unset($application);
@@ -442,7 +442,7 @@ else
 				';
 				$app = util\mysql\query($sql);
 				$GLOBALS['firePHP']->log($app, 'application');
-				$applicationTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $app['create_datetime']);
+				$applicationTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $app['create_datetime']);
 				$app['create_datetime'] = $applicationTime->format($lang['timeformat']);
 				$smarty->assign('application', $app);
 			}

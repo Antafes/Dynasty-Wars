@@ -1,11 +1,13 @@
 <?php
+namespace dal\gameOptions;
+
 /**
  * get the specified menu entry
  * @author Neithan
  * @param string $entryName
  * @return array
  */
-function lib_dal_gameOptions_getMenuEntry($entryName)
+function getMenuEntry($entryName)
 {
 	$sql = '
 		SELECT *
@@ -14,13 +16,14 @@ function lib_dal_gameOptions_getMenuEntry($entryName)
 	';
 	return util\mysql\query($sql);
 }
+
 /**
  * get all menu entries
  * @author Neithan
  * @param boolean $visible (optional)
  * @return array
  */
-function lib_dal_gameOptions_getAllMenuEntries($visible = true)
+function getAllMenuEntries($visible = true)
 {
 	$sql = '
 		SELECT *
@@ -37,7 +40,7 @@ function lib_dal_gameOptions_getAllMenuEntries($visible = true)
  * @param int $active
  * @return int
  */
-function lib_dal_gameOptions_setMenuEntry($game_menu_id, $active, $sort, $visible)
+function setMenuEntry($game_menu_id, $active, $sort, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
@@ -56,7 +59,7 @@ function lib_dal_gameOptions_setMenuEntry($game_menu_id, $active, $sort, $visibl
  * @param int $visible
  * @return int
  */
-function lib_dal_gameOptions_setAllMenuEntries($active, $visible)
+function setAllMenuEntries($active, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
@@ -71,7 +74,7 @@ function lib_dal_gameOptions_setAllMenuEntries($active, $visible)
  * @author Neithan
  * @return array
  */
-function lib_dal_gameOptions_getGameOptions()
+function getGameOptions()
 {
 	$sql = 'SELECT * FROM dw_game';
 	return util\mysql\query($sql);

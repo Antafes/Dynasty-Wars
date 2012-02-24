@@ -1,4 +1,6 @@
 <?php
+namespace dal\messages;
+
 /**
  * get all messages of the specified type
  * @author Neithan
@@ -6,7 +8,7 @@
  * @param String $for possible values: sender, recipient
  * @return array
  */
-function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
+function getMessages($uid, $type, $for, $archived = 0)
 {
 	$sql = '
 		SELECT * FROM dw_message
@@ -26,7 +28,7 @@ function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
  * @param String $for
  * @return array
  */
-function lib_dal_message_getMessage($msgid, $for, $archived = 0)
+function getMessage($msgid, $for, $archived = 0)
 {
 	$sql = '
 		SELECT * FROM dw_message
@@ -45,7 +47,7 @@ function lib_dal_message_getMessage($msgid, $for, $archived = 0)
  * @param boolean $forceDeletion will force the deletion of unread messages
  * @return int
  */
-function lib_dal_messages_markAsDeleted($msgid, $deleteFor, $forceDeletion)
+function markAsDeleted($msgid, $deleteFor, $forceDeletion)
 {
 	if ($deleteFor == 'sender' || $deleteFor == 'recipient')
 	{
@@ -70,7 +72,7 @@ function lib_dal_messages_markAsDeleted($msgid, $deleteFor, $forceDeletion)
  * @param int $msgid
  * @return int
  */
-function lib_dal_messages_markRead($msgid)
+function markRead($msgid)
 {
 	$sql = '
 		UPDATE dw_message
@@ -87,7 +89,7 @@ function lib_dal_messages_markRead($msgid)
  * @param int $msgid
  * @return int
  */
-function lib_dal_messages_archive($msgid)
+function archive($msgid)
 {
 	$sql = '
 		UPDATE dw_message
@@ -103,7 +105,7 @@ function lib_dal_messages_archive($msgid)
  * @param int $msgid
  * @return int
  */
-function lib_dal_messages_checkRecipient($msgid)
+function checkRecipient($msgid)
 {
 	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
 	return util\mysql\query($sql);
@@ -114,7 +116,7 @@ function lib_dal_messages_checkRecipient($msgid)
  * @param int $msgid
  * @return int
  */
-function lib_dal_messages_checkSender($msgid)
+function checkSender($msgid)
 {
 	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
 	return util\mysql\query($sql);

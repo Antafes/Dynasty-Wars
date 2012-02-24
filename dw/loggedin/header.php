@@ -6,12 +6,12 @@ if ($_POST['citychange'])
 	if ($_SESSION['lid'])
 	{
 		$_SESSION["city"] = $_POST['citychange'];
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => $_GET['chose']), true));
+		lib_bl_general_redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 	elseif ($_COOKIE['lid'])
 	{
 		setcookie("city", $_POST['citychange'], time()-604800, "", ".dynasty-wars.de");
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => $_GET['chose']), true));
+		lib_bl_general_redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 }
 if ($_SESSION["lid"]) {
@@ -152,7 +152,7 @@ elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving &&
 	}
 }
 
-$smarty->assign('readyJS', lib_util_html_createReadyScript($bodyonload));
+$smarty->assign('readyJS', util\html\createReadyScript($bodyonload));
 
 //selection of the map position
 $cities = util\mysql\query('

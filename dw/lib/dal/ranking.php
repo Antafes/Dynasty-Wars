@@ -1,10 +1,12 @@
 <?php
+namespace dal\ranking;
+
 /**
  * Returns the User Ranking
  * @author BlackIce
  * @return array
  */
-function lib_dal_ranking_getUserRanking(){
+function getUserRanking(){
 	$sql = '
 		SELECT
 			dw_points.uid,
@@ -33,7 +35,7 @@ function lib_dal_ranking_getUserRanking(){
  * @author BlackIce
  * @return array
  */
-function lib_dal_ranking_getClanRanking(){
+function getClanRanking(){
 	$SQL = 'SELECT dw_clan.cid, sum(unit_points) unitPoints,
 			sum(building_points) buildingPoints, sum(unit_points+building_points) AS points,
 			clanname
@@ -43,4 +45,3 @@ function lib_dal_ranking_getClanRanking(){
 			WHERE NOT deactivated GROUP BY dw_clan.cid ORDER BY points DESC';
 	return util\mysql\query($SQL,True);
 }
-?>

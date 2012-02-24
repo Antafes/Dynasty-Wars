@@ -1,11 +1,13 @@
 <?php
+namespace dal\lostPassword;
+
 /**
  * check for older requests
  * @author Neithan
  * @param int $uid
  * @return int
  */
-function lib_dal_lost_password_checkRecoveries($uid)
+function checkRecoveries($uid)
 {
 	$sql = 'SELECT lpid FROM dw_lostpw WHERE uid = '.$uid.'';
 	return util\mysql\query($sql);
@@ -19,7 +21,7 @@ function lib_dal_lost_password_checkRecoveries($uid)
  * @param int $uid
  * @return int
  */
-function lib_dal_lost_password_insertRecovery($id, $time, $uid)
+function insertRecovery($id, $time, $uid)
 {
 	$sql = '
 		INSERT INTO dw_lostpw (
@@ -44,7 +46,7 @@ function lib_dal_lost_password_insertRecovery($id, $time, $uid)
  * @param int $time
  * @return int
  */
-function lib_dal_lost_password_updateRecovery($id, $time)
+function updateRecovery($id, $time)
 {
 	$sql = '
 		UPDATE dw_lostpw
@@ -60,7 +62,7 @@ function lib_dal_lost_password_updateRecovery($id, $time)
  * @param int $uid
  * @return array
  */
-function lib_dal_lost_password_getRecoveryRequest($uid)
+function getRecoveryRequest($uid)
 {
 	$sql = '
 		SELECT * FROM dw_lostpw
@@ -75,9 +77,8 @@ function lib_dal_lost_password_getRecoveryRequest($uid)
  * @param int $uid
  * @return int
  */
-function lib_dal_lost_password_removeRecoveryRequest($uid)
+function removeRecoveryRequest($uid)
 {
 	$sql = 'DELETE FROM dw_lostpw WHERE uid = '.mysql_real_escape_string($uid).'';
 	return util\mysql\query($sql);
 }
-?>

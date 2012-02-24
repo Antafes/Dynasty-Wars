@@ -64,7 +64,7 @@ class closedList{
  */
 function lib_bl_unit_calcUnitPoints()
 {
-    return lib_dal_unit_calcUnitPoints();
+    return dal\unit\calcUnitPoints();
 }
 
 /**
@@ -129,8 +129,8 @@ function lib_bl_unit_calcFoodOrKoku($unitType, $amount, $type)
  */
 function lib_bl_unit_calcTotalFoodCost($uid)
 {
-    if (!lib_dal_calculateUnitCosts()) return 0;
-    $result = lib_dal_getUnitCount($uid);
+    if (!dal\unit\calculateUnitCosts()) return 0;
+    $result = dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
@@ -156,8 +156,8 @@ function lib_bl_unit_calcTotalFoodCost($uid)
 function lib_bl_unit_calcTotalKokuCost(
 $uid)
 {
-    if (!lib_dal_calculateUnitCosts()) return 0;
-    $result = lib_dal_getUnitCount($uid);
+    if (!dal\unit\calculateUnitCosts()) return 0;
+    $result = dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
@@ -183,7 +183,7 @@ $uid)
  */
 function lib_bl_unit_getUnits($kind, $uid)
 {
-  	return lib_dal_unit_getUnits($kind, $uid);
+  	return dal\unit\getUnits($kind, $uid);
 }
 
 /**
@@ -194,16 +194,16 @@ function lib_bl_unit_getUnits($kind, $uid)
  */
 function lib_bl_unit_checkDaimyo($uid)
 {
-	if (!lib_dal_unit_checkDaimyo($uid))
+	if (!dal\unit\checkDaimyo($uid))
 	{
-		$pos = lib_dal_login_getMainCity($uid);
+		$pos = dal\login\getMainCity($uid);
 
 		if (count($pos) > 0)
 		{
 			$pos_x = $pos['map_x'];
 			$pos_y = $pos['map_y'];
 		}
-		lib_dal_unit_createDaimyo($uid, $pos_x, $pos_y);
+		dal\unit\createDaimyo($uid, $pos_x, $pos_y);
 	}
 }
 ?>

@@ -9,7 +9,7 @@
  */
 function lib_bl_buildings_selectAll($x, $y, $not_built = 0)
 {
-	$res = lib_dal_buildings_selectAll($x, $y);
+	$res = dal\buildings\selectAll($x, $y);
 	$count = count($res);
 
 	$buildings = array();
@@ -41,7 +41,7 @@ function lib_bl_buildings_selectAll($x, $y, $not_built = 0)
  */
 function lib_bl_buildings_getHarbour($x, $y)
 {
-	return lib_dal_buildings_getHarbour($x, $y);
+	return dal\buildings\getHarbour($x, $y);
 }
 
 /**
@@ -127,7 +127,7 @@ function lib_bl_buildings_getPic($city, $building, $new_building = 0)
  */
 function lib_bl_buildings_selectBuilding($x, $y, $pos)
 {
-	$res = lib_dal_buildings_selectBuilding($x, $y, $pos);
+	$res = dal\buildings\selectBuilding($x, $y, $pos);
 
 	if ($res)
 	{
@@ -235,10 +235,10 @@ function lib_bl_buildings_prices($kind, $lvl, $upgrade_lvl, $has_harbour, $city)
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$prices = lib_dal_buildings_prices($kind);
-	$mainbuilding = lib_dal_buildings_getBuildingByKind(19, $x, $y);
-	$paper = lib_dal_buildings_getBuildingByKind(5, $x, $y);
-	$koku = lib_dal_buildings_getBuildingByKind(6, $x, $y);
+	$prices = dal\buildings\prices($kind);
+	$mainbuilding = dal\buildings\getBuildingByKind(19, $x, $y);
+	$paper = dal\buildings\getBuildingByKind(5, $x, $y);
+	$koku = dal\buildings\getBuildingByKind(6, $x, $y);
 
 	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['paper'] = 0;
@@ -282,7 +282,7 @@ function lib_bl_buildings_prices($kind, $lvl, $upgrade_lvl, $has_harbour, $city)
  */
 function lib_bl_buildings_upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 {
-	$prices = lib_dal_buildings_upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl);
+	$prices = dal\buildings\upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl);
 $GLOBALS['firePHP']->log($prices, 'upgradePrices');
 	if (is_array($prices))
 	{
@@ -361,7 +361,7 @@ function lib_bl_buildings_getNotBuilt($x, $y, $uid, $def=0)
  */
 function lib_bl_buildings_checkReligion($uid)
 {
-	return lib_dal_buildings_checkReligion($uid);
+	return dal\buildings\checkReligion($uid);
 }
 
 /**
@@ -377,7 +377,7 @@ function lib_bl_buildings_checkBuildable($uid, $kind, $x, $y)
 {
 	if ($kind != 19)
 	{
-		$main = lib_dal_buildings_getBuildingByKind(19, $x, $y);
+		$main = dal\buildings\getBuildingByKind(19, $x, $y);
 		switch ($main['ulvl'])
 		{
 			case 1:
@@ -441,7 +441,7 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$building = lib_dal_buildings_getBuildingByKind($kind, $x, $y);
+	$building = dal\buildings\getBuildingByKind($kind, $x, $y);
 	if ($kind == 19)
 	{
 		if (floor($building['lvl']/10) >= $building['ulvl'])
@@ -451,7 +451,7 @@ function lib_bl_buildings_checkUpgradeable($kind, $city)
 	}
 	elseif ($kind != 19)
 	{
-		$main = lib_dal_buildings_getBuildingByKind(19, $x, $y);
+		$main = dal\buildings\getBuildingByKind(19, $x, $y);
 		switch ($main['ulvl'])
 		{
 			case 1:
@@ -540,7 +540,7 @@ function lib_bl_buildings_buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
 {
 	if (is_integer($kind) && $upgrade == 0)
 	{
-		$btime = (int)lib_dal_buildings_getTime($kind, $upgrade, $u_lvl);
+		$btime = (int)dal\buildings\getTime($kind, $upgrade, $u_lvl);
 		if ($lvl)
 		{
 			unset($time);
@@ -558,7 +558,7 @@ function lib_bl_buildings_buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
 			$time = $btime;
 	}
 	else
-		$time = (int)lib_dal_buildings_getTime($kind, $upgrade, $u_lvl);
+		$time = (int)dal\buildings\getTime($kind, $upgrade, $u_lvl);
 	return $time;
 }
 
@@ -580,7 +580,7 @@ function lib_bl_buildings_build($buildplace, $uid, $city, $upgrade = 0, $kind = 
 	$building = lib_bl_buildings_selectBuilding($x, $y, $buildplace);
 	if (!$building)
 	{
-		$building = lib_dal_buildings_getBuildingByKind($kind, $x, $y);
+		$building = dal\buildings\getBuildingByKind($kind, $x, $y);
 
 		if (!$building)
 		{
@@ -620,21 +620,21 @@ $GLOBALS['firePHP']->log($building, 'building array');
 		if ($upgrade)
 		{
 			$btime = lib_bl_buildings_buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
-			$endTime = new DWDateTime();
+			$endTime = new \DWDateTime();
 			$endTime->add(new DateInterval('PT'.$btime.'S'));
 //			$endtime = time()+$btime;
 		}
 		else
 		{
 			$btime = lib_bl_buildings_buildTime($building['kind'], $building['lvl']);
-			$endTime = new DWDateTime();
+			$endTime = new \DWDateTime();
 			$endTime->add(new DateInterval('PT'.$btime.'S'));
 		}
 		if ($building['bid'] == 0)
-			$building['bid'] = lib_dal_buildings_insertBuilding($uid, $x, $y, $building['kind'], $buildplace);
-		$erg2 = lib_dal_buildings_startBuilding($building['bid'], $upgrade, $endTime);
+			$building['bid'] = dal\buildings\insertBuilding($uid, $x, $y, $building['kind'], $buildplace);
+		$erg2 = dal\buildings\startBuilding($building['bid'], $upgrade, $endTime);
 		if ($building['bid'] && !$building['position'])
-			lib_dal_buildings_insertBuildPlace($building['bid'], $buildplace);
+			dal\buildings\insertBuildPlace($building['bid'], $buildplace);
 		if (!$upgrade)
 		{
 			$res['food'] = $helpres['food'] - $prices['food'];
@@ -676,15 +676,15 @@ function lib_bl_buildings_checkBuild($uid, $city) {
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$buildlist = lib_dal_buildings_checkBuild($x, $y);
+	$buildlist = dal\buildings\checkBuild($x, $y);
 $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 	if (is_array($buildlist))
 	{
 		$x = 0;
 		foreach ($buildlist as $parts)
 		{
-			$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['end_datetime']);
-			$now = new DWDateTime();
+			$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['end_datetime']);
+			$now = new \DWDateTime();
 			if ($now >= $endtime)
 				lib_bl_buildings_buildComplete($parts['bid']);
 			else
@@ -715,7 +715,7 @@ $GLOBALS['firePHP']->log($buildlist, 'list of buildings');
 function lib_bl_buildings_buildComplete($bid)
 {
 	$build['bid'] = $bid;
-	$build = lib_dal_buildings_getBuildInfo($build['bid']);
+	$build = dal\buildings\getBuildInfo($build['bid']);
 	$is_upgradeable = lib_bl_buildings_getUpgradeable($build['kind']);
 	if (($build['lvl'] == 0 || !$build['lvl']) && ($build['ulvl'] == 0 || !$build['ulvl']) && $is_upgradeable)
 		$build['lvl'] = $build['ulvl'] = 1;
@@ -723,8 +723,8 @@ function lib_bl_buildings_buildComplete($bid)
 		$build['lvl']++;
 	elseif ($build['upgrade'])
 		$build['ulvl']++;
-	lib_dal_buildings_removeFromBuildList($build['bid']);
-	lib_dal_buildings_updateBuilding($build);
+	dal\buildings\removeFromBuildList($build['bid']);
+	dal\buildings\updateBuilding($build);
 }
 
 /**
@@ -740,7 +740,7 @@ $GLOBALS['firePHP']->log($city, 'city');
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$res = lib_dal_buildings_checkBuild($x, $y);
+	$res = dal\buildings\checkBuild($x, $y);
 $GLOBALS['firePHP']->log($res, 'checkBuild result');
 $GLOBALS['firePHP']->log(count($res), 'checkBuild result rows');
 	if ($res)
@@ -770,9 +770,9 @@ function lib_bl_buildings_checkGeishaFactory($city)
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$teahouse = lib_dal_buildings_getBuildingByKind(9, $x, $y);
-	$ninja = lib_dal_buildings_getBuildingByKind(10, $x, $y);
-	$blacksmith = lib_dal_buildings_getBuildingByKind(14, $x, $y);
+	$teahouse = dal\buildings\getBuildingByKind(9, $x, $y);
+	$ninja = dal\buildings\getBuildingByKind(10, $x, $y);
+	$blacksmith = dal\buildings\getBuildingByKind(14, $x, $y);
 	$return['factory'] = $return['geisha'] = 0;
 	if ($teahouse['ulvl'] == 4 && $ninja['ulvl'] == 3)
 		$return['geisha'] = 1;
@@ -793,7 +793,7 @@ function lib_bl_buildings_getDefense($city, $not_built = 0)
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$def_res = lib_dal_buildings_getDefense($x, $y);
+	$def_res = dal\buildings\getDefense($x, $y);
 	$count = count($def_res);
 	for ($n = 0; $n < $count; $n++)
 	{
@@ -822,7 +822,7 @@ function lib_bl_buildings_getBuildingByKind($kind, $city)
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$buildings = lib_dal_buildings_getBuildingByKind($kind, $x, $y);
+	$buildings = dal\buildings\getBuildingByKind($kind, $x, $y);
 	$build['lvl'] = $buildings['lvl'];
 	$build['ulvl'] = $buildings['ulvl'];
 	$build['bid'] = $buildings['bid'];

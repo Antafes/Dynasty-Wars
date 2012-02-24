@@ -107,7 +107,7 @@ function lib_bl_unit_move_giveSurrounding($x, $y)
   	$ly = $y-1;
   	$hy = $y+1;
 	//getting the sql-query with the surrounding fields
-  	$surrounding = lib_dal_troops_surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
+  	$surrounding = dal\troops\surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
   	if (count($surrounding) > 0)
   	{
 		foreach ($surrounding as &$part)

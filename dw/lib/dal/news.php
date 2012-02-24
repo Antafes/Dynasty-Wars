@@ -1,10 +1,12 @@
 <?php
+namespace dal\news;
+
 /**
  * get all news entries
  * @author Neithan
  * @return array
  */
-function lib_dal_news_getAllEntries()
+function getAllEntries()
 {
 	$sql = '
 		SELECT * FROM dw_news
@@ -19,7 +21,7 @@ function lib_dal_news_getAllEntries()
  * @param int $nid
  * @return array
  */
-function lib_dal_news_getEntry($nid)
+function getEntry($nid)
 {
 	$sql = '
 		SELECT * FROM dw_news
@@ -37,7 +39,7 @@ function lib_dal_news_getEntry($nid)
  * @param String $nick
  * @return int
  */
-function lib_dal_news_save($title, $content, $uid, $nick)
+function save($title, $content, $uid, $nick)
 {
 	$sql = '
 		INSERT INTO dw_news (
@@ -67,7 +69,7 @@ function lib_dal_news_save($title, $content, $uid, $nick)
  * @param String $changerNick
  * @return int
  */
-function lib_dal_news_update($nid, $title, $content, $changerUID, $changerNick)
+function update($nid, $title, $content, $changerUID, $changerNick)
 {
 	$sql = '
 		UPDATE dw_news

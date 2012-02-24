@@ -7,7 +7,7 @@
  */
 if (!isset($_GET['user'])) die ("no user set");
 
-if (!lib_dal_user_userExists($con, $_GET['user'])) die("no such user");
+if (!lib_bl_user_exists($_GET['user'])) die("no such user");
 
-lib_bl_map_drawUserCities($con, lib_dal_user_nick2uid($con, $nick), "pictures/dynamic_map.png", 2)
+lib_bl_map_drawUserCities(dal\user\nick2uid($nick), "pictures/dynamic_map.png", 2)
 ?>

@@ -29,7 +29,7 @@ if ($news_home)
 		$news[0]['email'] = $news_home['creator_email'];
 	}
 
-	$newsDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['create_datetime']);
+	$newsDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['create_datetime']);
 	$news[0]['time'] = $newsDate->format($lang['acptimeformat']);
 	$news[0]['text'] = nl2br($parser->parseIt($news_home['text']));
 
@@ -40,7 +40,7 @@ if ($news_home)
 		else
 			$count = 'ein';
 
-		$changedDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['changed_datetime']);
+		$changedDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['changed_datetime']);
 		$news[0]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, $changedDate->format($lang['timeformat']), $news_home['changer']));
 	}
 	$smarty->assign('news', $news);

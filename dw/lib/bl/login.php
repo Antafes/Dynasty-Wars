@@ -7,9 +7,9 @@
  */
 function lib_bl_login_getAllData($nick)
 {
-	$uid = lib_dal_user_nick2uid($nick);
+	$uid = dal\user\nick2uid($nick);
 	if (isset($uid) && $uid > 0)
-		return lib_dal_login_getAllData($uid);
+		return dal\login\getAllData($uid);
 	else
 		return false;
 }
@@ -21,7 +21,7 @@ function lib_bl_login_getAllData($nick)
  */
 function lib_bl_login_checkLogin()
 {
-	return lib_dal_login_checkLogin();
+	return dal\login\checkLogin();
 }
 
 /**
@@ -32,7 +32,7 @@ function lib_bl_login_checkLogin()
  */
 function lib_bl_login_setLastLogin($uid)
 {
-	return lib_dal_login_setLastLogin($uid);
+	return dal\login\setLastLogin($uid);
 }
 
 /**
@@ -43,7 +43,7 @@ function lib_bl_login_setLastLogin($uid)
  */
 function lib_bl_login_getMainCity($uid)
 {
-	$city = lib_dal_login_getMainCity($uid);
+	$city = dal\login\getMainCity($uid);
 	if (count($city) > 0)
 		return $city['map_x'].':'.$city['map_y'];
 }
@@ -56,7 +56,7 @@ function lib_bl_login_getMainCity($uid)
  */
 function lib_bl_login_createId($uid)
 {
-	$user = lib_dal_login_getAllData($uid);
+	$user = dal\login\getAllData($uid);
 	$uidpos = rand(1, 9);
 	$uidlen = strlen($uid);
 	$id = substr($user['password'], 0, $uidpos);
@@ -85,7 +85,7 @@ function lib_bl_login_checkId($id)
 	$pw .= substr($id, $uidpos+$uidlen, -6);
 	$pw .= substr($id, -3);
 	$uid = substr($id, $uidpos, $uidlen);
-	$user = lib_dal_login_getAllData($uid);
+	$user = dal\login\getAllData($uid);
 	if ($pw === $user['password']) {
 		return true;
 	} else {

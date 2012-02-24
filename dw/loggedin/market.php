@@ -175,7 +175,7 @@ elseif ($_GET['sub'] == 'log')
 				$class = 'anulled';
 			else
 			{
-				if ($offer['sid'] == $_SESSION['user']->getUID() && !lib_dal_market_isOpen($offer['mid']))
+				if ($offer['sid'] == $_SESSION['user']->getUID() && !lib_bl_market_isOpen($offer['mid']))
 					$class = 'sold';
 				elseif ($offer['bid'] == 1)
 					$class = 'buyed';
@@ -183,17 +183,17 @@ elseif ($_GET['sub'] == 'log')
 					$class = 'not_sold';
 			}
 
-			$offerDateTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $offer['create_datetime']);
+			$offerDateTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $offer['create_datetime']);
 			$offersArray[] = array(
 				'class' => $class,
 				'title' => $lang['item_'.$class],
-				'seller' => lib_dal_user_uid2nick($offer['sid']),
-				'buyer' => ($offer['bid'] ? lib_dal_user_uid2nick($offer['bid']) : 'N/A'),
+				'seller' => dal\user\uid2nick($offer['sid']),
+				'buyer' => ($offer['bid'] ? dal\user\uid2nick($offer['bid']) : 'N/A'),
 				'offer' => $lang[$offer['s_resource']],
-				'offer_amount' => lib_util_math_numberFormat($offer['s_amount'], 0),
+				'offer_amount' => util\math\numberFormat($offer['s_amount'], 0),
 				'request' => $lang[$offer['e_resource']],
-				'request_amount' => lib_util_math_numberFormat($offer['e_amount'], 0),
-				'tax' => lib_util_math_numberFormat($offer['tax'], 0),
+				'request_amount' => util\math\numberFormat($offer['e_amount'], 0),
+				'tax' => util\math\numberFormat($offer['tax'], 0),
 				'date' => ($offer['create_datetime'] == '0000-00-00 00:00:00' ? 'N/A' : $offerDateTime->format($lang['timeformat'])),
 			);
 		}

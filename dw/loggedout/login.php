@@ -53,7 +53,7 @@ if ($login == 1)
 			$_SESSION['city'] = $city;
 			$_SESSION['language'] = $lang['lang'];
 		}
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'home'), true));
+		lib_bl_general_redirect(util\html\createLink(array('chose' => 'home'), true));
 	}
 	else
 	{

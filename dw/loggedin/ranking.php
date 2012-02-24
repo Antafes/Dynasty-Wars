@@ -19,7 +19,7 @@ if (($rank_tab == 1) || (!$rank_tab))
 }
 elseif ($rank_tab == 2)
 {
-	$rankerg1 = lib_dal_ranking_getClanRanking();
+	$rankerg1 = dal\ranking\getClanRanking();
 	$smarty->assign('rank_list',$rankerg1);
 }
 

@@ -12,13 +12,13 @@ function lib_bl_messages_getMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'recipient');
+			$messages = dal\messages\getMessages($uid, $t, 'recipient');
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'recipient');
+		$messagesArray = dal\messages\getMessages($uid, $type, 'recipient');
 
 	if ($messagesArray)
 	{
@@ -40,12 +40,12 @@ function lib_bl_messages_getMessage($msgid)
 {
 	global $lang;
 
-	$message = lib_dal_message_getMessage($msgid, 'recipient');
+	$message = dal\message\getMessage($msgid, 'recipient');
 
 	if ($message)
 	{
 		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
@@ -70,13 +70,13 @@ function lib_bl_messages_getSentMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'sender');
+			$messages = dal\messages\getMessages($uid, $t, 'sender');
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'sender');
+		$messagesArray = dal\messages\getMessages($uid, $type, 'sender');
 
 	if ($messagesArray)
 	{
@@ -98,12 +98,12 @@ function lib_bl_messages_getSentMessage($msgid)
 {
 	global $lang;
 
-	$message = lib_dal_message_getMessage($msgid, 'sender');
+	$message = dal\message\getMessage($msgid, 'sender');
 
 	if ($message)
 	{
 		$message['recipient'] = lib_bl_general_uid2nick ($message['uid_recipient']);
-		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
@@ -127,13 +127,13 @@ function lib_bl_messages_getArchivedMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = lib_dal_messages_getMessages($uid, $t, 'recipient', 1);
+			$messages = dal\messages\getMessages($uid, $t, 'recipient', 1);
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = lib_dal_messages_getMessages($uid, $type, 'recipient', 1);
+		$messagesArray = dal\messages\getMessages($uid, $type, 'recipient', 1);
 
 	if ($messagesArray)
 	{
@@ -155,12 +155,12 @@ function lib_bl_messages_getArchivedMessage($msgid)
 {
 	global $lang;
 
-	$message = lib_dal_message_getMessage($msgid, 'recipient', 1);
+	$message = dal\message\getMessage($msgid, 'recipient', 1);
 
 	if ($message)
 	{
 		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
-		$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
+		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
@@ -203,7 +203,7 @@ function lib_bl_messages_getCounts($messages)
  */
 function lib_bl_messages_markAsDeletedSender($msgid, $forceDeletion = false)
 {
-	return lib_dal_messages_markAsDeleted($msgid, 'sender', $forceDeletion);
+	return dal\messages\markAsDeleted($msgid, 'sender', $forceDeletion);
 }
 
 /**
@@ -215,7 +215,7 @@ function lib_bl_messages_markAsDeletedSender($msgid, $forceDeletion = false)
  */
 function lib_bl_messages_markAsDeletedRecipient($msgid, $forceDeletion = false)
 {
-	return lib_dal_messages_markAsDeleted($msgid, 'recipient', $forceDeletion);
+	return dal\messages\markAsDeleted($msgid, 'recipient', $forceDeletion);
 }
 
 /**
@@ -227,7 +227,7 @@ function lib_bl_messages_markAsDeletedRecipient($msgid, $forceDeletion = false)
 function lib_bl_messages_markRead($msgid)
 {
 	if (is_int($msgid))
-		return lib_dal_messages_markRead ($msgid);
+		return dal\messages\markRead ($msgid);
 	else
 		return 0;
 }
@@ -245,8 +245,8 @@ function lib_bl_messages_checkReadMessages($uid)
 	{
 		if (!$message['unread'])
 		{
-			$messageDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $message['read_datetime']);
-			$currentDate = new DWDateTime();
+			$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['read_datetime']);
+			$currentDate = new \DWDateTime();
 			$dateDiff = $currentDate->diff($messageDate);
 
 			if ($dateDiff->d >= 14 || $dateDiff->m || $dateDiff->y)
@@ -263,7 +263,7 @@ function lib_bl_messages_checkReadMessages($uid)
  */
 function lib_bl_messages_archive($msgid)
 {
-	return lib_dal_messages_archive($msgid);
+	return dal\messages\archive($msgid);
 }
 
 /**
@@ -277,9 +277,9 @@ function lib_bl_messages_archive($msgid)
 function lib_bl_messages_checkUser($msgid, $uid, $mode)
 {
 	if ($mode == 1)
-		$checkuid = lib_dal_messages_checkRecipient($msgid);
+		$checkuid = dal\messages\checkRecipient($msgid);
 	elseif ($mode == 2)
-		$checkuid = lib_dal_messages_checkSender($msgid);
+		$checkuid = dal\messages\checkSender($msgid);
 
 	if ($uid == $checkuid)
 		return 1;

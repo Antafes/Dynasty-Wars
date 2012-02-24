@@ -1,10 +1,12 @@
 <?php
+namespace dal\tribunal;
+
 /**
  * returns all open hearings
  * @author Neithan
  * @return array
  */
-function lib_dal_tribunal_getAllHearings()
+function getAllHearings()
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
@@ -20,7 +22,7 @@ function lib_dal_tribunal_getAllHearings()
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllCauses($lang)
+function getAllCauses($lang)
 {
 	$sql = '
 		SELECT tcid, cause FROM dw_tribunal_causes
@@ -36,13 +38,12 @@ function lib_dal_tribunal_getAllCauses($lang)
  * @param int $uid
  * @return array
  */
-function lib_dal_tribunal_getAllMessages($uid)
+function getAllMessages($uid)
 {
-	$now = new DWDateTime();
 	$sql = '
 		SELECT msgid, title FROM dw_message
 		WHERE uid_recipient = '.mysql_real_escape_string($uid).'
-			AND ((read_datetime >= "'.mysql_real_escape_string($now->format()).'"
+			AND ((read_datetime >= NOW()
 				OR read_datetime = 0)
 				OR archive = 1)
 	';
@@ -55,7 +56,7 @@ function lib_dal_tribunal_getAllMessages($uid)
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllRules($lang)
+function getAllRules($lang)
 {
 	$sql = '
 		SELECT ruid, paragraph, title
@@ -73,7 +74,7 @@ function lib_dal_tribunal_getAllRules($lang)
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
+function getAllRuleTexts($ruid, $lang)
 {
 	$sql = '
 		SELECT
@@ -98,7 +99,7 @@ function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
  * @param string $title
  * @return int
  */
-function lib_dal_tribunal_insertRule($language, $paragraph, $title)
+function insertRule($language, $paragraph, $title)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_rules (
@@ -123,7 +124,7 @@ function lib_dal_tribunal_insertRule($language, $paragraph, $title)
  * @param string $text
  * @return int
  */
-function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
+function insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_rules_texts (
@@ -151,7 +152,7 @@ function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subc
  * @param int $key
  * @return int
  */
-function lib_dal_tribunal_deleteRule($table, $field, $key)
+function deleteRule($table, $field, $key)
 {
 	$sql = '
 		UPDATE '.mysql_real_escape_string($table).'
@@ -170,7 +171,7 @@ function lib_dal_tribunal_deleteRule($table, $field, $key)
  * @param string $description
  * @return int
  */
-function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
+function insertHearing($suitor, $accused, $cause, $description)
 {
 	$sql = '
 		INSERT INTO dw_tribunal (
@@ -198,7 +199,7 @@ function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
  * @param string $from
  * @return int
  */
-function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
+function insertArgument($tid, $msgid, $from)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_arguments (
@@ -223,7 +224,7 @@ function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
  * @param int $lang_id
  * @return array
  */
-function lib_dal_tribunal_getCause($tcid, $lang_id)
+function getCause($tcid, $lang_id)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_causes
@@ -239,7 +240,7 @@ function lib_dal_tribunal_getCause($tcid, $lang_id)
  * @param int $tid
  * @return array
  */
-function lib_dal_tribunal_getHearing($tid)
+function getHearing($tid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
@@ -255,7 +256,7 @@ function lib_dal_tribunal_getHearing($tid)
  * @param bool $approved
  * @return array
  */
-function lib_dal_tribunal_getArguments($tid, $approved)
+function getArguments($tid, $approved)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
@@ -274,7 +275,7 @@ function lib_dal_tribunal_getArguments($tid, $approved)
  * @param int $approved
  * @return int
  */
-function lib_dal_tribunal_approveArgument($aid, $approved)
+function approveArgument($aid, $approved)
 {
 	$sql = '
 		UPDATE dw_tribunal_arguments
@@ -290,7 +291,7 @@ function lib_dal_tribunal_approveArgument($aid, $approved)
  * @param int $tid
  * @return int
  */
-function lib_dal_tribunal_recallHearing($tid, $uid)
+function recallHearing($tid, $uid)
 {
 	$sql = '
 		UPDATE dw_tribunal
@@ -307,7 +308,7 @@ function lib_dal_tribunal_recallHearing($tid, $uid)
  * @param int $aid
  * @return array
  */
-function lib_dal_tribunal_getArgument($aid)
+function getArgument($aid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
@@ -324,7 +325,7 @@ function lib_dal_tribunal_getArgument($aid)
  * @param string $reason
  * @return int
  */
-function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
+function makeDecision($tid, $decision, $reason)
 {
 	$sql = '
 		UPDATE dw_tribunal
@@ -343,7 +344,7 @@ function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
  * @param int $block
  * @return int
  */
-function lib_dal_tribunal_blockComments($tid, $block)
+function blockComments($tid, $block)
 {
 	$sql = '
 		UPDATE dw_tribunal
@@ -359,7 +360,7 @@ function lib_dal_tribunal_blockComments($tid, $block)
  * @param int $tid
  * @return array
  */
-function lib_dal_tribunal_getComments($tid)
+function getComments($tid)
 {
 	$sql = '
 		SELECT
@@ -386,7 +387,7 @@ function lib_dal_tribunal_getComments($tid)
  * @param string $comment
  * @return int
  */
-function lib_dal_tribunal_saveComment($tid, $uid, $comment)
+function saveComment($tid, $uid, $comment)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_comments (
@@ -410,7 +411,7 @@ function lib_dal_tribunal_saveComment($tid, $uid, $comment)
  * @param int $tcoid
  * @return int
  */
-function lib_dal_tribunal_deleteComment($tcoid)
+function deleteComment($tcoid)
 {
 	$sql = '
 		UPDATE dw_tribunal_comments
@@ -428,7 +429,7 @@ function lib_dal_tribunal_deleteComment($tcoid)
  * @param int $uid
  * @return int
  */
-function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
+function editComment($tcoid, $comment, $uid)
 {
 	$sql = '
 		UPDATE dw_tribunal_comments
@@ -446,7 +447,7 @@ function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
  * @param int $tcoid
  * @return array
  */
-function lib_dal_tribunal_getComment($tcoid)
+function getComment($tcoid)
 {
 	$sql = '
 		SELECT
@@ -464,4 +465,3 @@ function lib_dal_tribunal_getComment($tcoid)
 	';
 	return util\mysql\query($sql);
 }
-?>

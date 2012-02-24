@@ -34,7 +34,7 @@ if ($con)
 	else
 	{
 		$points = $_SESSION['user']->getPoints();
-		$target->loadByUID(lib_dal_user_getUIDFromMapPosition($item_list['target']['tx'], $item_list['target']['ty']));
+		$target->loadByUID(dal\user\getUIDFromMapPosition($item_list['target']['tx'], $item_list['target']['ty']));
 		$tPoints = $target->getPoints();
 
 		if (($tPoints['unit_points'] + $tPoints['building_points']) < (($tPoints['unit_points'] + $tPoints['building_points']) * .75))

@@ -6,13 +6,15 @@
  *
  */
 
+namespace dal\map;
+
 /**
  * Returns the complete map (x and y coords as well as terrain type) sorted by
  * x and y.
  * @author siyb
  * @return array mapdata
  */
-function lib_dal_map_getSortedMapData() {
+function getSortedMapData() {
     return
     util\mysql\query(
         sprintf(
@@ -29,7 +31,7 @@ function lib_dal_map_getSortedMapData() {
  * @author siyb
  * @return array citydata
  */
-function lib_dal_map_returnAllCities() {
+function returnAllCities() {
     return
     util\mysql\query(
         sprintf(
@@ -50,7 +52,7 @@ function lib_dal_map_returnAllCities() {
  * @param int $y
  * @return int
  */
-function lib_dal_map_getTerrain($x, $y)
+function getTerrain($x, $y)
 {
 	$sql = '
 		SELECT terrain FROM dw_map
@@ -66,7 +68,7 @@ function lib_dal_map_getTerrain($x, $y)
  * @param int $uid
  * @return array
  */
-function lib_dal_map_getUsersMainCity($uid)
+function getUsersMainCity($uid)
 {
 	$sql = '
 		SELECT map_x, map_y FROM dw_map
@@ -77,9 +79,10 @@ function lib_dal_map_getUsersMainCity($uid)
 }
 
 /**
+ * @author siyb
  * @todo: finish
  */
-function lib_dal_map_setTerrainType($x, $y, $type) {
+function setTerrainType($x, $y, $type) {
 die("not supported yet");
 	$sql =
 		util\mysql\query(

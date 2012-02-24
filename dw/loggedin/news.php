@@ -35,7 +35,7 @@ if ($news_array)
 			$news[$i]['email'] = $news_array[$n]['creator_email'];
 		}
 
-		$createDate = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['create_datetime']);
+		$createDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['create_datetime']);
 		$news[$i]['time'] = $createDate->format($lang['acptimeformat']);
 		$news[$i]['text'] = nl2br($parser->parseIt($news_array[$n]['text']));
 
@@ -46,7 +46,7 @@ if ($news_array)
 			else
 				$count = 'ein';
 
-			$dateChanged = DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['changed_datetime']);
+			$dateChanged = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['changed_datetime']);
 			$news[$i]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, $dateChanged->format($lang['timeformat']), $news_array[$n]['changer']));
 		}
 	}

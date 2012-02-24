@@ -1,4 +1,8 @@
 <?php
+/**
+ * no namespace, because of the global character of this class!
+ * @author Neithan
+ */
 class DWDateTime extends DateTime
 {
 	/**
@@ -25,12 +29,12 @@ class DWDateTime extends DateTime
 	/**
 	 * adjusted diff method that returns a DWDateInterval object
 	 * @param DateTime $datetime
-	 * @return DWDateInterval
+	 * @return \DWDateInterval
 	 */
 	public function diff(DateTime $datetime)
 	{
 		$diff = parent::diff($datetime);
-		return new DWDateInterval($diff);
+		return new \DWDateInterval($diff);
 	}
 
 	/**

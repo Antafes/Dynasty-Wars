@@ -7,7 +7,7 @@
  */
 function lib_bl_lost_password_generateID($email)
 {
-	$uid = lib_dal_user_returnUID($email);
+	$uid = dal\user\returnUID($email);
 	if ($uid)
 	{
 		unset($id);
@@ -55,16 +55,16 @@ function lib_bl_lost_password_sendLPMail($email)
 		$id = lib_bl_lost_password_generateID($email);
 		if ($id)
 		{
-			$uid = lib_dal_user_returnUID($email);
-			$user = lib_dal_user_getUserInfos($uid);
+			$uid = dal\user\returnUID($email);
+			$user = dal\user\getUserInfos($uid);
 			$link = DIR_WS_INDEX.'?chose=lost_password&id='.$id;
 			$message = sprintf($lang['email_html'], $link, date($lang['timeformat']), date($lang['clockformat']));
 			lib_bl_general_sendMail($user['email'], $lang['subject'], $message);
-			$rec_check = lib_dal_lost_password_checkRecoveries($uid);
+			$rec_check = dal\lostPassword\checkRecoveries($uid);
 			if ($rec_check)
-				$recovery = lib_dal_lost_password_updateRecovery($id, time());
+				$recovery = dal\lostPassword\updateRecovery($id, time());
 			else
-				$recovery = lib_dal_lost_password_insertRecovery($id, time(), $uid);
+				$recovery = dal\lostPassword\insertRecovery($id, time(), $uid);
 			if ($recovery > 0)
 				return 1;
 			else
@@ -87,7 +87,7 @@ function lib_bl_lost_password_checkID($id)
 {
 	$uid_pos = (int)substr($id, -6, 2);
 	$uid = (int)substr($id, $uid_pos, 3);
-	$recovery = lib_dal_lost_password_getRecoveryRequest($uid);
+	$recovery = dal\lostPassword\getRecoveryRequest($uid);
 	if (strcasecmp($id, $recovery['mailid']) == 0)
 		return $uid;
 	else
@@ -136,6 +136,6 @@ function lib_bl_lost_password_changePassword($newpw, $newpww, $uid)
  */
 function lib_bl_lost_password_removeRecoveryRequest($uid)
 {
-	return lib_dal_lost_password_removeRecoveryRequest($uid);
+	return dal\lostPassword\removeRecoveryRequest($uid);
 }
 ?>

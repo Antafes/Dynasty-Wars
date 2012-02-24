@@ -1,4 +1,8 @@
 <?php
+/**
+ * no namespace, because of the global character of this class!
+ * @author Neithan
+ */
 class DWDateInterval
 {
 	/**

@@ -8,14 +8,14 @@
  */
 function lib_bl_register_maps($uid, $city)
 {
-	$coords = lib_dal_register_getFreeCoords();
+	$coords = dal\register\getFreeCoordinates();
 	$lines = count($coords);
 	if ($lines > 0) {
 		$rand = rand(1, $lines)-1;
 		$x = $coords[$rand]['map_x'];
 		$y = $coords[$rand]['map_y'];
 	}
-	$erg2 = lib_dal_register_updateCoords($uid, $city, $x, $y);
+	$erg2 = dal\register\updateCoordinates($uid, $city, $x, $y);
 	if ($erg2)
 		return 1;
 	else
@@ -74,20 +74,20 @@ function lib_bl_registerNew($nick, $pws, $email, $city)
 		else
 			$random .= lib_bl_general_alpRand();
 	}
-	$new_uid = lib_dal_register_insertUser($nick, $pws, $email, $random, $lang['lang']);
+	$new_uid = dal\register\insertUser($nick, $pws, $email, $random, $lang['lang']);
 	$erg3 = lib_bl_register_maps($new_uid, $city);
 	if ($erg3)
 	{
-		$coords = lib_dal_user_returnAllCities($new_uid);
+		$coords = dal\user\returnAllCities($new_uid);
 		if (count($coords) > 0)
 		{
 			$map_x = $coords['map_x'];
 			$map_y = $coords['map_y'];
 		}
 	}
-	$erg2 = lib_dal_register_insertRes($new_uid, $map_x, $map_y);
-	$erg4 = lib_dal_register_insertBuildings($new_uid, $map_x, $map_y);
-	$erg5 = lib_dal_register_insertPoints($new_uid);
+	$erg2 = dal\register\insertResources($new_uid, $map_x, $map_y);
+	$erg4 = dal\register\insertBuildings($new_uid, $map_x, $map_y);
+	$erg5 = dal\register\insertPoints($new_uid);
 	if ($new_uid && $erg2 && $erg3 && $erg4 && $erg5)
 	{
 		$random2 = $new_uid;

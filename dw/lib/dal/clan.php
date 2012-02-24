@@ -6,6 +6,8 @@
  *
  */
 
+namespace dal\clan;
+
 /**
  * Adds a positive transaction to the user's banklog
  * @author siyb
@@ -14,7 +16,7 @@
  * iron. No check, so make sure to do the checking before sending the query
  * @param <float> $amount the amount of the resource to be added to the bank
  */
-function lib_dal_clan_addToBank($uid, $resource, $amount) {
+function addToBank($uid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
     util\mysql\query(
         sprintf(
@@ -49,7 +51,7 @@ function lib_dal_clan_addToBank($uid, $resource, $amount) {
  * @param <type> $resource the resource of the transaction
  * @param <type> $amount the amount of the resource
  */
-function lib_dal_clan_removeFromBank($uid, $forUid, $resource, $amount) {
+function removeFromBank($uid, $forUid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
     util\mysql\query(
         sprintf(
@@ -79,7 +81,7 @@ function lib_dal_clan_removeFromBank($uid, $forUid, $resource, $amount) {
  * @param <int> $cid the clanid
  * @return <mysqlresultset> containing the transaction data
  */
-function lib_dal_clan_listBankTransactions($cid) {
+function listBankTransactions($cid) {
     return
     util\mysql\query(
         sprintf(
@@ -99,7 +101,7 @@ function lib_dal_clan_listBankTransactions($cid) {
  * @param <int> $uid the userid of the user to be listed
  * @return <mysqlresultset> containing the transaction data
  */
-function lib_dal_clan_listBankTransactionsPerUser($cid, $uid) {
+function listBankTransactionsPerUser($cid, $uid) {
     return
     util\mysql\query(
         sprintf(
@@ -120,7 +122,7 @@ function lib_dal_clan_listBankTransactionsPerUser($cid, $uid) {
  * @param <int> $uid the userid of the user to be listed
  * @return <mysqlresultset> containing the savings data
  */
-function lib_dal_clan_returnSavings($uid) {
+function returnSavings($uid) {
     return
     util\mysql\query(
         sprintf(
@@ -143,7 +145,7 @@ function lib_dal_clan_returnSavings($uid) {
  * @param <int> $cid the clanid of the clan to be listed
  * @return <mysqlresultset> containing the city data
  */
-function lib_dal_clan_returnAllCities($cid) {
+function returnAllCities($cid) {
     return
     util\mysql\query(
         sprintf(
@@ -157,9 +159,14 @@ function lib_dal_clan_returnAllCities($cid) {
     );
 }
 
-function lib_dal_clan_getAllUser($cid)
+/**
+ * returns an array with all users in the clan
+ * @author Neithan
+ * @param int $cid
+ * @return array
+ */
+function getAllUser($cid)
 {
 	$sql = 'SELECT * FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).'';
 	return util\mysql\query($sql, true);
 }
-?>

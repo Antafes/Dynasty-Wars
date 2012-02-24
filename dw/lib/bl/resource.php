@@ -8,7 +8,7 @@
  */
 function lib_bl_resource_basicIncome($kind, $city) {
 	$cityexp = explode(':', $city);
-	$upgrade = lib_dal_resource_getUpgrLvl(19, $cityexp[0], $cityexp[1]);
+	$upgrade = dal\resource\getUpgradeLevel(19, $cityexp[0], $cityexp[1]);
 	if ($upgrade)
 	{
 		switch ($kind)
@@ -119,7 +119,7 @@ function lib_bl_resource_bIncome($type, $basic, $lvl, $city)
 	$cityexp = explode(':', $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$upgrade = lib_dal_resource_getUpgrLvl(19, $x, $y);
+	$upgrade = dal\resource\getUpgradeLevel(19, $x, $y);
 	if ($type == 5)
 		$rate = lib_bl_resource_getPaperPercent($x, $y);
 	else
@@ -200,8 +200,8 @@ function lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $paperm
 	$iron = (float)$res['iron'];
 	$paper = (float)$res['paper'];
 	$koku = (float)$res['koku'];
-	$lastDateTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $res['last_datetime']);
-	$diff = $lastDateTime->diff(new DWDateTime());
+	$lastDateTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $res['last_datetime']);
+	$diff = $lastDateTime->diff(new \DWDateTime());
 	$past_time = $diff->getSeconds();
 	$newres['food'] = $food + ($past_time * lib_bl_resource_income(1, 's', $range, $city));
 	$newres['wood'] = $wood + ($past_time * lib_bl_resource_income(2, 's', $lumberjack, $city));
@@ -265,7 +265,7 @@ function lib_bl_resource_woodCosts($x, $y) {
  */
 function lib_bl_resource_getPaperPercent($x, $y)
 {
-	return lib_dal_resource_getPaperPercent($x, $y);
+	return dal\resource\getPaperPercent($x, $y);
 }
 
 /**
@@ -277,7 +277,7 @@ function lib_bl_resource_getPaperPercent($x, $y)
  * @return int
  */
 function lib_bl_resource_changePaperPercent($percent, $x, $y) {
-	return lib_dal_resource_changePaperPercent($percent, $x, $y);
+	return dal\resource\changePaperPercent($percent, $x, $y);
 }
 
 /**
@@ -288,12 +288,10 @@ function lib_bl_resource_changePaperPercent($percent, $x, $y) {
  * @param int $time default 0
  * @return int
  */
-function lib_bl_resource_updateAll($res, $city, $time=0)
+function lib_bl_resource_updateAll($res, $city)
 {
 	$cityexp = explode(':', $city);
-	if (!$time)
-		$time = time();
-	return lib_dal_resource_updateAll($res, $time, $cityexp[0], $cityexp[1]);
+	return dal\resource\updateAll($res, $cityexp[0], $cityexp[1]);
 }
 
 /**
@@ -304,7 +302,7 @@ function lib_bl_resource_updateAll($res, $city, $time=0)
 function lib_bl_resource_getResourceBuildings($city)
 {
 	$city_exp = explode(':', $city);
-	return lib_dal_resource_getResourceBuildings($city_exp[0], $city_exp[1]);
+	return dal\resource\getResourceBuildings($city_exp[0], $city_exp[1]);
 }
 
 /**
@@ -316,7 +314,7 @@ function lib_bl_resource_getResourceBuildings($city)
  */
 function lib_bl_resource_getLvl($kind, $x, $y)
 {
-	$lvl = lib_dal_resource_getLvl(19, $x, $y);
+	$lvl = dal\resource\getLevel(19, $x, $y);
 	if (!$lvl)
 		$lvl = 0;
 	return $lvl;
@@ -327,6 +325,20 @@ function lib_bl_resource_getLvl($kind, $x, $y)
  * @author siyb
  */
 function lib_bl_resource_hasEnoughOf($x, $y, $resource, $amount) {
-	return ($amount <= lib_dal_resource_returnResourceAmount($x, $y, $sellResource));
+	return ($amount <= dal\resource\returnResourceAmount($x, $y, $sellResource));
 }
-?>
+
+/**
+ * Will add the amout specified as $value to $uid's resource inventory of
+ * $resource. This function accepts negative values as well so that it can be
+ * used to remove units from the resource stock as well.
+ * @author Neithan
+ * @param String $resource
+ * @param int $value
+ * @param int $x
+ * @param int $y
+ */
+function lib_bl_resource_addToResources($resource, $value, $x, $y)
+{
+	dal\resource\addToResources($resource, $value, $x, $y);
+}

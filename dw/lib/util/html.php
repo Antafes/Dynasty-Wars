@@ -1,11 +1,12 @@
 <?php
+namespace util\html;
 /**
  * creates a jQuery ready script
  * @author Neithan
  * @param string $script
  * @return string
  */
-function lib_util_html_createReadyScript($script)
+function createReadyScript($script)
 {
 	return '<script language="javascript" type="text/javascript">
 		$(function(){
@@ -21,7 +22,7 @@ function lib_util_html_createReadyScript($script)
  * @param boolean $for_redirect
  * @return string
  */
-function lib_util_html_createLink($valuelist = '', $for_redirect = false)
+function createLink($valuelist = '', $for_redirect = false)
 {
 	$separator = '&amp;';
 	if ($for_redirect)

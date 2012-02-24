@@ -6,6 +6,8 @@
  *
  */
 
+namespace dal\market;
+
 /**
  * Places an offer on the market.
  * @param <int> $uid the user that places the order
@@ -15,7 +17,7 @@
  * @param <float> $exchangeAmount and the resources amount ...
  * @param <float> $tax the taxes one has to pay
  */
-function lib_dal_market_placeOnMarket(
+function placeOnMarket(
 	$uid, $x, $y, $sellResource, $sellAmount,
 	$exchangeResource, $exchangeAmount, $tax)
 {
@@ -65,7 +67,7 @@ function lib_dal_market_placeOnMarket(
  * @param <int> $mid the id of the marketitem to remove
  * @param int $uid
  */
-function lib_dal_market_removeFromMarket($mid, $uid) {
+function removeFromMarket($mid, $uid) {
 	util\mysql\query(
 		sprintf(
 			"
@@ -86,7 +88,7 @@ function lib_dal_market_removeFromMarket($mid, $uid) {
  * @param <int> $mid the id of the auction
  * @return int the uid of the owner
  */
-function lib_dal_market_getOwner($mid)
+function getOwner($mid)
 {
 	return
 		util\mysql\query(
@@ -106,7 +108,7 @@ function lib_dal_market_getOwner($mid)
  * @param <int> $mid the id of the offer to get information about
  * @return <array> an array containing the data
  */
-function lib_dal_market_getOfferDetails($mid) {
+function getOfferDetails($mid) {
 	return
 		util\mysql\query(
 			sprintf(
@@ -124,7 +126,7 @@ function lib_dal_market_getOfferDetails($mid) {
  * @author siyb
  * @return <array> containg all active offers of the market
  */
-function lib_dal_market_returnAllOffers()
+function returnAllOffers()
 {
 	return
 	util\mysql\query(
@@ -141,10 +143,10 @@ function lib_dal_market_returnAllOffers()
 /**
  * Checks if an offer is open
  * @author siyb
- * @param <int> $mid the id of the offer
- * @return <bool> returns 0 if the offer is closed and 1 if the offer is open
+ * @param int $mid the id of the offer
+ * @return int returns 0 if the offer is closed and 1 if the offer is open
  */
-function lib_dal_market_isOpen($mid) {
+function isOpen($mid) {
 	return
 		util\mysql\query(
 			sprintf(
@@ -166,7 +168,7 @@ function lib_dal_market_isOpen($mid) {
  * ALL will be used
  * @return <array> containing all offers the user was ever involved in
  */
-function lib_dal_market_userOffers($uid, $filter, $order = "DESC")
+function userOffers($uid, $filter, $order = "DESC")
 {
 	$join = "JOIN dw_user ON dw_user.uid = dw_market.sid OR dw_user.uid = dw_market.bid";
 	if ($filter == "BUYER")
@@ -198,9 +200,9 @@ function lib_dal_market_userOffers($uid, $filter, $order = "DESC")
  * for finished ones, standard is 1
  * @param <bool> $completeE 0 will include the sales of running offers, 1 the sales
  * for finished ones, standard is 1
- * @return <mysqlresultset> containing the sales data
+ * @return <array> containing the sales data
  */
-function lib_dal_market_sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
+function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 {
 	$sql = sprintf(
 		"
@@ -243,16 +245,17 @@ function lib_dal_market_sales($limitS = 25, $limitE = 25, $completeS = 1, $compl
 /**
  * Searches the offerlist according to the given criteria
  * @author siyb
- * @param <type> $Sresource
- * @param <type> $SvalueRangeStart
- * @param <type> $SvalueRangeEnd
- * @param <type> $Eresource
- * @param <type> $EvalueRangeStart
- * @param <type> $EvalueRangeEnd
- * @param <type> $complete
- * @return <type>
+ * @param <String> $Sresource default %
+ * @param <int> $SvalueRangeStart default 0
+ * @param <int> $SvalueRangeEnd default 200000000
+ * @param <String> $Eresource default %
+ * @param <int> $EvalueRangeStart default 0
+ * @param <int> $EvalueRangeEnd default 200000000
+ * @param <int> $complete default 0
+ * @param <String> $seller default %
+ * @return <array>
  */
-function lib_dal_market_search(
+function search(
 	$Sresource = '%', $SvalueRangeStart = 0, $SvalueRangeEnd = 200000000,
 	$Eresource = '%', $EvalueRangeStart = 0, $EvalueRangeEnd = 200000000,
 	$complete = 0, $seller = '%'
@@ -280,4 +283,3 @@ function lib_dal_market_search(
 	);
 	return util\mysql\query($sql, true);
 }
-?>

@@ -93,7 +93,7 @@ function lib_bl_map_drawMapImage($mapFile, $sizeFactor = 1) {
 	if ($sizeFactor != 2 &&  $sizeFactor != 1) die ('sizeFactor must be 1 or 2');
 
 	// map data
-	$mapData = lib_bl_map_formatMapArray(lib_dal_map_getSortedMapData());
+	$mapData = lib_bl_map_formatMapArray(dal\map\getSortedMapData());
 
 	// our image
 	$im = @imagecreate(400*$sizeFactor, 250*$sizeFactor)
@@ -184,7 +184,7 @@ function lib_bl_map_createPNGMap($mapFile, $sizeFactor, $data = -1) {
  */
 function lib_bl_map_drawUserCities($uid, $mapFile, $sizeFactor) {
     lib_bl_map_createPNGMap($mapFile, $sizeFactor,
-        lib_dal_user_returnAllCities($uid));
+        dal\user\returnAllCities($uid));
 }
 
 /**
@@ -196,7 +196,7 @@ function lib_bl_map_drawUserCities($uid, $mapFile, $sizeFactor) {
  */
 function lib_bl_map_drawClanCities($cid, $mapFile, $sizeFactor) {
     lib_bl_map_createPNGMap($mapFile, $sizeFactor,
-        lib_dal_clan_returnAllCities($cid));
+        dal\clan\returnAllCities($cid));
 }
 
 /**
@@ -207,7 +207,7 @@ function lib_bl_map_drawClanCities($cid, $mapFile, $sizeFactor) {
  */
 function lib_bl_map_drawAllCities($mapFile, $sizeFactor) {
     lib_bl_map_createPNGMap($mapFile, $sizeFactor,
-        lib_dal_map_returnAllCities());
+        dal\map\returnAllCities());
 }
 
 /**

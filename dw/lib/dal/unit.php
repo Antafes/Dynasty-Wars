@@ -6,12 +6,14 @@
  *
  */
 
+namespace dal\unit;
+
 /**
  * Returns a resultset containing all nicks and corresponding points
  * @author siyb
  * @return <array> containing uid and points already calculated
  */
-function lib_dal_unit_calcUnitPoints() {
+function calcUnitPoints() {
     return
     util\mysql\query(
         "
@@ -31,7 +33,7 @@ function lib_dal_unit_calcUnitPoints() {
  * @param <type> $uid the uid of the user
  * @return <array> containing uid and points already calculated
  */
-function lib_dal_getUnitCount($uid) {
+function getUnitCount($uid) {
     return
     util\mysql\query(
         sprintf(
@@ -50,7 +52,7 @@ function lib_dal_getUnitCount($uid) {
  * @author siyb
  * @return <int> 1 if yes 0 is not
  */
-function lib_dal_calculateUnitCosts() {
+function calculateUnitCosts() {
     $result = util\mysql\query("SELECT unitcosts FROM dw_game");
     if ($result)
     	return $result;
@@ -63,7 +65,7 @@ function lib_dal_calculateUnitCosts() {
  * @param int $uid
  * @return array
  */
-function lib_dal_unit_getUnits($kind, $uid)
+function getUnits($kind, $uid)
 {
 	$sql = '
 		SELECT
@@ -87,7 +89,7 @@ function lib_dal_unit_getUnits($kind, $uid)
  * @param int $y the y coordinate
  * @return array
  */
-function lib_dal_unit_getUnitCountByCoordinates($kind, $uid, $x, $y) {
+function getUnitCountByCoordinates($kind, $uid, $x, $y) {
 	return
 	util\mysql\query(
 		sprintf("
@@ -112,7 +114,7 @@ function lib_dal_unit_getUnitCountByCoordinates($kind, $uid, $x, $y) {
  * @param int $uid
  * @return int
  */
-function lib_dal_unit_checkDaimyo($uid)
+function checkDaimyo($uid)
 {
 	$sql = 'SELECT unid FROM dw_units WHERE uid = '.$uid.' AND kind = 19';
 	return util\mysql\query($sql);
@@ -126,7 +128,7 @@ function lib_dal_unit_checkDaimyo($uid)
  * @param int $pos_y
  * @return int
  */
-function lib_dal_unit_createDaimyo($uid, $pos_x, $pos_y)
+function createDaimyo($uid, $pos_x, $pos_y)
 {
 	$sql = '
 		INSERT INTO dw_units (
@@ -146,7 +148,12 @@ function lib_dal_unit_createDaimyo($uid, $pos_x, $pos_y)
 	return util\mysql\query($sql);
 }
 
-function lib_dal_unit_getUnit($unid)
+/**
+ * get the specified unit
+ * @param int $unid
+ * @return array
+ */
+function getUnit($unid)
 {
 	$sql = '
 		SELECT * FROM dw_units
@@ -154,4 +161,17 @@ function lib_dal_unit_getUnit($unid)
 	';
 	return util\mysql\query($sql);
 }
-?>
+
+/**
+ * delete a unit
+ * @author Neithan
+ * @param int $unid
+ */
+function deleteUnit($unid)
+{
+	$sql = '
+		DELETE FROM dw_units
+		WHERE unid = '.mysql_real_escape_string($unid).'
+	';
+	util\mysql\query($sql);
+}

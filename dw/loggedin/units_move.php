@@ -52,7 +52,7 @@ if ($_GET['mode'] == 'create')
 					'name' => $name,
 					'unid' => $atpos_part['unid'],
 					'count' => $atpos_part['count'],
-					'count_formatted' => lib_util_math_numberFormat($atpos_part['count'], 0),
+					'count_formatted' => util\math\numberFormat($atpos_part['count'], 0),
 				);
 			}
 			$position_list[] = array(
@@ -87,11 +87,11 @@ elseif ($_GET['mode'] == 'edit')
 			$sum += $tu_part['count'];
 			$unit_list[] = array(
 				'name' => $name,
-				'count' => lib_util_math_numberFormat((int)$tu_part['count'], 0),
+				'count' => util\math\numberFormat((int)$tu_part['count'], 0),
 			);
 		}
 		$unitSmarty->assign('unitList', $unit_list);
-		$unitSmarty->assign('unitSum', lib_util_math_numberFormat($sum, 0));
+		$unitSmarty->assign('unitSum', util\math\numberFormat($sum, 0));
 		$unitSmarty->assign('name', $lang['name']);
 		$unitSmarty->assign('change', $lang['change']);
 		$unitSmarty->assign('troop', $troop);
@@ -125,7 +125,7 @@ elseif ($_GET['mode'] == 'edit')
 					'name' => $name,
 					'unid' => $atpos_part['unid'],
 					'count' => $atpos_part['count'],
-					'count_formatted' => lib_util_math_numberFormat($atpos_part['count'], 0),
+					'count_formatted' => util\math\numberFormat($atpos_part['count'], 0),
 				);
 			}
 
@@ -170,7 +170,7 @@ $GLOBALS['firePHP']->log($_POST);
 					'name' => $name,
 					'unid' => $tu_part['unid'],
 					'count' => $tu_part['count'],
-					'count_formatted' => lib_util_math_numberFormat($tu_part['count'], 0),
+					'count_formatted' => util\math\numberFormat($tu_part['count'], 0),
 				);
 			}
 
@@ -207,7 +207,7 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 				if ($capCheck)
 				{
 					if ($_POST['movekind'] == 2)
-						lib_dal_resource_addToResources($_POST['resselect'], $_POST['rescount']*-1, $cityexp[0], $cityexp[1]);
+						lib_bl_resource_addToResources($_POST['resselect'], $_POST['rescount']*-1, $cityexp[0], $cityexp[1]);
 					lib_bl_troops_sendTroop($_GET['tid'], $_POST['tx'], $_POST['ty'], $_POST['movekind'], $_POST['resselect'], round($_POST['rescount']));
 					$unitSmarty->assign('sent', 1);
 					$unitSmarty->assign('textSent', $lang['sent']);
@@ -237,12 +237,12 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 
 		$unitList[] = array(
 			'name' => $name,
-			'count_formatted' => lib_util_math_numberFormat($tu_part['count'], 0),
+			'count_formatted' => util\math\numberFormat($tu_part['count'], 0),
 		);
 		$sum += $tu_part['count'];
 	}
 	$unitSmarty->assign('unitList', $unitList);
-	$unitSmarty->assign('sum', lib_util_math_numberFormat($sum, 0));
+	$unitSmarty->assign('sum', util\math\numberFormat($sum, 0));
 	$unitSmarty->assign('textCapacity', $lang['cap']);
 	$unitSmarty->assign('maxCapacity', array(
 		'plain' => lib_bl_troops_maxCapacity(intval($troop['tid']), false),

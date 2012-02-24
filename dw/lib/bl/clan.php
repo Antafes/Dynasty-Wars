@@ -15,11 +15,11 @@
  */
 function lib_bl_clan_addToBank($uid, $resource, $amount) {
     // check if the user owes enough of the resource
-    if (lib_dal_resource_returnResourceAmount($uid, $resource) < $amount)
+    if (dal\resource\returnResourceAmount($uid, $resource) < $amount)
         return 0;
     //@todo: check if the user is in a clan or not
 
-    lib_dal_clan_addToBank($uid, $resource, $amount);
+    dal\clan\addToBank($uid, $resource, $amount);
     return 1;
 }
 
@@ -33,8 +33,8 @@ function lib_bl_clan_addToBank($uid, $resource, $amount) {
  */
 function lib_bl_clan_listBankTransactions($cid, $uid=-1) {
     if($uid == -1)
-        return lib_dal_clan_listBankTransactions($cid);
+        return dal\clan\listBankTransactions($cid);
     else
-        return lib_dal_clan_listBankTransactionsPerUser($cid, $uid);
+        return dal\clan\listBankTransactionsPerUser($cid, $uid);
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+namespace dal\troops;
+
 /**
  * get the fields around $x and $y
  * @author Neithan
@@ -10,7 +12,7 @@
  * @param int $y
  * @return array
  */
-function lib_dal_troops_surrounding($lx, $hx, $ly, $hy, $x, $y)
+function surrounding($lx, $hx, $ly, $hy, $x, $y)
 {
 	$sql = '
 		SELECT map_x, map_y, terrain FROM dw_map
@@ -37,7 +39,7 @@ function lib_dal_troops_surrounding($lx, $hx, $ly, $hy, $x, $y)
  * @param int $tid
  * @return array
  */
-function lib_dal_troops_getTroop($tid)
+function getTroop($tid)
 {
 	$sql = 'SELECT * FROM dw_troops WHERE tid = '.$tid;
 	$GLOBALS['firePHP']->log($sql, 'getTroop->query');
@@ -51,7 +53,7 @@ function lib_dal_troops_getTroop($tid)
  * @param int $kind
  * @return array
  */
-function lib_dal_troops_getPos($uid, $kind)
+function getPos($uid, $kind)
 {
 	$sql = 'SELECT DISTINCT pos_x, pos_y FROM dw_'.$kind.' WHERE uid = '.$uid;
 	if ($kind == 'units')
@@ -66,9 +68,11 @@ function lib_dal_troops_getPos($uid, $kind)
  * @param int $posx
  * @param int $posy
  * @param int $kind (troops, units)
+ * @param bool $get_all
+ * @param String order_by
  * @return array
  */
-function lib_dal_troops_getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
+function getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
 {
 	if ($kind == 'troops')
 	{
@@ -109,7 +113,7 @@ function lib_dal_troops_getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
  * @param int $tid
  * @return array
  */
-function lib_dal_troops_getTroopUnits($tid, $order_by)
+function getTroopUnits($tid, $order_by)
 {
 	$sql = '
 		SELECT * FROM dw_units
@@ -130,7 +134,7 @@ function lib_dal_troops_getTroopUnits($tid, $order_by)
  * @param string $name
  * @return int
  */
-function lib_dal_troops_createTroop($uid, $posx, $posy, $name)
+function createTroop($uid, $posx, $posy, $name)
 {
 	$sql = '
 		INSERT INTO dw_troops (
@@ -155,7 +159,7 @@ function lib_dal_troops_createTroop($uid, $posx, $posy, $name)
  * @param int $tid
  * @return int
  */
-function lib_dal_troops_addUnits($unid, $tid)
+function addUnits($unid, $tid)
 {
 	$sql = '
 		UPDATE dw_units
@@ -171,7 +175,7 @@ function lib_dal_troops_addUnits($unid, $tid)
  * @param int $unid
  * @return array
  */
-function lib_dal_troops_getUnitCount($unid)
+function getUnitCount($unid)
 {
 	$sql = 'SELECT count, kind FROM dw_units WHERE unid = '.mysql_real_escape_string($unid);
 	return util\mysql\query($sql);
@@ -183,7 +187,7 @@ function lib_dal_troops_getUnitCount($unid)
  * @param int $unid
  * @param int $count
  */
-function lib_dal_troops_removeFromUNID($unid, $count)
+function removeFromUNID($unid, $count)
 {
 	$sql = 'UPDATE dw_units SET count = '.$count.' WHERE unid = '.mysql_real_escape_string($unid);
 	util\mysql\query($sql);
@@ -194,7 +198,7 @@ function lib_dal_troops_removeFromUNID($unid, $count)
  * @author Neithan
  * @return int
  */
-function lib_dal_troops_checkCanAttack()
+function checkCanAttack()
 {
 	$sql = 'SELECT canattack FROM dw_game';
 	return util\mysql\query($sql);
@@ -207,7 +211,7 @@ function lib_dal_troops_checkCanAttack()
  * @param int $ty
  * @return int
  */
-function lib_dal_troops_checkTarget($tx, $ty)
+function checkTarget($tx, $ty)
 {
 	$sql = 'SELECT uid FROM dw_map WHERE map_x = '.$tx.' AND map_y = '.$ty;
 	return util\mysql\query($sql);
@@ -219,7 +223,7 @@ function lib_dal_troops_checkTarget($tx, $ty)
  * @param int $tuid
  * @return int
  */
-function lib_dal_troops_checkTargetClan($tuid)
+function checkTargetClan($tuid)
 {
 	$sql = 'SELECT cid FROM dw_user WHERE uid = '.mysql_real_escape_string($tuid);
 	return util\mysql\query($sql);
@@ -232,10 +236,10 @@ function lib_dal_troops_checkTargetClan($tuid)
  * @param int $tx
  * @param int $ty
  * @param int $type
- * @param DWDateTime $endtime
+ * @param \DWDateTime $endtime
  * @return int
  */
-function lib_dal_troops_sendTroop($tid, $tx, $ty, $type, DWDateTime $endtime)
+function sendTroop($tid, $tx, $ty, $type, \DWDateTime $endtime)
 {
 	$sql = '
 		INSERT INTO dw_troops_move (
@@ -263,7 +267,7 @@ function lib_dal_troops_sendTroop($tid, $tx, $ty, $type, DWDateTime $endtime)
  * @param int $amount
  * @return int
  */
-function lib_dal_troops_addResToTroop($tid, $res, $amount)
+function addResourceToTroop($tid, $res, $amount)
 {
 	$sql = '
 		UPDATE dw_troops
@@ -280,7 +284,7 @@ function lib_dal_troops_addResToTroop($tid, $res, $amount)
  * @param int $tuid
  * @return array
  */
-function lib_dal_troops_checkTroops($tuid)
+function checkTroops($tuid)
 {
 	$sql = '
 		SELECT dw_troops_move.tid
@@ -298,7 +302,7 @@ function lib_dal_troops_checkTroops($tuid)
  * @param int $tid
  * @return array
  */
-function lib_dal_troops_checkTroop($tid)
+function checkTroop($tid)
 {
 	$sql = '
 		SELECT
@@ -317,7 +321,7 @@ function lib_dal_troops_checkTroop($tid)
  * @author Neithan
  * @param int $tid
  */
-function lib_dal_troops_endMoving($tid)
+function endMoving($tid)
 {
 	$sql = 'DELETE FROM dw_troops_move WHERE tid = '.mysql_real_escape_string($tid);
 	util\mysql\query($sql);
@@ -329,7 +333,7 @@ function lib_dal_troops_endMoving($tid)
  * @param int $tuid
  * @return int
  */
-function lib_dal_troops_getMaxTID($tuid)
+function getMaxTID($tuid)
 {
 	$sql = 'SELECT max(tid) FROM `dw_troops` WHERE uid = '.mysql_real_escape_string($tuid);
 	return util\mysql\query($sql);
@@ -342,7 +346,7 @@ function lib_dal_troops_getMaxTID($tuid)
  * @param int $x
  * @param int $y
  */
-function lib_dal_troops_changeTroopPosition($tid, $x, $y)
+function changeTroopPosition($tid, $x, $y)
 {
 	$sql = '
 		UPDATE dw_troops
@@ -360,7 +364,7 @@ function lib_dal_troops_changeTroopPosition($tid, $x, $y)
  * @param unknown_type $x
  * @param unknown_type $y
  */
-function lib_dal_troops_changeUnitsPosition($tid, $x, $y)
+function changeUnitsPosition($tid, $x, $y)
 {
 	$sql = '
 		UPDATE dw_units
@@ -378,7 +382,7 @@ function lib_dal_troops_changeUnitsPosition($tid, $x, $y)
  * @param int $tid
  * @return int
  */
-function lib_dal_troops_checkTroopUnits($kind, $tid)
+function checkTroopUnits($kind, $tid)
 {
 	$sql = '
 		SELECT unid FROM dw_units
@@ -393,7 +397,7 @@ function lib_dal_troops_checkTroopUnits($kind, $tid)
  * @author Neithan
  * @param int $unid
  */
-function lib_dal_troops_deleteUnit($unid)
+function deleteUnit($unid)
 {
 	$sql = 'DELETE FROM dw_units WHERE unid = '.mysql_real_escape_string($unid);
 	util\mysql\query($sql);
@@ -405,7 +409,7 @@ function lib_dal_troops_deleteUnit($unid)
  * @param int $tid
  * @param string $name
  */
-function lib_dal_troops_rename($tid, $name)
+function rename($tid, $name)
 {
 	$sql = '
 		UPDATE dw_troops
@@ -420,7 +424,7 @@ function lib_dal_troops_rename($tid, $name)
  * @author Neithan
  * @param int $tid
  */
-function lib_dal_troops_deleteTroop($tid)
+function deleteTroop($tid)
 {
 	$sql = 'DELETE FROM dw_troops WHERE tid = '.mysql_real_escape_string($tid);
 	util\mysql\query($sql);
@@ -431,7 +435,7 @@ function lib_dal_troops_deleteTroop($tid)
  * @author Neithan
  * @param int $tid
  */
-function lib_dal_troops_resetTID($tid)
+function resetTID($tid)
 {
 	$sql = '
 		UPDATE dw_units
@@ -448,7 +452,7 @@ function lib_dal_troops_resetTID($tid)
  * @param int $y
  * @return int
  */
-function lib_dal_troops_getIsle($x, $y)
+function getIsle($x, $y)
 {
 	$sql = '
 		SELECT isle FROM dw_map
@@ -464,7 +468,7 @@ function lib_dal_troops_getIsle($x, $y)
  * @param int $tid
  * @return array
  */
-function lib_dal_troops_loaded($tid)
+function loaded($tid)
 {
 	$sql = 'SELECT res, amount FROM dw_troops WHERE tid = '.mysql_real_escape_string($tid);
 	return util\mysql\query($sql);
@@ -473,10 +477,10 @@ function lib_dal_troops_loaded($tid)
 /**
  * get the unit stats
  * @author Neithan
- * @param <type> $kind
- * @return <type>
+ * @param int $kind
+ * @return array
  */
-function lib_dal_troops_getUnitStats($kind)
+function getUnitStats($kind)
 {
 	$sql = '
 		SELECT * FROM dw_unit_stats
@@ -491,7 +495,7 @@ function lib_dal_troops_getUnitStats($kind)
  * @param int $count
  * @return int
  */
-function lib_dal_troops_updateUnitCount($unid, $count)
+function updateUnitCount($unid, $count)
 {
 	$sql = '
 		UPDATE dw_units
@@ -506,7 +510,7 @@ function lib_dal_troops_updateUnitCount($unid, $count)
  * @author Neithan
  * @return array
  */
-function lib_dal_troops_getAllMovingTroops()
+function getAllMovingTroops()
 {
 	$sql = 'SELECT * FROM dw_troops_move';
 	return util\mysql\query($sql, true);
@@ -518,7 +522,7 @@ function lib_dal_troops_getAllMovingTroops()
  * @param int $unid
  * @return int
  */
-function lib_dal_troops_removeFromTroop($unid)
+function removeFromTroop($unid)
 {
 	$sql = '
 		UPDATE dw_units
@@ -527,4 +531,3 @@ function lib_dal_troops_removeFromTroop($unid)
 	';
 	return util\mysql\query($sql);
 }
-?>

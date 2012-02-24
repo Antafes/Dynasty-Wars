@@ -1,6 +1,8 @@
 <?php
+namespace dal\log;
+
 /**
- * insert logmessages
+ * insert log messages
  * @author Neithan
  * @param int $type
  * @param string $actor
@@ -8,7 +10,7 @@
  * @param string $extra
  * @return int
  */
-function lib_dal_log_saveLog($type, $actor, $concerned, $extra)
+function saveLog($type, $actor, $concerned, $extra)
 {
 	$sql = '
 		INSERT INTO dw_log (
@@ -33,7 +35,7 @@ function lib_dal_log_saveLog($type, $actor, $concerned, $extra)
  * @param int $uid_actor
  * @return int
  */
-function lib_dal_log_newReg($uid_actor)
+function newReg($uid_actor)
 {
 	$sql = '
 		INSERT INTO dw_log (
@@ -56,7 +58,7 @@ function lib_dal_log_newReg($uid_actor)
  * @author Neithan
  * @return array
  */
-function lib_dal_log_getLogEntries()
+function getLogEntries()
 {
 	$sql = '
 		SELECT * FROM dw_log

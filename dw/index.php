@@ -105,7 +105,7 @@ elseif ($con)
 			}
 
 			unset($_SESSION['user']);
-			lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'acp'), true));
+			lib_bl_general_redirect(util\html\createLink(array('chose' => 'acp'), true));
 		}
 
 		if ($_POST['change_user'])
@@ -128,18 +128,18 @@ elseif ($con)
 			}
 
 			unset($_SESSION['user']);
-			lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'home'), true));
+			lib_bl_general_redirect(util\html\createLink(array('chose' => 'home'), true));
 		}
 
 		if ($_POST['language'] && $_SESSION['language'])
 		{
 			$_SESSION['language'] = $_POST['language'];
-			lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'options'), true));
+			lib_bl_general_redirect(util\html\createLink(array('chose' => 'options'), true));
 		}
 		elseif ($_POST['language'] && $_COOKIE['language'])
 		{
 			setcookie('language', $_POST['language'], time()+604800, '', '.dynasty-wars.de');
-			lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'options'), true));
+			lib_bl_general_redirect(util\html\createLink(array('chose' => 'options'), true));
 		}
 
 		if ($_GET['chose'] == 'logout')

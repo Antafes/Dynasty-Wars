@@ -6,26 +6,22 @@
  *
  */
 
+namespace dal\user;
+
 /**
  * Will check if the specified user exists in the database.
  * @author siyb
  * @param <String> $user the user to be checked
  * @return <int> returns 1 if the user has been found, 0 otherwise
  */
-function lib_dal_user_userExists($user)
+function exists($user)
 {
-	$count =
-    util\mysql\query(
+    return util\mysql\query(
 		sprintf(
             "SELECT count(*) FROM dw_user WHERE nick='%s'",
             mysql_real_escape_string($user)
         )
     );
-
-	if ($count  > 0)
-		return 1;
-	else
-		return 0;
 }
 
 /**
@@ -34,7 +30,7 @@ function lib_dal_user_userExists($user)
  * @param <int> $uid the uid of the user
  * @return <string> the nick
  */
-function lib_dal_user_uid2nick($uid)
+function uid2nick($uid)
 {
 	global $lang;
 
@@ -54,7 +50,7 @@ function lib_dal_user_uid2nick($uid)
  * @param <int> $uid the uid of the user
  * @return <int> the uid
  */
-function lib_dal_user_nick2uid($nick) {
+function nick2uid($nick) {
     return
         util\mysql\query(
             sprintf(
@@ -69,7 +65,7 @@ function lib_dal_user_nick2uid($nick) {
  * @param <int> $uid the uid of the user
  * @return <int> the clanid of the user
  */
-function lib_dal_user_returnCID($uid) {
+function returnCID($uid) {
     return
         util\mysql\query(
             sprintf(
@@ -84,7 +80,7 @@ function lib_dal_user_returnCID($uid) {
  * @param <int> $uid userid
  * @return <array> resultset containing city data
  */
-function lib_dal_user_returnAllCities($uid) {
+function returnAllCities($uid) {
     return
     util\mysql\query(
         sprintf(
@@ -103,7 +99,7 @@ function lib_dal_user_returnAllCities($uid) {
  * @param string $email
  * @return int
  */
-function lib_dal_user_returnUID($email)
+function returnUID($email)
 {
 	$sql = '
 		SELECT `uid` FROM `dw_user`
@@ -118,7 +114,7 @@ function lib_dal_user_returnUID($email)
  * @param int $uid
  * @return array
  */
-function lib_dal_user_getClanRank($uid)
+function getClanRank($uid)
 {
 	$sql = 'SELECT cid, rankid FROM dw_user WHERE uid = '.$uid.'';
 	return util\mysql\query($sql);
@@ -130,7 +126,7 @@ function lib_dal_user_getClanRank($uid)
  * @param int $cid
  * @return array
  */
-function lib_dal_user_getUIDFromCID($cid)
+function getClanLeaders($cid)
 {
 	$sql = 'SELECT uid FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).' AND rankid = 1';
 	return util\mysql\query($sql, true);
@@ -143,7 +139,7 @@ function lib_dal_user_getUIDFromCID($cid)
  * @param unknown_type $y
  * @return unknown_type
  */
-function lib_dal_user_getUIDFromMapPosition($x, $y)
+function getUIDFromMapPosition($x, $y)
 {
 	$sql = '
 		SELECT uid FROM dw_map
@@ -159,7 +155,7 @@ function lib_dal_user_getUIDFromMapPosition($x, $y)
  * @param int $uid
  * @return array
  */
-function lib_dal_user_getUserInfos($uid)
+function getUserInfos($uid)
 {
 	$sql = '
 		SELECT * FROM dw_user
@@ -174,7 +170,7 @@ function lib_dal_user_getUserInfos($uid)
  * @param int $tid
  * @return int
  */
-function lib_dal_user_getUIDFromTID($tid)
+function getUIDFromTID($tid)
 {
 	$sql = '
 		SELECT uid FROM dw_troops
@@ -188,7 +184,7 @@ function lib_dal_user_getUIDFromTID($tid)
  * @author Neithan
  * @return array
  */
-function lib_dal_user_getACPUserList()
+function getACPUserList()
 {
 	$sql = '
 		SELECT

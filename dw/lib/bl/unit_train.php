@@ -23,12 +23,12 @@ function lib_bl_unit_train_checkBuildings($city)
 function lib_bl_unit_train_unitPrices($kind)
 {
 	global $lang;
-	$prices = lib_dal_unit_train_unitPrices($kind);
+	$prices = dal\unit\train\unitPrices($kind);
 
 	$mainCity = $_SESSION['user']->getMainCity();
-	$mainbuilding = lib_dal_buildings_getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
-	$paper = lib_dal_buildings_getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
-	$koku = lib_dal_buildings_getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
+	$mainbuilding = dal\buildings\getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
+	$paper = dal\buildings\getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
+	$koku = dal\buildings\getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
 
 	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['paper'] = 0;
@@ -37,7 +37,7 @@ function lib_bl_unit_train_unitPrices($kind)
 		$prices['koku'] = 0;
 
 	foreach ($prices as $key => $value)
-		$prices[$key.'_formatted'] = lib_util_math_numberFormat($value, 0);
+		$prices[$key.'_formatted'] = util\math\numberFormat($value, 0);
 
 	return $prices;
 }
@@ -92,7 +92,7 @@ function lib_bl_unit_train_maxUnitsHelper(&$value)
  */
 function lib_bl_unit_train_trainTime($kind)
 {
-	return lib_dal_unit_train_trainTime($kind);
+	return dal\unit\train\trainTime($kind);
 }
 
 /**
@@ -118,10 +118,10 @@ function lib_bl_unit_train_train($kind, $count, $uid, $city)
 		$sum_prices["iron"] = $prices["iron"]*$count;
 		$sum_prices["paper"] = $prices["paper"]*$count;
 		$sum_prices["koku"] = $prices["koku"]*$count;
-		$endTime = new DWDateTime();
+		$endTime = new \DWDateTime();
 		$endTime->add(new DateInterval('PT'.(lib_bl_unit_train_trainTime($kind) * $count)));
-		$erg1 = lib_dal_unit_train_removeRes($sum_prices, $uid);
-		$erg2 = lib_dal_unit_train_startTrain($kind, $uid, $count, $endTime, $city);
+		$erg1 = dal\unit\train\removeResources($sum_prices, $uid);
+		$erg2 = dal\unit\train\startTrain($kind, $uid, $count, $endTime, $city);
 		if ($erg1 && $erg2)
 			return 1;
 		else
@@ -140,14 +140,14 @@ function lib_bl_unit_train_train($kind, $count, $uid, $city)
  */
 function lib_bl_unit_train_checkTraining($uid, $city)
 {
-	$units = lib_dal_unit_train_checkTraining($uid, $city);
+	$units = dal\unit\train\checkTraining($uid, $city);
 
 	if ($units)
 	{
 		foreach ($units as $unit)
 		{
-			$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $unit['end_datetime']);
-			$now = new DWDateTime();
+			$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $unit['end_datetime']);
+			$now = new \DWDateTime();
 			if ($now >= $endtime)
 			{
 				$unit['uid'] = $uid;
@@ -188,12 +188,12 @@ function lib_bl_unit_train_trainComplete($valuelist)
 	$cityexp = explode(":", $valuelist['city']);
 	$map_x = intval($cityexp[0]);
 	$map_y = intval($cityexp[1]);
-	lib_dal_unit_train_removeComplete($valuelist['tid']);
-	$unid = lib_dal_unit_train_checkPos($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
+	dal\unit\train\removeFromTrainList($valuelist['tid']);
+	$unid = dal\unit\train\checkPosition($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
 	if ($unid)
-		$erg3 = lib_dal_unit_train_addUnit($valuelist['count'], $unid);
+		$erg3 = dal\unit\train\addUnit($valuelist['count'], $unid);
 	else
-		$erg3 = lib_dal_unit_train_newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
+		$erg3 = dal\unit\train\newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
 	if ($erg1 && $erg3)
 		return 1;
 	else

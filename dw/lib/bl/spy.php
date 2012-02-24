@@ -8,13 +8,13 @@
 
 /**
  * Spy algorithm explanation:
- * 
+ *
  * 1) Calculate the total defense of the victim -> (number of spies) + DEF_STANDARD + (DEF_TOWERFACT * towerlevel)
  * 2) Calculate the disclosure chance -> (sum of all requested LOOKFOR) / (sum of all LOOKFORS)
  * 3) Calculate the ratio of attacking spies and defending spies
  * 4) Calculate how many spies will be riskchecked  -> (amount of attacking spies) * (ratio calculated in 3)
  * 5) Calculate enemy spy survivors -> (amount of spies that are riskchecked) * (disclosure chance)
- * 
+ *
  */
  namespace dwars\lib\bl;
 
@@ -50,19 +50,19 @@ const INITIAL_COST = 1000;
 
 function spyOn($uid, $numberOfSpies, $x, $y, $lookFor) {
         if (!hasEnoughSpies($uid, $numberOfSpies, $x, $y)) return 0;
-	
+
 	$spyCost = calculateSpyCost($lookFor) * numberOfSpies;
-	
+
 	if (!lib_bl_resource_hasEnoughOf($x, $y, "koku", $spyCost)) return -1;
-	
-	$victimUid = lib_dal_user_getUIDFromMapPosition($x, $y);
-	
+
+	$victimUid = dal\user\getUIDFromMapPosition($x, $y);
+
 	$noSpiesOfVictim = calculateTotalDefense($victimUid, $x, $y);
-	
+
 	$remainingSpies = doRiskChecks($numberOfSpies, $noSpiesOfVictim, $lookFor);
-	
+
 	if ($remainingSpies <= 0) return -2; // all spies are dead, no intelligence data for you!
-	
+
 	generateSpyReport($victim, $x, $y, $lookFor);
 	return 1;
 }
@@ -190,7 +190,7 @@ function getAttackerVictimSpyRatio($attackerNoSpies, $victimNoSpies) {
  * @param int y
  */
 function noOfSpiesAtLocation($uid, $x, $y) {
-	return lib_dal_unit_getUnitCountByCoordinates(3, $uid, $x, $y);
+	return dal\unit\getUnitCountByCoordinates(3, $uid, $x, $y);
 }
 
 /**

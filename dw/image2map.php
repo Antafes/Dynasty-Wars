@@ -19,7 +19,7 @@ function image2map($filePath) {
         for ($x = 0; $x < $imageWidth; $x++) {
                 for ($y = 0; $y < $imageHeight; $y++) {
 			if ($x > 0 && $x < 293 && $y > 0 && $y < 90) continue; // skip 1:1 to 293:90
-                        lib_dal_map_setTerrainType($x, $y, lib_bl_map_getTerrainTypeByColor(imagecolorat($im,$x,$y)));
+                        dal\map\setTerrainType($x, $y, lib_bl_map_getTerrainTypeByColor(imagecolorat($im,$x,$y)));
 		}
 	}
 }

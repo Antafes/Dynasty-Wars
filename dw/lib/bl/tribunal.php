@@ -7,7 +7,7 @@
 function lib_bl_tribunal_getAllHearings()
 {
 	$parser = new wikiparser;
-	$hearings = lib_dal_tribunal_getAllHearings();
+	$hearings = dal\tribunal\getAllHearings();
 
 	if ($hearings)
 	{
@@ -32,7 +32,7 @@ function lib_bl_tribunal_getAllHearings()
  */
 function lib_bl_tribunal_getAllCauses($lang)
 {
-	return lib_dal_tribunal_getAllCauses(lib_bl_tribunal_lang2id($lang));
+	return dal\tribunal\getAllCauses(lib_bl_tribunal_lang2id($lang));
 }
 
 /**
@@ -63,7 +63,7 @@ function lib_bl_tribunal_lang2id($lang)
  */
 function lib_bl_tribunal_getAllMessages($uid)
 {
-	return lib_dal_tribunal_getAllMessages($uid);
+	return dal\tribunal\getAllMessages($uid);
 }
 
 /**
@@ -80,14 +80,14 @@ function lib_bl_tribunal_getAllRules($language = '')
 		global $lang;
 		$language = $lang['lang'];
 	}
-	$rules = lib_dal_tribunal_getAllRules($language);
+	$rules = dal\tribunal\getAllRules($language);
 
 	$rules_array = array();
 	if ($rules)
 	{
 		foreach ($rules as $rule)
 		{
-			$ruletexts = lib_dal_tribunal_getAllRuleTexts($rule['ruid'], $language);
+			$ruletexts = dal\tribunal\getAllRuleTexts($rule['ruid'], $language);
 			$texts = array();
 			foreach ($ruletexts as $text)
 			{
@@ -122,17 +122,17 @@ function lib_bl_tribunal_getAllRules($language = '')
  */
 function lib_bl_tribunal_insertRule($valuelist)
 {
-	$ruid = lib_dal_tribunal_insertRule($valuelist['language'], $valuelist['paragraph'], $valuelist['title']);
+	$ruid = dal\tribunal\insertRule($valuelist['language'], $valuelist['paragraph'], $valuelist['title']);
 	$clauses_count = count($valuelist['clauses']);
 	for ($i = 0; $i < $clauses_count; $i++)
 	{
 		$clause = $valuelist['clauses'][$i];
-		lib_dal_tribunal_insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['text']);
+		dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['text']);
 		if (is_array($clause['subclauses']))
 		{
 			$subclauses_count = count($clause['subclauses']);
 			for ($n = 0; $n < $subclauses_count; $n++)
-				lib_dal_tribunal_insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['subclauses'][$n]['text'], $n + 1);
+				dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['subclauses'][$n]['text'], $n + 1);
 		}
 	}
 }
@@ -145,8 +145,8 @@ function lib_bl_tribunal_insertRule($valuelist)
  */
 function lib_bl_tribunal_deleteRule($ruid)
 {
-	lib_dal_tribunal_deleteRule('dw_tribunal_rules', 'ruid', $ruid);
-	lib_dal_tribunal_deleteRule('dw_tribunal_rules_texts', 'ruid', $ruid);
+	dal\tribunal\deleteRule('dw_tribunal_rules', 'ruid', $ruid);
+	dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'ruid', $ruid);
 }
 
 /**
@@ -157,7 +157,7 @@ function lib_bl_tribunal_deleteRule($ruid)
  */
 function lib_bl_tribunal_deleteClause($rutid)
 {
-	lib_dal_tribunal_deleteRule('dw_tribunal_rules_texts', 'rutid', $rutid);
+	dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'rutid', $rutid);
 }
 
 /**
@@ -173,7 +173,7 @@ function lib_bl_tribunal_deleteClause($rutid)
 function lib_bl_tribunal_insertHearing($suitor, $accused, $cause, $description, $arguments)
 {
 	$error = array();
-	$accused_uid = lib_dal_user_nick2uid($accused);
+	$accused_uid = dal\user\nick2uid($accused);
 	if ($accused == '')
 		$error['accused'] = true;
 	if ($cause == 0)
@@ -184,7 +184,7 @@ function lib_bl_tribunal_insertHearing($suitor, $accused, $cause, $description, 
 		$error['suitor'] = true;
 	if (count($error) == 0)
 	{
-		$tid = lib_dal_tribunal_insertHearing($suitor, $accused_uid, $cause, $description);
+		$tid = dal\tribunal\insertHearing($suitor, $accused_uid, $cause, $description);
 		lib_bl_tribunal_addArgument($tid, $arguments, 'suitor');
 		$accused_lang = lib_bl_general_getLanguage($accused_uid);
 		include('language/'.$accused_lang.'/ingame/tribunal.php');
@@ -207,7 +207,7 @@ function lib_bl_tribunal_addArgument($tid, $arguments, $from)
 {
 	$aid_array = array();
 	foreach ($arguments as $argument)
-		$aid_array[] = lib_dal_tribunal_insertArgument($tid, $argument, $from);
+		$aid_array[] = dal\tribunal\insertArgument($tid, $argument, $from);
 	return $aid_array;
 }
 
@@ -220,7 +220,7 @@ function lib_bl_tribunal_addArgument($tid, $arguments, $from)
 function lib_bl_tribunal_getCause($tcid)
 {
 	global $lang;
-	return lib_dal_tribunal_getCause($tcid, lib_bl_tribunal_lang2id($lang['lang']));
+	return dal\tribunal\getCause($tcid, lib_bl_tribunal_lang2id($lang['lang']));
 }
 
 /**
@@ -234,7 +234,7 @@ function lib_bl_tribunal_getHearing($tid)
 	global $own_uid;
 
 	$parser = new wikiparser;
-	$hearing = lib_dal_tribunal_getHearing($tid);
+	$hearing = dal\tribunal\getHearing($tid);
 
 	if ($hearing)
 	{
@@ -263,7 +263,7 @@ function lib_bl_tribunal_getHearing($tid)
  */
 function lib_bl_tribunal_approveArgument($aid, $approved)
 {
-	return lib_dal_tribunal_approveArgument($aid, ($approved == 'accept' ? 1 : -1));
+	return dal\tribunal\approveArgument($aid, ($approved == 'accept' ? 1 : -1));
 }
 
 /**
@@ -274,7 +274,7 @@ function lib_bl_tribunal_approveArgument($aid, $approved)
  */
 function lib_bl_tribunal_recallHearing($tid, $uid)
 {
-	return lib_dal_tribunal_recallHearing($tid, $uid);
+	return dal\tribunal\recallHearing($tid, $uid);
 }
 
 /**
@@ -289,7 +289,7 @@ function lib_bl_tribunal_getArguments($tid, $approved)
 {
 	global $lang;
 
-	$arguments = lib_dal_tribunal_getArguments($tid, $approved);
+	$arguments = dal\tribunal\getArguments($tid, $approved);
 
 	foreach ($arguments as &$argument)
 	{
@@ -319,8 +319,8 @@ function lib_bl_tribunal_getArguments($tid, $approved)
  */
 function lib_bl_tribunal_getArgument($aid)
 {
-	$argument = lib_dal_tribunal_getArgument($aid);
-	$argument['added_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $argument['added_datetime']);
+	$argument = dal\tribunal\getArgument($aid);
+	$argument['added_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $argument['added_datetime']);
 	return $argument;
 }
 
@@ -334,7 +334,7 @@ function lib_bl_tribunal_getArgument($aid)
  */
 function lib_bl_tribunal_makeDecision($tid, $decision, $reason)
 {
-	return lib_dal_tribunal_makeDecision($tid, $decision, $reason);
+	return dal\tribunal\makeDecision($tid, $decision, $reason);
 }
 
 /**
@@ -346,7 +346,7 @@ function lib_bl_tribunal_makeDecision($tid, $decision, $reason)
  */
 function lib_bl_tribunal_blockComments($tid, $block)
 {
-	return lib_dal_tribunal_blockComments($tid, $block);
+	return dal\tribunal\blockComments($tid, $block);
 }
 
 /**
@@ -357,12 +357,12 @@ function lib_bl_tribunal_blockComments($tid, $block)
  */
 function lib_bl_tribunal_getComments($tid)
 {
-	$comments = lib_dal_tribunal_getComments($tid);
+	$comments = dal\tribunal\getComments($tid);
 
 	foreach ($comments as &$comment)
 	{
-		$comment['create_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
-		$comment['changed_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
+		$comment['create_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
+		$comment['changed_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
 	}
 	unset($comment);
 
@@ -379,7 +379,7 @@ function lib_bl_tribunal_getComments($tid)
  */
 function lib_bl_tribunal_saveComment($tid, $uid, $comment)
 {
-	return lib_dal_tribunal_saveComment($tid, $uid, $comment);
+	return dal\tribunal\saveComment($tid, $uid, $comment);
 }
 
 /**
@@ -390,7 +390,7 @@ function lib_bl_tribunal_saveComment($tid, $uid, $comment)
  */
 function lib_bl_tribunal_deleteComment($tcoid)
 {
-	return lib_dal_tribunal_deleteComment($tcoid);
+	return dal\tribunal\deleteComment($tcoid);
 }
 
 /**
@@ -403,7 +403,7 @@ function lib_bl_tribunal_deleteComment($tcoid)
  */
 function lib_bl_tribunal_editComment($tcoid, $comment, $uid)
 {
-	return lib_dal_tribunal_editComment($tcoid, $comment, $uid);
+	return dal\tribunal\editComment($tcoid, $comment, $uid);
 }
 
 /**
@@ -413,10 +413,10 @@ function lib_bl_tribunal_editComment($tcoid, $comment, $uid)
  */
 function lib_bl_tribunal_getComment($tcoid)
 {
-	$comment = lib_dal_tribunal_getComment($tcoid);
+	$comment = dal\tribunal\getComment($tcoid);
 
-	$comment['create_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
-	$comment['changed_datetime'] = DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
+	$comment['create_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
+	$comment['changed_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);
 
 	return $comment;
 }

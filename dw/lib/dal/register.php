@@ -1,10 +1,12 @@
 <?php
+namespace dal\register;
+
 /**
  * get all coordinates where the terrain is not water or walkable and where no uid is set
  * @author Neithan
  * @return array
  */
-function lib_dal_register_getFreeCoords()
+function getFreeCoordinates()
 {
 	$sql = '
 		SELECT `map_x`, `map_y`
@@ -27,7 +29,7 @@ function lib_dal_register_getFreeCoords()
  * @param int $y
  * @return int
  */
-function lib_dal_register_updateCoords($uid, $city, $x, $y)
+function updateCoordinates($uid, $city, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_map`
@@ -50,7 +52,7 @@ function lib_dal_register_updateCoords($uid, $city, $x, $y)
  * @param string $language
  * @return int
  */
-function lib_dal_register_insertUser($nick, $pws, $email, $random, $language)
+function insertUser($nick, $pws, $email, $random, $language)
 {
 	$sql = '
 		INSERT INTO dw_user (
@@ -78,7 +80,7 @@ function lib_dal_register_insertUser($nick, $pws, $email, $random, $language)
  * @param int $uid
  * @return int
  */
-function lib_dal_register_insertRes($uid, $x, $y)
+function insertResources($uid, $x, $y)
 {
 	$sql = '
 		INSERT INTO dw_res
@@ -98,7 +100,7 @@ function lib_dal_register_insertRes($uid, $x, $y)
  * @param int $map_y
  * @return int
  */
-function lib_dal_register_insertBuildings($uid, $map_x, $map_y)
+function insertBuildings($uid, $map_x, $map_y)
 {
 	$sql = '
 		INSERT INTO dw_buildings (
@@ -127,9 +129,8 @@ function lib_dal_register_insertBuildings($uid, $map_x, $map_y)
  * @param int $uid
  * @return int
  */
-function lib_dal_register_insertPoints($uid)
+function insertPoints($uid)
 {
 	$sql = 'INSERT INTO dw_points (uid) VALUES ('.$uid.')';
 	return util\mysql\query($sql);
 }
-?>

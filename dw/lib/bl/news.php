@@ -6,7 +6,7 @@
  */
 function lib_bl_news_getAllEntries()
 {
-	return lib_dal_news_getAllEntries();
+	return dal\news\getAllEntries();
 }
 
 /**
@@ -17,7 +17,7 @@ function lib_bl_news_getAllEntries()
  */
 function lib_bl_news_getEntry($nid)
 {
-	return lib_dal_news_getEntry($nid);
+	return dal\news\getEntry($nid);
 }
 
 /**
@@ -30,7 +30,7 @@ function lib_bl_news_getEntry($nid)
  */
 function lib_bl_news_save($title, $content, UserCls $author)
 {
-	return lib_dal_news_save($title, $content, $author->getUID(), $author->getNick());
+	return dal\news\save($title, $content, $author->getUID(), $author->getNick());
 }
 
 /**
@@ -44,5 +44,5 @@ function lib_bl_news_save($title, $content, UserCls $author)
  */
 function lib_bl_news_update($nid, $title, $content, UserCls $changer)
 {
-	return lib_dal_news_update($nid, $title, $content, $changer->getUID(), $changer->getNick());
+	return dal\news\update($nid, $title, $content, $changer->getUID(), $changer->getNick());
 }

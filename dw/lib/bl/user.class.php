@@ -174,7 +174,7 @@ class UserCls {
 	{
 		global $lang;
 
-		$date = DWDateTime::createFromFormat('Y-m-d H:i:s', $this->regdate);
+		$date = \DWDateTime::createFromFormat('Y-m-d H:i:s', $this->regdate);
 
 		return $date->format($lang['timeformat']);
 	}
@@ -270,10 +270,10 @@ class UserCls {
 	 */
 	public function checkLastLogin()
 	{
-		$lastLogin = new DWDateTime($this->last_login);
-		$tmp = new DWDateTime();
+		$lastLogin = new \DWDateTime($this->last_login);
+		$tmp = new \DWDateTime();
 		$sub1 = $tmp->sub(new DateInterval('P5D'));
-		$tmp = new DWDateTime();
+		$tmp = new \DWDateTime();
 		$sub2 = $tmp->sub(new DateInterval('P14D'));
 
 		if ($lastLogin < $sub2)
@@ -312,10 +312,10 @@ class UserCls {
 
 	public function getLanguage()
 	{
-		$check = lib_dal_general_checkLanguageIsActive($this->language);
+		$check = dal\general\checkLanguageIsActive($this->language);
 
 		if (!$check)
-			$this->language = lib_dal_general_getFallbackLanguage();
+			$this->language = dal\general\getFallbackLanguage();
 
 		return $this->language;
 	}
