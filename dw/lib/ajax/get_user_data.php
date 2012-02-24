@@ -43,7 +43,7 @@ if ($con)
 		LEFT JOIN dw_clan c USING (cid)
 		WHERE m.uid = '.mysql_real_escape_string($_GET['uid']).'
 	';
-	$data = lib_util_mysqlQuery($sql);
+	$data = util\mysql\query($sql);
 
 	$html = '<div style="text-align: center">'.$data['city'].' ['.$data['map_x'].':'.$data['map_y'].']</div>';
 	$html .= '<table><tbody><tr>';

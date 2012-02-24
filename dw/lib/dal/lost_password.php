@@ -8,7 +8,7 @@
 function lib_dal_lost_password_checkRecoveries($uid)
 {
 	$sql = 'SELECT lpid FROM dw_lostpw WHERE uid = '.$uid.'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -34,7 +34,7 @@ function lib_dal_lost_password_insertRecovery($id, $time, $uid)
 			'.$uid.'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -51,7 +51,7 @@ function lib_dal_lost_password_updateRecovery($id, $time)
 		SET mailid = "'.mysql_real_escape_string($id).'",
 			sent_time = NOW()
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -66,7 +66,7 @@ function lib_dal_lost_password_getRecoveryRequest($uid)
 		SELECT * FROM dw_lostpw
 		WHERE uid = '.mysql_real_escape_string($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -78,6 +78,6 @@ function lib_dal_lost_password_getRecoveryRequest($uid)
 function lib_dal_lost_password_removeRecoveryRequest($uid)
 {
 	$sql = 'DELETE FROM dw_lostpw WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>

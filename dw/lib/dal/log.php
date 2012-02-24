@@ -24,7 +24,7 @@ function lib_dal_log_saveLog($type, $actor, $concerned, $extra)
 			"'.mysql_real_escape_string($extra).'",
 			'.mysql_real_escape_string($type).')
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -48,7 +48,7 @@ function lib_dal_log_newReg($uid_actor)
 			1
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -62,5 +62,5 @@ function lib_dal_log_getLogEntries()
 		SELECT * FROM dw_log
 		ORDER BY log_datetime DESC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }

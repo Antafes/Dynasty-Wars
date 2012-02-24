@@ -43,7 +43,7 @@ elseif ($con)
 
 	$user = new UserCls();
 
-	$error = lib_util_mysqlQuery('SELECT error_report FROM dw_game');
+	$error = util\mysql\query('SELECT error_report FROM dw_game');
 	error_reporting($error);
 //abfrage GET, POST variablen
 	if ($_SESSION['lid'])
@@ -61,7 +61,7 @@ elseif ($con)
 	if ($_POST['language'])
 		$lang['lang'] = $_POST['language'];
 	$sql = 'SELECT login_closed FROM dw_game';
-	$login_closed = lib_util_mysqlQuery($sql);
+	$login_closed = util\mysql\query($sql);
 
 	if ($user->getUID() && (($login_closed == 1 && $user->getGameRank() < 1) xor ($login_closed == 2 && $user->getGameRank() != 2) xor !$checkid))
 	{

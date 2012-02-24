@@ -3,7 +3,7 @@ include ('loggedout/header.php');
 lib_bl_general_loadLanguageFile('news', 'loggedout');
 //db: auslesen der news
 $parser = new wikiparser();
-$news_array = lib_util_mysqlQuery('
+$news_array = util\mysql\query('
 	SELECT
 		n.*,
 		u1.nick AS creator,

@@ -39,7 +39,7 @@ $smarty->assign('userInfos', array(
 ));
 
 include('lib/bl/resource.inc.php');
-$gameOptions = lib_util_mysqlQuery('SELECT board, adminmail, version FROM dw_game');
+$gameOptions = util\mysql\query('SELECT board, adminmail, version FROM dw_game');
 
 if ($_GET['chose'] == 'buildings')
 {
@@ -59,7 +59,7 @@ $sql = '
 	WHERE uid_recipient = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
 		AND unread
 ';
-$new_msg = lib_util_mysqlQuery($sql);
+$new_msg = util\mysql\query($sql);
 if (!$new_msg)
 	$new_msg = 0;
 
@@ -155,7 +155,7 @@ elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving &&
 $smarty->assign('readyJS', lib_util_html_createReadyScript($bodyonload));
 
 //selection of the map position
-$cities = lib_util_mysqlQuery('
+$cities = util\mysql\query('
 	SELECT
 		CONCAT(map_x, ":", map_y) coords,
 		city

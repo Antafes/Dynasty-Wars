@@ -19,7 +19,7 @@ function lib_dal_market_placeOnMarket(
 	$uid, $x, $y, $sellResource, $sellAmount,
 	$exchangeResource, $exchangeAmount, $tax)
 {
-	lib_util_mysqlQuery(
+	util\mysql\query(
 		sprintf(
 			"INSERT INTO dw_market (
 				`sid`,
@@ -66,7 +66,7 @@ function lib_dal_market_placeOnMarket(
  * @param int $uid
  */
 function lib_dal_market_removeFromMarket($mid, $uid) {
-	lib_util_mysqlQuery(
+	util\mysql\query(
 		sprintf(
 			"
 			UPDATE dw_market
@@ -89,7 +89,7 @@ function lib_dal_market_removeFromMarket($mid, $uid) {
 function lib_dal_market_getOwner($mid)
 {
 	return
-		lib_util_mysqlQuery(
+		util\mysql\query(
 			sprintf(
 				"
 				SELECT sid FROM dw_market
@@ -108,7 +108,7 @@ function lib_dal_market_getOwner($mid)
  */
 function lib_dal_market_getOfferDetails($mid) {
 	return
-		lib_util_mysqlQuery(
+		util\mysql\query(
 			sprintf(
 				"
 				SELECT * FROM dw_market
@@ -127,7 +127,7 @@ function lib_dal_market_getOfferDetails($mid) {
 function lib_dal_market_returnAllOffers()
 {
 	return
-	lib_util_mysqlQuery(
+	util\mysql\query(
 		sprintf(
 			"
 			SELECT * FROM dw_market
@@ -146,7 +146,7 @@ function lib_dal_market_returnAllOffers()
  */
 function lib_dal_market_isOpen($mid) {
 	return
-		lib_util_mysqlQuery(
+		util\mysql\query(
 			sprintf(
 				"
 				SELECT count(*) FROM dw_market
@@ -184,7 +184,7 @@ function lib_dal_market_userOffers($uid, $filter, $order = "DESC")
 		mysql_real_escape_string($uid),
 		mysql_real_escape_string($order)
 	);
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -237,7 +237,7 @@ function lib_dal_market_sales($limitS = 25, $limitE = 25, $completeS = 1, $compl
 		mysql_real_escape_string($completeE),
 		mysql_real_escape_string($limitE)
 	);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -278,6 +278,6 @@ function lib_dal_market_search(
 		mysql_real_escape_string($complete),
 		mysql_real_escape_string($seller)
 	);
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 ?>

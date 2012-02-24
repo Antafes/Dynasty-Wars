@@ -11,7 +11,7 @@ function lib_dal_tribunal_getAllHearings()
 		WHERE decision_datetime = 0
 			AND !deleted
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -27,7 +27,7 @@ function lib_dal_tribunal_getAllCauses($lang)
 		WHERE language = '.mysql_real_escape_string($lang).'
 		ORDER BY sort
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -46,7 +46,7 @@ function lib_dal_tribunal_getAllMessages($uid)
 				OR read_datetime = 0)
 				OR archive = 1)
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -64,7 +64,7 @@ function lib_dal_tribunal_getAllRules($lang)
 			AND !deleted
 		ORDER BY paragraph ASC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -87,7 +87,7 @@ function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
 			AND !deleted
 		ORDER BY clause, subclause
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -111,7 +111,7 @@ function lib_dal_tribunal_insertRule($language, $paragraph, $title)
 			"'.mysql_real_escape_string($title).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -140,7 +140,7 @@ function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subc
 			"'.mysql_real_escape_string($text).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -158,7 +158,7 @@ function lib_dal_tribunal_deleteRule($table, $field, $key)
 		SET deleted = 1
 		WHERE '.mysql_real_escape_string($field).' = '.mysql_real_escape_string($key).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -187,7 +187,7 @@ function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
 			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -213,7 +213,7 @@ function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
 			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -230,7 +230,7 @@ function lib_dal_tribunal_getCause($tcid, $lang_id)
 		WHERE tcid = '.mysql_real_escape_string($tcid).'
 			AND language = '.mysql_real_escape_string($lang_id).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -245,7 +245,7 @@ function lib_dal_tribunal_getHearing($tid)
 		SELECT * FROM dw_tribunal
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -264,7 +264,7 @@ function lib_dal_tribunal_getArguments($tid, $approved)
 	if ($approved == false)
 		$sql .= '		AND approved = 1
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -281,7 +281,7 @@ function lib_dal_tribunal_approveArgument($aid, $approved)
 		SET approved = '.mysql_real_escape_string($approved).'
 		WHERE aid = '.mysql_real_escape_string($aid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -298,7 +298,7 @@ function lib_dal_tribunal_recallHearing($tid, $uid)
 			deleted_by = '.mysql_real_escape_string($uid).'
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -313,7 +313,7 @@ function lib_dal_tribunal_getArgument($aid)
 		SELECT * FROM dw_tribunal_arguments
 		WHERE aid = '.mysql_real_escape_string($aid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -333,7 +333,7 @@ function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
 			decision_datetime = NOW()
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -350,7 +350,7 @@ function lib_dal_tribunal_blockComments($tid, $block)
 		SET block_comments = '.mysql_real_escape_string($block).'
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -375,7 +375,7 @@ function lib_dal_tribunal_getComments($tid)
 			AND !deleted
 		ORDER BY create_datetime
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -401,7 +401,7 @@ function lib_dal_tribunal_saveComment($tid, $uid, $comment)
 			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -417,7 +417,7 @@ function lib_dal_tribunal_deleteComment($tcoid)
 		SET deleted = 1
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -438,7 +438,7 @@ function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
 			changed_count = changed_count + 1
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -462,6 +462,6 @@ function lib_dal_tribunal_getComment($tcoid)
 			AND !deleted
 		ORDER BY create_datetime
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>

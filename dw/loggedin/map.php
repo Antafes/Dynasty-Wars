@@ -61,7 +61,7 @@ $sql = '
 		AND m.map_y BETWEEN '.mysql_real_escape_string($min_y).' AND '.mysql_real_escape_string($max_y).'
 	ORDER BY m.map_y, m.map_x
 ';
-$mapRawData = lib_util_mysqlQuery($sql);
+$mapRawData = util\mysql\query($sql);
 
 $uidList = array();
 $mapData = array();

@@ -1,28 +1,5 @@
 <?php
-/*
- *
- * Licensed under GPL2
- * Copyleft by siyb (siyb@geekosphere.org)
- *
- */
-
-/**
- * Creates a 2 dimensional array containing multiple rows of a resultset
- * @author siyb
- * @param resource $res
- * @return array
- */
-function lib_util_mysql_data2array($res)
-{
-    $i = 0;
-    while ($row = mysql_fetch_array($res))
-    {
-        $retArray[$i] = $row;
-        $i++;
-    }
-    return $retArray;
-}
-
+namespace util\mysql;
 
 /**
  * handles the mysql_query
@@ -34,7 +11,7 @@ function lib_util_mysql_data2array($res)
  * @param bool $noTransform (default = false) if set to "true" the query function always returns a multidimension array
  * @return array|string|int|float
  */
-function lib_util_mysqlQuery($sql, $noTransform = false)
+function query($sql, $noTransform = false)
 {
 	global $con, $debug, $firePHP_debug, $smarty_debug;
 
@@ -114,28 +91,40 @@ function lib_util_mysqlQuery($sql, $noTransform = false)
 	else
 		return false;
 }
+
 /**
  * Let the Transaction begin
  * @author BlackIce
  */
-function lib_util_mysql_transactionBegin()
+function transactionBegin()
 {
-    lib_util_mysqlQuery("BEGIN");
+    query("BEGIN");
 }
+
 /**
  * Save Changes on Database
  * @author BlackIce
  */
-function lib_util_mysql_transactionCommit()
+function transactionCommit()
 {
-    lib_util_mysqlQuery("COMMIT");
+    query("COMMIT");
 }
+
 /**
  * Rollback Changes
  * @author BlackIce
  */
-function lib_util_mysql_transactionRollback()
+function transactionRollback()
 {
-    lib_util_mysqlQuery("ROLLBACK");
+    query("ROLLBACK");
 }
-?>
+
+/**
+ * escapes and wraps the given value
+ * @param mixed $value
+ * @return String
+ */
+function sqlval($value)
+{
+	return '"'.mysql_real_escape_string($value).'"';
+}

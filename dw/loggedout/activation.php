@@ -10,13 +10,13 @@ if ($_REQUEST['id'])
 	$idt = explode('/', $id);
 	$id1 = mysql_real_escape_string($idt[0]);
 	$id2 = mysql_real_escape_string($idt[1]);
-	$stat = lib_util_mysqlQuery('SELECT status FROM dw_user WHERE uid='.$id1.'');
+	$stat = util\mysql\query('SELECT status FROM dw_user WHERE uid='.$id1.'');
 	$errors = array();
 	if ($stat)
 	{
 		if (strcasecmp($id2, $stat) == 0 && $id1)
 		{
-			$erg2 = lib_util_mysqlQuery('UPDATE dw_user SET status = "" WHERE uid='.$id1.'');
+			$erg2 = util\mysql\query('UPDATE dw_user SET status = "" WHERE uid='.$id1.'');
 			lib_bl_log_saveLog(3, $id1, 0, '');
 			if ($erg2)
 				$errors['activated'] = 1;

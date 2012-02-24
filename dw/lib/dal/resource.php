@@ -23,7 +23,7 @@ function lib_dal_resource_addToResources($resource, $value, $x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-    lib_util_mysqlQuery($sql);
+    util\mysql\query($sql);
 }
 
 /**
@@ -40,7 +40,7 @@ function lib_dal_resource_returnResourceAmount($x, $y, $resource)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-    return lib_util_mysqlQuery($sql);
+    return util\mysql\query($sql);
 }
 
 /**
@@ -58,7 +58,7 @@ function lib_dal_resource_getUpgrLvl($kind, $x, $y)
 			AND `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -74,7 +74,7 @@ function lib_dal_resource_getResearchLvl($uid, $type)
 		WHERE `uid` = "'.mysql_real_escape_string($uid).'"
 			AND `type` = "'.mysql_real_escape_string($type).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -92,7 +92,7 @@ function lib_dal_resource_getLvl($kind, $x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` = "'.mysql_real_escape_string($kind).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -118,7 +118,7 @@ function lib_dal_resource_updateAll($res, $time, $x, $y)
 		WHERE `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -135,7 +135,7 @@ function lib_dal_resource_getPaperPercent($x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -154,7 +154,7 @@ function lib_dal_resource_changePaperPercent($percent, $x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -172,6 +172,6 @@ function lib_dal_resource_getResourceBuildings($x, $y)
 			AND map_y = '.mysql_real_escape_string($y).'
 			AND kind BETWEEN 1 AND 6
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 ?>

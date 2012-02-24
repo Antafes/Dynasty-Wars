@@ -13,7 +13,7 @@ function lib_dal_buildings_selectAll($x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` < 23
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * can the city build an harbour?
@@ -27,7 +27,7 @@ function lib_dal_buildings_getHarbour($x, $y)
 	$sql = 'SELECT `harbour` FROM `dw_map`
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * select the choosen building from the position
@@ -46,7 +46,7 @@ function lib_dal_buildings_selectBuilding($x, $y, $pos)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			'.$buildplace.'
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 /**
  * calculating the build prices
@@ -67,7 +67,7 @@ function lib_dal_buildings_prices($kind)
 		FROM dw_costs_b
 		WHERE kind = "'.mysql_real_escape_string($kind).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * selecting the upgrade prices
@@ -85,7 +85,7 @@ function lib_dal_buildings_upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 			AND `kind_u` = "'.mysql_real_escape_string($kind_u).'"
 	';
 $GLOBALS['firePHP']->log($sql, 'upgradePrices sql');
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * check religion
@@ -96,7 +96,7 @@ $GLOBALS['firePHP']->log($sql, 'upgradePrices sql');
 function lib_dal_buildings_checkReligion($uid)
 {
 	$sql = 'SELECT `religion` FROM `dw_user` WHERE `uid` = '.mysql_real_escape_string($uid);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * get the specified building via kind and map position
@@ -118,7 +118,7 @@ function lib_dal_buildings_getBuildingByKind($kind, $x, $y)
 		WHERE `kind` = '.mysql_real_escape_string($kind).'
 			AND `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * get the build or upgrade time
@@ -134,7 +134,7 @@ function lib_dal_buildings_getTime($kind, $upgrade, $u_lvl)
 		$sql = 'SELECT `btime` FROM `dw_buildtimes` WHERE `kind` = '.mysql_real_escape_string($kind);
 	elseif ($upgrade == 1)
 		$sql = 'SELECT `upgrtime` FROM `dw_buildtimes_upgr` WHERE `kind` = '.mysql_real_escape_string($kind).' AND `kind_u` = '.mysql_real_escape_string($u_lvl);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * check for running build
@@ -159,7 +159,7 @@ function lib_dal_buildings_checkBuild($x, $y)
 		ORDER BY `end_datetime` ASC
 	';
 $GLOBALS['firePHP']->log($sql, 'checkBuild sql');
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 /**
  * insert a new build building
@@ -188,7 +188,7 @@ function lib_dal_buildings_insertBuilding($uid, $x, $y, $kind, $position)
 			"'.mysql_real_escape_string($position).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * insert a newly started build
@@ -213,7 +213,7 @@ function lib_dal_buildings_startBuilding($bid, $upgrade, DWDateTime $endTime)
 			"'.mysql_real_escape_string($endTime->format('Y-m-d H:i:s')).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -228,7 +228,7 @@ function lib_dal_buildings_insertBuildPlace($bid, $buildplace)
 		UPDATE `dw_buildings` SET `position` = "'.mysql_real_escape_string($buildplace).'"
 		WHERE `bid` = "'.mysql_real_escape_string($bid).'"
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }
 /**
  * get special infos for build completion
@@ -249,7 +249,7 @@ function lib_dal_buildings_getBuildInfo($bid)
 		LEFT OUTER JOIN `dw_buildings` ON `dw_build`.`bid` = `dw_buildings`.`bid`
 		WHERE `dw_build`.`bid` = "'.mysql_real_escape_string($bid).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * remove the completed building from the build list
@@ -259,7 +259,7 @@ function lib_dal_buildings_getBuildInfo($bid)
 function lib_dal_buildings_removeFromBuildList($bid)
 {
 	$sql = 'DELETE FROM `dw_build` WHERE `bid` = "'.mysql_real_escape_string($bid).'"';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }
 /**
  * update the completed building
@@ -274,7 +274,7 @@ function lib_dal_buildings_updateBuilding($valuelist)
 			`upgrade_lvl` = "'.mysql_real_escape_string($valuelist['ulvl']).'"
 		WHERE `bid` = "'.mysql_real_escape_string($valuelist['bid']).'"
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }
 /**
  * get the defense buildings
@@ -290,7 +290,7 @@ function lib_dal_buildings_getDefense($x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` > 22
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -310,6 +310,6 @@ function lib_dal_buildings_getStats($kind, $upgrade_lvl)
 		WHERE kind = '.mysql_real_escape_string($kind).'
 			AND upgrade_lvl = '.mysql_real_escape_string($upgrade_lvl).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>

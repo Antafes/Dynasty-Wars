@@ -3,7 +3,7 @@ ob_start();
 $lang['lang'] = lib_bl_general_getLanguage();
 lib_bl_general_loadLanguageFile('main', 'loggedout');
 lib_bl_general_loadLanguageFile('general', null);
-$gameOptions = lib_util_mysqlQuery('SELECT board, show_board, adminmail, version FROM dw_game');
+$gameOptions = util\mysql\query('SELECT board, show_board, adminmail, version FROM dw_game');
 
 $smarty->assign('logo_image', 'pictures/logo.png');
 

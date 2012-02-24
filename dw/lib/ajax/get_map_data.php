@@ -55,7 +55,7 @@ if ($con)
 			AND m.map_y BETWEEN '.mysql_real_escape_string($minY).' AND '.mysql_real_escape_string($maxY).'
 		ORDER BY m.map_y, m.map_x
 	';
-	$mapRawData = lib_util_mysqlQuery($sql);
+	$mapRawData = util\mysql\query($sql);
 
 	$mapData = array();
 	$row = 0;

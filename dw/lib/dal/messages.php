@@ -16,7 +16,7 @@ function lib_dal_messages_getMessages($uid, $type, $for, $archived = 0)
 			AND archive = '.mysql_real_escape_string($archived).'
 		ORDER BY create_datetime DESC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -34,7 +34,7 @@ function lib_dal_message_getMessage($msgid, $for, $archived = 0)
 			AND !del_'.$for.'
 			AND archive = '.mysql_real_escape_string($archived).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -58,7 +58,7 @@ function lib_dal_messages_markAsDeleted($msgid, $deleteFor, $forceDeletion)
 		if (!$forceDeletion)
 			$sql .= 'AND !unread';
 
-		return lib_util_mysqlQuery($sql);
+		return util\mysql\query($sql);
 	}
 	else
 		return 0;
@@ -78,7 +78,7 @@ function lib_dal_messages_markRead($msgid)
 			read_datetime = NOW()
 		WHERE msgid = '.mysql_real_escape_string($msgid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -94,7 +94,7 @@ function lib_dal_messages_archive($msgid)
 		SET archive = 1
 		WHERE msgid = '.mysql_real_escape_string($msgid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -106,7 +106,7 @@ function lib_dal_messages_archive($msgid)
 function lib_dal_messages_checkRecipient($msgid)
 {
 	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * get the sender of the message
@@ -117,5 +117,5 @@ function lib_dal_messages_checkRecipient($msgid)
 function lib_dal_messages_checkSender($msgid)
 {
 	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }

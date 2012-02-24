@@ -8,7 +8,7 @@
 function lib_dal_unit_train_unitPrices($kind)
 {
 	$sql = 'SELECT * FROM dw_costs_u WHERE kind = '.$kind;
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -20,7 +20,7 @@ function lib_dal_unit_train_unitPrices($kind)
 function lib_dal_unit_train_trainTime($kind)
 {
 	$sql = 'SELECT btime FROM dw_buildtimes_unit WHERE kind = '.$kind;
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -42,7 +42,7 @@ function lib_dal_unit_train_removeRes($valuelist, $uid)
 			koku = koku-'.$valuelist['koku'].'
 		WHERE uid = '.$uid.'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -74,7 +74,7 @@ function lib_dal_unit_train_startTrain($kind, $uid, $count, DWDateTime $endTime,
 			"'.mysql_real_escape_string($city).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -97,7 +97,7 @@ function lib_dal_unit_train_checkTraining($uid, $city)
 		WHERE uid = '.mysql_real_escape_string($uid).'
 			AND city = "'.mysql_real_escape_string($city).'"
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -108,7 +108,7 @@ function lib_dal_unit_train_checkTraining($uid, $city)
 function lib_dal_unit_train_removeComplete($tid)
 {
 	$sql = 'DELETE FROM dw_build_unit WHERE tid='.$tid;
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }
 
 /**
@@ -130,7 +130,7 @@ function lib_dal_unit_train_checkPos($uid, $map_x, $map_y, $kind)
 			AND kind = '.$kind.'
 			AND NOT tid
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -143,7 +143,7 @@ function lib_dal_unit_train_checkPos($uid, $map_x, $map_y, $kind)
 function lib_dal_unit_train_addUnit($count, $unid)
 {
 	$sql = 'UPDATE dw_units SET count = count + '.$count.' WHERE unid = '.$unid;
-	return lib_util_mysqlQuery($sql);;
+	return util\mysql\query($sql);;
 }
 
 /**
@@ -173,7 +173,7 @@ function lib_dal_unit_train_newUnit($uid, $kind, $count, $map_x, $map_y)
 			'.$map_y.'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -187,5 +187,5 @@ function lib_dal_unit_deleteUnit($unid)
 		DELETE FROM dw_units
 		WHERE unid = '.mysql_real_escape_string($unid).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

@@ -15,7 +15,7 @@
 function lib_dal_user_userExists($user)
 {
 	$count =
-    lib_util_mysqlQuery(
+    util\mysql\query(
 		sprintf(
             "SELECT count(*) FROM dw_user WHERE nick='%s'",
             mysql_real_escape_string($user)
@@ -40,7 +40,7 @@ function lib_dal_user_uid2nick($uid)
 
     if (!$uid) return $lang['emperor'];
     return
-        lib_util_mysqlQuery(
+        util\mysql\query(
             sprintf(
                 "SELECT nick FROM dw_user WHERE uid = '%d'",
                 mysql_real_escape_string($uid)
@@ -56,7 +56,7 @@ function lib_dal_user_uid2nick($uid)
  */
 function lib_dal_user_nick2uid($nick) {
     return
-        lib_util_mysqlQuery(
+        util\mysql\query(
             sprintf(
                 "SELECT uid FROM dw_user WHERE nick = '%s'",
                 mysql_real_escape_string($nick)
@@ -71,7 +71,7 @@ function lib_dal_user_nick2uid($nick) {
  */
 function lib_dal_user_returnCID($uid) {
     return
-        lib_util_mysqlQuery(
+        util\mysql\query(
             sprintf(
                 "SELECT cid FROM dw_user WHERE uid = %d",
                 mysql_real_escape_string($uid)
@@ -86,7 +86,7 @@ function lib_dal_user_returnCID($uid) {
  */
 function lib_dal_user_returnAllCities($uid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y FROM dw_map
@@ -109,7 +109,7 @@ function lib_dal_user_returnUID($email)
 		SELECT `uid` FROM `dw_user`
 		WHERE `email` LIKE "'.mysql_real_escape_string($email).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -121,7 +121,7 @@ function lib_dal_user_returnUID($email)
 function lib_dal_user_getClanRank($uid)
 {
 	$sql = 'SELECT cid, rankid FROM dw_user WHERE uid = '.$uid.'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -133,7 +133,7 @@ function lib_dal_user_getClanRank($uid)
 function lib_dal_user_getUIDFromCID($cid)
 {
 	$sql = 'SELECT uid FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).' AND rankid = 1';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -150,7 +150,7 @@ function lib_dal_user_getUIDFromMapPosition($x, $y)
 		WHERE map_x = '.mysql_real_escape_string($x).'
 			AND map_y = '.mysql_real_escape_string($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -165,7 +165,7 @@ function lib_dal_user_getUserInfos($uid)
 		SELECT * FROM dw_user
 		WHERE uid = '.mysql_real_escape_string($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -180,7 +180,7 @@ function lib_dal_user_getUIDFromTID($tid)
 		SELECT uid FROM dw_troops
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -199,5 +199,5 @@ function lib_dal_user_getACPUserList()
 		FROM dw_user
 		ORDER BY uid
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }

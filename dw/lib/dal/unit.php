@@ -13,7 +13,7 @@
  */
 function lib_dal_unit_calcUnitPoints() {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         "
         SELECT dw_user.uid, sum((food + wood + rock + iron + paper + koku) * count / 1000.0) AS points
         FROM dw_units
@@ -33,7 +33,7 @@ function lib_dal_unit_calcUnitPoints() {
  */
 function lib_dal_getUnitCount($uid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT kind, sum(count) as count from dw_units
@@ -51,7 +51,7 @@ function lib_dal_getUnitCount($uid) {
  * @return <int> 1 if yes 0 is not
  */
 function lib_dal_calculateUnitCosts() {
-    $result = lib_util_mysqlQuery("SELECT unitcosts FROM dw_game");
+    $result = util\mysql\query("SELECT unitcosts FROM dw_game");
     if ($result)
     	return $result;
 }
@@ -75,7 +75,7 @@ function lib_dal_unit_getUnits($kind, $uid)
 		WHERE kind = '.$kind.'
 			AND uid = '.$uid.'
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -89,7 +89,7 @@ function lib_dal_unit_getUnits($kind, $uid)
  */
 function lib_dal_unit_getUnitCountByCoordinates($kind, $uid, $x, $y) {
 	return
-	lib_util_mysqlQuery(
+	util\mysql\query(
 		sprintf("
 			SELECT
 				count
@@ -115,7 +115,7 @@ function lib_dal_unit_getUnitCountByCoordinates($kind, $uid, $x, $y) {
 function lib_dal_unit_checkDaimyo($uid)
 {
 	$sql = 'SELECT unid FROM dw_units WHERE uid = '.$uid.' AND kind = 19';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -143,7 +143,7 @@ function lib_dal_unit_createDaimyo($uid, $pos_x, $pos_y)
 			'.$pos_y.'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 function lib_dal_unit_getUnit($unid)
@@ -152,6 +152,6 @@ function lib_dal_unit_getUnit($unid)
 		SELECT * FROM dw_units
 		WHERE unid = '.mysql_real_escape_string($unid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>

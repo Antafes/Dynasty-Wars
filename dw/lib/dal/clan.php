@@ -16,7 +16,7 @@
  */
 function lib_dal_clan_addToBank($uid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             INSERT INTO dw_clan_bank
@@ -51,7 +51,7 @@ function lib_dal_clan_addToBank($uid, $resource, $amount) {
  */
 function lib_dal_clan_removeFromBank($uid, $forUid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             INSERT INTO dw_clan_bank
@@ -81,7 +81,7 @@ function lib_dal_clan_removeFromBank($uid, $forUid, $resource, $amount) {
  */
 function lib_dal_clan_listBankTransactions($cid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT * FROM dw_clan_bank
@@ -101,7 +101,7 @@ function lib_dal_clan_listBankTransactions($cid) {
  */
 function lib_dal_clan_listBankTransactionsPerUser($cid, $uid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT * FROM dw_clan_bank
@@ -122,7 +122,7 @@ function lib_dal_clan_listBankTransactionsPerUser($cid, $uid) {
  */
 function lib_dal_clan_returnSavings($uid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT resource, sum(amount) FROM dw_clan_bank
@@ -145,7 +145,7 @@ function lib_dal_clan_returnSavings($uid) {
  */
 function lib_dal_clan_returnAllCities($cid) {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y, dw_map.uid as uid, dw_clan.cid as cid FROM dw_map
@@ -160,6 +160,6 @@ function lib_dal_clan_returnAllCities($cid) {
 function lib_dal_clan_getAllUser($cid)
 {
 	$sql = 'SELECT * FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).'';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 ?>

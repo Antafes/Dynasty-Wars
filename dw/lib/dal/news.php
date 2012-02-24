@@ -10,7 +10,7 @@ function lib_dal_news_getAllEntries()
 		SELECT * FROM dw_news
 		ORDER BY create_datetime DESC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -25,7 +25,7 @@ function lib_dal_news_getEntry($nid)
 		SELECT * FROM dw_news
 		WHERE nid = '.mysql_real_escape_string($nid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -54,7 +54,7 @@ function lib_dal_news_save($title, $content, $uid, $nick)
 			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -79,5 +79,5 @@ function lib_dal_news_update($nid, $title, $content, $changerUID, $changerNick)
 			changed_datetime = NOW()
 		WHERE nid = '.mysql_real_escape_string($nid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }

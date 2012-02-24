@@ -6,7 +6,7 @@ $parser = new wikiparser();
 
 $smarty->assign('heading', $lang['lastnews']);
 
-$news_home = lib_util_mysqlQuery('
+$news_home = util\mysql\query('
 	SELECT
 		n.*,
 		u1.nick AS creator,

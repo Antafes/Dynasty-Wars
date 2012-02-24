@@ -20,7 +20,7 @@ if ($_GET['do'] == 'new')
 //new member
 if ($_POST['accept'] && $_GET['cid'] == $_SESSION['user']->getCID()) //accepting of the new member
 {
-	$clanname = lib_util_mysqlQuery('
+	$clanname = util\mysql\query('
 		SELECT clanname FROM dw_clan
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 	');
@@ -28,27 +28,27 @@ if ($_POST['accept'] && $_GET['cid'] == $_SESSION['user']->getCID()) //accepting
 	//acceptation message
 	lib_bl_general_sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['acceptmsg'], $clanname), 3);
 	lib_bl_log_saveLog(4, $_SESSION['user']->getUID(), $_POST['entuid'], '');
-	$rankid_new = lib_util_mysqlQuery('
+	$rankid_new = util\mysql\query('
 		SELECT rankid FROM dw_clan_rank
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 			AND standard = 1
 	');
 
-	$erg = lib_util_mysqlQuery('
+	$erg = util\mysql\query('
 		UPDATE dw_user
 		SET cid = '.mysql_real_escape_string($_GET['cid']).',
 			rankid = '.mysql_real_escape_string($rankid_new).'
 		WHERE uid = '.mysql_real_escape_string($_POST['entuid']).'
 	');
 
-	lib_util_mysqlQuery('
+	util\mysql\query('
 		DELETE FROM dw_clan_applications
 		WHERE uid = '.mysql_real_escape_string($_POST['entuid']).'
 	');
 }
 elseif ($_POST['decline'] && ($_GET['cid'] == $_SESSION['user']->getCID())) //member not accepted
 {
-	$clanname = lib_util_mysqlQuery('
+	$clanname = util\mysql\query('
 		SELECT clanname FROM dw_clan
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 	');
@@ -57,7 +57,7 @@ elseif ($_POST['decline'] && ($_GET['cid'] == $_SESSION['user']->getCID())) //me
 	lib_bl_general_sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['declinemsg'], $clanname), 3);
 	lib_bl_log_saveLog(5, $_SESSION['user']->getUID(), $_POST['entuid'], '');
 
-	lib_util_mysqlQuery('
+	util\mysql\query('
 		DELETE FROM dw_clan_applications
 		WHERE uid = '.mysql_real_escape_string($_POST['entuid']).'
 	');
@@ -81,7 +81,7 @@ $sql = '
 	LEFT JOIN dw_points p ON (u.uid = p.uid)
 	WHERE c.cid = '.mysql_real_escape_string($_GET['cid']).'
 ';
-$clan = lib_util_mysqlQuery($sql);
+$clan = util\mysql\query($sql);
 
 if ($_GET['cid'] != $_SESSION['user']->getCID()) //clan applications
 {
@@ -100,7 +100,7 @@ if ($_GET['cid'] != $_SESSION['user']->getCID()) //clan applications
 				NOW()
 			)
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 			$smarty->assign('applicationSaved', 1);
 	}
 }
@@ -112,7 +112,7 @@ else
 			DELETE FROM dw_clan
 			WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 		';
-		$delerg = lib_util_mysqlQuery($sql);
+		$delerg = util\mysql\query($sql);
 		$sql = '
 			SELECT rnid
 			FROM dw_clan_rank
@@ -120,27 +120,27 @@ else
 				AND rnid != 1
 				AND rnid != 2
 		';
-		$rnids = lib_util_mysqlQuery($sql, true);
+		$rnids = util\mysql\query($sql, true);
 		if ($rnids)
 		{
 			$sql = '
 				DELETE FROM dw_clan_rankname
 				WHERE rnid IN ('.mysql_real_escape_string(implode(', ', $rnids)).')
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 		}
 		$sql = '
 			DELETE FROM dw_clan_rank
 			WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 		';
-		$delerg2 = lib_util_mysqlQuery($sql);
+		$delerg2 = util\mysql\query($sql);
 		$sql = '
 			UPDATE dw_user
 			SET cid = 0,
 				rankid = 0
 			WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 		';
-		$usererg = lib_util_mysqlQuery($sql);
+		$usererg = util\mysql\query($sql);
 		if ($delerg && $delerg2 && $usererg)
 		{
 			lib_bl_log_saveLog(6, $_SESSION['user']->getUID(), 0, '');
@@ -175,7 +175,7 @@ else
 					SET public_text = "'.mysql_real_escape_string($newpublic_text).'"
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 				';
-				if (lib_util_mysqlQuery($sql))
+				if (util\mysql\query($sql))
 					$clan['public_text'] = $newpublic_text;
 			}
 			if ($newinternal_text || $_POST['changing'])
@@ -186,7 +186,7 @@ else
 					SET internal_text = "'.mysql_real_escape_string($newinternal_text).'"
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 				';
-				if (lib_util_mysqlQuery($sql))
+				if (util\mysql\query($sql))
 					$clan['internal_text'] = $newinternal_text;
 			}
 		}
@@ -205,7 +205,7 @@ else
 					LEFT JOIN dw_clan_rankname USING (rnid)
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 				';
-				$smarty->assign('clanRanks', lib_util_mysqlQuery($sql));
+				$smarty->assign('clanRanks', util\mysql\query($sql));
 			}
 			elseif ($_GET['do'] == 'del' && $_GET['rank'])
 			{
@@ -217,7 +217,7 @@ else
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 						AND rankid = '.mysql_real_escape_string($_GET['rank']).'
 				';
-				$helperg = lib_util_mysqlQuery($sql);
+				$helperg = util\mysql\query($sql);
 
 				if ($helperg['standard'])
 				{
@@ -226,14 +226,14 @@ else
 						FROM dw_clan_rank
 						WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 					';
-					$max_rankid = lib_util_mysqlQuery($sql) - 1;
+					$max_rankid = util\mysql\query($sql) - 1;
 					$sql = '
 						UPDATE dw_clan_rank
 						SET standard = 1
 						WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 							AND rankid = '.mysql_real_escape_string($max_rankid).'
 					';
-					lib_util_mysqlQuery($sql);
+					util\mysql\query($sql);
 				}
 
 				$sql = '
@@ -241,13 +241,13 @@ else
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 						AND rankid = '.mysql_real_escape_string($_GET['rank']).'
 				';
-				if (lib_util_mysqlQuery($sql))
+				if (util\mysql\query($sql))
 				{
 					$sql = '
 						DELETE FROM dw_clan_rankname
 						WHERE rnid = '.mysql_real_escape_string($helperg['rnid']).'
 					';
-					lib_util_mysqlQuery($sql);
+					util\mysql\query($sql);
 					$smarty->assign('deleted', 1);
 				}
 				$sql = '
@@ -259,7 +259,7 @@ else
 					LEFT JOIN dw_clan_rankname USING (rnid)
 					WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
 				';
-				$smarty->assign('clanRanks', lib_util_mysqlQuery($sql));
+				$smarty->assign('clanRanks', util\mysql\query($sql));
 			}
 			elseif ($_GET['do'] == 'new' || $rank > 0)
 			{
@@ -267,7 +267,7 @@ else
 				$standard = $_POST['standard'];
 				if($rankname)
 				{
-					$newrankid = lib_util_mysqlQuery('SELECT MAX(rankid) FROM dw_clan_rank WHERE cid='.$_GET['cid'].'');
+					$newrankid = util\mysql\query('SELECT MAX(rankid) FROM dw_clan_rank WHERE cid='.$_GET['cid'].'');
 					$newrankid++;
 					if ($standard)
 					{
@@ -277,7 +277,7 @@ else
 							UPDATE `dw_clan_rank` SET `standard` = 0
 							WHERE `cid` = "'.mysql_real_escape_string($_GET['cid']).'" AND `standard` = 1
 						';
-						lib_util_mysqlQuery($sql);
+						util\mysql\query($sql);
 
 						if ($rank > 0)
 						{
@@ -285,7 +285,7 @@ else
 								UPDATE `dw_clan_rank` SET `standard` = 1
 								WHERE `rankid` = "'.mysql_real_escape_string($rank).'"
 							';
-							lib_util_mysqlQuery($sql);
+							util\mysql\query($sql);
 						}
 					}
 					else
@@ -297,7 +297,7 @@ else
 							INSERT INTO dw_clan_rankname (rankname)
 							VALUES ("'.mysql_real_escape_string($rankname).'")
 						';
-						$new_rnid = lib_util_mysqlQuery($sql);
+						$new_rnid = util\mysql\query($sql);
 						$sql = '
 							INSERT INTO dw_clan_rank (
 								cid,
@@ -310,7 +310,7 @@ else
 								"'.mysql_real_escape_string($new_rnid).'",
 								"'.mysql_real_escape_string($standard).'")
 							';
-						$erg1 = lib_util_mysqlQuery($sql);
+						$erg1 = util\mysql\query($sql);
 						if ($erg1)
 							$err['rankcreated'] = 1;
 					}
@@ -320,20 +320,20 @@ else
 							SELECT `rnid` FROM `dw_clan_rankname`
 							WHERE `rankname` LIKE "'.mysql_real_escape_string($rankname).'"
 						';
-						$rnid = lib_util_mysqlQuery($sql);
+						$rnid = util\mysql\query($sql);
 						if (!$rnid)
 						{
 							$sql = '
 								INSERT INTO `dw_clan_rankname` (`rankname`)
 								VALUES ("'.mysql_real_escape_string($rankname).'")
 							';
-							$rnid = lib_util_mysqlQuery($sql);
+							$rnid = util\mysql\query($sql);
 						}
 						$sql = '
 							UPDATE `dw_clan_rank` SET `rnid` = "'.mysql_real_escape_string($rnid).'"
 							WHERE `rankid` = "'.mysql_real_escape_string($rank).'"
 						';
-						lib_util_mysqlQuery($sql);
+						util\mysql\query($sql);
 					}
 					lib_bl_general_redirect('index.php?chose=clan&cid='.$_GET['cid'].'&cmode=2&umode=1');
 				}
@@ -346,7 +346,7 @@ else
 							INNER JOIN `dw_clan_rankname` `crn` USING (rnid)
 							WHERE `rankid` = "'.mysql_real_escape_string($rank).'"
 						';
-						$rank_res = lib_util_mysqlQuery($sql);
+						$rank_res = util\mysql\query($sql);
 						$smarty->assign('rankRes', $rank_res);
 					}
 				}
@@ -361,7 +361,7 @@ else
 					SET rankid = '.mysql_real_escape_string($newrankid).'
 					WHERE uid = '.mysql_real_escape_string($_POST['member']).'
 				';
-				$changed = lib_util_mysqlQuery($sql);
+				$changed = util\mysql\query($sql);
 				$smarty->assign('changedRank', 1);
 			}
 
@@ -375,7 +375,7 @@ else
 					AND !deactivated
 				ORDER BY rankid
 			';
-			$smarty->assign('userList', lib_util_mysqlQuery($sql));
+			$smarty->assign('userList', util\mysql\query($sql));
 			$sql = '
 				SELECT
 					cr.rankid,
@@ -385,7 +385,7 @@ else
 				WHERE cr.cid = '.mysql_real_escape_string($_GET['cid']).'
 				ORDER BY cr.rankid
 			';
-			$ranks = lib_util_mysqlQuery($sql);
+			$ranks = util\mysql\query($sql);
 
 			$rankList = array();
 			foreach ($ranks as $rank)
@@ -411,7 +411,7 @@ else
 					JOIN dw_user u USING(uid)
 					WHERE ca.cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 				';
-				$applications = lib_util_mysqlQuery($sql, true);
+				$applications = util\mysql\query($sql, true);
 				$GLOBALS['firePHP']->log($applications, 'applications before');
 
 				if ($applications)
@@ -440,7 +440,7 @@ else
 					JOIN dw_user u USING (uid)
 					WHERE ca.appid = '.mysql_real_escape_string($_GET['appid']).'
 				';
-				$app = lib_util_mysqlQuery($sql);
+				$app = util\mysql\query($sql);
 				$GLOBALS['firePHP']->log($app, 'application');
 				$applicationTime = DWDateTime::createFromFormat('Y-m-d H:i:s', $app['create_datetime']);
 				$app['create_datetime'] = $applicationTime->format($lang['timeformat']);
@@ -463,7 +463,7 @@ else
 				AND !u.deactivated
 			ORDER BY u.rankid
 		';
-		$membersList = lib_util_mysqlQuery($sql, true);
+		$membersList = util\mysql\query($sql, true);
 		$smarty->assign('membersListData', $membersList);
 		$usermapEntry = lib_bl_gameOptions_getMenuEntry('usermap');
 		$smarty->assign('usermapEnabled', $usermapEntry['active']);
@@ -474,7 +474,7 @@ else
 		if ($_POST['sent'])
 		{
 			$sql = 'SELECT uid FROM dw_user WHERE cid = '.mysql_real_escape_string($_GET['cid']).'';
-			$recipients = lib_util_mysqlQuery($sql, true);
+			$recipients = util\mysql\query($sql, true);
 			$sent = false;
 			foreach ($recipients as $recipient)
 			{

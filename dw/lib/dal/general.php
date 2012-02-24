@@ -13,7 +13,7 @@ function lib_dal_general_getRes($x, $y)
 		WHERE `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -25,7 +25,7 @@ function lib_dal_general_getRes($x, $y)
 function lib_dal_general_getLanguage($uid)
 {
 	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -48,7 +48,7 @@ function lib_dal_general_getLanguages($active)
 			WHERE active
 		';
 
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -59,7 +59,7 @@ function lib_dal_general_getLanguages($active)
 function lib_dal_general_getSeason()
 {
 	$sql = 'SELECT season FROM dw_game';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -91,7 +91,7 @@ function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $messa
 			'.mysql_real_escape_string($type).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -104,7 +104,7 @@ function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $title, $messa
 function lib_dal_general_deactivateUser($uid, $state)
 {
 	$sql = 'UPDATE dw_user SET deactivated = '.mysql_real_escape_string($state).' WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -116,7 +116,7 @@ function lib_dal_general_deactivateUser($uid, $state)
 function lib_dal_general_setClanLeader($uid)
 {
 	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -132,7 +132,7 @@ function lib_dal_general_deleteFrom($table, $where)
 		DELETE FROM '.mysql_real_escape_string($table).'
 		WHERE '.mysql_real_escape_string($where).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -144,7 +144,7 @@ function lib_dal_general_deleteFrom($table, $where)
 function lib_dal_general_updateMap($uid)
 {
 	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -160,7 +160,7 @@ function lib_dal_general_deleteBuildings($uid)
 		USING dw_buildings LEFT JOIN dw_build USING (bid)
 		WHERE dw_buildings.uid = '.mysql_real_escape_string($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -178,7 +178,7 @@ function lib_dal_general_changePosition($where, $uid = 0, $city = '')
 		SET uid = '.mysql_real_escape_string($uid).',
 			city = "'.mysql_real_escape_string($city).'"
 		WHERE '.mysql_real_escape_string($where);
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -193,7 +193,7 @@ function lib_dal_general_checkMenuEntry($entry_name)
 		SELECT active FROM dw_game_menu
 		WHERE menu_name = "'.mysql_real_escape_string($entry_name).'"
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -211,7 +211,7 @@ function lib_dal_general_getUnreadMessagesCount($recipient)
 			AND unread = 1
 			AND !del_recipient
 	';
-	return (int)lib_util_mysqlQuery($sql);
+	return (int)util\mysql\query($sql);
 }
 
 /**
@@ -227,7 +227,7 @@ function lib_dal_general_getMissionary($uid)
 		FROM dw_missionary
 		WHERE uid='.mysql_real_escape_string($uid).'
 	';
-	return (int)lib_util_mysqlQuery($sql);
+	return (int)util\mysql\query($sql);
 }
 
 /**
@@ -243,7 +243,7 @@ function lib_dal_general_checkLanguageIsActive($language)
 		WHERE language = "'.mysql_real_escape_string($language).'"
 			AND active
 	';
-	return (bool)lib_util_mysqlQuery($sql);
+	return (bool)util\mysql\query($sql);
 }
 
 /**
@@ -257,5 +257,5 @@ function lib_dal_general_getFallbackLanguage()
 		FROM dw_language
 		WHERE fallback
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }

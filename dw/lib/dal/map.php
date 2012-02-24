@@ -14,7 +14,7 @@
  */
 function lib_dal_map_getSortedMapData() {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y, terrain, city from dw_map
@@ -31,7 +31,7 @@ function lib_dal_map_getSortedMapData() {
  */
 function lib_dal_map_returnAllCities() {
     return
-    lib_util_mysqlQuery(
+    util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y from dw_map
@@ -57,7 +57,7 @@ function lib_dal_map_getTerrain($x, $y)
 		WHERE map_x = '.mysql_real_escape_string($x).'
 			AND map_y = '.mysql_real_escape_string($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -73,7 +73,7 @@ function lib_dal_map_getUsersMainCity($uid)
 		WHERE uid = '.mysql_real_escape_string($uid).'
 			AND maincity = 1
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -81,11 +81,11 @@ function lib_dal_map_getUsersMainCity($uid)
  */
 function lib_dal_map_setTerrainType($x, $y, $type) {
 die("not supported yet");
-	$sql = 
-		lib_util_mysqlQuery(
-			"INSERT INTO 
+	$sql =
+		util\mysql\query(
+			"INSERT INTO
 			dw_map (map_x, map_x, terrain, isle, harbour)
-			
+
 			"
 		);
 	//INSERT INTO users (username, email) VALUES ('Jo', 'jo@email.com')

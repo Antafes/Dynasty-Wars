@@ -25,7 +25,7 @@ function lib_dal_ranking_getUserRanking(){
 		ORDER BY points DESC
 	';
 
-	return lib_util_mysqlQuery($sql, true);
+	return util\mysql\query($sql, true);
 }
 
 /**
@@ -41,6 +41,6 @@ function lib_dal_ranking_getClanRanking(){
 			LEFT OUTER JOIN dw_user ON dw_clan.cid=dw_user.cid
 			LEFT OUTER JOIN dw_points ON dw_user.uid=dw_points.uid
 			WHERE NOT deactivated GROUP BY dw_clan.cid ORDER BY points DESC';
-	return lib_util_mysqlQuery($SQL,True);
+	return util\mysql\query($SQL,True);
 }
 ?>

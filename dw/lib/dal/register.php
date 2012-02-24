@@ -15,7 +15,7 @@ function lib_dal_register_getFreeCoords()
 			)
 			AND NOT `uid`
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -37,7 +37,7 @@ function lib_dal_register_updateCoords($uid, $city, $x, $y)
 		WHERE `map_x` = '.$x.'
 			AND `map_y` = '.$y.'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -69,7 +69,7 @@ function lib_dal_register_insertUser($nick, $pws, $email, $random, $language)
 			"'.mysql_real_escape_string($language).'"
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -87,7 +87,7 @@ function lib_dal_register_insertRes($uid, $x, $y)
 			map_x = '.mysql_real_escape_string($x).',
 			map_y = '.mysql_real_escape_string($y).'
 	';
-	return lib_util_mysqlQuery($sql, true); //with the second parameter an insert returns the number of affected rows
+	return util\mysql\query($sql, true); //with the second parameter an insert returns the number of affected rows
 }
 
 /**
@@ -118,7 +118,7 @@ function lib_dal_register_insertBuildings($uid, $map_x, $map_y)
 			('.$uid.', '.$map_x.', '.$map_y.', 6, 0, 0, 7),
 			('.$uid.', '.$map_x.', '.$map_y.', 22, 0, 0, 0)
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 
 /**
@@ -130,6 +130,6 @@ function lib_dal_register_insertBuildings($uid, $map_x, $map_y)
 function lib_dal_register_insertPoints($uid)
 {
 	$sql = 'INSERT INTO dw_points (uid) VALUES ('.$uid.')';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>

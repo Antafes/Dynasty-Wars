@@ -14,7 +14,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET login_closed='.$_POST['login_closed'].'
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 		{
 			if ($_POST['login_closed'] == 0)
 			{
@@ -41,7 +41,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET reg_closed='.$_POST['reg_closed'].'
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 		{
 			if ($_POST['reg_closed'] == 0)
 			{
@@ -59,7 +59,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 	if ($_POST['reset1'] == 1 && $_POST['reset2'] == 1)
 	{
 		$sql = 'SELECT uid FROM dw_user WHERE admin = 2';
-		$superAdmins = lib_util_mysqlQuery($sql, true);
+		$superAdmins = util\mysql\query($sql, true);
 
 		$where = '';
 		foreach ($superAdmins as $superAdmin)
@@ -92,7 +92,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			$sql = '
 				TRUNCATE '.$truncate.'
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 		}
 
 		foreach ($deleteArray as $delete)
@@ -100,7 +100,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			$sql = '
 				DELETE FROM '.$delete.' WHERE NOT ('.$where.')
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 		}
 
 		$sql = '
@@ -110,7 +110,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			WHERE city != ""
 				AND NOT ('.$where.')
 		';
-		lib_util_mysqlQuery($sql);
+		util\mysql\query($sql);
 
 		$message = $lang['resetGame'];
 		lib_bl_log_saveLog(20, $_SESSION['user']->getUID(), '', '');
@@ -123,7 +123,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET board="'.mysql_real_escape_string($_POST['board']).'"
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 		{
 			lib_bl_log_saveLog(27, $_SESSION['user']->getUID(), '', $_POST['board']);
 			$message = sprintf($lang['changedBoardAddress'], $_POST['board']);
@@ -137,7 +137,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET error_report = '.mysql_real_escape_string($new_error_report).'
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 		{
 			lib_bl_log_saveLog(28, $_SESSION['user']->getUID(), '', $new_error_report);
 			$message = $lang['changedErrorReporting'];
@@ -150,7 +150,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET unitcosts = '.mysql_real_escape_string($_POST['unitCosts']).'
 		';
-		lib_util_mysqlQuery($sql);
+		util\mysql\query($sql);
 
 		if ($_POST['unitCosts'])
 		{
@@ -170,7 +170,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET canattack = "'.mysql_real_escape_string($_POST['canAttack']).'"
 		';
-		lib_util_mysqlQuery($sql);
+		util\mysql\query($sql);
 
 		if ($_POST['canAttack'])
 		{
@@ -190,7 +190,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 			UPDATE dw_game
 			SET version = "'.mysql_real_escape_string($_POST['version']).'"
 		';
-		if (lib_util_mysqlQuery($sql))
+		if (util\mysql\query($sql))
 		{
 			lib_bl_log_saveLog(33, $_SESSION['user']->getUID(), '', $_POST['version']);
 			$message = $lang['changedVersion'];

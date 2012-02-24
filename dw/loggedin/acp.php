@@ -6,8 +6,8 @@ $smarty->assign('lang', $lang);
 
 if ($_SESSION['user']->getGameRank())
 {
-	$users = lib_util_mysqlQuery('SELECT COUNT(uid) FROM dw_user');
-	$clans = lib_util_mysqlQuery('SELECT COUNT(cid) FROM dw_clan');
+	$users = util\mysql\query('SELECT COUNT(uid) FROM dw_user');
+	$clans = util\mysql\query('SELECT COUNT(cid) FROM dw_clan');
 
 	$smarty->assign('userCount', $users);
 	$smarty->assign('clanCount', $clans);

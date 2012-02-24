@@ -44,7 +44,7 @@ else //search for clans
 				';
 			}
 
-			$clanData = lib_util_mysqlQuery($sql, true);
+			$clanData = util\mysql\query($sql, true);
 
 			if ($clanData) //showing of the found clan
 			{
@@ -57,7 +57,7 @@ else //search for clans
 							AND !deactivated
 						GROUP BY cid
 					';
-					$clan['users'] = lib_util_mysqlQuery($sql);
+					$clan['users'] = util\mysql\query($sql);
 				}
 				unset($clan);
 
@@ -80,7 +80,7 @@ else //search for clans
 					"'.mysql_real_escape_string($_SESSION['user']->getNick()).'"
 				)
 			';
-			$cid = lib_util_mysqlQuery($sql);
+			$cid = util\mysql\query($sql);
 			$points = $_SESSION['user']->getPoints();
 			$sql = '
 				INSERT INTO dw_clan_points (
@@ -91,7 +91,7 @@ else //search for clans
 					'.mysql_real_escape_string($points['building_points']).'
 				)
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 			$sql = '
 				INSERT INTO dw_clan_rank (
 					cid,
@@ -110,7 +110,7 @@ else //search for clans
 					0
 				)
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 
 			if ($cid && $_SESSION['user']->setCID($cid) && $_SESSION['user']->setRankID(1))
 			{
@@ -130,7 +130,7 @@ else //search for clans
 			WHERE uid = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
 				AND kind = 13
 		';
-		$smarty->assign('gardenLvl', lib_util_mysqlQuery($sql));
+		$smarty->assign('gardenLvl', util\mysql\query($sql));
 	}
 }
 

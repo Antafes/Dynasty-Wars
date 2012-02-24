@@ -31,7 +31,7 @@ $sql = '
 	FROM dw_clan
 	WHERE cid = '.mysql_real_escape_string($registeredUser->getCID()).'
 ';
-$smarty->assign('clan', lib_util_mysqlQuery($sql));
+$smarty->assign('clan', util\mysql\query($sql));
 
 include("loggedin/footer.php");
 

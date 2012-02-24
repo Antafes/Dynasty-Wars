@@ -66,7 +66,7 @@ if ($_GET['leave'] == 2)
 		FROM dw_user
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 	';
-	$users = lib_util_mysqlQuery($sql);
+	$users = util\mysql\query($sql);
 	$sql = '
 		SELECT COUNT(u.uid)
 		FROM dw_user u
@@ -75,7 +75,7 @@ if ($_GET['leave'] == 2)
 			AND cr.admin
 		GROUP BY u.uid
 	';
-	$admins = lib_util_mysqlQuery($sql);
+	$admins = util\mysql\query($sql);
 
 	if ($users && $admins)
 	{
@@ -87,7 +87,7 @@ if ($_GET['leave'] == 2)
 				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 					AND admin
 			';
-			$adminRankID = lib_util_mysqlQuery($sql);
+			$adminRankID = util\mysql\query($sql);
 
 			$sql = '
 				SELECT u.uid
@@ -99,7 +99,7 @@ if ($_GET['leave'] == 2)
 				ORDER BY RAND()
 				LIMIT 1
 			';
-			$newAdmin = lib_util_mysqlQuery($sql);
+			$newAdmin = util\mysql\query($sql);
 
 			if (!$newAdmin)
 			{
@@ -111,7 +111,7 @@ if ($_GET['leave'] == 2)
 					ORDER BY RAND()
 					LIMIT 1
 				';
-				$newAdmin = lib_util_mysqlQuery($sql);
+				$newAdmin = util\mysql\query($sql);
 			}
 
 			$newAdminUser = new UserCls();
@@ -125,12 +125,12 @@ if ($_GET['leave'] == 2)
 				DELETE FROM dw_clan
 				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 			';
-			$deleteResult = lib_util_mysqlQuery($sql);
+			$deleteResult = util\mysql\query($sql);
 			$sql = '
 				DELETE FROM dw_clan_rank
 				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
 			';
-			$delerg2 = lib_util_mysqlQuery($sql);
+			$delerg2 = util\mysql\query($sql);
 		}
 
 		if ($_SESSION['user']->setCID(0))

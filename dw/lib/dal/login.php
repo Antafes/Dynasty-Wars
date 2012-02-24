@@ -20,7 +20,7 @@ function lib_dal_login_getAllData($uid)
 		FROM dw_user
 		WHERE uid = '.$uid.'
 	';
-	$r = lib_util_mysqlQuery($sql);
+	$r = util\mysql\query($sql);
 	return $r;
 }
 /**
@@ -31,7 +31,7 @@ function lib_dal_login_getAllData($uid)
 function lib_dal_login_checkLogin()
 {
 	$sql = 'SELECT login_closed FROM dw_game';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * set last login time
@@ -47,7 +47,7 @@ function lib_dal_login_setLastLogin($uid)
 		SET last_login_datetime = NOW()
 		WHERE uid='.mysql_real_escape_string($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 /**
  * get the maincity of this user
@@ -59,6 +59,6 @@ function lib_dal_login_setLastLogin($uid)
 function lib_dal_login_getMainCity($uid, $add_where = ' AND maincity = 1')
 {
 	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.$uid.$add_where.'';
-	return lib_util_mysqlQuery($sql);
+	return util\mysql\query($sql);
 }
 ?>
