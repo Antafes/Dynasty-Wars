@@ -19,6 +19,9 @@ class DWDateTime extends DateTime
 	 */
 	public function __construct($time = 'now', $object = null)
 	{
+		//manually set the timezone to UTC https://bugs.php.net/bug.php?id=52480
+		date_default_timezone_set('UTC');
+
 		if (!$object) //has to be here, because no functions as default value allowed
 			$object = new DateTimeZone(date_default_timezone_get());
 
