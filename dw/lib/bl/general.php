@@ -10,7 +10,7 @@ namespace bl\general;
  */
 function getResources($x, $y)
 {
-	return dal\general\getResources($x, $y);
+	return \dal\general\getResources($x, $y);
 }
 
 /**
@@ -22,7 +22,7 @@ function getResources($x, $y)
 function getLanguageByUID($uid = '')
 {
 	if ($uid)
-		$language = dal\general\getLanguageByUID($uid);
+		$language = \dal\general\getLanguageByUID($uid);
 	else
 		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	return $language;
@@ -36,7 +36,7 @@ function getLanguageByUID($uid = '')
  */
 function getLanguages($active = true)
 {
-	return dal\general\getLanguages($active);
+	return \dal\general\getLanguages($active);
 }
 
 /**
@@ -113,7 +113,7 @@ function formatTime($time, $format)
  */
 function getSeason()
 {
-	return dal\general\getSeason();
+	return \dal\general\getSeason();
 }
 
 /**
@@ -125,7 +125,7 @@ function getSeason()
 function getMaxStorage($city)
 {
 	$cityexp = explode(':', $city);
-	$storage_building = dal\buildings\getBuildingByKind(22, $cityexp[0], $cityexp[1]);
+	$storage_building = \dal\buildings\getBuildingByKind(22, $cityexp[0], $cityexp[1]);
 	$storage_lvl = $storage_building['lvl'];
 
 	$storage = 10000;
@@ -177,7 +177,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
 	if (is_numeric($uid_recipient) && is_numeric($uid_sender))
 	{
-		$msgerg = dal\general\sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
+		$msgerg = \dal\general\sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
 
 		if ($msgerg)
 			return 1;
@@ -194,7 +194,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
  */
 function deleteUser($reguid)
 {
-	$helperg = dal\user\getClanRank($reguid);
+	$helperg = \dal\user\getClanRank($reguid);
 
 	if (count($helperg) > 0)
 	{
@@ -204,23 +204,23 @@ function deleteUser($reguid)
 
 	if ($rankid == 1)
 	{
-		$helperg = dal\user\getClanLeaders($regcid);
+		$helperg = \dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = dal\clan\getAllUser($regcid);
+			$clan_user = \dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = dal\general\setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = \dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
 
-	$erg1 = dal\general\deleteFrom('dw_user', 'uid = '.$reguid);
-	$erg2 = dal\general\deleteFrom('dw_res', 'uid = '.$reguid);
-	$erg3 = dal\general\updateMap($reguid);
-	$erg4 = dal\general\deleteBuildings($reguid);
-	$erg5 = dal\general\deleteFrom('dw_message', 'uid_recipient = '.$reguid);
-	$erg6 = dal\general\deleteFrom('dw_points', 'uid = '.$reguid);
-	$erg7 = dal\general\deleteFrom('dw_clan_applications', 'uid = '.$reguid);
-	$erg8 = dal\general\deleteFrom('dw_research', 'uid = '.$reguid);
+	$erg1 = \dal\general\deleteFrom('dw_user', 'uid = '.$reguid);
+	$erg2 = \dal\general\deleteFrom('dw_res', 'uid = '.$reguid);
+	$erg3 = \dal\general\updateMap($reguid);
+	$erg4 = \dal\general\deleteBuildings($reguid);
+	$erg5 = \dal\general\deleteFrom('dw_message', 'uid_recipient = '.$reguid);
+	$erg6 = \dal\general\deleteFrom('dw_points', 'uid = '.$reguid);
+	$erg7 = \dal\general\deleteFrom('dw_clan_applications', 'uid = '.$reguid);
+	$erg8 = \dal\general\deleteFrom('dw_research', 'uid = '.$reguid);
 
 	if ($erg1 && $erg2 && $erg3 && $erg4 && $erg5 && $erg6 && $erg7 && $erg8)
 		return 1;
@@ -237,21 +237,21 @@ function deleteUser($reguid)
  */
 function deactivateUser($uid, $state)
 {
-	$helperg = dal\user\getClanRank($reguid);
+	$helperg = \dal\user\getClanRank($reguid);
 	if (count($helperg) > 0) {
 		$regcid = $helperg['cid'];
 		$rankid = $helperg['rankid'];
 	}
 	if ($rankid == 1) {
-		$helperg = dal\user\getClanLeaders($regcid);
+		$helperg = \dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = dal\clan\getAllUser($regcid);
+			$clan_user = \dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = dal\general\setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = \dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
-	$erg1 = dal\general\deactivateUser($uid, $state);
+	$erg1 = \dal\general\deactivateUser($uid, $state);
 	if ($erg1 > 0 && $leaderg > 0)
 		return 1;
 	else
@@ -276,18 +276,18 @@ function changePosition($uid, $x, $y, $city)
 		return 3;
 	else
 	{
-		$reguid = dal\user\getUIDFromMapPosition($x, $y);
+		$reguid = \dal\user\getUIDFromMapPosition($x, $y);
 
 		if ($reguid != $uid)
 			return 2;
 		else
 		{
-			$terrain = dal\map\getTerrain($x, $y);
+			$terrain = \dal\map\getTerrain($x, $y);
 			if ($terrain != 1 && $terrain != 5)
 			{
-				$erg3 = dal\general\changePosition('uid = '.$uid);
+				$erg3 = \dal\general\changePosition('uid = '.$uid);
 				$where = 'map_x='.mysql_real_escape_string($x).' AND map_y='.mysql_real_escape_string($y);
-				$erg4 = dal\general\changePosition($where, $uid, $city);
+				$erg4 = \dal\general\changePosition($where, $uid, $city);
 
 				if ($erg3 && $erg4)
 					return 1;
@@ -333,7 +333,7 @@ function sendMail($recipient, $subject, $message, $sender = 'support@dynasty-war
  */
 function checkMenuEntry($entry_name)
 {
-	$check = dal\general\checkMenuEntry($entry_name);
+	$check = \dal\general\checkMenuEntry($entry_name);
 
 	if ($check < 1)
 		header('Location: index.php?chose=home');
@@ -349,7 +349,7 @@ function checkMenuEntry($entry_name)
  */
 function getGameRank($uid)
 {
-	$user = dal\login\getAllData($uid);
+	$user = \dal\login\getAllData($uid);
 	return $user['game_rank'];
 }
 
@@ -361,7 +361,7 @@ function getGameRank($uid)
  */
 function uid2nick($uid)
 {
-	return dal\user\uid2nick($uid);
+	return \dal\user\uid2nick($uid);
 }
 
 /**
@@ -372,7 +372,7 @@ function uid2nick($uid)
  */
 function nick2uid($nick)
 {
-	return dal\user\nick2uid($nick);
+	return \dal\user\nick2uid($nick);
 }
 
 /**
@@ -440,7 +440,7 @@ function cutOffText($text, $characters)
  */
 function getUnreadMessageCount($recipient)
 {
-	$msgs = dal\general\getUnreadMessagesCount($recipient);
+	$msgs = \dal\general\getUnreadMessagesCount($recipient);
 	if (!$msgs)
 		$msgs = 0;
 	return (int)$msgs;
@@ -454,7 +454,7 @@ function getUnreadMessageCount($recipient)
  */
 function getMissionary($uid)
 {
-	$missionary = dal\general\getMissionary($uid);
+	$missionary = \dal\general\getMissionary($uid);
 
 	if ($missionary > 0)
 		return true;
@@ -482,8 +482,8 @@ function loadLanguageFile($page, $location = 'loggedin', $isAjax = false, $userL
 	if($userLang)
 		$usedLang = $userLang;
 
-	if (!dal\general\checkLanguageIsActive($usedLang))
-		$usedLang = dal\general\getFallbackLanguage();
+	if (!\dal\general\checkLanguageIsActive($usedLang))
+		$usedLang = \dal\general\getFallbackLanguage();
 
 	$path = '';
 

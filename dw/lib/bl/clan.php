@@ -17,11 +17,11 @@ namespace bl\clan;
  */
 function addToBank($uid, $resource, $amount) {
     // check if the user owes enough of the resource
-    if (dal\resource\returnResourceAmount($uid, $resource) < $amount)
+    if (\dal\resource\returnResourceAmount($uid, $resource) < $amount)
         return 0;
     //@todo: check if the user is in a clan or not
 
-    dal\clan\addToBank($uid, $resource, $amount);
+    \dal\clan\addToBank($uid, $resource, $amount);
     return 1;
 }
 
@@ -35,7 +35,7 @@ function addToBank($uid, $resource, $amount) {
  */
 function listBankTransactions($cid, $uid=-1) {
     if($uid == -1)
-        return dal\clan\listBankTransactions($cid);
+        return \dal\clan\listBankTransactions($cid);
     else
-        return dal\clan\listBankTransactionsPerUser($cid, $uid);
+        return \dal\clan\listBankTransactionsPerUser($cid, $uid);
 }

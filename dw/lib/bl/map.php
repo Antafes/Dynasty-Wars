@@ -95,7 +95,7 @@ function drawMapImage($mapFile, $sizeFactor = 1) {
 	if ($sizeFactor != 2 &&  $sizeFactor != 1) die ('sizeFactor must be 1 or 2');
 
 	// map data
-	$mapData = formatMapArray(dal\map\getSortedMapData());
+	$mapData = formatMapArray(\dal\map\getSortedMapData());
 
 	// our image
 	$im = @imagecreate(400*$sizeFactor, 250*$sizeFactor)
@@ -123,7 +123,7 @@ function drawMapImage($mapFile, $sizeFactor = 1) {
 /**
  * Formats the mysql output array of the map into a 2dim array $foo[x][y] = $terrain;
  * @author siyb
- * @return <mysqlresultset> mapdata as returned by lib_dal_map_getSortedMapData()
+ * @return <mysqlresultset> mapdata as returned by \dal\map\getSortedMapData()
  * @return <array> 2dim array containing the mapdata
  */
 function formatMapArray($mapData) {
@@ -186,7 +186,7 @@ function createPNGMap($mapFile, $sizeFactor, $data = -1) {
  */
 function drawUserCities($uid, $mapFile, $sizeFactor) {
     createPNGMap($mapFile, $sizeFactor,
-        dal\user\returnAllCities($uid));
+        \dal\user\returnAllCities($uid));
 }
 
 /**
@@ -198,7 +198,7 @@ function drawUserCities($uid, $mapFile, $sizeFactor) {
  */
 function drawClanCities($cid, $mapFile, $sizeFactor) {
     createPNGMap($mapFile, $sizeFactor,
-        dal\clan\returnAllCities($cid));
+        \dal\clan\returnAllCities($cid));
 }
 
 /**
@@ -209,7 +209,7 @@ function drawClanCities($cid, $mapFile, $sizeFactor) {
  */
 function drawAllCities($mapFile, $sizeFactor) {
     createPNGMap($mapFile, $sizeFactor,
-        dal\map\returnAllCities());
+        \dal\map\returnAllCities());
 }
 
 /**

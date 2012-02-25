@@ -5,7 +5,7 @@ setcookie('city', $city, time()-100, '', '.dynasty-wars.de');
 setcookie('language', $lang['lang'], time()-100, '', '.dynasty-wars.de');
 if ($_COOKIE['own_uid'])
 	setcookie('own_uid', $_COOKIE['own_uid'], time()-100, '', '.dynasty-wars.de');
-$lang['lang'] = bl\general\getLanguage();
+$lang['lang'] = bl\general\getLanguageByUID();
 bl\general\loadLanguageFile('logout');
 $smarty->assign('lang', $lang);
 include('loggedout/header.php');

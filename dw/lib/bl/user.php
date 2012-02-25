@@ -8,7 +8,7 @@ namespace bl\user;
  */
 function getACPUserList()
 {
-	return dal\user\getACPUserList();
+	return \dal\user\getACPUserList();
 }
 
 /**
@@ -19,5 +19,5 @@ function getACPUserList()
  */
 function exists($nick)
 {
-	return dal\user\exists($nick) > 0;
+	return \dal\user\exists($nick) > 0;
 }

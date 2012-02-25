@@ -18,7 +18,7 @@ namespace dal\clan;
  */
 function addToBank($uid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             INSERT INTO dw_clan_bank
@@ -53,7 +53,7 @@ function addToBank($uid, $resource, $amount) {
  */
 function removeFromBank($uid, $forUid, $resource, $amount) {
     $escapedUid = mysql_real_escape_string($uid);
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             INSERT INTO dw_clan_bank
@@ -83,7 +83,7 @@ function removeFromBank($uid, $forUid, $resource, $amount) {
  */
 function listBankTransactions($cid) {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT * FROM dw_clan_bank
@@ -103,7 +103,7 @@ function listBankTransactions($cid) {
  */
 function listBankTransactionsPerUser($cid, $uid) {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT * FROM dw_clan_bank
@@ -124,7 +124,7 @@ function listBankTransactionsPerUser($cid, $uid) {
  */
 function returnSavings($uid) {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT resource, sum(amount) FROM dw_clan_bank
@@ -147,7 +147,7 @@ function returnSavings($uid) {
  */
 function returnAllCities($cid) {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y, dw_map.uid as uid, dw_clan.cid as cid FROM dw_map
@@ -168,5 +168,5 @@ function returnAllCities($cid) {
 function getAllUser($cid)
 {
 	$sql = 'SELECT * FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).'';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }

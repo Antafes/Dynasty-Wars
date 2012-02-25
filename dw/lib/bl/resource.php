@@ -11,7 +11,7 @@ namespace bl\resource;
 function basicIncome($kind, $city)
 {
 	$cityexp = explode(':', $city);
-	$upgrade = dal\resource\getUpgradeLevel(19, $cityexp[0], $cityexp[1]);
+	$upgrade = \dal\resource\getUpgradeLevel(19, $cityexp[0], $cityexp[1]);
 
 	if ($upgrade)
 	{
@@ -148,11 +148,11 @@ function income($type, $cycle, $lvl, $city)
 	$cityexp = explode(':', $city);
 	$basic = basicIncome($type, $city);
 	$upgrade = incomeUpgrades($type, $city);
-	$uid = dal\user\getUIDFromMapPosition($cityexp[0], $cityexp[1]);
-	$costs['food'] = bl\unit\calcTotalFoodCost($uid);
-	$costs['koku'] = bl\unit\calcTotalKokuCost($uid);
+	$uid = \dal\user\getUIDFromMapPosition($cityexp[0], $cityexp[1]);
+	$costs['food'] = \bl\unit\calcTotalFoodCost($uid);
+	$costs['koku'] = \bl\unit\calcTotalKokuCost($uid);
 	$income = buildingsIncome($type, $basic, $lvl, $city)+$basic;
-	//$paperprod = lib_bl_resource_getpaperpercent($x, $y);
+	//$paperprod = \bl\resource\getPaperPercent($x, $y);
 
 	switch ($type)
 	{
@@ -200,7 +200,7 @@ function income($type, $cycle, $lvl, $city)
 function newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city)
 {
 	$cityexp = explode(':', $city);
-	$res = bl\general\getResources($cityexp[0], $cityexp[1]);
+	$res = \bl\general\getResources($cityexp[0], $cityexp[1]);
 
 	$food = (float)$res['food'];
 	$wood = (float)$res['wood'];
@@ -212,7 +212,7 @@ function newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $trad
 	$lastDateTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $res['last_datetime']);
 	$diff = $lastDateTime->diff(new \DWDateTime());
 	$past_time = $diff->getSeconds();
-	$storage = bl\general\getMaxStorage($city);
+	$storage = \bl\general\getMaxStorage($city);
 
 	$newres['food'] = $food + ($past_time * income(1, 's', $range, $city));
 	$newres['wood'] = $wood + ($past_time * income(2, 's', $lumberjack, $city));
@@ -284,7 +284,7 @@ function woodCosts($x, $y)
  */
 function getPaperPercent($x, $y)
 {
-	return dal\resource\getPaperPercent($x, $y);
+	return \dal\resource\getPaperPercent($x, $y);
 }
 
 /**
@@ -297,7 +297,7 @@ function getPaperPercent($x, $y)
  */
 function changePaperPercent($percent, $x, $y)
 {
-	return dal\resource\changePaperPercent($percent, $x, $y);
+	return \dal\resource\changePaperPercent($percent, $x, $y);
 }
 
 /**
@@ -311,7 +311,7 @@ function changePaperPercent($percent, $x, $y)
 function updateAll($res, $city)
 {
 	$cityexp = explode(':', $city);
-	return dal\resource\updateAll($res, $cityexp[0], $cityexp[1]);
+	return \dal\resource\updateAll($res, $cityexp[0], $cityexp[1]);
 }
 
 /**
@@ -322,7 +322,7 @@ function updateAll($res, $city)
 function getResourceBuildings($city)
 {
 	$city_exp = explode(':', $city);
-	return dal\resource\getResourceBuildings($city_exp[0], $city_exp[1]);
+	return \dal\resource\getResourceBuildings($city_exp[0], $city_exp[1]);
 }
 
 /**
@@ -334,7 +334,7 @@ function getResourceBuildings($city)
  */
 function getLevel($kind, $x, $y)
 {
-	$lvl = dal\resource\getLevel($kind, $x, $y);
+	$lvl = \dal\resource\getLevel($kind, $x, $y);
 	if (!$lvl)
 		$lvl = 0;
 	return $lvl;
@@ -351,7 +351,7 @@ function getLevel($kind, $x, $y)
  */
 function hasEnoughOf($x, $y, $resource, $amount)
 {
-	return ($amount <= dal\resource\returnResourceAmount($x, $y, $resource));
+	return ($amount <= \dal\resource\returnResourceAmount($x, $y, $resource));
 }
 
 /**
@@ -366,5 +366,5 @@ function hasEnoughOf($x, $y, $resource, $amount)
  */
 function addToResources($resource, $value, $x, $y)
 {
-	dal\resource\addToResources($resource, $value, $x, $y);
+	\dal\resource\addToResources($resource, $value, $x, $y);
 }

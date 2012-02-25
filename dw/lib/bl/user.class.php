@@ -40,7 +40,7 @@ class UserCls {
 
 	private function fill($sql){
 
-		$result = util\mysql\query($sql);
+		$result = \util\mysql\query($sql);
 		if (!$result){
 			return false;
 		}
@@ -70,7 +70,7 @@ class UserCls {
 			FROM dw_map
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
-		$this->cities = util\mysql\query($sql, true);
+		$this->cities = \util\mysql\query($sql, true);
 
 		return true;
 	}
@@ -95,29 +95,29 @@ class UserCls {
 			$newPW = md5($newPW);
 			$PWResult = false;
 
-			util\mysql\transactionBegin();
+			\util\mysql\transactionBegin();
 			$SQL = 'UPDATE dw_user SET password = "'.mysql_real_escape_string($newPW).'"
 				WHERE uid = "'.mysql_real_escape_string($this->uid).'"
 				AND password = "'.mysql_real_escape_string($this->pw).'"';
 
-			$result = util\mysql\query($SQL);
+			$result = \util\mysql\query($SQL);
 
 			if($result)
 			{
 				$SQL = 'SELECT password FROM dw_user WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-				$result = util\mysql\query($SQL);
+				$result = \util\mysql\query($SQL);
 
 				if ($result == $newPW)
 				{
-					util\mysql\transactionCommit();
+					\util\mysql\transactionCommit();
 					$PWResult = True;
 				}
 				else
-					util\mysql\transactionRollback();
+					\util\mysql\transactionRollback();
 			}
 			else
 			{
-				util\mysql\transactionRollback();
+				\util\mysql\transactionRollback();
 			}
 
 			return $PWResult;
@@ -142,7 +142,7 @@ class UserCls {
 			SET email = "'.mysql_real_escape_string($newMail).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"
 				AND email = "'.mysql_real_escape_string($this->email).'"';
-		return (bool)(util\mysql\query($sql));
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getBlocked(){
@@ -157,7 +157,7 @@ class UserCls {
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
 		$this->blocked = 1;
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function unsetBlocked()
@@ -168,7 +168,7 @@ class UserCls {
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
 		$this->blocked = 0;
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getRegDate()
@@ -192,7 +192,7 @@ class UserCls {
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
 		$this->game_rank = $rank;
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getRankID(){
@@ -206,7 +206,7 @@ class UserCls {
 			SET rankid = '.mysql_real_escape_string($id).'
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getCID(){
@@ -220,7 +220,7 @@ class UserCls {
 			SET cid = '.mysql_real_escape_string($cid).'
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getClanObj(){
@@ -239,7 +239,7 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user SET description = "'.mysql_real_escape_string($NewValue).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(util\mysql\query($sql));
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getLastLogin()
@@ -258,7 +258,7 @@ class UserCls {
 			SET last_login_datetime = NOW()
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	/**
@@ -297,7 +297,7 @@ class UserCls {
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
 		$this->status = $status;
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function unsetStatus()
@@ -308,15 +308,15 @@ class UserCls {
 			WHERE uid = '.mysql_real_escape_string($this->uid).'
 		';
 		$this->status = '';
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getLanguage()
 	{
-		$check = dal\general\checkLanguageIsActive($this->language);
+		$check = \dal\general\checkLanguageIsActive($this->language);
 
 		if (!$check)
-			$this->language = dal\general\getFallbackLanguage();
+			$this->language = \dal\general\getFallbackLanguage();
 
 		return $this->language;
 	}
@@ -325,7 +325,7 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user SET language = "'.mysql_real_escape_string($NewValue).'"
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(util\mysql\query($sql));
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getReligion(){
@@ -339,14 +339,14 @@ class UserCls {
 	public function setDeactivated(){
 		$sql = 'UPDATE dw_user SET deactivated = 1
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(util\mysql\query($sql));
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getPoints(){
 		$sql = '
 			SELECT unit_points, building_points FROM dw_points
 			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return util\mysql\query($sql);
+		return \util\mysql\query($sql);
 	}
 
 

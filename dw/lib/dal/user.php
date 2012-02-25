@@ -16,7 +16,7 @@ namespace dal\user;
  */
 function exists($user)
 {
-    return util\mysql\query(
+    return \util\mysql\query(
 		sprintf(
             "SELECT count(*) FROM dw_user WHERE nick='%s'",
             mysql_real_escape_string($user)
@@ -36,7 +36,7 @@ function uid2nick($uid)
 
     if (!$uid) return $lang['emperor'];
     return
-        util\mysql\query(
+        \util\mysql\query(
             sprintf(
                 "SELECT nick FROM dw_user WHERE uid = '%d'",
                 mysql_real_escape_string($uid)
@@ -52,7 +52,7 @@ function uid2nick($uid)
  */
 function nick2uid($nick) {
     return
-        util\mysql\query(
+        \util\mysql\query(
             sprintf(
                 "SELECT uid FROM dw_user WHERE nick = '%s'",
                 mysql_real_escape_string($nick)
@@ -67,7 +67,7 @@ function nick2uid($nick) {
  */
 function returnCID($uid) {
     return
-        util\mysql\query(
+        \util\mysql\query(
             sprintf(
                 "SELECT cid FROM dw_user WHERE uid = %d",
                 mysql_real_escape_string($uid)
@@ -82,7 +82,7 @@ function returnCID($uid) {
  */
 function returnAllCities($uid) {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y FROM dw_map
@@ -105,7 +105,7 @@ function returnUID($email)
 		SELECT `uid` FROM `dw_user`
 		WHERE `email` LIKE "'.mysql_real_escape_string($email).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -117,7 +117,7 @@ function returnUID($email)
 function getClanRank($uid)
 {
 	$sql = 'SELECT cid, rankid FROM dw_user WHERE uid = '.$uid.'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -129,7 +129,7 @@ function getClanRank($uid)
 function getClanLeaders($cid)
 {
 	$sql = 'SELECT uid FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).' AND rankid = 1';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -146,7 +146,7 @@ function getUIDFromMapPosition($x, $y)
 		WHERE map_x = '.mysql_real_escape_string($x).'
 			AND map_y = '.mysql_real_escape_string($y).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -161,7 +161,7 @@ function getUserInfos($uid)
 		SELECT * FROM dw_user
 		WHERE uid = '.mysql_real_escape_string($uid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -176,7 +176,7 @@ function getUIDFromTID($tid)
 		SELECT uid FROM dw_troops
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -195,5 +195,5 @@ function getACPUserList()
 		FROM dw_user
 		ORDER BY uid
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }

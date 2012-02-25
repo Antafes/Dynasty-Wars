@@ -10,7 +10,7 @@ namespace dal\lostPassword;
 function checkRecoveries($uid)
 {
 	$sql = 'SELECT lpid FROM dw_lostpw WHERE uid = '.$uid.'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -36,7 +36,7 @@ function insertRecovery($id, $time, $uid)
 			'.$uid.'
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -53,7 +53,7 @@ function updateRecovery($id, $time)
 		SET mailid = "'.mysql_real_escape_string($id).'",
 			sent_time = NOW()
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -68,7 +68,7 @@ function getRecoveryRequest($uid)
 		SELECT * FROM dw_lostpw
 		WHERE uid = '.mysql_real_escape_string($uid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -80,5 +80,5 @@ function getRecoveryRequest($uid)
 function removeRecoveryRequest($uid)
 {
 	$sql = 'DELETE FROM dw_lostpw WHERE uid = '.mysql_real_escape_string($uid).'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

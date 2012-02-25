@@ -22,7 +22,7 @@ function getAllData($uid)
 		FROM dw_user
 		WHERE uid = '.$uid.'
 	';
-	$r = util\mysql\query($sql);
+	$r = \util\mysql\query($sql);
 	return $r;
 }
 
@@ -34,7 +34,7 @@ function getAllData($uid)
 function checkLogin()
 {
 	$sql = 'SELECT login_closed FROM dw_game';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -51,7 +51,7 @@ function setLastLogin($uid)
 		SET last_login_datetime = NOW()
 		WHERE uid='.mysql_real_escape_string($uid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -64,5 +64,5 @@ function setLastLogin($uid)
 function getMainCity($uid, $add_where = ' AND maincity = 1')
 {
 	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.$uid.$add_where.'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

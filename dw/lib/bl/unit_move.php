@@ -12,9 +12,9 @@ namespace bl\unit\move;
 function aStar($start_x, $start_y, $target_x, $target_y)
 {
 	//creating the openlist
-	$openlist = new bl\unit\OpenList;
+	$openlist = new \bl\unit\OpenList;
 	//creating the closedlist
-	$closedlist = new bl\unit\ClosedList;
+	$closedlist = new \bl\unit\ClosedList;
 	/*
 	* setting the g values for each terrain type
 	* the g value is the "weight" of the field
@@ -108,7 +108,7 @@ function giveSurrounding($x, $y)
   	$ly = $y-1;
   	$hy = $y+1;
 	//getting the sql-query with the surrounding fields
-  	$surrounding = dal\troops\surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
+  	$surrounding = \dal\troops\surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
   	if (count($surrounding) > 0)
   	{
 		foreach ($surrounding as &$part)

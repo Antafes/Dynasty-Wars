@@ -14,18 +14,18 @@ function getMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = dal\messages\getMessages($uid, $t, 'recipient');
+			$messages = \dal\messages\getMessages($uid, $t, 'recipient');
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = dal\messages\getMessages($uid, $type, 'recipient');
+		$messagesArray = \dal\messages\getMessages($uid, $type, 'recipient');
 
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['sender'] = bl\general\uid2nick($message['uid_sender']);
+			$message['sender'] = \bl\general\uid2nick($message['uid_sender']);
 		unset($message);
 	}
 
@@ -42,16 +42,16 @@ function getMessage($msgid)
 {
 	global $lang;
 
-	$message = dal\message\getMessage($msgid, 'recipient');
+	$message = \dal\messages\getMessage($msgid, 'recipient');
 
 	if ($message)
 	{
-		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
+		$message['sender'] = \bl\general\uid2nick($message['uid_sender']);
 		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
-	$parser = new wikiparser;
+	$parser = new \bl\wikiParser\WikiParser();
 	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
 	$message['message'] = $parser->parseIt($message['message']);
 
@@ -72,18 +72,18 @@ function getSentMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = dal\messages\getMessages($uid, $t, 'sender');
+			$messages = \dal\messages\getMessages($uid, $t, 'sender');
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = dal\messages\getMessages($uid, $type, 'sender');
+		$messagesArray = \dal\messages\getMessages($uid, $type, 'sender');
 
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['recipient'] = bl\general\uid2nick($message['uid_recipient']);
+			$message['recipient'] = \bl\general\uid2nick($message['uid_recipient']);
 		unset($message);
 	}
 
@@ -100,16 +100,16 @@ function getSentMessage($msgid)
 {
 	global $lang;
 
-	$message = dal\message\getMessage($msgid, 'sender');
+	$message = \dal\messages\getMessage($msgid, 'sender');
 
 	if ($message)
 	{
-		$message['recipient'] = lib_bl_general_uid2nick ($message['uid_recipient']);
+		$message['recipient'] = \bl\general\uid2nick ($message['uid_recipient']);
 		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
-	$parser = new wikiparser;
+	$parser = new \bl\wikiParser\WikiParser();
 	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
 	$message['message'] = $parser->parseIt($message['message']);
 
@@ -129,18 +129,18 @@ function getArchivedMessages($uid, $type)
 	{
 		foreach ($type as $t)
 		{
-			$messages = dal\messages\getMessages($uid, $t, 'recipient', 1);
+			$messages = \dal\messages\getMessages($uid, $t, 'recipient', 1);
 			if ($messages)
 				$messagesArray += $messages;
 		}
 	}
 	else
-		$messagesArray = dal\messages\getMessages($uid, $type, 'recipient', 1);
+		$messagesArray = \dal\messages\getMessages($uid, $type, 'recipient', 1);
 
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['sender'] = bl\general\uid2nick($message['uid_sender']);
+			$message['sender'] = \bl\general\uid2nick($message['uid_sender']);
 		unset($message);
 	}
 
@@ -157,16 +157,16 @@ function getArchivedMessage($msgid)
 {
 	global $lang;
 
-	$message = dal\message\getMessage($msgid, 'recipient', 1);
+	$message = \dal\messages\getMessage($msgid, 'recipient', 1);
 
 	if ($message)
 	{
-		$message['sender'] = bl\general\uid2nick ($message['uid_sender']);
+		$message['sender'] = \bl\general\uid2nick ($message['uid_sender']);
 		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
 
-	$parser = new wikiparser;
+	$parser = new \bl\wikiParser\WikiParser();
 	$message['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $message['message']);
 	$message['message'] = $parser->parseIt($message['message']);
 
@@ -205,7 +205,7 @@ function getCounts($messages)
  */
 function markAsDeletedSender($msgid, $forceDeletion = false)
 {
-	return dal\messages\markAsDeleted($msgid, 'sender', $forceDeletion);
+	return \dal\messages\markAsDeleted($msgid, 'sender', $forceDeletion);
 }
 
 /**
@@ -217,7 +217,7 @@ function markAsDeletedSender($msgid, $forceDeletion = false)
  */
 function markAsDeletedRecipient($msgid, $forceDeletion = false)
 {
-	return dal\messages\markAsDeleted($msgid, 'recipient', $forceDeletion);
+	return \dal\messages\markAsDeleted($msgid, 'recipient', $forceDeletion);
 }
 
 /**
@@ -229,7 +229,7 @@ function markAsDeletedRecipient($msgid, $forceDeletion = false)
 function markRead($msgid)
 {
 	if (is_int($msgid))
-		return dal\messages\markRead ($msgid);
+		return \dal\messages\markRead ($msgid);
 	else
 		return 0;
 }
@@ -265,7 +265,7 @@ function checkReadMessages($uid)
  */
 function archive($msgid)
 {
-	return dal\messages\archive($msgid);
+	return \dal\messages\archive($msgid);
 }
 
 /**
@@ -279,9 +279,9 @@ function archive($msgid)
 function checkUser($msgid, $uid, $mode)
 {
 	if ($mode == 1)
-		$checkuid = dal\messages\checkRecipient($msgid);
+		$checkuid = \dal\messages\checkRecipient($msgid);
 	elseif ($mode == 2)
-		$checkuid = dal\messages\checkSender($msgid);
+		$checkuid = \dal\messages\checkSender($msgid);
 
 	if ($uid == $checkuid)
 		return 1;

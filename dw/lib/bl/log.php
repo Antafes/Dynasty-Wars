@@ -12,12 +12,12 @@ namespace bl\log;
 function saveLog($type, $actor, $concerned, $extra)
 {
 	if ($actor)
-		$nick_actor = dal\user\uid2nick($actor);
+		$nick_actor = \dal\user\uid2nick($actor);
 
 	if ($concerned)
-		$nick_concerned = dal\user\uid2nick($concerned);
+		$nick_concerned = \dal\user\uid2nick($concerned);
 
-	dal\log\saveLog($type, $nick_actor, $nick_concerned, $extra);
+	\dal\log\saveLog($type, $nick_actor, $nick_concerned, $extra);
 }
 
 /**
@@ -90,8 +90,8 @@ function translateLog($text, $user, $concerned, $extra, \DWDateTime $dateTime)
  */
 function failed($user, $con_user, $type)
 {
-	$username = dal\user\uid2nick($user);
-	$con_username = dal\user\uid2nick($con_user);
+	$username = \dal\user\uid2nick($user);
+	$con_username = \dal\user\uid2nick($con_user);
 	$header = "From: Dynasty Wars <support@dynastywars.de>";
 	$subject = $lang["failedlog_title"];
 	$message = translateFailed($lang["failedlog"], $username, $con_username, $type);
@@ -111,7 +111,7 @@ function failed($user, $con_user, $type)
 function types($type, $actor, $concerned, $extra, \DWDateTime $dateTime)
 {
 	global $lang;
-	bl\general\loadLanguageFile('log', 'acp');
+	\bl\general\loadLanguageFile('log', 'acp');
 
 	return translateLog($lang["t".$type], $actor, $concerned, $extra, $dateTime);
 }
@@ -123,7 +123,7 @@ function types($type, $actor, $concerned, $extra, \DWDateTime $dateTime)
  */
 function getLogEntries()
 {
-	return dal\log\getLogEntries();
+	return \dal\log\getLogEntries();
 }
 
 /**

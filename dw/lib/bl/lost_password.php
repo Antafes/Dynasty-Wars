@@ -9,7 +9,7 @@ namespace bl\lostPassword;
  */
 function generateID($email)
 {
-	$uid = dal\user\returnUID($email);
+	$uid = \dal\user\returnUID($email);
 	if ($uid)
 	{
 		$id = '';
@@ -17,11 +17,11 @@ function generateID($email)
 		{
 			$rand = rand(1,3);
 			if ($rand == 1)
-				$id .= bl\general\alpRand();
+				$id .= \bl\general\alpRand();
 			if ($rand == 2)
 				$id .= rand(0,9);
 			if ($rand == 3)
-				$id .= bl\general\signRand();
+				$id .= \bl\general\signRand();
 		}
 
 		$uid_pos = rand(0,19);
@@ -57,7 +57,7 @@ function sendLostPasswordMail($email)
 {
 	global $lang;
 
-	$check = bl\register\checkMail($email);
+	$check = \bl\register\checkMail($email);
 
 	if ($check > 0)
 	{
@@ -65,17 +65,17 @@ function sendLostPasswordMail($email)
 
 		if ($id)
 		{
-			$uid = dal\user\returnUID($email);
-			$user = dal\user\getUserInfos($uid);
+			$uid = \dal\user\returnUID($email);
+			$user = \dal\user\getUserInfos($uid);
 			$link = DIR_WS_INDEX.'?chose=lost_password&id='.$id;
 			$message = sprintf($lang['email_html'], $link, date($lang['timeformat']), date($lang['clockformat']));
-			bl\general\sendMail($user['email'], $lang['subject'], $message);
-			$rec_check = dal\lostPassword\checkRecoveries($uid);
+			\bl\general\sendMail($user['email'], $lang['subject'], $message);
+			$rec_check = \dal\lostPassword\checkRecoveries($uid);
 
 			if ($rec_check)
-				$recovery = dal\lostPassword\updateRecovery($id, time());
+				$recovery = \dal\lostPassword\updateRecovery($id, time());
 			else
-				$recovery = dal\lostPassword\insertRecovery($id, time(), $uid);
+				$recovery = \dal\lostPassword\insertRecovery($id, time(), $uid);
 
 			if ($recovery > 0)
 				return 1;
@@ -99,7 +99,7 @@ function checkID($id)
 {
 	$uid_pos = (int)substr($id, -6, 2);
 	$uid = (int)substr($id, $uid_pos, 3);
-	$recovery = dal\lostPassword\getRecoveryRequest($uid);
+	$recovery = \dal\lostPassword\getRecoveryRequest($uid);
 
 	if (strcasecmp($id, $recovery['mailid']) == 0)
 		return $uid;
@@ -125,12 +125,12 @@ function changePassword($newpw, $newpww, $uid)
 	if ($newpw === $newpww)
 	{
 		$pws = md5(mysql_real_escape_string($newpw));
-		$changed = lib_bl_options_changePassword($pws, $uid);
+		$changed = changePassword($pws, $uid);
 
 		if ($changed)
 		{
-			$city = bl\login\getMainCity($uid);
-			$id = bl\login\createID($uid);
+			$city = \bl\login\getMainCity($uid);
+			$id = \bl\login\createID($uid);
 			$_SESSION["lid"] = $id;
 			$_SESSION["city"] = $city;
 			$_SESSION["language"] = $lang["lang"];
@@ -152,5 +152,5 @@ function changePassword($newpw, $newpww, $uid)
  */
 function removeRecoveryRequest($uid)
 {
-	return dal\lostPassword\removeRecoveryRequest($uid);
+	return \dal\lostPassword\removeRecoveryRequest($uid);
 }

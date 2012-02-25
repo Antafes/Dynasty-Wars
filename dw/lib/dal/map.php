@@ -16,7 +16,7 @@ namespace dal\map;
  */
 function getSortedMapData() {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y, terrain, city from dw_map
@@ -33,7 +33,7 @@ function getSortedMapData() {
  */
 function returnAllCities() {
     return
-    util\mysql\query(
+    \util\mysql\query(
         sprintf(
             "
             SELECT map_x, map_y from dw_map
@@ -59,7 +59,7 @@ function getTerrain($x, $y)
 		WHERE map_x = '.mysql_real_escape_string($x).'
 			AND map_y = '.mysql_real_escape_string($y).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -75,7 +75,7 @@ function getUsersMainCity($uid)
 		WHERE uid = '.mysql_real_escape_string($uid).'
 			AND maincity = 1
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -85,7 +85,7 @@ function getUsersMainCity($uid)
 function setTerrainType($x, $y, $type) {
 die("not supported yet");
 	$sql =
-		util\mysql\query(
+		\util\mysql\query(
 			"INSERT INTO
 			dw_map (map_x, map_x, terrain, isle, harbour)
 

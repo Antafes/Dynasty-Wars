@@ -9,7 +9,7 @@ namespace bl\troops;
  */
 function getTroop($tid)
 {
-	return dal\troops\getTroop($tid);
+	return \dal\troops\getTroop($tid);
 }
 
 /**
@@ -21,7 +21,7 @@ function getTroop($tid)
  */
 function getPosition($uid, $kind="troops")
 {
-	$pos = dal\troops\getPosition($uid, $kind);
+	$pos = \dal\troops\getPosition($uid, $kind);
 
 	if ($pos)
 	{
@@ -49,7 +49,7 @@ function getPosition($uid, $kind="troops")
  */
 function getAtPosition($uid, $posx, $posy, $kind="troops", $getAll = false, $orderBy = 'unid')
 {
-	return dal\troops\getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy);
+	return \dal\troops\getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy);
 }
 
 /**
@@ -61,7 +61,7 @@ function getAtPosition($uid, $posx, $posy, $kind="troops", $getAll = false, $ord
  */
 function getTroopUnits($tid, $orderBy = null)
 {
-	return dal\troops\getTroopUnits($tid, $orderBy);
+	return \dal\troops\getTroopUnits($tid, $orderBy);
 }
 
 /**
@@ -78,7 +78,7 @@ function countTroopUnits($tid)
 	foreach ($lines as $line)
 		$count += $line['count'];
 
-	return util\math\numberFormat($count, 0);
+	return \util\math\numberFormat($count, 0);
 }
 
 /**
@@ -90,7 +90,7 @@ function countTroopUnits($tid)
  */
 function addUnits($unid, $tid)
 {
-	return dal\troops\addUnits($unid, $tid);
+	return \dal\troops\addUnits($unid, $tid);
 }
 
 /**
@@ -106,13 +106,13 @@ function addNewUnits($unids, $tid)
 
 	foreach ($unids as $unid)
 	{
-		$troop = dal\troops\getUnitCount($unid);
-		$in_troop = dal\troops\checkTroopUnits($troop['kind'], $tid);
+		$troop = \dal\troops\getUnitCount($unid);
+		$in_troop = \dal\troops\checkTroopUnits($troop['kind'], $tid);
 
 		if ($in_troop)
 		{
-			$added = dal\unit\train\addUnit($troop['count'], $in_troop);
-			dal\unit\deleteUnit($unid);
+			$added = \dal\unit\train\addUnit($troop['count'], $in_troop);
+			\dal\unit\deleteUnit($unid);
 		}
 		else
 		{
@@ -141,9 +141,9 @@ function addNewUnits($unids, $tid)
  */
 function createTroop($uid, $posx, $posy, $unids, $name)
 {
-	$tid = dal\troops\createTroop($uid, $posx, $posy, $name);
+	$tid = \dal\troops\createTroop($uid, $posx, $posy, $name);
 	$newname = $name." ".$tid;
-	dal\troops\rename($tid, $newname);
+	\dal\troops\rename($tid, $newname);
 
 	foreach ($unids as $unid)
 		$added = addUnits($unid, $tid);
@@ -166,18 +166,18 @@ function createTroop($uid, $posx, $posy, $unids, $name)
  */
 function checkComplete($unid, $posx, $posy, $count, $uid)
 {
-	$troop = dal\troops\getUnitCount($unid);
+	$troop = \dal\troops\getUnitCount($unid);
 
 	if ($count != $troop['count'])
 	{
-		$newunid = dal\unit\train\checkPosition($uid, $posx, $posy, $troop['kind']);
+		$newunid = \dal\unit\train\checkPosition($uid, $posx, $posy, $troop['kind']);
 
 		if (!$newunid)
-			$newunid = dal\unit\train\newUnit($uid, $troop['kind'], $count, $posx, $posy);
+			$newunid = \dal\unit\train\newUnit($uid, $troop['kind'], $count, $posx, $posy);
 		else
-			dal\unit\train\addUnit($count, $newunid);
+			\dal\unit\train\addUnit($count, $newunid);
 
-		dal\troops\removeFromUNID($unid, $troop['count'] - $count);
+		\dal\troops\removeFromUNID($unid, $troop['count'] - $count);
 		return $newunid;
 	}
 	else
@@ -191,7 +191,7 @@ function checkComplete($unid, $posx, $posy, $count, $uid)
  */
 function checkCanAttack()
 {
-	return dal\troops\checkCanAttack();
+	return \dal\troops\checkCanAttack();
 }
 
 /**
@@ -203,7 +203,7 @@ function checkCanAttack()
  */
 function checkTarget($tx, $ty)
 {
-	return dal\troops\checkTarget($tx, $ty);
+	return \dal\troops\checkTarget($tx, $ty);
 }
 
 /**
@@ -218,7 +218,7 @@ function checkTargetClan($tuid, $cid, $type)
 {
 	if ($type > 2)
 	{
-		$tcid = dal\troops\checkTargetClan($tuid);
+		$tcid = \dal\troops\checkTargetClan($tuid);
 
 		if ($tcid == $cid)
 			return 1;
@@ -245,17 +245,17 @@ function sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
 	$troop = getTroop($tid);
 //	$checkisle = checkIsle($posx, $posy, $tx, $ty);
 //	if ($checkisle)
-		$sendtime = bl\unit\move\aStar($troop["pos_x"], $troop["pos_y"], $tx, $ty);
+		$sendtime = \bl\unit\move\aStar($troop["pos_x"], $troop["pos_y"], $tx, $ty);
 /*
 	else
 //not yet implemented
 */
 	$endtime = new \DWDateTime();
 	$endtime->add(new DateInterval('PT'.$sendtime.'S'));
-	$erg1 = dal\troops\sendTroop(intval($tid), intval($tx), intval($ty), intval($type), $endtime);
+	$erg1 = \dal\troops\sendTroop(intval($tid), intval($tx), intval($ty), intval($type), $endtime);
 
 	if ($res && $count)
-		dal\troops\addResourceToTroop(intval($tid), $res, intval($count));
+		\dal\troops\addResourceToTroop(intval($tid), $res, intval($count));
 
 	if ($erg1)
 		return 1;
@@ -274,8 +274,8 @@ function sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
  */
 function checkIsle($posx, $posy, $tx, $ty)
 {
-	$targetIsle = dal\troops\getIsle($tx, $ty);
-	$currentIsle = dal\troops\getIsle($posx, $posy);
+	$targetIsle = \dal\troops\getIsle($tx, $ty);
+	$currentIsle = \dal\troops\getIsle($posx, $posy);
 
 	if ($targetIsle != $currentIsle)
 		return 1;
@@ -291,7 +291,7 @@ function checkIsle($posx, $posy, $tx, $ty)
  */
 function checkTroops($tuid)
 {
-	$tids = dal\troops\checkTroops($tuid);
+	$tids = \dal\troops\checkTroops($tuid);
 	$GLOBALS['firePHP']->log($tids, 'checkTroops-TIDS');
 
 	$return = array();
@@ -310,7 +310,7 @@ function checkTroops($tuid)
  */
 function checkTroop($tid)
 {
-	$troop = dal\troops\checkTroop($tid);
+	$troop = \dal\troops\checkTroop($tid);
 
 	if ($troop)
 		$troop['end_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $troop['end_datetime']);
@@ -337,8 +337,8 @@ function checkMoving($tuid)
 
 			if ($moveinfo["end_datetime"] < $now && count($moveinfo) > 0)
 			{
-				dal\troops\changeTroopPosition($tid, $moveinfo["tx"], $moveinfo["ty"]);
-				dal\troops\changeUnitsPosition($tid, $moveinfo["tx"], $moveinfo["tx"]);
+				\dal\troops\changeTroopPosition($tid, $moveinfo["tx"], $moveinfo["ty"]);
+				\dal\troops\changeUnitsPosition($tid, $moveinfo["tx"], $moveinfo["tx"]);
 				endMoving($tid);
 			}
 		}
@@ -362,7 +362,7 @@ function checkMoving($tuid)
  */
 function endMoving($tid)
 {
-	$erg1 = dal\troops\endMoving($tid);
+	$erg1 = \dal\troops\endMoving($tid);
 
 	if ($erg1)
 		return 1;
@@ -387,7 +387,7 @@ function maxCapacity($tid, $formatted = true)
 		$maxCapacity += $cap[$part['kind']] * $part['count'];
 
 	if ($formatted)
-		return util\math\numberFormat($maxCapacity, 0);
+		return \util\math\numberFormat($maxCapacity, 0);
 	else
 		return $maxCapacity;
 }
@@ -419,7 +419,7 @@ function getCapacities()
  */
 function loaded($tid)
 {
-	return dal\troops\loaded($tid);
+	return \dal\troops\loaded($tid);
 }
 
 /**
@@ -449,7 +449,7 @@ function checkCapacity($capacity, $tid)
  */
 function rename($tid, $name)
 {
-	dal\troops\rename(intval($tid), $name);
+	\dal\troops\rename(intval($tid), $name);
 }
 
 /**
@@ -462,23 +462,23 @@ function rename($tid, $name)
 function deleteTroop($tid, $uid)
 {
 	$troop = getTroop($tid);
-	dal\troops\deleteTroop($tid);
+	\dal\troops\deleteTroop($tid);
 	$troop_units = getTroopUnits($tid);
 
 	if (count($troop_units) > 0)
 	{
 		foreach ($troop_units as $unit)
 		{
-			$unid = dal\unit\train\checkPosition($uid, $troop["pos_x"], $troop["pos_y"], $unit['kind']);
+			$unid = \dal\unit\train\checkPosition($uid, $troop["pos_x"], $troop["pos_y"], $unit['kind']);
 
 			if ($unid)
 			{
-				dal\unit\train\addUnit($unit['count'], $unid);
-				lib_dal_troops_delunit($unit['unid']);
+				\dal\unit\train\addUnit($unit['count'], $unid);
+				\dal\troops\deleteUnit($unit['unid']);
 			}
 		}
 
-		dal\troops\resetTID($tid);
+		\dal\troops\resetTID($tid);
 		return 1;
 	}
 	else
@@ -499,19 +499,19 @@ function unload($tid, $uid, $lng)
 	include ("language/".$lang["lang"]."/ingame/units.php");
 	include ("language/".$lang["lang"]."/ingame/main.php");
 	$troop = getTroop($tid);
-	$tuid = dal\user\getUIDFromMapPosition($troop["pos_x"], $troop["pos_y"]);
-	dal\resource\addToResources($troop["res"], $troop["amount"], $troop["pos_x"], $troop["pos_y"]);
-	$erg1 = dal\troops\addResourceToTroop($tid, "", 0);
+	$tuid = \dal\user\getUIDFromMapPosition($troop["pos_x"], $troop["pos_y"]);
+	\dal\resource\addToResources($troop["res"], $troop["amount"], $troop["pos_x"], $troop["pos_y"]);
+	$erg1 = \dal\troops\addResourceToTroop($tid, "", 0);
 
 	if ($erg1)
 	{
-		bl\general\sendMessage(
+		\bl\general\sendMessage(
 			$uid,
 			$tuid,
 			$lang["unloadtitle"],
 			sprintf(
 				$lang["unloadmsg"],
-				dal\user\uid2nick($uid),
+				\dal\user\uid2nick($uid),
 				$troop["amount"],
 				$lang[$troop["res"]]
 			),
@@ -539,7 +539,7 @@ function fight($tid, $target, $type)
 	if ($troop['pos_x'].':'.$troop['pos_y'] != $target)
 		return false;
 
-	$target_uid = dal\user\getUIDFromMapPosition($target_exp[0], $target_exp[1]);
+	$target_uid = \dal\user\getUIDFromMapPosition($target_exp[0], $target_exp[1]);
 	$target_units = getAtPosition($target_uid, $target_exp[0], $target_exp[1], 'units', true, 'kind');
 	$groupedUnits = array(
 		'target' => new GroupedUnits(),
@@ -789,10 +789,10 @@ function fight($tid, $target, $type)
 	elseif ($all_escaping_attacker)
 		$result = $lang['fight']['lose'];
 
-	bl\general\sendMessage(-1, $troop['uid'], $lang['fight']['topic'], sprintf(
+	\bl\general\sendMessage(-1, $troop['uid'], $lang['fight']['topic'], sprintf(
 		$lang['fight']['message'],
-		dal\user\uid2nick($troop['uid']),
-		dal\user\uid2nick($target_uid),
+		\dal\user\uid2nick($troop['uid']),
+		\dal\user\uid2nick($target_uid),
 		$result,
 		$msg_html
 	), 4);
@@ -814,10 +814,10 @@ function fight($tid, $target, $type)
 	elseif ($all_escaping_target)
 		$result = $lang['fight']['lose'];
 
-	bl\general\sendMessage(-1, $target_uid, $lang['fight']['topic'], sprintf(
+	\bl\general\sendMessage(-1, $target_uid, $lang['fight']['topic'], sprintf(
 		$lang['fight']['message'],
-		dal\user\uid2nick($target_uid),
-		dal\user\uid2nick($troop['uid']),
+		\dal\user\uid2nick($target_uid),
+		\dal\user\uid2nick($troop['uid']),
 		$result,
 		$msg_html
 	), 4);
@@ -928,7 +928,7 @@ function unitFight($attacker, $target, $city)
 						{
 							if ($key !== 'total_count' && $target_unit['count'] > 0)
 							{
-								$stats = dal\troops\getUnitStats($target_unit['kind']);
+								$stats = \dal\troops\getUnitStats($target_unit['kind']);
 
 								if (!$target_unit['escaping'])
 								{
@@ -1071,7 +1071,7 @@ class GroupedUnits
 				elseif (in_array($unit['kind'], $this->unit_groups['rider']))
 					$type = 'rider';
 
-				$unit['stats'] = dal\troops\getUnitStats($unit['kind']);
+				$unit['stats'] = \dal\troops\getUnitStats($unit['kind']);
 
 				foreach ($unit['stats'] as $key => &$stat)
 					if ($key != 'usid')
@@ -1099,7 +1099,7 @@ class GroupedUnits
 			{
 				foreach ($value as $key2 => $part)
 				{
-					$stats = dal\troops\getUnitStats($part['kind']);
+					$stats = \dal\troops\getUnitStats($part['kind']);
 					$speed += (int) $stats['speed'];
 				}
 			}
@@ -1177,13 +1177,13 @@ class GroupedUnits
 	 */
 	function setCityDefense($x, $y)
 	{
-		$defense_buildings = dal\buildings\getDefense($x, $y);
+		$defense_buildings = \dal\buildings\getDefense($x, $y);
 
 		$this->city_defense = (int) 75;
 
 		foreach ($defense_buildings as $defense)
 		{
-			$values = dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
+			$values = \dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
 			$this->city_defense += (int) $values['defense'] + ($defense['lvl'] * $values['defense'] * $this->factor);
 		}
 	}
@@ -1204,11 +1204,11 @@ class GroupedUnits
 	 */
 	function setCityAttack($x, $y)
 	{
-		$defense_buildings = dal\buildings\getDefense($x, $y);
+		$defense_buildings = \dal\buildings\getDefense($x, $y);
 
 		foreach ($defense_buildings as $defense)
 		{
-			$values = dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
+			$values = \dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
 			$this->city_attack += (int) $values['attack'] + ($defense['lvl'] * $values['attack'] * $this->factor);
 		}
 	}
@@ -1233,9 +1233,9 @@ class GroupedUnits
 		foreach ($units as $unit)
 		{
 			if ($unit['count'] > 0)
-				dal\troops\updateUnitCount($unit['unid'], $unit['count']);
+				\dal\troops\updateUnitCount($unit['unid'], $unit['count']);
 			else
-				dal\troops\deleteUnit($unit['unid']);
+				\dal\troops\deleteUnit($unit['unid']);
 		}
 	}
 
@@ -1286,5 +1286,5 @@ class GroupedUnits
  */
 function removeFromTroop($unid)
 {
-	return dal\troops\removeFromTroop($unid);
+	return \dal\troops\removeFromTroop($unid);
 }

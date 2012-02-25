@@ -10,7 +10,7 @@ namespace dal\unit\train;
 function unitPrices($kind)
 {
 	$sql = 'SELECT * FROM dw_costs_u WHERE kind = '.$kind;
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -22,7 +22,7 @@ function unitPrices($kind)
 function trainTime($kind)
 {
 	$sql = 'SELECT btime FROM dw_buildtimes_unit WHERE kind = '.$kind;
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -44,7 +44,7 @@ function removeResources($valuelist, $uid)
 			koku = koku-'.$valuelist['koku'].'
 		WHERE uid = '.$uid.'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -76,7 +76,7 @@ function startTrain($kind, $uid, $count, \DWDateTime $endTime, $city)
 			"'.mysql_real_escape_string($city).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -99,7 +99,7 @@ function checkTraining($uid, $city)
 		WHERE uid = '.mysql_real_escape_string($uid).'
 			AND city = "'.mysql_real_escape_string($city).'"
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -110,7 +110,7 @@ function checkTraining($uid, $city)
 function removeFromTrainList($tid)
 {
 	$sql = 'DELETE FROM dw_build_unit WHERE tid = '.util\mysql\sqlval($tid).'';
-	util\mysql\query($sql);
+	\util\mysql\query($sql);
 }
 
 /**
@@ -132,7 +132,7 @@ function checkPosition($uid, $map_x, $map_y, $kind)
 			AND kind = '.$kind.'
 			AND NOT tid
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -145,7 +145,7 @@ function checkPosition($uid, $map_x, $map_y, $kind)
 function addUnit($count, $unid)
 {
 	$sql = 'UPDATE dw_units SET count = count + '.$count.' WHERE unid = '.$unid;
-	return util\mysql\query($sql);;
+	return \util\mysql\query($sql);;
 }
 
 /**
@@ -175,5 +175,5 @@ function newUnit($uid, $kind, $count, $map_x, $map_y)
 			'.$map_y.'
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

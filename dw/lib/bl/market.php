@@ -27,14 +27,14 @@ function placeResourceOnMarket($uid, $sellResource, $sellAmount,
 	$y = $cityexp[1];
 
 	// check if the user has enough resources
-	if (dal\resource\returnResourceAmount($x, $y, $sellResource) < $sellAmount)
+	if (\dal\resource\returnResourceAmount($x, $y, $sellResource) < $sellAmount)
 		return 0;
 
 	// remove the specified amount of the resource from the user
-	dal\resource\addToResources($sellResource, $sellAmount * -1, $x, $y);
+	\dal\resource\addToResources($sellResource, $sellAmount * -1, $x, $y);
 
 	// place resource on market
-	dal\market\placeOnMarket(
+	\dal\market\placeOnMarket(
 		$uid,
 		$x,
 		$y,
@@ -66,29 +66,29 @@ function buy($uid, $mid, $city)
 	$x = $cityexp[0];
 	$y = $cityexp[1];
 
-	if (dal\market\getOwner($mid) == $uid) // check if the user owns the offer
+	if (\dal\market\getOwner($mid) == $uid) // check if the user owns the offer
 		return 0;
 
-	if (!dal\market\isOpen($mid)) // check if the offer is still open
+	if (!\dal\market\isOpen($mid)) // check if the offer is still open
 		return -1;
 
-	$offerDetails = dal\market\getOfferDetails($mid);
+	$offerDetails = \dal\market\getOfferDetails($mid);
 
 	if (!$offerDetails['sx'] || !$offerDetails['sy'])
 	{
-		$seller = dal\map\getUsersMainCity($offerDetails['sid']);
+		$seller = \dal\map\getUsersMainCity($offerDetails['sid']);
 		$offerDetails['sx'] = $seller['map_x'];
 		$offerDetails['sy'] = $seller['map_y'];
 	}
 
 	// check if the buyer has enough resourses to pay for the offer
-	if (dal\resource\returnResourceAmount($x, $y, $offerDetails['e_resource']) < $offerDetails['e_amount'])
+	if (\dal\resource\returnResourceAmount($x, $y, $offerDetails['e_resource']) < $offerDetails['e_amount'])
 		return -2;
 
-	dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
+	\dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
 
 	// transfer the goods to the buyer
-	dal\resource\addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['s_resource'],
 		$offerDetails['s_amount'] - $offerDetails['tax'],
 		$x,
@@ -96,7 +96,7 @@ function buy($uid, $mid, $city)
 	);
 
 	// remove the payment from the buyers account
-	dal\resource\addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['e_resource'],
 		$offerDetails['e_amount'] * -1,
 		$x,
@@ -104,7 +104,7 @@ function buy($uid, $mid, $city)
 	);
 
 	// ... and transfer it to the seller
-	dal\resource\addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['e_resource'],
 		$offerDetails['e_amount'],
 		$offerDetails['sx'],
@@ -112,17 +112,17 @@ function buy($uid, $mid, $city)
 	);
 
 	// send a message to the seller
-	$userlang = bl\general\getLanguage($offerDetails['sid']);
+	$userlang = \bl\general\getLanguageByUID($offerDetails['sid']);
 	$lang = array();
-	$lang += bl\general\loadLanguageFile('event_messages', 'loggedin', false, $userlang);
-	$lang += bl\general\loadLanguageFile('main', 'loggedin', false, $userlang);
-	bl\general\sendMessage(
+	$lang += \bl\general\loadLanguageFile('event_messages', 'loggedin', false, $userlang);
+	$lang += \bl\general\loadLanguageFile('main', 'loggedin', false, $userlang);
+	\bl\general\sendMessage(
 		0,
 		$offerDetails['sid'],
 		$lang["buy_title"],
 		sprintf(
 			$lang["buy_msg"],
-			dal\user\uid2nick($uid),
+			\dal\user\uid2nick($uid),
 			$offerDetails['s_amount'],
 			htmlentities($lang[$offerDetails['s_resource']]),
 			$offerDetails['e_amount'],
@@ -145,17 +145,17 @@ function anull($uid, $mid, $city)
 {
 	$city_exp = explode(':', $city);
 
-	if (dal\market\getOwner($mid) != $uid)
+	if (\dal\market\getOwner($mid) != $uid)
 		return 0; // check if the user owns the offer
 
-	if (!dal\market\isOpen($mid))
+	if (!\dal\market\isOpen($mid))
 		return -1; // check if the offer is still open
 
-	$offerDetails = dal\market\getOfferDetails($mid);
-	dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
+	$offerDetails = \dal\market\getOfferDetails($mid);
+	\dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
 
 	// lets transfer the offers resources back to the owner
-	dal\resource\addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['s_resource'],
 		$offerDetails['s_amount'],
 		$city_exp[0],
@@ -165,7 +165,7 @@ function anull($uid, $mid, $city)
 }
 
 /**
- * Just a wrapper for the lib_dal_market_userOffers() function that seperates the
+ * Just a wrapper for the \dal\market\userOffers() function that seperates the
  * display layer from the data access layer
  * @author siyb
  * @param <int> $uid the uid of the user
@@ -177,7 +177,7 @@ function anull($uid, $mid, $city)
  */
 function userOffers($uid, $filter, $order)
 {
-	return dal\market\userOffers($uid, $filter, $order);
+	return \dal\market\userOffers($uid, $filter, $order);
 }
 
 /**
@@ -189,7 +189,7 @@ function userOffers($uid, $filter, $order)
  * @return <float> the tax
  */
 function calculateTax($resource, $amount) {
-	$res = dal\market\sales();
+	$res = \dal\market\sales();
 	$total = 0;
 	foreach ($res as $row)
 	{
@@ -202,16 +202,16 @@ function calculateTax($resource, $amount) {
 	 * in a specific timeframe. Take this percentage and use it on $amount to
 	 * calulate the tax that has to be payed
 	*/
-	$tax = util\math\calcPercentage($total, $fragment);
+	$tax = \util\math\calcPercentage($total, $fragment);
 
 	if ($tax > 49)
 		$tax = 49;
 
-	return util\math\calcFragment($amount, $tax);
+	return \util\math\calcFragment($amount, $tax);
 }
 
 /**
- * Just a wrapper for the dal\market\search() function that seperates the
+ * Just a wrapper for the \dal\market\search() function that seperates the
  * display layer from the data access layer
  * @author siyb
  * @author Neithan
@@ -233,7 +233,7 @@ function search(
 {
 	global $lang;
 
-	$offers = dal\market\search(
+	$offers = \dal\market\search(
 		$Sresource,
 		$SvalueRangeStart,
 		$SvalueRangeEnd,
@@ -249,12 +249,12 @@ function search(
 	{
 		$result[] = array(
 			'mid' => $offer['mid'],
-			'seller' => dal\user\uid2nick($offer['sid']),
+			'seller' => \dal\user\uid2nick($offer['sid']),
 			'soldResource' => $lang[$offer['s_resource']],
-			'soldAmount' => util\math\numberFormat($offer['s_amount'], 0),
+			'soldAmount' => \util\math\numberFormat($offer['s_amount'], 0),
 			'requestedResource' => $lang[$offer['e_resource']],
-			'requestedAmount' => util\math\numberFormat($offer['e_amount'], 0),
-			'tax' => util\math\numberFormat($offer['tax'], 0),
+			'requestedAmount' => \util\math\numberFormat($offer['e_amount'], 0),
+			'tax' => \util\math\numberFormat($offer['tax'], 0),
 			'ownOffer' => ($offer['sid'] == $_SESSION['user']->getUID() ? 1 : 0),
 		);
 	}
@@ -272,7 +272,7 @@ function returnAllOffers()
 {
 	global $lang;
 
-	$allOffers = dal\market\returnAllOffers();
+	$allOffers = \dal\market\returnAllOffers();
 
 	$result = array();
 	if ($allOffers)
@@ -281,12 +281,12 @@ function returnAllOffers()
 		{
 			$result[] = array(
 				'mid' => $offer['mid'],
-				'seller' => dal\user\uid2nick($offer['sid']),
+				'seller' => \dal\user\uid2nick($offer['sid']),
 				'soldResource' => $lang[$offer['s_resource']],
-				'soldAmount' => util\math\numberFormat($offer['s_amount'], 0),
+				'soldAmount' => \util\math\numberFormat($offer['s_amount'], 0),
 				'requestedResource' => $lang[$offer['e_resource']],
-				'requestedAmount' => util\math\numberFormat($offer['e_amount'], 0),
-				'tax' => util\math\numberFormat($offer['tax'], 0),
+				'requestedAmount' => \util\math\numberFormat($offer['e_amount'], 0),
+				'tax' => \util\math\numberFormat($offer['tax'], 0),
 				'ownOffer' => ($offer['sid'] == $_SESSION['user']->getUID() ? 1 : 0),
 			);
 		}
@@ -303,5 +303,5 @@ function returnAllOffers()
  */
 function isOpen($mid)
 {
-	return dal\market\isOpen($mid) > 0;
+	return \dal\market\isOpen($mid) > 0;
 }

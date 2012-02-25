@@ -12,7 +12,7 @@ function getAllEntries()
 		SELECT * FROM dw_news
 		ORDER BY create_datetime DESC
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -27,7 +27,7 @@ function getEntry($nid)
 		SELECT * FROM dw_news
 		WHERE nid = '.mysql_real_escape_string($nid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -56,7 +56,7 @@ function save($title, $content, $uid, $nick)
 			NOW()
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -81,5 +81,5 @@ function update($nid, $title, $content, $changerUID, $changerNick)
 			changed_datetime = NOW()
 		WHERE nid = '.mysql_real_escape_string($nid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

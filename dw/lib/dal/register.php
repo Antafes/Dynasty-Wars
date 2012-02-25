@@ -17,7 +17,7 @@ function getFreeCoordinates()
 			)
 			AND NOT `uid`
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -39,7 +39,7 @@ function updateCoordinates($uid, $city, $x, $y)
 		WHERE `map_x` = '.$x.'
 			AND `map_y` = '.$y.'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -71,7 +71,7 @@ function insertUser($nick, $pws, $email, $random, $language)
 			"'.mysql_real_escape_string($language).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -89,7 +89,7 @@ function insertResources($uid, $x, $y)
 			map_x = '.mysql_real_escape_string($x).',
 			map_y = '.mysql_real_escape_string($y).'
 	';
-	return util\mysql\query($sql, true); //with the second parameter an insert returns the number of affected rows
+	return \util\mysql\query($sql, true); //with the second parameter an insert returns the number of affected rows
 }
 
 /**
@@ -120,7 +120,7 @@ function insertBuildings($uid, $map_x, $map_y)
 			('.$uid.', '.$map_x.', '.$map_y.', 6, 0, 0, 7),
 			('.$uid.', '.$map_x.', '.$map_y.', 22, 0, 0, 0)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -132,5 +132,5 @@ function insertBuildings($uid, $map_x, $map_y)
 function insertPoints($uid)
 {
 	$sql = 'INSERT INTO dw_points (uid) VALUES ('.$uid.')';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

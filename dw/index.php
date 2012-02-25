@@ -27,7 +27,7 @@ $smarty->assign('title', 'Dynasty Wars');
 
 //db: connect to database
 $con = @mysql_connect($server, $seruser, $serpw);
-$lang['lang'] = bl\general\getLanguage();
+$lang['lang'] = bl\general\getLanguageByUID();
 
 if (!$con)
 {

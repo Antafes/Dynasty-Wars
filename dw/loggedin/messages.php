@@ -78,7 +78,7 @@ elseif ($_GET['mmode'] == "sent") //sent messages
 			$msgid = $_POST['delete'][$i];
 
 			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
-				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
+				bl\messages\markAsDeletedRecipient($msgid);
 			else
 				$n = $msgids;
 		}
@@ -121,7 +121,7 @@ elseif ($_GET['mmode'] == "archive") //archived messages
 			$msgid = $_POST['delete'][$i];
 
 			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
-				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
+				bl\messages\markAsDeletedRecipient($msgid);
 			else
 				$n = $msgids;
 		}
@@ -164,7 +164,7 @@ elseif ($_GET['mmode'] == "event") //event messages
 			$msgid = $_POST['delete'][$i];
 
 			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
-				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
+				bl\messages\markAsDeletedRecipient($msgid);
 			else
 				$n = $msgids;
 		}

@@ -21,7 +21,7 @@ function placeOnMarket(
 	$uid, $x, $y, $sellResource, $sellAmount,
 	$exchangeResource, $exchangeAmount, $tax)
 {
-	util\mysql\query(
+	\util\mysql\query(
 		sprintf(
 			"INSERT INTO dw_market (
 				`sid`,
@@ -68,7 +68,7 @@ function placeOnMarket(
  * @param int $uid
  */
 function removeFromMarket($mid, $uid) {
-	util\mysql\query(
+	\util\mysql\query(
 		sprintf(
 			"
 			UPDATE dw_market
@@ -91,7 +91,7 @@ function removeFromMarket($mid, $uid) {
 function getOwner($mid)
 {
 	return
-		util\mysql\query(
+		\util\mysql\query(
 			sprintf(
 				"
 				SELECT sid FROM dw_market
@@ -110,7 +110,7 @@ function getOwner($mid)
  */
 function getOfferDetails($mid) {
 	return
-		util\mysql\query(
+		\util\mysql\query(
 			sprintf(
 				"
 				SELECT * FROM dw_market
@@ -129,7 +129,7 @@ function getOfferDetails($mid) {
 function returnAllOffers()
 {
 	return
-	util\mysql\query(
+	\util\mysql\query(
 		sprintf(
 			"
 			SELECT * FROM dw_market
@@ -148,7 +148,7 @@ function returnAllOffers()
  */
 function isOpen($mid) {
 	return
-		util\mysql\query(
+		\util\mysql\query(
 			sprintf(
 				"
 				SELECT count(*) FROM dw_market
@@ -186,7 +186,7 @@ function userOffers($uid, $filter, $order = "DESC")
 		mysql_real_escape_string($uid),
 		mysql_real_escape_string($order)
 	);
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -239,7 +239,7 @@ function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 		mysql_real_escape_string($completeE),
 		mysql_real_escape_string($limitE)
 	);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -281,5 +281,5 @@ function search(
 		mysql_real_escape_string($complete),
 		mysql_real_escape_string($seller)
 	);
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }

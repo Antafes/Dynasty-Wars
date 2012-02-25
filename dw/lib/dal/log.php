@@ -26,7 +26,7 @@ function saveLog($type, $actor, $concerned, $extra)
 			"'.mysql_real_escape_string($extra).'",
 			'.mysql_real_escape_string($type).')
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -40,5 +40,5 @@ function getLogEntries()
 		SELECT * FROM dw_log
 		ORDER BY log_datetime DESC
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }

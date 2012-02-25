@@ -9,10 +9,10 @@ namespace bl\login;
  */
 function getAllData($nick)
 {
-	$uid = dal\user\nick2uid($nick);
+	$uid = \bl\general\nick2uid($nick);
 
 	if (isset($uid) && $uid > 0)
-		return dal\login\getAllData($uid);
+		return \dal\login\getAllData($uid);
 	else
 		return false;
 }
@@ -24,7 +24,7 @@ function getAllData($nick)
  */
 function checkLogin()
 {
-	return dal\login\checkLogin();
+	return \dal\login\checkLogin();
 }
 
 /**
@@ -35,7 +35,7 @@ function checkLogin()
  */
 function setLastLogin($uid)
 {
-	return dal\login\setLastLogin($uid);
+	return \dal\login\setLastLogin($uid);
 }
 
 /**
@@ -46,7 +46,7 @@ function setLastLogin($uid)
  */
 function getMainCity($uid)
 {
-	$city = dal\login\getMainCity($uid);
+	$city = \dal\login\getMainCity($uid);
 
 	if (count($city) > 0)
 		return $city['map_x'].':'.$city['map_y'];
@@ -60,7 +60,7 @@ function getMainCity($uid)
  */
 function createID($uid)
 {
-	$user = dal\login\getAllData($uid);
+	$user = \dal\login\getAllData($uid);
 	$uidpos = rand(1, 9);
 	$uidlen = strlen($uid);
 	$id = substr($user['password'], 0, $uidpos);
@@ -90,7 +90,7 @@ function checkID($id)
 	$pw .= substr($id, $uidpos+$uidlen, -6);
 	$pw .= substr($id, -3);
 	$uid = substr($id, $uidpos, $uidlen);
-	$user = dal\login\getAllData($uid);
+	$user = \dal\login\getAllData($uid);
 
 	return ($pw === $user['password']);
 }

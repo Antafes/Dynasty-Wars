@@ -24,7 +24,7 @@ function ClosePopUp() {
 //language
 	$lang["lang"] = $_SESSION["language"];
 	if (!$lang["lang"]) {
-		$lang["lang"] = bl\general\getLanguage();
+		$lang["lang"] = bl\general\getLanguageByUID();
 	}
 	include("../language/".$lang["lang"]."/acp/poschange.php");
 //abfrage GET, POST variablen

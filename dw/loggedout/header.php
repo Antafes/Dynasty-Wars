@@ -1,6 +1,6 @@
 <?php
 ob_start();
-$lang['lang'] = bl\general\getLanguage();
+$lang['lang'] = bl\general\getLanguageByUID();
 bl\general\loadLanguageFile('main', 'loggedout');
 bl\general\loadLanguageFile('general', null);
 $gameOptions = util\mysql\query('SELECT board, show_board, adminmail, version FROM dw_game');

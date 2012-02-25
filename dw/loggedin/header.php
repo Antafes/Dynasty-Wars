@@ -26,7 +26,7 @@ $nick = bl\general\uid2nick($_SESSION['user']->getUID());
 $admin = bl\general\getGameRank($_SESSION['user']->getUID());
 //language
 if (!$lang['lang'])
-	$lang['lang'] = bl\general\getLanguage($_SESSION['user']->getUID());
+	$lang['lang'] = bl\general\getLanguageByUID($_SESSION['user']->getUID());
 
 bl\general\loadLanguageFile('main');
 bl\general\loadLanguageFile('general', null);

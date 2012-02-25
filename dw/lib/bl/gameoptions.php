@@ -9,7 +9,7 @@ namespace bl\gameOptions;
  */
 function getMenuEntry($entryName)
 {
-	return dal\gameOptions\getMenuEntry($entryName);
+	return \dal\gameOptions\getMenuEntry($entryName);
 }
 
 /**
@@ -20,7 +20,7 @@ function getMenuEntry($entryName)
  */
 function getAllMenuEntries($visible = true)
 {
-	return dal\gameOptions\getAllMenuEntries($visible);
+	return \dal\gameOptions\getAllMenuEntries($visible);
 }
 
 /**
@@ -34,11 +34,11 @@ function getAllMenuEntries($visible = true)
 function setAllMenuEntries($changedEntries, $sorts, $visible)
 {
 	$allEntries = getAllMenuEntries(false);
-	dal\gameOptions\setAllMenuEntries(0, 0);
+	\dal\gameOptions\setAllMenuEntries(0, 0);
 	foreach ($allEntries as $entry)
 	{
 		$game_menu_id = $entry['game_menu_id'];
-		dal\gameOptions\setMenuEntry($game_menu_id, ($changedEntries[$game_menu_id] ? 1 : 0), $sorts[$game_menu_id], ($visible[$game_menu_id] ? 1 : 0));
+		\dal\gameOptions\setMenuEntry($game_menu_id, ($changedEntries[$game_menu_id] ? 1 : 0), $sorts[$game_menu_id], ($visible[$game_menu_id] ? 1 : 0));
 	}
 }
 
@@ -49,7 +49,7 @@ function setAllMenuEntries($changedEntries, $sorts, $visible)
  */
 function getGameOptions()
 {
-	$gameOptions = dal\gameOptions\getGameOptions();
+	$gameOptions = \dal\gameOptions\getGameOptions();
 
 	$errorReportingArray = array();
 	$errorReporting = $gameOptions['error_report'];

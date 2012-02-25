@@ -26,7 +26,7 @@ function addToResources($resource, $value, $x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-    util\mysql\query($sql);
+    \util\mysql\query($sql);
 }
 
 /**
@@ -44,7 +44,7 @@ function returnResourceAmount($x, $y, $resource)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-    return util\mysql\query($sql);
+    return \util\mysql\query($sql);
 }
 
 /**
@@ -62,7 +62,7 @@ function getUpgradeLevel($kind, $x, $y)
 			AND `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -78,7 +78,7 @@ function getResearchLevel($uid, $type)
 		WHERE `uid` = "'.mysql_real_escape_string($uid).'"
 			AND `type` = "'.mysql_real_escape_string($type).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -96,7 +96,7 @@ function getLevel($kind, $x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` = "'.mysql_real_escape_string($kind).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -121,7 +121,7 @@ function updateAll($res, $x, $y)
 		WHERE `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -138,7 +138,7 @@ function getPaperPercent($x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -157,7 +157,7 @@ function changePaperPercent($percent, $x, $y)
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -175,5 +175,5 @@ function getResourceBuildings($x, $y)
 			AND map_y = '.mysql_real_escape_string($y).'
 			AND kind BETWEEN 1 AND 6
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }

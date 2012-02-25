@@ -8,17 +8,17 @@ namespace bl\tribunal;
  */
 function getAllHearings()
 {
-	$parser = new wikiparser;
-	$hearings = dal\tribunal\getAllHearings();
+	$parser = new \bl\wikiParser\WikiParser();
+	$hearings = \dal\tribunal\getAllHearings();
 
 	if ($hearings)
 	{
 		foreach ($hearings as &$hearing)
 		{
 			$hearing['cause'] = getCause($hearing['cause']);
-			$hearing['suitorNick'] = bl\general\uid2nick($hearing['suitor']);
-			$hearing['accusedNick'] = bl\general\uid2nick($hearing['accused']);
-			$hearing['parsedCutOffDescription'] = $parser->parseIt(bl\general\cutOffText($hearing['description'], 100));
+			$hearing['suitorNick'] = \bl\general\uid2nick($hearing['suitor']);
+			$hearing['accusedNick'] = \bl\general\uid2nick($hearing['accused']);
+			$hearing['parsedCutOffDescription'] = $parser->parseIt(\bl\general\cutOffText($hearing['description'], 100));
 		}
 		unset($hearing);
 	}
@@ -34,7 +34,7 @@ function getAllHearings()
  */
 function getAllCauses($lang)
 {
-	return dal\tribunal\getAllCauses(languageCode2ID($lang));
+	return \dal\tribunal\getAllCauses(languageCode2ID($lang));
 }
 
 /**
@@ -45,7 +45,7 @@ function getAllCauses($lang)
  */
 function languageCode2ID($lang)
 {
-	return dal\general\getLanguageIDByCode($lang);
+	return \dal\general\getLanguageIDByCode($lang);
 }
 
 /**
@@ -56,7 +56,7 @@ function languageCode2ID($lang)
  */
 function getAllMessages($uid)
 {
-	return dal\tribunal\getAllMessages($uid);
+	return \dal\tribunal\getAllMessages($uid);
 }
 
 /**
@@ -74,14 +74,14 @@ function getAllRules($language = '')
 		$language = $lang['lang'];
 	}
 
-	$rules = dal\tribunal\getAllRules($language);
+	$rules = \dal\tribunal\getAllRules($language);
 
 	$rules_array = array();
 	if ($rules)
 	{
 		foreach ($rules as $rule)
 		{
-			$ruletexts = dal\tribunal\getAllRuleTexts($rule['ruid'], $language);
+			$ruletexts = \dal\tribunal\getAllRuleTexts($rule['ruid'], $language);
 			$texts = array();
 			foreach ($ruletexts as $text)
 			{
@@ -115,20 +115,20 @@ function getAllRules($language = '')
  */
 function insertRule($valuelist)
 {
-	$ruid = dal\tribunal\insertRule($valuelist['language'], $valuelist['paragraph'], $valuelist['title']);
+	$ruid = \dal\tribunal\insertRule($valuelist['language'], $valuelist['paragraph'], $valuelist['title']);
 
 	$clauses_count = count($valuelist['clauses']);
 	for ($i = 0; $i < $clauses_count; $i++)
 	{
 		$clause = $valuelist['clauses'][$i];
-		dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['text']);
+		\dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['text']);
 
 		if (is_array($clause['subclauses']))
 		{
 			$subclauses_count = count($clause['subclauses']);
 
 			for ($n = 0; $n < $subclauses_count; $n++)
-				dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['subclauses'][$n]['text'], $n + 1);
+				\dal\tribunal\insertRuleText($ruid, $valuelist['language'], $i + 1, $clause['subclauses'][$n]['text'], $n + 1);
 		}
 	}
 }
@@ -141,8 +141,8 @@ function insertRule($valuelist)
  */
 function deleteRule($ruid)
 {
-	dal\tribunal\deleteRule('dw_tribunal_rules', 'ruid', $ruid);
-	dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'ruid', $ruid);
+	\dal\tribunal\deleteRule('dw_tribunal_rules', 'ruid', $ruid);
+	\dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'ruid', $ruid);
 }
 
 /**
@@ -153,7 +153,7 @@ function deleteRule($ruid)
  */
 function deleteClause($rutid)
 {
-	dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'rutid', $rutid);
+	\dal\tribunal\deleteRule('dw_tribunal_rules_texts', 'rutid', $rutid);
 }
 
 /**
@@ -169,7 +169,7 @@ function deleteClause($rutid)
 function insertHearing($suitor, $accused, $cause, $description, $arguments)
 {
 	$error = array();
-	$accused_uid = dal\user\nick2uid($accused);
+	$accused_uid = \dal\user\nick2uid($accused);
 
 	if ($accused == '')
 		$error['accused'] = true;
@@ -185,11 +185,11 @@ function insertHearing($suitor, $accused, $cause, $description, $arguments)
 
 	if (count($error) == 0)
 	{
-		$tid = dal\tribunal\insertHearing($suitor, $accused_uid, $cause, $description);
+		$tid = \dal\tribunal\insertHearing($suitor, $accused_uid, $cause, $description);
 		addArgument($tid, $arguments, 'suitor');
-		$accused_lang = bl\general\getLanguage($accused_uid);
+		$accused_lang = \bl\general\getLanguageByUID($accused_uid);
 		include('language/'.$accused_lang.'/ingame/tribunal.php');
-		bl\general\sendMessage($suitor, $accused_uid, $lang['info_title'], sprintf($lang['info_msg'], $tid), 3);
+		\bl\general\sendMessage($suitor, $accused_uid, $lang['info_title'], sprintf($lang['info_msg'], $tid), 3);
 		return false;
 	}
 	else
@@ -208,7 +208,7 @@ function addArgument($tid, $arguments, $from)
 {
 	$aid_array = array();
 	foreach ($arguments as $argument)
-		$aid_array[] = dal\tribunal\insertArgument($tid, $argument, $from);
+		$aid_array[] = \dal\tribunal\insertArgument($tid, $argument, $from);
 
 	return $aid_array;
 }
@@ -224,7 +224,7 @@ function getCause($tcid)
 {
 	global $lang;
 
-	return dal\tribunal\getCause($tcid, languageCode2ID($lang['lang']));
+	return \dal\tribunal\getCause($tcid, languageCode2ID($lang['lang']));
 }
 
 /**
@@ -238,8 +238,8 @@ function getHearing($tid)
 {
 	global $own_uid;
 
-	$parser = new wikiparser;
-	$hearing = dal\tribunal\getHearing($tid);
+	$parser = new \bl\wikiParser\WikiParser();
+	$hearing = \dal\tribunal\getHearing($tid);
 
 	if ($hearing)
 	{
@@ -250,8 +250,8 @@ function getHearing($tid)
 
 		$hearing['arguments'] = getArguments($tid, $getAllArguments);
 		$hearing['cause'] = getCause($hearing['cause']);
-		$hearing['suitorNick'] = bl\general\uid2nick($hearing['suitor']);
-		$hearing['accusedNick'] = bl\general\uid2nick($hearing['accused']);
+		$hearing['suitorNick'] = \bl\general\uid2nick($hearing['suitor']);
+		$hearing['accusedNick'] = \bl\general\uid2nick($hearing['accused']);
 		$hearing['parsedDescription'] = $parser->parseIt($hearing['description']);
 		$hearing['parsedReason'] = $parser->parseIt($hearing['reason']);
 		$hearing['messages'] = getAllMessages($_SESSION['user']->getUID());
@@ -268,7 +268,7 @@ function getHearing($tid)
  */
 function approveArgument($aid, $approved)
 {
-	return dal\tribunal\approveArgument($aid, ($approved == 'accept' ? 1 : -1));
+	return \dal\tribunal\approveArgument($aid, ($approved == 'accept' ? 1 : -1));
 }
 
 /**
@@ -279,7 +279,7 @@ function approveArgument($aid, $approved)
  */
 function recallHearing($tid, $uid)
 {
-	return dal\tribunal\recallHearing($tid, $uid);
+	return \dal\tribunal\recallHearing($tid, $uid);
 }
 
 /**
@@ -294,7 +294,7 @@ function getArguments($tid, $approved)
 {
 	global $lang;
 
-	$arguments = dal\tribunal\getArguments($tid, $approved);
+	$arguments = \dal\tribunal\getArguments($tid, $approved);
 
 	foreach ($arguments as &$argument)
 	{
@@ -309,9 +309,9 @@ function getArguments($tid, $approved)
 		}
 
 		$argument['approvedText'] = $approved;
-		$argument['message'] = bl\messages\getMessage($argument['msgid']);
+		$argument['message'] = \bl\messages\getMessage($argument['msgid']);
 		$argument['formattedDateAdded'] = date($lang['acptimeformat'], $argument['date_added']);
-		$argument['fromNick'] = bl\general\uid2nick($argument['from']);
+		$argument['fromNick'] = \bl\general\uid2nick($argument['from']);
 	}
 	unset($argument);
 
@@ -326,7 +326,7 @@ function getArguments($tid, $approved)
  */
 function getArgument($aid)
 {
-	$argument = dal\tribunal\getArgument($aid);
+	$argument = \dal\tribunal\getArgument($aid);
 	$argument['added_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $argument['added_datetime']);
 	return $argument;
 }
@@ -341,7 +341,7 @@ function getArgument($aid)
  */
 function makeDecision($tid, $decision, $reason)
 {
-	return dal\tribunal\makeDecision($tid, $decision, $reason);
+	return \dal\tribunal\makeDecision($tid, $decision, $reason);
 }
 
 /**
@@ -353,7 +353,7 @@ function makeDecision($tid, $decision, $reason)
  */
 function blockComments($tid, $block)
 {
-	return dal\tribunal\blockComments($tid, $block);
+	return \dal\tribunal\bl\ockComments($tid, $block);
 }
 
 /**
@@ -364,7 +364,7 @@ function blockComments($tid, $block)
  */
 function getComments($tid)
 {
-	$comments = dal\tribunal\getComments($tid);
+	$comments = \dal\tribunal\getComments($tid);
 
 	foreach ($comments as &$comment)
 	{
@@ -386,7 +386,7 @@ function getComments($tid)
  */
 function saveComment($tid, $uid, $comment)
 {
-	return dal\tribunal\saveComment($tid, $uid, $comment);
+	return \dal\tribunal\saveComment($tid, $uid, $comment);
 }
 
 /**
@@ -397,7 +397,7 @@ function saveComment($tid, $uid, $comment)
  */
 function deleteComment($tcoid)
 {
-	return dal\tribunal\deleteComment($tcoid);
+	return \dal\tribunal\deleteComment($tcoid);
 }
 
 /**
@@ -410,7 +410,7 @@ function deleteComment($tcoid)
  */
 function editComment($tcoid, $comment, $uid)
 {
-	return dal\tribunal\editComment($tcoid, $comment, $uid);
+	return \dal\tribunal\editComment($tcoid, $comment, $uid);
 }
 
 /**
@@ -420,7 +420,7 @@ function editComment($tcoid, $comment, $uid)
  */
 function getComment($tcoid)
 {
-	$comment = dal\tribunal\getComment($tcoid);
+	$comment = \dal\tribunal\getComment($tcoid);
 
 	$comment['create_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['create_datetime']);
 	$comment['changed_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $comment['changed_datetime']);

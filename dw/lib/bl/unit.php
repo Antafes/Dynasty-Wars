@@ -61,14 +61,14 @@ class ClosedList
 }
 
 /**
- * A wrapper for lib_dal_unit_calcUnitPoints, please use this function instead
+ * A wrapper for \dal\unit\calcUnitPoints, please use this function instead
  * of the dal one.
  * @author siyb
  * @return array containing nick and points already calculated
  */
 function calcUnitPoints()
 {
-    return dal\unit\calcUnitPoints();
+    return \dal\unit\calcUnitPoints();
 }
 
 /**
@@ -133,8 +133,8 @@ function calcFoodOrKoku($unitType, $amount, $type)
  */
 function calcTotalFoodCost($uid)
 {
-    if (!dal\unit\calculateUnitCosts()) return 0;
-    $result = dal\unit\getUnitCount($uid);
+    if (!\dal\unit\calculateUnitCosts()) return 0;
+    $result = \dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
@@ -152,15 +152,15 @@ function calcTotalFoodCost($uid)
 }
 
 /**
- * Does the same as lib_bl_unit_calcTotalFoodCost() for koku
+ * Does the same as calcTotalFoodCost() for koku
  * @author siyb
  * @param <int> $uid the userid of the user
  * @return <int> total koku cost per hour for all units
  */
 function calcTotalKokuCost($uid)
 {
-    if (!dal\unit\calculateUnitCosts()) return 0;
-    $result = dal\unit\getUnitCount($uid);
+    if (!\dal\unit\calculateUnitCosts()) return 0;
+    $result = \dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
@@ -186,7 +186,7 @@ function calcTotalKokuCost($uid)
  */
 function getUnits($kind, $uid)
 {
-  	return dal\unit\getUnits($kind, $uid);
+  	return \dal\unit\getUnits($kind, $uid);
 }
 
 /**
@@ -197,15 +197,15 @@ function getUnits($kind, $uid)
  */
 function checkDaimyo($uid)
 {
-	if (!dal\unit\checkDaimyo($uid))
+	if (!\dal\unit\checkDaimyo($uid))
 	{
-		$pos = dal\login\getMainCity($uid);
+		$pos = \dal\login\getMainCity($uid);
 
 		if (count($pos) > 0)
 		{
 			$pos_x = $pos['map_x'];
 			$pos_y = $pos['map_y'];
 		}
-		dal\unit\createDaimyo($uid, $pos_x, $pos_y);
+		\dal\unit\createDaimyo($uid, $pos_x, $pos_y);
 	}
 }

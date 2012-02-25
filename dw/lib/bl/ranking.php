@@ -11,7 +11,7 @@ function getUserRanking()
 {
 	global $lang;
 
-    $ranklist = dal\ranking\getUserRanking();
+    $ranklist = \dal\ranking\getUserRanking();
 
     foreach($ranklist as &$value)
 	{

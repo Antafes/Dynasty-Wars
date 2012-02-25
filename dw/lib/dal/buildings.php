@@ -15,7 +15,7 @@ function selectAll($x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` < 23
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -30,7 +30,7 @@ function getHarbour($x, $y)
 	$sql = 'SELECT `harbour` FROM `dw_map`
 		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
 			AND `map_y` = "'.mysql_real_escape_string($y).'"';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -50,7 +50,7 @@ function selectBuilding($x, $y, $pos)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			'.$buildplace.'
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -72,7 +72,7 @@ function prices($kind)
 		FROM dw_costs_b
 		WHERE kind = "'.mysql_real_escape_string($kind).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -90,7 +90,7 @@ function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 		WHERE kind="'.mysql_real_escape_string($kind).'"
 			AND `kind_u` = "'.mysql_real_escape_string($kind_u).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -102,7 +102,7 @@ function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 function checkReligion($uid)
 {
 	$sql = 'SELECT `religion` FROM `dw_user` WHERE `uid` = '.mysql_real_escape_string($uid);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -125,7 +125,7 @@ function getBuildingByKind($kind, $x, $y)
 		WHERE `kind` = '.mysql_real_escape_string($kind).'
 			AND `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -142,7 +142,7 @@ function getTime($kind, $upgrade, $u_lvl)
 		$sql = 'SELECT `btime` FROM `dw_buildtimes` WHERE `kind` = '.mysql_real_escape_string($kind);
 	elseif ($upgrade == 1)
 		$sql = 'SELECT `upgrtime` FROM `dw_buildtimes_upgr` WHERE `kind` = '.mysql_real_escape_string($kind).' AND `kind_u` = '.mysql_real_escape_string($u_lvl);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -168,7 +168,7 @@ function checkBuild($x, $y)
 		ORDER BY `end_datetime` ASC
 	';
 $GLOBALS['firePHP']->log($sql, 'checkBuild sql');
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -198,7 +198,7 @@ function insertBuilding($uid, $x, $y, $kind, $position)
 			"'.mysql_real_escape_string($position).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -224,7 +224,7 @@ function startBuilding($bid, $upgrade, \DWDateTime $endTime)
 			"'.mysql_real_escape_string($endTime->format('Y-m-d H:i:s')).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -239,7 +239,7 @@ function insertBuildPlace($bid, $buildplace)
 		UPDATE `dw_buildings` SET `position` = "'.mysql_real_escape_string($buildplace).'"
 		WHERE `bid` = "'.mysql_real_escape_string($bid).'"
 	';
-	util\mysql\query($sql);
+	\util\mysql\query($sql);
 }
 
 /**
@@ -261,7 +261,7 @@ function getBuildInfo($bid)
 		LEFT OUTER JOIN `dw_buildings` ON `dw_build`.`bid` = `dw_buildings`.`bid`
 		WHERE `dw_build`.`bid` = "'.mysql_real_escape_string($bid).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -272,7 +272,7 @@ function getBuildInfo($bid)
 function removeFromBuildList($bid)
 {
 	$sql = 'DELETE FROM `dw_build` WHERE `bid` = "'.mysql_real_escape_string($bid).'"';
-	util\mysql\query($sql);
+	\util\mysql\query($sql);
 }
 
 /**
@@ -288,7 +288,7 @@ function updateBuilding($valuelist)
 			`upgrade_lvl` = "'.mysql_real_escape_string($valuelist['ulvl']).'"
 		WHERE `bid` = "'.mysql_real_escape_string($valuelist['bid']).'"
 	';
-	util\mysql\query($sql);
+	\util\mysql\query($sql);
 }
 
 /**
@@ -305,7 +305,7 @@ function getDefense($x, $y)
 			AND `map_y` = "'.mysql_real_escape_string($y).'"
 			AND `kind` > 22
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -325,5 +325,5 @@ function getStats($kind, $upgrade_lvl)
 		WHERE kind = '.mysql_real_escape_string($kind).'
 			AND upgrade_lvl = '.mysql_real_escape_string($upgrade_lvl).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

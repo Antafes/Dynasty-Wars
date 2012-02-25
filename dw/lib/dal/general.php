@@ -15,7 +15,7 @@ function getResources($x, $y)
 		WHERE `map_x` = '.mysql_real_escape_string($x).'
 			AND `map_y` = '.mysql_real_escape_string($y).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -27,7 +27,7 @@ function getResources($x, $y)
 function getLanguageByUID($uid)
 {
 	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -50,7 +50,7 @@ function getLanguages($active)
 			WHERE active
 		';
 
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -61,7 +61,7 @@ function getLanguages($active)
 function getSeason()
 {
 	$sql = 'SELECT season FROM dw_game';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -93,7 +93,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 			'.mysql_real_escape_string($type).'
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -106,7 +106,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 function deactivateUser($uid, $state)
 {
 	$sql = 'UPDATE dw_user SET deactivated = '.mysql_real_escape_string($state).' WHERE uid = '.mysql_real_escape_string($uid).'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -118,7 +118,7 @@ function deactivateUser($uid, $state)
 function setClanLeader($uid)
 {
 	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.mysql_real_escape_string($uid).'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -134,7 +134,7 @@ function deleteFrom($table, $where)
 		DELETE FROM '.mysql_real_escape_string($table).'
 		WHERE '.mysql_real_escape_string($where).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -146,7 +146,7 @@ function deleteFrom($table, $where)
 function updateMap($uid)
 {
 	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.mysql_real_escape_string($uid).'';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -162,7 +162,7 @@ function deleteBuildings($uid)
 		USING dw_buildings LEFT JOIN dw_build USING (bid)
 		WHERE dw_buildings.uid = '.mysql_real_escape_string($uid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -180,7 +180,7 @@ function changePosition($where, $uid = 0, $city = '')
 		SET uid = '.mysql_real_escape_string($uid).',
 			city = "'.mysql_real_escape_string($city).'"
 		WHERE '.mysql_real_escape_string($where);
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -195,7 +195,7 @@ function checkMenuEntry($entry_name)
 		SELECT active FROM dw_game_menu
 		WHERE menu_name = "'.mysql_real_escape_string($entry_name).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -213,7 +213,7 @@ function getUnreadMessagesCount($recipient)
 			AND unread = 1
 			AND !del_recipient
 	';
-	return (int)util\mysql\query($sql);
+	return (int)\util\mysql\query($sql);
 }
 
 /**
@@ -229,7 +229,7 @@ function getMissionary($uid)
 		FROM dw_missionary
 		WHERE uid='.mysql_real_escape_string($uid).'
 	';
-	return (int)util\mysql\query($sql);
+	return (int)\util\mysql\query($sql);
 }
 
 /**
@@ -245,7 +245,7 @@ function checkLanguageIsActive($language)
 		WHERE language = "'.mysql_real_escape_string($language).'"
 			AND active
 	';
-	return (bool)util\mysql\query($sql);
+	return (bool)\util\mysql\query($sql);
 }
 
 /**
@@ -259,7 +259,7 @@ function getFallbackLanguage()
 		FROM dw_language
 		WHERE fallback
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -273,7 +273,7 @@ function getLanguageIDByCode($code)
 	$sql = '
 		SELECT language_id
 		FROM dw_languages
-		WHERE language = '.util\mysql\sqlval($code).'
+		WHERE language = '.\util\mysql\sqlval($code).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

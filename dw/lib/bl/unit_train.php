@@ -13,7 +13,7 @@ function checkBuildings($city)
 
 	$buildings = array();
 	foreach($kinds as $kind)
-		$buildings[$kind] = bl\buildings\getBuildingByKind($kind, $city);
+		$buildings[$kind] = \bl\buildings\getBuildingByKind($kind, $city);
 
 	return $buildings;
 }
@@ -26,12 +26,12 @@ function checkBuildings($city)
  */
 function unitPrices($kind)
 {
-	$prices = dal\unit\train\unitPrices($kind);
+	$prices = \dal\unit\train\unitPrices($kind);
 
 	$mainCity = $_SESSION['user']->getMainCity();
-	$mainbuilding = dal\buildings\getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
-	$paper = dal\buildings\getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
-	$koku = dal\buildings\getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
+	$mainbuilding = \dal\buildings\getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
+	$paper = \dal\buildings\getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
+	$koku = \dal\buildings\getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
 
 	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
 		$prices['paper'] = 0;
@@ -40,7 +40,7 @@ function unitPrices($kind)
 		$prices['koku'] = 0;
 
 	foreach ($prices as $key => $value)
-		$prices[$key.'_formatted'] = util\math\numberFormat($value, 0);
+		$prices[$key.'_formatted'] = \util\math\numberFormat($value, 0);
 
 	return $prices;
 }
@@ -58,7 +58,7 @@ function maxUnits($kind, $city)
 	$x = intval($cityexp[0]);
 	$y = intval($cityexp[1]);
 	$costs = unitPrices($kind);
-	$res = bl\general\getResources($x, $y);
+	$res = \bl\general\getResources($x, $y);
 	if ($costs["food"])
 		$units["food"] = floor($res["food"]/$costs["food"]);
 	if ($costs["wood"])
@@ -71,7 +71,7 @@ function maxUnits($kind, $city)
 		$units["paper"] = floor($res["paper"]/$costs["paper"]);
 	if ($costs["koku"])
 		$units["koku"] = floor($res["koku"]/$costs["koku"]);
-	array_walk($units, lib_bl_unit_train_maxUnitsHelper);
+	array_walk($units, '\bl\unit\train\maxUnitsHelper');
 	return min($units);
 }
 
@@ -95,7 +95,7 @@ function maxUnitsHelper(&$value)
  */
 function trainTime($kind)
 {
-	return dal\unit\train\trainTime($kind);
+	return \dal\unit\train\trainTime($kind);
 }
 
 /**
@@ -123,8 +123,8 @@ function train($kind, $count, $uid, $city)
 		$sum_prices["koku"] = $prices["koku"]*$count;
 		$endTime = new \DWDateTime();
 		$endTime->add(new DateInterval('PT'.(trainTime($kind) * $count)));
-		$erg1 = dal\unit\train\removeResources($sum_prices, $uid);
-		$erg2 = dal\unit\train\startTrain($kind, $uid, $count, $endTime, $city);
+		$erg1 = \dal\unit\train\removeResources($sum_prices, $uid);
+		$erg2 = \dal\unit\train\startTrain($kind, $uid, $count, $endTime, $city);
 
 		if ($erg1 && $erg2)
 			return 1;
@@ -144,7 +144,7 @@ function train($kind, $count, $uid, $city)
  */
 function checkTraining($uid, $city)
 {
-	$units = dal\unit\train\checkTraining($uid, $city);
+	$units = \dal\unit\train\checkTraining($uid, $city);
 
 	if ($units)
 	{
@@ -192,12 +192,12 @@ function trainComplete($valuelist)
 	$cityexp = explode(":", $valuelist['city']);
 	$map_x = intval($cityexp[0]);
 	$map_y = intval($cityexp[1]);
-	dal\unit\train\removeFromTrainList($valuelist['tid']);
-	$unid = dal\unit\train\checkPosition($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
+	\dal\unit\train\removeFromTrainList($valuelist['tid']);
+	$unid = \dal\unit\train\checkPosition($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
 	if ($unid)
-		$erg3 = dal\unit\train\addUnit($valuelist['count'], $unid);
+		$erg3 = \dal\unit\train\addUnit($valuelist['count'], $unid);
 	else
-		$erg3 = dal\unit\train\newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
+		$erg3 = \dal\unit\train\newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
 	if ($erg1 && $erg3)
 		return 1;
 	else

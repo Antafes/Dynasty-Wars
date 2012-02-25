@@ -13,7 +13,7 @@ function getAllHearings()
 		WHERE decision_datetime = 0
 			AND !deleted
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -29,7 +29,7 @@ function getAllCauses($lang)
 		WHERE language = '.mysql_real_escape_string($lang).'
 		ORDER BY sort
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -47,7 +47,7 @@ function getAllMessages($uid)
 				OR read_datetime = 0)
 				OR archive = 1)
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -65,7 +65,7 @@ function getAllRules($lang)
 			AND !deleted
 		ORDER BY paragraph ASC
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -88,7 +88,7 @@ function getAllRuleTexts($ruid, $lang)
 			AND !deleted
 		ORDER BY clause, subclause
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -112,7 +112,7 @@ function insertRule($language, $paragraph, $title)
 			"'.mysql_real_escape_string($title).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -141,7 +141,7 @@ function insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
 			"'.mysql_real_escape_string($text).'"
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -159,7 +159,7 @@ function deleteRule($table, $field, $key)
 		SET deleted = 1
 		WHERE '.mysql_real_escape_string($field).' = '.mysql_real_escape_string($key).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -188,7 +188,7 @@ function insertHearing($suitor, $accused, $cause, $description)
 			NOW()
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -214,7 +214,7 @@ function insertArgument($tid, $msgid, $from)
 			NOW()
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -231,7 +231,7 @@ function getCause($tcid, $lang_id)
 		WHERE tcid = '.mysql_real_escape_string($tcid).'
 			AND language = '.mysql_real_escape_string($lang_id).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -246,7 +246,7 @@ function getHearing($tid)
 		SELECT * FROM dw_tribunal
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -265,7 +265,7 @@ function getArguments($tid, $approved)
 	if ($approved == false)
 		$sql .= '		AND approved = 1
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -282,7 +282,7 @@ function approveArgument($aid, $approved)
 		SET approved = '.mysql_real_escape_string($approved).'
 		WHERE aid = '.mysql_real_escape_string($aid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -299,7 +299,7 @@ function recallHearing($tid, $uid)
 			deleted_by = '.mysql_real_escape_string($uid).'
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -314,7 +314,7 @@ function getArgument($aid)
 		SELECT * FROM dw_tribunal_arguments
 		WHERE aid = '.mysql_real_escape_string($aid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -334,7 +334,7 @@ function makeDecision($tid, $decision, $reason)
 			decision_datetime = NOW()
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -351,7 +351,7 @@ function blockComments($tid, $block)
 		SET block_comments = '.mysql_real_escape_string($block).'
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -376,7 +376,7 @@ function getComments($tid)
 			AND !deleted
 		ORDER BY create_datetime
 	';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -402,7 +402,7 @@ function saveComment($tid, $uid, $comment)
 			NOW()
 		)
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -418,7 +418,7 @@ function deleteComment($tcoid)
 		SET deleted = 1
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -439,7 +439,7 @@ function editComment($tcoid, $comment, $uid)
 			changed_count = changed_count + 1
 		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -463,5 +463,5 @@ function getComment($tcoid)
 			AND !deleted
 		ORDER BY create_datetime
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

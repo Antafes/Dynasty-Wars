@@ -14,7 +14,7 @@ function getMenuEntry($entryName)
 		FROM dw_game_menu
 		WHERE menu_name = "'.mysql_real_escape_string($entryName).'"
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -30,7 +30,7 @@ function getAllMenuEntries($visible = true)
 		FROM dw_game_menu
 		'.($visible ? 'WHERE visible = 1' : '').'
 		ORDER BY sort ASC';
-	return util\mysql\query($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -49,7 +49,7 @@ function setMenuEntry($game_menu_id, $active, $sort, $visible)
 			visible = '.mysql_real_escape_string($visible).'
 		WHERE game_menu_id = '.mysql_real_escape_string($game_menu_id).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -66,7 +66,7 @@ function setAllMenuEntries($active, $visible)
 		SET active = '.mysql_real_escape_string($active).',
 			visible = '.mysql_real_escape_string($visible).'
 	';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -77,5 +77,5 @@ function setAllMenuEntries($active, $visible)
 function getGameOptions()
 {
 	$sql = 'SELECT * FROM dw_game';
-	return util\mysql\query($sql);
+	return \util\mysql\query($sql);
 }

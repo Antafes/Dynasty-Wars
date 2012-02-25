@@ -17,7 +17,7 @@ if ($_GET['del'])
 
 if ($_POST['changepw'] == 1)
 {
-	if (lib_bl_options_getOldPassword($_SESSION['user']->getUID()) == md5($_POST['oldpw']) && $_POST['newpw'] == $_POST['newpww'])
+	if ($_SESSION['user']->getPW() == md5($_POST['oldpw']) && $_POST['newpw'] == $_POST['newpww'])
 	{
 		if ($_SESSION['user']->setPW($_POST['newpw'], $_POST['newpww']))
 		{
