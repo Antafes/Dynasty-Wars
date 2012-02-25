@@ -72,7 +72,7 @@ if ($con)
 		}
 
 		$mapData[$row][] = array(
-			'image' => lib_bl_mapTerrain($position['terrain']).'.png',
+			'image' => bl\map\terrain($position['terrain']).'.png',
 			'uid' => (int) $position['uid'],
 			'map_x' => (int) $position['map_x'],
 			'map_y' => (int) $position['map_y'],

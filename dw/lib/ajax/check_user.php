@@ -11,15 +11,15 @@ if ($con)
 
 	include_once('../dal/general.ajax.inc.php');
 
-	$item_list = lib_bl_ajax_buildArray($_GET['items']);
-	$target = new UserCls();
+	$item_list = bl\general\jsonDecode($_GET['items'], true);
+	$target = new bl\user\UserCls();
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('units', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('units', 'loggedin', true);
 
 	$error_text = '';
 	$error_type = 0;
@@ -44,7 +44,7 @@ if ($con)
 		}
 	}
 
-	echo lib_bl_ajax_prepareOutput(array(
+	echo bl\general\jsonEncode(array(
 		'ok' => true,
 		'type' => $error_type,
 		'text' => $error_text,

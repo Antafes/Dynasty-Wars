@@ -1,7 +1,7 @@
 <?php
 include('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('main', 'acp');
+bl\general\loadLanguageFile('main', 'acp');
 $smarty->assign('lang', $lang);
 
 if ($_SESSION['user']->getGameRank())

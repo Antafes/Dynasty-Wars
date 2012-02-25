@@ -1,7 +1,7 @@
 <?php
 include('loggedout/header.php');
 include('lib/bl/lost_password.inc.php');
-lib_bl_general_loadLanguageFile('lost_password', 'loggedout');
+bl\general\loadLanguageFile('lost_password', 'loggedout');
 
 $smarty->assign('heading', htmlentities($lang['lost_password']));
 $smarty->assign('id', $_GET['id']);
@@ -10,7 +10,7 @@ if (!$_GET['id'])
 {
 	$smarty->assign('action', 'index.php?chose=lost_password');
 	if ($_POST['lp_sub'])
-		$sent = lib_bl_lost_password_sendLPMail($_POST['email']);
+		$sent = bl\lostPassword\sendLostPasswordMail($_POST['email']);
 
 	if ($sent)
 	{
@@ -28,12 +28,12 @@ if (!$_GET['id'])
 elseif ($_GET['id'])
 {
 	$smarty->assign('action', 'index.php?chose=lost_password&id='.$_GET['id']);
-	$uid = lib_bl_lost_password_checkID($_GET['id']);
+	$uid = bl\lostPassword\checkID($_GET['id']);
 	if ($uid > 0)
 	{
 		if ($_POST['lostpwsub'])
 		{
-			$error = lib_bl_lost_password_changePassword($_POST['newpw'], $_POST['newpww'], $uid);
+			$error = bl\lostPassword\changePassword($_POST['newpw'], $_POST['newpww'], $uid);
 			if ($error == 1)
 				header('Location: index.php');
 		}

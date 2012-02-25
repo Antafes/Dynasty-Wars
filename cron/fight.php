@@ -11,21 +11,21 @@ require_once(dirname(__FILE__).'/../dw/lib/util/dateInterval.php');
 $con = @mysql_connect($server, $seruser, $serpw);
 mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 
-$moving_troops = lib_dal_troops_getAllMovingTroops();
+$moving_troops = dal\troops\getAllMovingTroops();
 
 if ($moving_troops)
 {
 	foreach ($moving_troops as $moving_troop)
 	{
-		$endtime = DWDateTime::createFromFormat('Y-m-d H:i:s', $moving_troop['endtime']);
-		$now = new DWDateTime();
+		$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $moving_troop['endtime']);
+		$now = new \DWDateTime();
 		if ($endtime <= $now)
 		{
-			lib_bl_troops_endMoving ($moving_troop['tid']);
+			bl\troops\endMoving ($moving_troop['tid']);
 
 			if ($moving_troop['type'] > 2)
 			{
-				lib_bl_troops_fight($moving_troop['tid'], $moving_troop['tx'].':'.$moving_troop['ty']);
+				bl\troops\fight($moving_troop['tid'], $moving_troop['tx'].':'.$moving_troop['ty']);
 			}
 		}
 	}

@@ -8,7 +8,7 @@ namespace dal\general;
  * @param int $y
  * @return array
  */
-function getRes($x, $y)
+function getResources($x, $y)
 {
 	$sql = '
 		SELECT * FROM `dw_res`
@@ -24,7 +24,7 @@ function getRes($x, $y)
  * @param int $uid
  * @return string
  */
-function getLanguage($uid)
+function getLanguageByUID($uid)
 {
 	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
 	return util\mysql\query($sql);
@@ -258,6 +258,22 @@ function getFallbackLanguage()
 		SELECT language
 		FROM dw_language
 		WHERE fallback
+	';
+	return util\mysql\query($sql);
+}
+
+/**
+ * get the language id to the given language code
+ * @author Neithan
+ * @param String $code
+ * @return int
+ */
+function getLanguageIDByCode($code)
+{
+	$sql = '
+		SELECT language_id
+		FROM dw_languages
+		WHERE language = '.util\mysql\sqlval($code).'
 	';
 	return util\mysql\query($sql);
 }

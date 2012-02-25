@@ -1,4 +1,3 @@
 <?php
-include_once('lib/dal/tribunal.php');
-include_once('lib/bl/tribunal.php');
-?>
+require_once('lib/dal/tribunal.php');
+require_once('lib/bl/tribunal.php');

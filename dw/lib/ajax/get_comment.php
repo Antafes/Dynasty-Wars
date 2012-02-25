@@ -20,16 +20,16 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
 	$array['status'] = 'ok';
 
-	$comment_array = lib_bl_tribunal_getComment($item_list['tcoid']);
+	$comment_array = bl\tribunal\getComment($item_list['tcoid']);
 	$array['comment'] = $comment_array['comment'];
 
 	foreach ($array as &$part)

@@ -1,4 +1,3 @@
 <?php
-include_once('lib/dal/buildings.php');
-include_once('lib/bl/buildings.php');
-?>
+require_once('lib/dal/buildings.php');
+require_once('lib/bl/buildings.php');

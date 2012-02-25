@@ -13,7 +13,7 @@ $sql = '
 		last_time
 	FROM dw_res
 ';
-$logEntries = lib_util_mysqlQuery($sql, true);
+$logEntries = util\mysql\query($sql, true);
 
 foreach ($logEntries as $logEntry)
 {
@@ -24,5 +24,5 @@ foreach ($logEntries as $logEntry)
 			AND map_x = '.mysql_real_escape_string($logEntry['map_x']).'
 			AND map_y = '.mysql_real_escape_string($logEntry['map_y']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

@@ -24,7 +24,7 @@ function ClosePopUp() {
 //language
 	$lang["lang"] = $_SESSION["language"];
 	if (!$lang["lang"]) {
-		$lang["lang"] = lib_bl_general_getLanguage();
+		$lang["lang"] = bl\general\getLanguage();
 	}
 	include("../language/".$lang["lang"]."/acp/poschange.php");
 //abfrage GET, POST variablen
@@ -53,10 +53,10 @@ function ClosePopUp() {
 		if ($helpstring) {
 			$regcity = mysql_result($helpstring, 0);
 		}
-		$poschange = lib_bl_general_changePos($reguid, $nx, $ny, $regcity, $con);
+		$poschange = bl\general\changePosition($reguid, $nx, $ny, $regcity, $con);
 		if ($poschange == 1) {
-			lib_bl_general_changePos(0, $reguid, $lang["poschangedtitle"], sprintf($lang["poschangedmsg"], $nick, $oldx, $oldy, $nx, $ny), 3);
-			lib_bl_log_saveLog(14, $uid, $reguid, "[$nx:$ny]");
+			bl\general\changePosition(0, $reguid, $lang["poschangedtitle"], sprintf($lang["poschangedmsg"], $nick, $oldx, $oldy, $nx, $ny), 3);
+			bl\log\saveLog(14, $uid, $reguid, "[$nx:$ny]");
 		}
 	}
 	$erg2 = mysql_query("SELECT map_x, map_y, city FROM dw_map WHERE uid='$reguid'", $con);

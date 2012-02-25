@@ -1,6 +1,6 @@
 <?php
 include ('loggedout/header.php');
-lib_bl_general_loadLanguageFile('login', 'loggedout');
+bl\general\loadLanguageFile('login', 'loggedout');
 unset ($err);
 $login = $_POST['login'];
 $user = $_POST['nick'];
@@ -13,7 +13,7 @@ $smarty->assign('login', $login);
 
 if ($login == 1)
 {
-	$login = lib_bl_login_getAllData($user);
+	$login = bl\login\getAllData($user);
 	$uid = $login['uid'];
 	$reguser = $login['nick'];
 	$regpw = $login['password'];
@@ -22,7 +22,7 @@ if ($login == 1)
 	$admin = $login['game_rank'];
 	$lang['lang'] = $login['language'];
 	$deactivated = $login['deactivated'];
-	$login_closed = lib_bl_login_checkLogin();
+	$login_closed = bl\login\checkLogin();
 	if ($status)
 		$err['status'] = 1;
 	if ($blocked)
@@ -39,9 +39,9 @@ if ($login == 1)
 		&& !$deactivated
 	)
 	{
-		lib_bl_login_setLastLogin($uid);
-		$city = lib_bl_login_getMainCity($uid);
-		$id = lib_bl_login_createId($uid);
+		bl\login\setLastLogin($uid);
+		$city = bl\login\getMainCity($uid);
+		$id = bl\login\createID($uid);
 		if ($save_login)
 		{
 			setcookie('lid', $id, time()+604800, '', '.dynasty-wars.de');
@@ -53,7 +53,7 @@ if ($login == 1)
 			$_SESSION['city'] = $city;
 			$_SESSION['language'] = $lang['lang'];
 		}
-		lib_bl_general_redirect(util\html\createLink(array('chose' => 'home'), true));
+		bl\general\redirect(util\html\createLink(array('chose' => 'home'), true));
 	}
 	else
 	{

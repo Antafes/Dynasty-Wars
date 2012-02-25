@@ -12,7 +12,7 @@ $sql = '
 		last_login
 	FROM dw_user
 ';
-$data = lib_util_mysqlQuery($sql, true);
+$data = util\mysql\query($sql, true);
 
 foreach ($data as $row)
 {
@@ -22,5 +22,5 @@ foreach ($data as $row)
 			last_login_datetime = "'.mysql_real_escape_string($row['last_login'] ? date('Y-m-d H:i:s', $row['last_login']) : 0).'"
 		WHERE uid = '.mysql_real_escape_string($row['uid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

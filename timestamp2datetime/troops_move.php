@@ -11,7 +11,7 @@ $sql = '
 		endtime
 	FROM dw_troops_move
 ';
-$logEntries = lib_util_mysqlQuery($sql, true);
+$logEntries = util\mysql\query($sql, true);
 
 foreach ($logEntries as $logEntry)
 {
@@ -20,5 +20,5 @@ foreach ($logEntries as $logEntry)
 		SET end_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $logEntry['endtime'])).'"
 		WHERE tmid = '.mysql_real_escape_string($logEntry['tmid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

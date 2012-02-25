@@ -22,7 +22,7 @@
 //start building
 	if ($construct) {
 		$erg2 = build(2, mysql_real_escape_string($building), 0, mysql_real_escape_string($bid), $user->getUID(), $city, $con);
-		$ressources = lib_bl_resource_newRes($user->getUID(), $range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $harbour, $con);
+		$ressources = bl\resource\newResources($user->getUID(), $range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $harbour, $con);
 		$food = $ressources['food'];
 		$wood = $ressources['wood'];
 		$rock = $ressources['rock'];
@@ -32,7 +32,7 @@
 		$build_check = check_build($user->getUID(), $city, 2, $con);
 	} elseif ($upgrade) {
 		$erg2 = build(2, mysql_real_escape_string($building), 1, mysql_real_escape_string($bid), $user->getUID(), $city, $con);
-		$ressources = lib_bl_resource_newRes($user->getUID(), $range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $harbour, $con);
+		$ressources = bl\resource\newResources($user->getUID(), $range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $harbour, $con);
 		$food = $ressources['food'];
 		$wood = $ressources['wood'];
 		$rock = $ressources['rock'];
@@ -70,7 +70,7 @@
 											<td width="670" class="box_8">
 <?php
 	$wall = building(1, 2, $user->getUID(), $city, $con);
-	$prices = prices(1, 2, $wall['lvl'], $wall['upgrade_lvl'], $con);
+	$prices = prices(1, 2, $wall['lvl']);
 	if ($wall['upgrade_lvl'] < 4) {
 		$prices_upgr = upgrade_prices("1.".$wall['upgrade_lvl'], 2, $wall['lvl'], $wall['upgrade_lvl'], $con);
 	}
@@ -156,7 +156,7 @@
 											<td width="670" class="box_8">
 <?php
 	$tower = building(2, 2, $user->getUID(), $city, $con);
-	$prices = prices(2, 2, $tower["lvl"], $tower["upgrade_lvl"], $con);
+	$prices = prices(2, 2, $tower["lvl"]);
 	if ($tower["upgrade_lvl"] < 4) {
 		$prices_upgr = upgrade_prices("2.".$tower["upgrade_lvl"], 2, $tower["lvl"], $tower["upgrade_lvl"], $con);
 	}
@@ -245,7 +245,7 @@
 											<td width="670" class="box_8">
 <?php
 	$camp = building(3, 2, $user->getUID(), $city, $con);
-	$prices = prices(3, 2, $camp["lvl"], $camp["upgrade_lvl"], $con);
+	$prices = prices(3, 2, $camp["lvl"]);
 	if ($camp["upgrade_lvl"] < 4) {
 		$prices_upgr = upgrade_prices("3.".$camp["upgrade_lvl"], 2, $camp["lvl"], $camp["upgrade_lvl"], $con);
 	}

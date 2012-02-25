@@ -20,15 +20,15 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	$check = lib_bl_tribunal_approveArgument($item_list['aid'], $item_list['state']);
-	$argument = lib_bl_tribunal_getArgument($item_list['aid']);
+	$check = bl\tribunal\approveArgument($item_list['aid'], $item_list['state']);
+	$argument = bl\tribunal\getArgument($item_list['aid']);
 
 	if ($argument['approved'] == 1)
 		$approved = ' ['.$lang['approved'].']';

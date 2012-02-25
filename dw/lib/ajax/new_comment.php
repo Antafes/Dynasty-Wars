@@ -14,7 +14,7 @@ if ($con)
 	include_once('../dal/tribunal.php');
 	include_once('../bl/tribunal.php');
 
-	$parser = new wikiparser();
+	$parser = new bl\wikiParser\WikiParser();
 
 	$item_list = json_decode($_GET['items']);
 	$new_item_list = array();
@@ -22,18 +22,18 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	$insert_id = lib_bl_tribunal_saveComment($item_list['ajax_id'], $_SESSION['user']->getUID(), $item_list['comment_text']);
+	$insert_id = bl\tribunal\saveComment($item_list['ajax_id'], $_SESSION['user']->getUID(), $item_list['comment_text']);
 
 	$array['status'] = 'ok';
 	$array['html'] = '<div class="comment">
-		'.htmlentities(sprintf($lang['comment_from'], lib_bl_general_uid2nick($_SESSION['user']->getUID()))).'
+		'.htmlentities(sprintf($lang['comment_from'], bl\general\uid2nick($_SESSION['user']->getUID()))).'
 		<div class="comment_at">'.htmlentities(sprintf($lang['comment_at'], date($lang['acptimeformat'], time()))).'</div>
 		<div class="comment_content">
 			'.nl2br($parser->parseIt($item_list['comment_text'])).'

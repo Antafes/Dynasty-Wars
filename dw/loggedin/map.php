@@ -2,7 +2,7 @@
 include('loggedin/header.php');
 include('lib/bl/map.inc.php');
 
-lib_bl_general_loadLanguageFile('map');
+bl\general\loadLanguageFile('map');
 
 
 $smarty->assign('lang', $lang);
@@ -38,7 +38,7 @@ $min_x = $x - 8;
 $min_y = $y - 8;
 $max_x = $x + 8;
 $max_y = $y + 8;
-$season = lib_bl_general_getSeason();
+$season = bl\general\getSeason();
 if ($season == 1)
 	$path = 'pictures/map/summer/';
 elseif ($season == 2)
@@ -78,7 +78,7 @@ foreach ($mapRawData as $position)
 	}
 
 	$mapData[$row][] = array(
-		'image' => lib_bl_mapTerrain($position['terrain']).'.png',
+		'image' => bl\map\terrain($position['terrain']).'.png',
 	) + $position;
 
 	if ($position['uid'])

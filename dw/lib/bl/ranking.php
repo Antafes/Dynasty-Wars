@@ -1,5 +1,13 @@
 <?php
-function lib_bl_ranking_getUserRanking()
+namespace bl\ranking;
+
+/**
+ * get the rank list
+ * @author Neithan
+ * @global array $lang
+ * @return array
+ */
+function getUserRanking()
 {
 	global $lang;
 

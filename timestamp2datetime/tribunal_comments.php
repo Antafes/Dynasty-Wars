@@ -12,7 +12,7 @@ $sql = '
 		date_last_changed
 	FROM dw_tribunal_comments
 ';
-$data = lib_util_mysqlQuery($sql, true);
+$data = util\mysql\query($sql, true);
 
 foreach ($data as $row)
 {
@@ -22,5 +22,5 @@ foreach ($data as $row)
 			changed_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $row['date_last_changed'])).'"
 		WHERE tcoid = '.mysql_real_escape_string($row['tcoid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

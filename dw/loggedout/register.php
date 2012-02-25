@@ -1,6 +1,6 @@
 <?php
 include('loggedout/header.php');
-lib_bl_general_loadLanguageFile('register', 'loggedout');
+bl\general\loadLanguageFile('register', 'loggedout');
 
 unset($err);
 //einfuegen der registrierungsfunktionen
@@ -29,7 +29,7 @@ if (!$reg_closed)
 	$c = 0;
 	if ($nick)
 	{
-		if (lib_bl_register_checkName($nick, $lang['notusable']))
+		if (bl\register\checkName($nick, $lang['notusable']))
 		{
 			$err['name'] = 1;
 			unset($nick);
@@ -47,7 +47,7 @@ if (!$reg_closed)
 
 		if ($resp->is_valid)
 		{
-			$check_email = lib_bl_register_checkMail($email);
+			$check_email = bl\register\checkMail($email);
 			if (!$check_email)
 				$err['email'] = 1;
 			else
@@ -94,7 +94,7 @@ if (!$reg_closed)
 							}
 						}
 						if ($nick && $pw && $pww && $email && $city)
-							$err['registration'] = lib_bl_registerNew($nick, $pws, $email, $city);
+							$err['registration'] = bl\register\createNewUser($nick, $pws, $email, $city);
 					}
 					else
 						$err['pw<>pww'] = 1;

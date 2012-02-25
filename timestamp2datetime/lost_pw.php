@@ -11,7 +11,7 @@ $sql = '
 		sent_time
 	FROM dw_lostpw
 ';
-$logEntries = lib_util_mysqlQuery($sql, true);
+$logEntries = util\mysql\query($sql, true);
 
 foreach ($logEntries as $logEntry)
 {
@@ -20,5 +20,5 @@ foreach ($logEntries as $logEntry)
 		SET sent_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $logEntry['sent_time'])).'"
 		WHERE lpid = '.mysql_real_escape_string($logEntry['lpid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

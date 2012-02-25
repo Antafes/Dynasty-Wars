@@ -21,10 +21,10 @@ if ($_GET['mode'] == 'create')
 		$posy = intval($pos[1]);
 		for ($i = 0; $i < intval($_POST['ids']); $i++)
 			if ($_POST['id'.$i] > 0)
-				$unids[$i] = lib_bl_troops_checkComplete(intval($_POST['unid'.$i]), $posx, $posy, intval($_POST['id'.$i]), $_SESSION['user']->getUID());
+				$unids[$i] = bl\troops\checkComplete(intval($_POST['unid'.$i]), $posx, $posy, intval($_POST['id'.$i]), $_SESSION['user']->getUID());
 
 		if (count($unids) > 0)
-			$created = lib_bl_troops_createTroop($_SESSION['user']->getUID(), $posx, $posy, $unids, $lang['trooppre']);
+			$created = bl\troops\createTroop($_SESSION['user']->getUID(), $posx, $posy, $unids, $lang['trooppre']);
 	}
 
 	$unitSmarty->assign('create_troop', $lang['create_troop']);
@@ -33,13 +33,13 @@ if ($_GET['mode'] == 'create')
 		$unitSmarty->assign('troopCreated', $lang['troop_created']);
 
 	$unitSmarty->assign('create', $lang['create']);
-	$pos = lib_bl_troops_getPos($_SESSION['user']->getUID(), 'units');
+	$pos = bl\troops\getPosition($_SESSION['user']->getUID(), 'units');
 	if ($pos)
 	{
 		$position_list = array();
 		foreach ($pos as $part)
 		{
-			$atpos = lib_bl_troops_getAtPos($_SESSION['user']->getUID(), $part['x'], $part['y'], 'units');
+			$atpos = bl\troops\getAtPosition($_SESSION['user']->getUID(), $part['x'], $part['y'], 'units');
 			$unit_list = array();
 			foreach ($atpos as $atpos_part)
 			{
@@ -68,12 +68,12 @@ if ($_GET['mode'] == 'create')
 elseif ($_GET['mode'] == 'edit')
 {
 	if ($_POST['change'])
-		lib_bl_troops_rename($_GET['tid'], $_POST['tname']);
+		bl\troops\rename($_GET['tid'], $_POST['tname']);
 
-	$troop = lib_bl_troops_getTroop($_GET['tid']);
+	$troop = bl\troops\getTroop($_GET['tid']);
 	if (!$_GET['do'])
 	{
-		$troopunits = lib_bl_troops_getTroopUnits(intval($_GET['tid']));
+		$troopunits = bl\troops\getTroopUnits(intval($_GET['tid']));
 		$unitSmarty->assign('editTroop', sprintf($lang['edittroop'], $troop['name']));
 		$unit_list = array();
 		$sum = 0;
@@ -103,12 +103,12 @@ elseif ($_GET['mode'] == 'edit')
 		{
 			for ($i = 0; $i < intval($_POST['count']); $i++)
 				if ($_POST['amount'.$i] > 0)
-					$unids[$i] = lib_bl_troops_checkComplete(intval($_POST['unid'.$i]), $troop['pos_x'], $troop['pos_y'], intval($_POST['amount'.$i]), $_SESSION['user']->getUID());
+					$unids[$i] = bl\troops\checkComplete(intval($_POST['unid'.$i]), $troop['pos_x'], $troop['pos_y'], intval($_POST['amount'.$i]), $_SESSION['user']->getUID());
 
-			$added = lib_bl_troops_addNewUnits($unids, $_GET['tid']);
+			$added = bl\troops\addNewUnits($unids, $_GET['tid']);
 		}
 
-		$atpos = lib_bl_troops_getAtPos($_SESSION['user']->getUID(), $troop['pos_x'], $troop['pos_y'], 'units');
+		$atpos = bl\troops\getAtPosition($_SESSION['user']->getUID(), $troop['pos_x'], $troop['pos_y'], 'units');
 		$unitSmarty->assign('heading', sprintf($lang['addto'], $troop['name']));
 
 		if (is_array($atpos))
@@ -143,17 +143,17 @@ $GLOBALS['firePHP']->log($_POST);
 		{
 			for ($i = 0; $i < intval($_POST['count']); $i++)
 				if ($_POST['amount'.$i] > 0)
-					$unids[$i] = lib_bl_troops_checkComplete(intval($_POST['unid'.$i]), $troop['pos_x'], $troop['pos_y'], intval($_POST['amount'.$i]), $_SESSION['user']->getUID());
+					$unids[$i] = bl\troops\checkComplete(intval($_POST['unid'.$i]), $troop['pos_x'], $troop['pos_y'], intval($_POST['amount'.$i]), $_SESSION['user']->getUID());
 
 			$removed = true;
 			foreach ($unids as $unid)
 			{
-				$r = lib_bl_troops_removeFromTroop($unid);
+				$r = bl\troops\removeFromTroop($unid);
 				if (!$r)
 					$removed = false;
 			}
 		}
-		$troopunits = lib_bl_troops_getTroopUnits($_GET['tid']);
+		$troopunits = bl\troops\getTroopUnits($_GET['tid']);
 		$unitSmarty->assign('heading', sprintf($lang['removefrom'], $troop['name']));
 
 		if (is_array($troopunits))
@@ -187,8 +187,8 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 	if ($_GET['mode'] == 'goback')
 	{
 		$cityexp = explode(':', $city);
-		$load = lib_bl_troops_loaded($_GET['tid']);
-		lib_bl_troops_sendTroop(intval($_GET['tid']), $cityexp[0], $cityexp[1], 5, $load['res'], $load['amount']);
+		$load = bl\troops\loaded($_GET['tid']);
+		bl\troops\sendTroop(intval($_GET['tid']), $cityexp[0], $cityexp[1], 5, $load['res'], $load['amount']);
 		$unitSmarty->assign('sent', 1);
 		$unitSmarty->assign('textSent', sprintf($lang['sentBack'], $city));
 	}
@@ -197,18 +197,18 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 	{
 		$errors = array();
 		$cityexp = explode(':', $city);
-		$value = lib_bl_troops_checkTarget($_POST['tx'], $_POST['ty']);
+		$value = bl\troops\checkTarget($_POST['tx'], $_POST['ty']);
 		if ($value)
 		{
-			$inClan = lib_bl_troops_checkTargetClan($value, $_SESSION['user']->getCID(), $_POST['movekind']);
+			$inClan = bl\troops\checkTargetClan($value, $_SESSION['user']->getCID(), $_POST['movekind']);
 			if (!$inClan)
 			{
-				$capCheck = lib_bl_troops_checkCap(round($_POST['rescount']), $_GET['tid']);
+				$capCheck = bl\troops\checkCapacity(round($_POST['rescount']), $_GET['tid']);
 				if ($capCheck)
 				{
 					if ($_POST['movekind'] == 2)
-						lib_bl_resource_addToResources($_POST['resselect'], $_POST['rescount']*-1, $cityexp[0], $cityexp[1]);
-					lib_bl_troops_sendTroop($_GET['tid'], $_POST['tx'], $_POST['ty'], $_POST['movekind'], $_POST['resselect'], round($_POST['rescount']));
+						bl\resource\addToResources($_POST['resselect'], $_POST['rescount']*-1, $cityexp[0], $cityexp[1]);
+					bl\troops\sendTroop($_GET['tid'], $_POST['tx'], $_POST['ty'], $_POST['movekind'], $_POST['resselect'], round($_POST['rescount']));
 					$unitSmarty->assign('sent', 1);
 					$unitSmarty->assign('textSent', $lang['sent']);
 				}
@@ -221,9 +221,9 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 		else
 			$errors['noTarget'] = 1;
 	}
-	$troop = lib_bl_troops_getTroop(intval($_GET['tid']));
+	$troop = bl\troops\getTroop(intval($_GET['tid']));
 	$GLOBALS['firePHP']->log($troop, 'units_move.php->troop');
-	$troopUnits = lib_bl_troops_getTroopUnits(intval($troop['tid']));
+	$troopUnits = bl\troops\getTroopUnits(intval($troop['tid']));
 	$GLOBALS['firePHP']->log($troopUnits, 'units_move.php->troopUnits');
 	$unitSmarty->assign('troop', $troop);
 	$unitList = array();
@@ -245,8 +245,8 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 	$unitSmarty->assign('sum', util\math\numberFormat($sum, 0));
 	$unitSmarty->assign('textCapacity', $lang['cap']);
 	$unitSmarty->assign('maxCapacity', array(
-		'plain' => lib_bl_troops_maxCapacity(intval($troop['tid']), false),
-		'formatted' => lib_bl_troops_maxCapacity(intval($troop['tid']))
+		'plain' => bl\troops\maxCapacity(intval($troop['tid']), false),
+		'formatted' => bl\troops\maxCapacity(intval($troop['tid']))
 	));
 	$unitSmarty->assign('textMoveOptions', $lang['moveoptions']);
 	$unitSmarty->assign('textPosition', $lang['position']);
@@ -258,7 +258,7 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 		'attack' => $lang['attack'],
 		'robbery' => $lang['robbery'],
 	));
-	$unitSmarty->assign('canAttack', lib_bl_troops_checkCanAttack());
+	$unitSmarty->assign('canAttack', bl\troops\checkCanAttack());
 	$unitSmarty->assign('ressources', array(
 		'food' => $lang['food'],
 		'wood' => $lang['wood'],
@@ -282,11 +282,11 @@ else
 	$unitSmarty->assign('textTroops', $lang['troops']);
 
 	if ($_GET['do'] == 'disband')
-		lib_bl_troops_deleteTroop($_GET['tid'], $_SESSION['user']->getUID());
+		bl\troops\deleteTroop($_GET['tid'], $_SESSION['user']->getUID());
 	elseif ($_GET['do'] == 'unload')
-		$unloaded = lib_bl_troops_unload($_GET['tid'], $_SESSION['user']->getUID(), $lang['lang']);
+		$unloaded = bl\troops\unload($_GET['tid'], $_SESSION['user']->getUID(), $lang['lang']);
 
-	$pos = lib_bl_troops_getPos($_SESSION['user']->getUID());
+	$pos = bl\troops\getPosition($_SESSION['user']->getUID());
 	if (count($pos) > 0)
 	{
 		$unitSmarty->assign('textOnMoving', $lang['onmoving']);
@@ -300,18 +300,18 @@ else
 		$positionList = array();
 		foreach ($pos as $part)
 		{
-			$atpos = lib_bl_troops_getAtPos($_SESSION['user']->getUID(), $part['x'], $part['y']);
+			$atpos = bl\troops\getAtPosition($_SESSION['user']->getUID(), $part['x'], $part['y']);
 			$troopList = array();
 			foreach ($atpos as $atpos_part)
 			{
-				$onmoving = lib_bl_troops_checkTroop($atpos_part['tid']);
+				$onmoving = bl\troops\checkTroop($atpos_part['tid']);
 				$troopList[] = array(
 					'tid' => $atpos_part['tid'],
 					'onMoving' => $onmoving,
 					'name' => $atpos_part['name'],
 					'res' => $atpos_part['res'],
 					'loaded' => sprintf($lang['loaded'], $atpos_part['amount'], $lang[$atpos_part['res']]),
-					'count' => lib_bl_troops_countTroopUnits($atpos_part['tid']),
+					'count' => bl\troops\countTroopUnits($atpos_part['tid']),
 					'atHome' => ($part['x'].':'.$part['y'] != $city ? 0 : 1),
 				);
 			}

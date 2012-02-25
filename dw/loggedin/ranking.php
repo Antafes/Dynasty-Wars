@@ -2,7 +2,7 @@
 include('loggedin/header.php');
 include('lib/bl/ranking.inc.php');
 
-lib_bl_general_loadLanguageFile('ranking');
+bl\general\loadLanguageFile('ranking');
 $smarty->assign('lang', $lang);
 
 $rank_tab = $_GET['rank_tab'];
@@ -14,7 +14,7 @@ $smarty->assign('link_clans', '<a href="index.php?chose=ranking&amp;rank_tab=2">
 
 if (($rank_tab == 1) || (!$rank_tab))
 {
-	$rankerg1 = lib_bl_ranking_getUserRanking();
+	$rankerg1 = bl\ranking\getUserRanking();
 	$smarty->assign('rank_list',$rankerg1);
 }
 elseif ($rank_tab == 2)

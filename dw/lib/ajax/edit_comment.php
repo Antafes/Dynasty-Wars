@@ -14,7 +14,7 @@ if ($con)
 	include_once('../dal/tribunal.php');
 	include_once('../bl/tribunal.php');
 
-	$parser = new wikiparser();
+	$parser = new bl\wikiParser\WikiParser();
 
 	$item_list = json_decode($_GET['items']);
 	$new_item_list = array();
@@ -22,15 +22,15 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	lib_bl_tribunal_editComment($item_list['ajax_id'], $item_list['comment_text'], $_SESSION['user']->getUID());
-	$comment = lib_bl_tribunal_getComment($item_list['ajax_id']);
+	bl\tribunal\editComment($item_list['ajax_id'], $item_list['comment_text'], $_SESSION['user']->getUID());
+	$comment = bl\tribunal\getComment($item_list['ajax_id']);
 
 	$array['status'] = 'ok';
 	$array['html'] = '<div class="comment_content">
@@ -42,7 +42,7 @@ if ($con)
 		$changed_count = $comment['changed_count'];
 	$array['html'] .= '
 		<div class="comment_changed">
-			'.htmlentities(sprintf($lang['last_changed'], $changed_count, lib_bl_general_uid2nick($comment['last_changed_from']), date($lang['acptimeformat'], $comment['date_last_changed']))).'
+			'.htmlentities(sprintf($lang['last_changed'], $changed_count, bl\general\uid2nick($comment['last_changed_from']), date($lang['acptimeformat'], $comment['date_last_changed']))).'
 		</div>';
 
 	foreach ($array as &$part)

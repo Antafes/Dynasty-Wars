@@ -1,6 +1,6 @@
 <?php
 include('loggedin/header.php');
-lib_bl_general_loadLanguageFile('clan');
+bl\general\loadLanguageFile('clan');
 
 unset($foundation);
 //requesting of get and post variables
@@ -114,8 +114,8 @@ else //search for clans
 
 			if ($cid && $_SESSION['user']->setCID($cid) && $_SESSION['user']->setRankID(1))
 			{
-				lib_bl_log_saveLog(2, $_SESSION['user']->getUID(), 0, '');
-				lib_bl_general_redirect('index.php?chose=clan&cid='.$cid.'');
+				bl\log\saveLog(2, $_SESSION['user']->getUID(), 0, '');
+				bl\general\redirect('index.php?chose=clan&cid='.$cid.'');
 			}
 		}
 	}

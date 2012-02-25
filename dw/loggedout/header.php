@@ -1,8 +1,8 @@
 <?php
 ob_start();
-$lang['lang'] = lib_bl_general_getLanguage();
-lib_bl_general_loadLanguageFile('main', 'loggedout');
-lib_bl_general_loadLanguageFile('general', null);
+$lang['lang'] = bl\general\getLanguage();
+bl\general\loadLanguageFile('main', 'loggedout');
+bl\general\loadLanguageFile('general', null);
 $gameOptions = util\mysql\query('SELECT board, show_board, adminmail, version FROM dw_game');
 
 $smarty->assign('logo_image', 'pictures/logo.png');

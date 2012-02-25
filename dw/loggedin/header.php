@@ -6,12 +6,12 @@ if ($_POST['citychange'])
 	if ($_SESSION['lid'])
 	{
 		$_SESSION["city"] = $_POST['citychange'];
-		lib_bl_general_redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
+		bl\general\redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 	elseif ($_COOKIE['lid'])
 	{
 		setcookie("city", $_POST['citychange'], time()-604800, "", ".dynasty-wars.de");
-		lib_bl_general_redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
+		bl\general\redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 }
 if ($_SESSION["lid"]) {
@@ -22,14 +22,14 @@ if ($_SESSION["lid"]) {
 	$lang['lang'] = $_COOKIE['language'];
 }
 //selection of the user informations
-$nick = lib_bl_general_uid2nick($_SESSION['user']->getUID());
-$admin = lib_bl_general_getGameRank($_SESSION['user']->getUID());
+$nick = bl\general\uid2nick($_SESSION['user']->getUID());
+$admin = bl\general\getGameRank($_SESSION['user']->getUID());
 //language
 if (!$lang['lang'])
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
+	$lang['lang'] = bl\general\getLanguage($_SESSION['user']->getUID());
 
-lib_bl_general_loadLanguageFile('main');
-lib_bl_general_loadLanguageFile('general', null);
+bl\general\loadLanguageFile('main');
+bl\general\loadLanguageFile('general', null);
 
 $smarty->assign('userInfos', array(
 	'city' => $city,
@@ -46,12 +46,12 @@ if ($_GET['chose'] == 'buildings')
 	include('lib/bl/buildings.inc.php');
 //check for running build
 	if ($_GET['chose'] == 'buildings' && !$_GET['buildplace'])
-		$is_building = lib_bl_buildings_checkBuild($_SESSION['user']->getUID(), $city);
+		$is_building = bl\buildings\checkBuild($_SESSION['user']->getUID(), $city);
 }
 elseif ($_GET['chose'] == 'units')
 {
 	include('lib/bl/unit.inc.php');
-	$train_check = lib_bl_unit_train_checkTraining($_SESSION['user']->getUID(), $city);
+	$train_check = bl\unit\train\checkTraining($_SESSION['user']->getUID(), $city);
 }
 //new messages
 $sql = '
@@ -83,7 +83,7 @@ elseif ($_GET['chose'] == 'tribunal')
 	$smarty->assign('tribunalAjaxJS', '<script language="javascript" type="text/javascript" src="lib/js/tribunal_ajax.js"></script>');
 
 //actualising the ressources
-$res_buildings = lib_bl_resource_getResourceBuildings($city);
+$res_buildings = bl\resource\getResourceBuildings($city);
 if ($res_buildings)
 {
 	foreach ($res_buildings as $res_building)
@@ -122,19 +122,19 @@ if ($res_buildings)
 	if (!$tradepost)
 		$tradepost = 0;
 }
-$max_storage = lib_bl_general_getMaxStorage($city);
-$ressources = lib_bl_resource_newRes($ricefield, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
+$max_storage = bl\general\getMaxStorage($city);
+$ressources = bl\resource\newResources($ricefield, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
 $food = $ressources['food'];
 $wood = $ressources['wood'];
 $rock = $ressources['rock'];
 $iron = $ressources['iron'];
 $paper = $ressources['paper'];
 $koku = $ressources['koku'];
-$troops_moving = lib_bl_troops_checkMoving($_SESSION['user']->getUID());
-$tids = lib_bl_troops_checkTroops($_SESSION['user']->getUID());
+$troops_moving = bl\troops\checkMoving($_SESSION['user']->getUID());
+$tids = bl\troops\checkTroops($_SESSION['user']->getUID());
 $bodyonload = sprintf('r(%d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f);'."\n", $food, $wood, $rock, $iron, $paper, $koku,
-	lib_bl_resource_income(1, 's', $ricefield, $city), lib_bl_resource_income(2, 's', $lumberjack, $city), lib_bl_resource_income(3, 's', $quarry, $city),
-	lib_bl_resource_income(4, 's', $ironmine, $city), lib_bl_resource_income(5, 's', $papermill, $city), lib_bl_resource_income(6, 's', $tradepost, $city),
+	bl\resource\income(1, 's', $ricefield, $city), bl\resource\income(2, 's', $lumberjack, $city), bl\resource\income(3, 's', $quarry, $city),
+	bl\resource\income(4, 's', $ironmine, $city), bl\resource\income(5, 's', $papermill, $city), bl\resource\income(6, 's', $tradepost, $city),
 	$max_storage
 );
 if ($is_building)
@@ -147,7 +147,7 @@ elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving &&
 {
 	foreach ($tids as $tid)
 	{
-		$troop = lib_bl_troops_checkTroop($tid);
+		$troop = bl\troops\checkTroop($tid);
 		$bodyonload .= sprintf('timer(%u, %u);'."\n", $troop['end_datetime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $tid);
 	}
 }
@@ -167,7 +167,7 @@ $smarty->assign('cities', $cities);
 foreach ($cities as &$cities_part)
 	$cities_part['city'] = htmlentities ($cities_part['city']);
 
-$menuEntries = lib_bl_gameOptions_getAllMenuEntries();
+$menuEntries = bl\gameOptions\getAllMenuEntries();
 $block_entry = $menuEntries[count($menuEntries)-3];
 $block = 1;
 
@@ -233,7 +233,7 @@ if ($own_uid || $_SESSION['user']->getGameRank())
 	$special_line = '<div class="add_info">';
 	if ($own_uid)
 	{
-		$own_nick = lib_bl_general_uid2nick($own_uid);
+		$own_nick = bl\general\uid2nick($own_uid);
 		$special_line .= htmlentities($own_nick).' eingeloggt als '.htmlentities($nick).'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
 	}
 	if ($_SESSION['user']->getGameRank() >= 1)

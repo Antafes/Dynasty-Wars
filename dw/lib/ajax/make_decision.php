@@ -14,7 +14,7 @@ if ($con)
 	include_once('../dal/tribunal.php');
 	include_once('../bl/tribunal.php');
 
-	$parser = new wikiparser();
+	$parser = new bl\wikiParser\WikiParser();
 
 	$item_list = json_decode($_GET['items']);
 	$new_item_list = array();
@@ -22,17 +22,17 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	$result = lib_bl_tribunal_makeDecision($item_list['ajax_id'], $item_list['decision'], $item_list['reason']);
+	$result = bl\tribunal\makeDecision($item_list['ajax_id'], $item_list['decision'], $item_list['reason']);
 	if ($result > 0)
 	{
-		$hearing = lib_bl_tribunal_getHearing($item_list['ajax_id']);
+		$hearing = bl\tribunal\getHearing($item_list['ajax_id']);
 		$html = '
 			<div class="row">
 				<div class="left">

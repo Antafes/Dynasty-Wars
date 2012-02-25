@@ -1,14 +1,14 @@
 <?php
 include('loggedout/header.php');
-lib_bl_general_loadLanguageFile('del_user', 'rest');
+bl\general\loadLanguageFile('del_user', 'rest');
 
 $smarty->assign('lang', $lang);
 
 $uid = $_GET['uid'];
 if ($uid)
 {
-	lib_bl_log_saveLog(23, $uid, '', '');
-	lib_bl_general_deactivateUser((int)$uid, 1);
+	bl\log\saveLog(23, $uid, '', '');
+	bl\general\deactivateUser((int)$uid, 1);
 }
 include('loggedout/footer.php');
 

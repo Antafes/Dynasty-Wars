@@ -10,21 +10,21 @@ $count = $_POST['count'];
 
 if ($build && $unit && $count)
 {
-	$train = lib_bl_unit_train_train($unit, $count, $_SESSION['user']->getUID(), $city);
-	$ressources = lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
+	$train = bl\unit\train\train($unit, $count, $_SESSION['user']->getUID(), $city);
+	$ressources = bl\resource\newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
 	$food = $ressources['food'];
 	$wood = $ressources['wood'];
 	$rock = $ressources['rock'];
 	$iron = $ressources['iron'];
 	$paper = $ressources['paper'];
 	$koku = $ressources['koku'];
-	$train_check = lib_bl_unit_train_checkTraining($_SESSION['user']->getUID(), $city);
+	$train_check = bl\unit\train\checkTraining($_SESSION['user']->getUID(), $city);
 }
 
 if ($train_check['ok'] && $build)
-	lib_bl_general_redirect ('index.php?chose=units');
+	bl\general\redirect ('index.php?chose=units');
 
-$buildings = lib_bl_unit_train_checkBuildings($city);
+$buildings = bl\unit\train\checkBuildings($city);
 $check = count($buildings);
 $unitSmarty->assign('check', $check);
 $unitSmarty->assign('unitBuild', $lang['unitbuild']);
@@ -107,7 +107,7 @@ else
 		),
 	);
 
-	$cap = lib_bl_troops_getCaps();
+	$cap = bl\troops\getCapacities();
 	$unitSmarty->assign('trainCheck', $train_check);
 	$unitSmarty->assign('build', $lang['build']);
 	$unitSmarty->assign('buildTime', $lang['time']);
@@ -127,7 +127,7 @@ else
 		$building = $buildings[$currentUnit['building']];
 		if ($building['bid'] && $building['ulvl'] >= $currentUnit['ulvl'])
 		{
-			$unit = lib_bl_unit_getUnits($unitKind, $_SESSION['user']->getUID());
+			$unit = bl\unit\getUnits($unitKind, $_SESSION['user']->getUID());
 			if ($unit)
 			{
 				unset($count);
@@ -137,9 +137,9 @@ else
 			else
 				$count = 0;
 
-			$prices = lib_bl_unit_train_unitPrices($unitKind);
-			$check = lib_bl_buildings_resCheck($food, $wood, $rock, $iron, $paper, $koku, $prices['food'], $prices['wood'], $prices['rock'], $prices['iron'], $prices['paper'], $prices['koku']);
-			$picture = lib_bl_unit_train_getUnitPicture($unitKind);
+			$prices = bl\unit\train\unitPrices($unitKind);
+			$check = bl\buildings\resourceCheck($food, $wood, $rock, $iron, $paper, $koku, $prices['food'], $prices['wood'], $prices['rock'], $prices['iron'], $prices['paper'], $prices['koku']);
+			$picture = bl\unit\train\getUnitPicture($unitKind);
 
 			$unitList[] = array(
 				'kind' => $unitKind,
@@ -148,9 +148,9 @@ else
 				'picture' => $picture,
 				'description' => $lang['u_descr'][$unitKind],
 				'price' => $prices,
-				'maxBuildable' => lib_bl_unit_train_maxUnits($unitKind, $city),
+				'maxBuildable' => bl\unit\train\maxUnits($unitKind, $city),
 				'check' => $check,
-				'buildTime' => lib_bl_general_formatTime(lib_bl_unit_train_trainTime($unitKind), 'h:m:s'),
+				'buildTime' => bl\general\formatTime(bl\unit\train\trainTime($unitKind), 'h:m:s'),
 				'capacity' => number_format($cap[$unitKind], 0, $lang['decimals'], $lang['thousands']),
 			);
 		}

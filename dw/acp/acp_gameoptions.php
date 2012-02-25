@@ -1,7 +1,7 @@
 <?php
 include('lib/bl/gameoptions.inc.php');
 
-lib_bl_general_loadLanguageFile('gameoptions', 'acp');
+bl\general\loadLanguageFile('gameoptions', 'acp');
 $smarty->assign('lang', $lang);
 
 if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
@@ -18,17 +18,17 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		{
 			if ($_POST['login_closed'] == 0)
 			{
-				lib_bl_log_saveLog(17, $_SESSION['user']->getUID(), 0, '');
+				bl\log\saveLog(17, $_SESSION['user']->getUID(), 0, '');
 				$message = $lang['loginUnblocked'];
 			}
 			elseif ($_POST['login_closed'] == 1)
 			{
-				lib_bl_log_saveLog(16, $_SESSION['user']->getUID(), 0, '');
+				bl\log\saveLog(16, $_SESSION['user']->getUID(), 0, '');
 				$message = $lang['loginAdminOnly'];
 			}
 			elseif ($_POST['login_closed'] == 2)
 			{
-				lib_bl_log_saveLog(15, $_SESSION['user']->getUID(), 0, '');
+				bl\log\saveLog(15, $_SESSION['user']->getUID(), 0, '');
 				$message = $lang['loginBlocked'];
 			}
 		}
@@ -45,12 +45,12 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		{
 			if ($_POST['reg_closed'] == 0)
 			{
-				lib_bl_log_saveLog(18, $_SESSION['user']->getUID(), 0, '', $con);
+				bl\log\saveLog(18, $_SESSION['user']->getUID(), 0, '', $con);
 				$message = $lang['registrationUnblocked'];
 			}
 			elseif ($_POST['reg_closed'] == 1)
 			{
-				lib_bl_log_saveLog(19, $_SESSION['user']->getUID(), 0, '', $con);
+				bl\log\saveLog(19, $_SESSION['user']->getUID(), 0, '', $con);
 				$message = $lang['registrationBlocked'];
 			}
 		}
@@ -113,7 +113,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		util\mysql\query($sql);
 
 		$message = $lang['resetGame'];
-		lib_bl_log_saveLog(20, $_SESSION['user']->getUID(), '', '');
+		bl\log\saveLog(20, $_SESSION['user']->getUID(), '', '');
 	}
 	//changing of the board adress
 	if ($_POST['board'])
@@ -125,7 +125,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		';
 		if (util\mysql\query($sql))
 		{
-			lib_bl_log_saveLog(27, $_SESSION['user']->getUID(), '', $_POST['board']);
+			bl\log\saveLog(27, $_SESSION['user']->getUID(), '', $_POST['board']);
 			$message = sprintf($lang['changedBoardAddress'], $_POST['board']);
 		}
 	}
@@ -139,7 +139,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		';
 		if (util\mysql\query($sql))
 		{
-			lib_bl_log_saveLog(28, $_SESSION['user']->getUID(), '', $new_error_report);
+			bl\log\saveLog(28, $_SESSION['user']->getUID(), '', $new_error_report);
 			$message = $lang['changedErrorReporting'];
 		}
 	}
@@ -154,12 +154,12 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 
 		if ($_POST['unitCosts'])
 		{
-			lib_bl_log_saveLog(29, $_SESSION['user']->getUID(), '', '');
+			bl\log\saveLog(29, $_SESSION['user']->getUID(), '', '');
 			$message = $lang['enabledUnitCosts'];
 		}
 		else
 		{
-			lib_bl_log_saveLog(30, $_SESSION['user']->getUID(), '', '');
+			bl\log\saveLog(30, $_SESSION['user']->getUID(), '', '');
 			$message = $lang['disabledUnitCosts'];
 		}
 	}
@@ -174,12 +174,12 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 
 		if ($_POST['canAttack'])
 		{
-			lib_bl_log_saveLog(31, $_SESSION['user']->getUID(), '', '');
+			bl\log\saveLog(31, $_SESSION['user']->getUID(), '', '');
 			$message = $lang['enabledAttacking'];
 		}
 		else
 		{
-			lib_bl_log_saveLog(32, $_SESSION['user']->getUID(), '', '');
+			bl\log\saveLog(32, $_SESSION['user']->getUID(), '', '');
 			$message = $lang['disabledAttacking'];
 		}
 	}
@@ -192,7 +192,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		';
 		if (util\mysql\query($sql))
 		{
-			lib_bl_log_saveLog(33, $_SESSION['user']->getUID(), '', $_POST['version']);
+			bl\log\saveLog(33, $_SESSION['user']->getUID(), '', $_POST['version']);
 			$message = $lang['changedVersion'];
 		}
 	}
@@ -201,18 +201,18 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		$smarty->assign('message', $message);
 
 	//selection of the gameoptions
-	$smarty->assign('gameOptions', lib_bl_gameOptions_getGameOptions());
+	$smarty->assign('gameOptions', bl\gameOptions\getGameOptions());
 }
 elseif ($_GET['gameOptionsSub'] == 'menu')
 {
 	if ($_POST['sort'] || $_POST['entries'])
 	{
-		lib_bl_gameOptions_setAllMenuEntries($_POST['entries'], $_POST['sort'], $_POST['visible']);
-		lib_bl_log_saveLog(34, $_SESSION['user']->getUID(), '', '');
-		lib_bl_general_redirect('index.php?chose=acp&sub=gameoptions&gameOptionsSub=menu');
+		bl\gameOptions\setAllMenuEntries($_POST['entries'], $_POST['sort'], $_POST['visible']);
+		bl\log\saveLog(34, $_SESSION['user']->getUID(), '', '');
+		bl\general\redirect('index.php?chose=acp&sub=gameoptions&gameOptionsSub=menu');
 	}
 
-	$acpMenuEntries = lib_bl_gameOptions_getAllMenuEntries(false);
+	$acpMenuEntries = bl\gameOptions\getAllMenuEntries(false);
 	$count = count($acpMenuEntries) - 3;
 	$sortingArray = array_combine(range(2, $count), range(2, $count));
 	$smarty->assign('menuEntries', $acpMenuEntries);

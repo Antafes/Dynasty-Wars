@@ -53,7 +53,7 @@ function getTroop($tid)
  * @param int $kind
  * @return array
  */
-function getPos($uid, $kind)
+function getPosition($uid, $kind)
 {
 	$sql = 'SELECT DISTINCT pos_x, pos_y FROM dw_'.$kind.' WHERE uid = '.$uid;
 	if ($kind == 'units')
@@ -67,12 +67,12 @@ function getPos($uid, $kind)
  * @param int $uid
  * @param int $posx
  * @param int $posy
- * @param int $kind (troops, units)
- * @param bool $get_all
- * @param String order_by
+ * @param String $kind (troops, units)
+ * @param bool $getAll
+ * @param String $order_by
  * @return array
  */
-function getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
+function getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy)
 {
 	if ($kind == 'troops')
 	{
@@ -100,8 +100,8 @@ function getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
 			WHERE pos_x = '.$posx.'
 				AND pos_y = '.$posy.'
 				AND uid = '.mysql_real_escape_string($uid).'
-				'.(!$get_all ? 'AND NOT tid' : '').'
-			ORDER BY '.$order_by.'
+				'.(!$getAll ? 'AND NOT tid' : '').'
+			ORDER BY '.$orderBy.'
 		';
 	}
 	return util\mysql\query($sql, true);
@@ -111,16 +111,17 @@ function getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by)
  * get the units that are in this troop
  * @author Neithan
  * @param int $tid
+ * @param String $orderBy
  * @return array
  */
-function getTroopUnits($tid, $order_by)
+function getTroopUnits($tid, $orderBy)
 {
 	$sql = '
 		SELECT * FROM dw_units
 		WHERE tid = '.mysql_real_escape_string($tid).'
 	';
-	if($order_by)
-		$sql .= 'ORDER BY '.$order_by;
+	if($orderBy)
+		$sql .= 'ORDER BY '.$orderBy;
 	$GLOBALS['firePHP']->log($sql, 'getTroopUnits->query');
 	return util\mysql\query($sql, true);
 }

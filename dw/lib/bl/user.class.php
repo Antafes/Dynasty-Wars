@@ -1,4 +1,5 @@
 <?php
+namespace bl\user;
 
 /**
  * Description of UserCls

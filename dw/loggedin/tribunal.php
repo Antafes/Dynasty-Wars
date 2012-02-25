@@ -2,16 +2,16 @@
 include('lib/bl/tribunal.inc.php');
 include('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('tribunal');
+bl\general\loadLanguageFile('tribunal');
 $smarty->assign('lang', $lang);
 
-$parser = new wikiparser;
+$parser = new bl\wikiParser\WikiParser;
 
 if ($_GET['sub'] == 'hearings' || !$_GET['sub'])
 {
 	if (!$_GET['id'])
 	{
-		$hearings = lib_bl_tribunal_getAllHearings();
+		$hearings = bl\tribunal\getAllHearings();
 		$smarty->assign('hearings', ($hearings ? $hearings : array()));
 		$smarty->assign('hearingsCount', count($hearings));
 	}
@@ -21,17 +21,17 @@ if ($_GET['sub'] == 'hearings' || !$_GET['sub'])
 		{
 			if ($_GET['action'] == 'recall')
 			{
-				lib_bl_tribunal_recallHearing($_GET['id'], $_SESSION['user']->getUID());
+				bl\tribunal\recallHearing($_GET['id'], $_SESSION['user']->getUID());
 				if ($_SESSION['user']->getGameRank() >= 1)
 				{
-					$h = lib_bl_tribunal_getHearing($_GET['id']);
-					lib_bl_log_saveLog(25, $_SESSION['user']->getUID(), $h['suitor'], $_GET['id']);
+					$h = bl\tribunal\getHearing($_GET['id']);
+					bl\log\saveLog(25, $_SESSION['user']->getUID(), $h['suitor'], $_GET['id']);
 				}
-				lib_bl_general_redirect('index.php?chose=tribunal&sub=hearings');
+				bl\general\redirect('index.php?chose=tribunal&sub=hearings');
 			}
 		}
 
-		$smarty->assign('hearing', lib_bl_tribunal_getHearing($_GET['id']));
+		$smarty->assign('hearing', bl\tribunal\getHearing($_GET['id']));
 		$smarty->assign('commentReadyScript', util\html\createReadyScript('showCommentList("comments", '.$_GET['id'].')'));
 	}
 }
@@ -39,22 +39,22 @@ elseif ($_GET['sub'] == 'newhearing')
 {
 	if ($_POST['nh_sub'])
 	{
-		$errors = lib_bl_tribunal_insertHearing($_SESSION['user']->getUID(), $_POST['accused'], $_POST['causes'], $_POST['cause_description'], $_POST['arguments']);
+		$errors = bl\tribunal\insertHearing($_SESSION['user']->getUID(), $_POST['accused'], $_POST['causes'], $_POST['cause_description'], $_POST['arguments']);
 
 		if ($errors == false)
-			lib_bl_general_redirect('index.php?chose=tribunal&sub=newhearing&successful=1');
+			bl\general\redirect('index.php?chose=tribunal&sub=newhearing&successful=1');
 		else
 			$smarty->assign('errors', $errors);
 	}
 
-	$smarty->assign('causes', lib_bl_tribunal_getAllCauses($lang['lang']));
-	$smarty->assign('messages', lib_bl_tribunal_getAllMessages($_SESSION['user']->getUID()));
+	$smarty->assign('causes', bl\tribunal\getAllCauses($lang['lang']));
+	$smarty->assign('messages', bl\tribunal\getAllMessages($_SESSION['user']->getUID()));
 }
 elseif($_GET['sub'] == 'rules')
 {
 	if (($_SESSION['user']->getGameRank() == 2 || $_SESSION['user']->getGameRank() == 3) && !$own_uid)
 	{
-		$languages = lib_bl_general_getLanguages(false);
+		$languages = bl\general\getLanguages(false);
 		$langArray = array();
 		foreach ($languages as $language)
 			$langArray[$language['language']] = $language['name'];
@@ -63,7 +63,7 @@ elseif($_GET['sub'] == 'rules')
 
 	if (!$_GET['rules_sub'] || $_GET['rules_sub'] == 'show')
 	{
-		$rules = lib_bl_tribunal_getAllRules($_GET['languages']);
+		$rules = bl\tribunal\getAllRules($_GET['languages']);
 
 		$page = $_GET['page'];
 		if (!$page)
@@ -73,7 +73,7 @@ elseif($_GET['sub'] == 'rules')
 		if (count($rules) > 5)
 		{
 			$pages = ceil(count($rules) / 5);
-			$pagelinks = lib_bl_general_createPageLinks($_GET['chose'], $pages, 'sub=rules&rules_sub=show&languages='.$_GET['languages']);
+			$pagelinks = bl\general\createPageLinks($_GET['chose'], $pages, 'sub=rules&rules_sub=show&languages='.$_GET['languages']);
 		}
 
 		$smarty->assign('rules', $rules);
@@ -87,10 +87,10 @@ elseif($_GET['sub'] == 'rules')
 			switch ($_GET['delete'])
 			{
 				case 'rule':
-					lib_bl_tribunal_deleteRule($_GET['id']);
+					bl\tribunal\deleteRule($_GET['id']);
 					break;
 				case 'clause':
-					lib_bl_tribunal_deleteClause($_GET['id']);
+					bl\tribunal\deleteClause($_GET['id']);
 					break;
 			}
 		}
@@ -114,7 +114,7 @@ elseif($_GET['sub'] == 'rules')
 
 			if ($error['paragraph'] != 1 && $error['title'] != 1 && $error['clause1'] != 1)
 			{
-				lib_bl_tribunal_insertRule(array(
+				bl\tribunal\insertRule(array(
 					'paragraph' => $_POST['paragraph'],
 					'title' => $_POST['title'],
 					'clauses' => $_POST['description'],
@@ -123,7 +123,7 @@ elseif($_GET['sub'] == 'rules')
 			}
 		}
 
-		$rules = lib_bl_tribunal_getAllRules($_GET['languages']);
+		$rules = bl\tribunal\getAllRules($_GET['languages']);
 
 		$page = $_GET['page'];
 		if (!$page)
@@ -133,7 +133,7 @@ elseif($_GET['sub'] == 'rules')
 		if (count($rules) > 10)
 		{
 			$pages = ceil(count($rules) / 10);
-			$pagelinks = lib_bl_general_createPageLinks($_GET['chose'], $pages, 'sub=rules&rules_sub=show&languages='.$_GET['languages']);
+			$pagelinks = bl\general\createPageLinks($_GET['chose'], $pages, 'sub=rules&rules_sub=show&languages='.$_GET['languages']);
 		}
 
 		$smarty->assign('rules', $rules);

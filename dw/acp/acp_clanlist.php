@@ -1,5 +1,5 @@
 <?php
-lib_bl_general_loadLanguageFile('clans', 'acp');
+bl\general\loadLanguageFile('clans', 'acp');
 $smarty->assign('lang', $lang);
 
 if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2)

@@ -14,17 +14,17 @@ if ($con)
 	require_once('../dal/tribunal.php');
 	require_once('../bl/tribunal.php');
 
-	$parser = new wikiparser();
+	$parser = new bl\wikiParser\WikiParser();
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	$comments = lib_bl_tribunal_getComments($_GET['tid']);
-	$hearing = lib_bl_tribunal_getHearing($_GET['tid']);
+	$comments = bl\tribunal\getComments($_GET['tid']);
+	$hearing = bl\tribunal\getHearing($_GET['tid']);
 
 	if (is_array($comments) and count($comments) > 0)
 	{
@@ -33,7 +33,7 @@ if ($con)
 		{
 			$html .= '
 				<div class="comment">
-					'.htmlentities(sprintf($lang['comment_from'], lib_bl_general_uid2nick($comment['writer']))).'
+					'.htmlentities(sprintf($lang['comment_from'], bl\general\uid2nick($comment['writer']))).'
 					<div class="comment_at">'.htmlentities(sprintf($lang['comment_at'], $comment['create_datetime']->format($lang['acptimeformat']))).'</div>
 					<div class="comment_content">
 						'.nl2br($parser->parseIt($comment['comment'])).'
@@ -46,10 +46,10 @@ if ($con)
 					$changed_count = $comment['changed_count'];
 				$html .= '
 					<div class="comment_changed">
-						'.htmlentities(sprintf($lang['last_changed'], $changed_count, lib_bl_general_uid2nick($comment['last_changed_from']), $comment['changed_datetime']->format($lang['acptimeformat']))).'
+						'.htmlentities(sprintf($lang['last_changed'], $changed_count, bl\general\uid2nick($comment['last_changed_from']), $comment['changed_datetime']->format($lang['acptimeformat']))).'
 					</div>';
 			}
-			if ($comment['writer'] == $_SESSION['user']->getUID() || lib_bl_general_getGameRank($_SESSION['user']->getUID()) > 0)
+			if ($comment['writer'] == $_SESSION['user']->getUID() || bl\general\getGameRank($_SESSION['user']->getUID()) > 0)
 			{
 				$html .= '<div class="comment_options">
 					<a href="javascript:;" onclick="editComment(this, \'comment_dialog\', '.$comment['tcoid'].', \'lib/ajax/edit_comment.php\', \''.$lang['save'].'\', \''.$lang['cancel'].'\', 400)">'.htmlentities($lang['edit']).'</a>

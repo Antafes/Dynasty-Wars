@@ -20,7 +20,7 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	lib_bl_tribunal_deleteComment($item_list['tcoid']);
+	bl\tribunal\deleteComment($item_list['tcoid']);
 
 	echo json_encode(array('status' => 'ok'));
 }

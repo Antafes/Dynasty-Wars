@@ -1,10 +1,12 @@
 <?php
+namespace bl\user;
+
 /**
  * get the list of users for the acp user list
  * @author Neithan
  * @return array
  */
-function lib_bl_user_getACPUserList()
+function getACPUserList()
 {
 	return dal\user\getACPUserList();
 }
@@ -15,7 +17,7 @@ function lib_bl_user_getACPUserList()
  * @param String $nick
  * @return bool
  */
-function lib_bl_user_exists($nick)
+function exists($nick)
 {
 	return dal\user\exists($nick) > 0;
 }

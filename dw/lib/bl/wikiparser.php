@@ -1,5 +1,7 @@
 <?php
-class wikiparser {
+namespace bl\wikiParser;
+
+class WikiParser {
 
 	var $preg_replacements;
 

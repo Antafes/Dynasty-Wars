@@ -12,7 +12,7 @@ $sql = '
 		date_read
 	FROM dw_message
 ';
-$messages = lib_util_mysqlQuery($sql, true);
+$messages = util\mysql\query($sql, true);
 
 foreach ($messages as $message)
 {
@@ -22,5 +22,5 @@ foreach ($messages as $message)
 			read_datetime = "'.mysql_real_escape_string($message['date_read'] ? date('Y-m-d H:i:s', $message['date_read']) : 0).'"
 		WHERE msgid = '.mysql_real_escape_string($message['msgid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

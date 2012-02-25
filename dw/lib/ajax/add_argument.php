@@ -24,23 +24,23 @@ if ($con)
 	if (isset($_SESSION['own_uid']) || isset($_COOKIE['own_uid']))
 		$own_uid = true;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
 	$msgid = $item_list['msgid'];
 	if (!$msgid)
 		$msgid = $item_list['msgid_manual'];
 
-	$aid = lib_bl_tribunal_addArgument($item_list['ajax_id'], array($msgid), $_SESSION['user']->getUID());
+	$aid = bl\tribunal\addArgument($item_list['ajax_id'], array($msgid), $_SESSION['user']->getUID());
 	$aid = $aid[0];
 
-	$argument = lib_bl_tribunal_getArgument($aid);
-	$message = lib_bl_messages_getMessage($argument['msgid']);
-	$hearing = lib_bl_tribunal_getHearing($item_list['ajax_id']);
+	$argument = bl\tribunal\getArgument($aid);
+	$message = bl\messages\getMessage($argument['msgid']);
+	$hearing = bl\tribunal\getHearing($item_list['ajax_id']);
 
 	if ($_SESSION['user']->getGameRank() > 1 && $_SESSION['user']->getUID() != $hearing['accused']
 		&& $_SESSION['user']->getUID() != $hearing['suitor'] && !$own_uid)
@@ -58,7 +58,7 @@ if ($con)
 			<div id="argument_'.$argument['aid'].'" class="argument_text">
 				'.nl2br($message['message']).'
 			</div>
-			'.htmlentities(sprintf($lang['added_by'], $argument['added_datetime']->format($lang['acptimeformat']), dal\user\uid2nick($_SESSION['user']->getUID()))).'
+			'.htmlentities(sprintf($lang['added_by'], $argument['added_datetime']->format($lang['acptimeformat']), bl\general\uid2nick($_SESSION['user']->getUID()))).'
 			<br />
 		';
 

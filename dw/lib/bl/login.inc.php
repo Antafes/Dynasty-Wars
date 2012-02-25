@@ -1,5 +1,4 @@
 <?php
-include_once('lib/dal/login.php');
-include_once('lib/dal/user.php');
-include_once('lib/bl/login.php');
-?>
+require_once('lib/dal/login.php');
+require_once('lib/dal/user.php');
+require_once('lib/bl/login.php');

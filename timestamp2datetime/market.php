@@ -11,7 +11,7 @@ $sql = '
 		timestamp
 	FROM dw_market
 ';
-$market_data = lib_util_mysqlQuery($sql, true);
+$market_data = util\mysql\query($sql, true);
 
 foreach ($market_data as $row)
 {
@@ -20,5 +20,5 @@ foreach ($market_data as $row)
 		SET create_datetime = "'.mysql_real_escape_string($row['timestamp'] != 1 ? date('Y-m-d H:i:s', $row['timestamp']) : 0).'"
 		WHERE mid = '.mysql_real_escape_string($row['mid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

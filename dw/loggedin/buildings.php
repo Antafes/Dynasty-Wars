@@ -2,7 +2,7 @@
 include('loggedin/header.php');
 include('lib/bl/buildings.inc.php');
 
-lib_bl_general_loadLanguageFile('building');
+bl\general\loadLanguageFile('building');
 
 $template_file = '';
 
@@ -15,13 +15,13 @@ if (!$_GET['buildplace'])
 		else
 			$upgrade = 0;
 
-		lib_bl_buildings_build((int) $_POST['buildplace'], $_SESSION['user']->getUID(), $city, $upgrade, $_POST['kind']);
-		lib_bl_general_redirect(util\html\createLink(array('chose' => 'buildings'), true));
+		bl\buildings\build((int) $_POST['buildplace'], $_SESSION['user']->getUID(), $city, $upgrade, $_POST['kind']);
+		bl\general\redirect(util\html\createLink(array('chose' => 'buildings'), true));
 	}
 
 	$cityexp = explode(':', $city);
-	$buildings = lib_bl_buildings_selectAll($cityexp[0], $cityexp[1]);
-	$religion = lib_bl_buildings_checkReligion($_SESSION['user']->getUID());
+	$buildings = bl\buildings\selectAll($cityexp[0], $cityexp[1]);
+	$religion = bl\buildings\checkReligion($_SESSION['user']->getUID());
 	$city_position = array(
 		1 => array('top' => 255, 'left' => 278),
 		2 => ($buildings[2]['lvl'] == 0 ? array('top' => 460, 'left' => 384) : array('top' => 410, 'left' => 384)),
@@ -49,12 +49,12 @@ if (!$_GET['buildplace'])
 	$max_buildplaces = 19;
 	if ($religion != 1)
 		$max_buildplaces++;
-	$check_geisha_factory = lib_bl_buildings_checkGeishaFactory($city);
+	$check_geisha_factory = bl\buildings\checkGeishaAndFactory($city);
 	if ($check_geisha_factory['geisha'])
 		$max_buildplaces++;
 	if ($check_geisha_factory['factory'])
 		$max_buildplaces++;
-	$season = lib_bl_general_getSeason();
+	$season = bl\general\getSeason();
 	/*if ($season == 1)
 		$season = 'summer';
 	elseif ($season == 2)
@@ -68,11 +68,11 @@ if (!$_GET['buildplace'])
 	)));
 	$smarty->assign('maxBuildplaces', $max_buildplaces + 1); // + 1 for the loop in smarty
 	$smarty->assign('buildingPositions', $city_position);
-	$smarty->assign('wayPart', lib_bl_buildings_getPic($city, 'way_part'));
+	$smarty->assign('wayPart', bl\buildings\getBuildPlacePicture($city, 'way_part'));
 
 	$building_pictures = array();
 	for ($i = 1; $i <= $max_buildplaces; $i++)
-		$building_pictures[$i] = lib_bl_buildings_getPic($city, $buildings[$i]);
+		$building_pictures[$i] = bl\buildings\getBuildPlacePicture($city, $buildings[$i]);
 	$smarty->assign('buildingPictures', $building_pictures);
 
 	$smarty->assign('isBuilding', $is_building);
@@ -89,20 +89,20 @@ if (!$_GET['buildplace'])
 elseif (is_numeric($_GET['buildplace']))
 {
 	$cityexp = explode(':', $city);
-	$building = lib_bl_buildings_selectBuilding($cityexp[0], $cityexp[1], $_GET['buildplace']);
-	$ressources = lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
+	$building = bl\buildings\selectBuilding($cityexp[0], $cityexp[1], $_GET['buildplace']);
+	$ressources = bl\resource\newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
 
 	if ($building['lvl'] || ($building['lvl'] == 0 && $_GET['buildplace'] < 8))
 	{
-		$has_upgrades = lib_bl_buildings_getUpgradeable($building['kind']);
-		$has_harbour = lib_bl_buildings_getHarbour($cityexp[0], $cityexp[1]);
-		$prices = lib_bl_buildings_prices($building['kind'], $building['lvl'], $building['ulvl'], $has_harbour, $city);
-		$time = lib_bl_buildings_buildTime($building['kind'], $building['lvl']);
+		$has_upgrades = bl\buildings\getUpgradeable($building['kind']);
+		$has_harbour = bl\buildings\getHarbour($cityexp[0], $cityexp[1]);
+		$prices = bl\buildings\prices($building['kind'], $building['lvl'], $has_harbour, $city);
+		$time = bl\buildings\buildTime($building['kind'], $building['lvl']);
 
 		if ($has_upgrades > 0)
-			$u_time = lib_bl_buildings_buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
+			$u_time = bl\buildings\buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
 
-		if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
+		if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
 			$smarty->assign('notBuildable', 1);
 
 		if ($building['kind'] != 6)
@@ -110,7 +110,7 @@ elseif (is_numeric($_GET['buildplace']))
 		elseif ($building['kind'] == 6)
 			$smarty->assign('buildingName', htmlentities($lang['building_names'][$building['kind']][$has_harbour]));
 
-		if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
+		if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
 		{
 			$smarty->assign('levelInfo', htmlentities($lang['level']));
 			$smarty->assign('level', $building['lvl']);
@@ -118,12 +118,12 @@ elseif (is_numeric($_GET['buildplace']))
 
 		$smarty->assign('buildPlace', $_GET['buildplace']);
 
-		if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
+		if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
 		{
 			if ($building['lvl'])
-				$smarty->assign('buildingPicture', lib_bl_buildings_getPic($city, $building));
+				$smarty->assign('buildingPicture', bl\buildings\getBuildPlacePicture($city, $building));
 			elseif ($building['lvl'] == 0 && $_GET['buildplace'] < 8)
-				$smarty->assign('buildingPicture', lib_bl_buildings_getPic($city, $building, 1));
+				$smarty->assign('buildingPicture', bl\buildings\getBuildPlacePicture($city, $building, 1));
 
 			if ($building['kind'] != 6)
 				$smarty->assign('buildingDescription', htmlentities($lang['descr'][$building['kind']]));
@@ -151,21 +151,21 @@ elseif (is_numeric($_GET['buildplace']))
 			if (is_array($prices))
 				$res_values += $prices;
 
-			$can_build = lib_bl_buildings_resCheck($res_values);
+			$can_build = bl\buildings\resourceCheck($res_values);
 			if ($building['kind'] == 19 && $building['lvl'] > 0 && $building['lvl'] % 10 == 0 && $building['lvl'] / 10 >= $building['ulvl'])
 				$can_build = 0;
 
 			$smarty->assign('canBuild', $can_build);
-			$smarty->assign('freeBuildPosition', lib_bl_buildings_checkFreeBuildPosition($city, $building['kind']));
+			$smarty->assign('freeBuildPosition', bl\buildings\checkFreeBuildPosition($city, $building['kind']));
 			$smarty->assign('build', htmlentities($lang['build']));
-			$smarty->assign('buildTime', lib_bl_general_formatTime($time, 'd h:m:s'));
+			$smarty->assign('buildTime', bl\general\formatTime($time, 'd h:m:s'));
 		}
-		elseif (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
+		elseif (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
 			$smarty->assign('notYetBuildable', htmlentities($lang['not_yet_buildable']));
 
 		if ($has_upgrades)
 		{
-			$prices_upgr = $upgrade_prices = lib_bl_buildings_upgradePrices($building['kind'], $building['ulvl'], $building['lvl'], $building['ulvl']);
+			$prices_upgr = $upgrade_prices = bl\buildings\upgradePrices($building['kind'], $building['ulvl'], $building['lvl'], $building['ulvl']);
 
 			if (is_array($upgrade_prices))
 			{
@@ -184,27 +184,27 @@ elseif (is_numeric($_GET['buildplace']))
 				);
 				if (is_array($prices_upgr))
 					$res_values += $prices_upgr;
-				$can_upgrade['resCheck'] = lib_bl_buildings_resCheck($res_values);
-				$can_upgrade['upgradeCheck'] = lib_bl_buildings_checkUpgradeable($building['kind'], $city);
+				$can_upgrade['resCheck'] = bl\buildings\resourceCheck($res_values);
+				$can_upgrade['upgradeCheck'] = bl\buildings\checkUpgradeable($building['kind'], $city);
 				$smarty->assign('canUpgrade', $can_upgrade);
 				$smarty->assign('upgrade', htmlentities($lang['upgrade']));
-				$smarty->assign('upgradeTime', lib_bl_general_formatTime($u_time, 'd h:m:s'));
+				$smarty->assign('upgradeTime', bl\general\formatTime($u_time, 'd h:m:s'));
 			}
 		}
 
 		if ($building['kind'] == 19)
 		{
 			$smarty->assign('showDefenseBuildings', true);
-			$defense = lib_bl_buildings_getDefense($city);
+			$defense = bl\buildings\getDefense($city);
 			$smarty->assign('defense', htmlentities($lang['defense']));
 			$smarty->assign('upgradeLevel', $building['ulvl']);
 
 			if ($building['ulvl'] >= 2)
 			{
 				$smarty->assign('defensePictures', array(
-					'd23' => lib_bl_buildings_getPic($city, $defense[23]),
-					'd24' => lib_bl_buildings_getPic($city, $defense[24]),
-					'd25' => lib_bl_buildings_getPic($city, $defense[25]),
+					'd23' => bl\buildings\getBuildPlacePicture($city, $defense[23]),
+					'd24' => bl\buildings\getBuildPlacePicture($city, $defense[24]),
+					'd25' => bl\buildings\getBuildPlacePicture($city, $defense[25]),
 				));
 			}
 			elseif ($building['ulvl'] < 2)
@@ -217,9 +217,9 @@ elseif (is_numeric($_GET['buildplace']))
 	else
 	{
 		if ($_GET['buildplace'] < 23)
-			$buildables = lib_bl_buildings_getNotBuilt($cityexp[0], $cityexp[1], $_SESSION['user']->getUID());
+			$buildables = bl\buildings\getNotBuilt($cityexp[0], $cityexp[1], $_SESSION['user']->getUID());
 		else
-			$buildables = lib_bl_buildings_getNotBuilt($cityexp[0], $cityexp[1], $_SESSION['user']->getUID(), 1);
+			$buildables = bl\buildings\getNotBuilt($cityexp[0], $cityexp[1], $_SESSION['user']->getUID(), 1);
 		$smarty->assign('buildables', $buildables);
 		$smarty->assign('newBuilding', htmlentities($lang['new_building']));
 
@@ -231,22 +231,22 @@ elseif (is_numeric($_GET['buildplace']))
 
 			foreach ($buildables as $buildable)
 			{
-				if (lib_bl_buildings_checkBuildable($_SESSION['user']->getUID(), $buildable['kind'], $cityexp[0], $cityexp[1]))
+				if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $buildable['kind'], $cityexp[0], $cityexp[1]))
 				{
-					$has_upgrades = lib_bl_buildings_getUpgradeable($buildable['kind']);
+					$has_upgrades = bl\buildings\getUpgradeable($buildable['kind']);
 
 					if (!$has_upgrades || $buildable['ulvl'])
 					{
-						$prices = lib_bl_buildings_prices($buildable['kind'], $buildable['lvl'], $buildable['ulvl'], $has_harbour, $city);
-						$time = lib_bl_buildings_buildTime($buildable['kind'], $buildable['lvl']);
+						$prices = bl\buildings\prices($buildable['kind'], $buildable['lvl'], $has_harbour, $city);
+						$time = bl\buildings\buildTime($buildable['kind'], $buildable['lvl']);
 					}
 					else
 					{
-						$prices = lib_bl_buildings_upgradePrices($buildable['kind'], $buildable['lvl'], $buildable['ulvl'], $has_harbour);
-						$time = lib_bl_buildings_buildTime($buildable['kind'], $buildable['lvl'], 1, $buildable['ulvl']);
+						$prices = bl\buildings\upgradePrices($buildable['kind'], $buildable['lvl'], $buildable['ulvl'], $has_harbour);
+						$time = bl\buildings\buildTime($buildable['kind'], $buildable['lvl'], 1, $buildable['ulvl']);
 					}
 
-					if (lib_bl_buildings_getUpgradeable($buildable['kind']) && $buildable['ulvl'] == 0)
+					if (bl\buildings\getUpgradeable($buildable['kind']) && $buildable['ulvl'] == 0)
 						$buildable['ulvl'] = 1;
 
 					$prices_formatted = array(
@@ -272,11 +272,11 @@ elseif (is_numeric($_GET['buildplace']))
 					$smarty_buildings[] = array(
 						'kind' => $buildable['kind'],
 						'name' => htmlentities($lang['building_names'][$buildable['kind']][$buildable['ulvl']]),
-						'image' => lib_bl_buildings_getPic($city, $buildable, 1),
+						'image' => bl\buildings\getBuildPlacePicture($city, $buildable, 1),
 						'prices' => $prices_formatted,
-						'time' => lib_bl_general_formatTime($time, 'd h:m:s'),
-						'canBuild' => lib_bl_buildings_resCheck($res_values),
-						'freeBuildPosition' => lib_bl_buildings_checkFreeBuildPosition($city, $buildable['kind']),
+						'time' => bl\general\formatTime($time, 'd h:m:s'),
+						'canBuild' => bl\buildings\resourceCheck($res_values),
+						'freeBuildPosition' => bl\buildings\checkFreeBuildPosition($city, $buildable['kind']),
 					);
 				}
 			}

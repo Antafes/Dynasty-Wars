@@ -2,7 +2,7 @@
 include("loggedin/header.php");
 include_once('lib/bl/register.inc.php');
 
-lib_bl_general_loadLanguageFile('options');
+bl\general\loadLanguageFile('options');
 $smarty->assign('lang', $lang);
 
 if ($_GET['del'])
@@ -21,7 +21,7 @@ if ($_POST['changepw'] == 1)
 	{
 		if ($_SESSION['user']->setPW($_POST['newpw'], $_POST['newpww']))
 		{
-			$id = lib_bl_login_createId($_SESSION['user']->getUID());
+			$id = bl\login\createID($_SESSION['user']->getUID());
 
 			if ($_SESSION['lid'])
 				$_SESSION['lid'] = $id;
@@ -43,7 +43,7 @@ if ($_GET['textchange'])
 
 if ($_POST['changeemail'] == 1)
 {
-	$check_mail = lib_bl_register_checkMail($_POST['email']);
+	$check_mail = bl\register\checkMail($_POST['email']);
 	if (!$check_mail)
 	{
 		$smarty->assign('infoMessage', $lang['emailFormat']);
@@ -114,7 +114,7 @@ if ($_GET['leave'] == 2)
 				$newAdmin = util\mysql\query($sql);
 			}
 
-			$newAdminUser = new UserCls();
+			$newAdminUser = new bl\user\UserCls();
 			$newAdminUser->loadByUID($newAdmin);
 			$newAdminUser->setRankID($adminRankID);
 		}
@@ -138,7 +138,7 @@ if ($_GET['leave'] == 2)
 	}
 }
 
-$languages = lib_bl_general_getLanguages();
+$languages = bl\general\getLanguages();
 
 $languagesArray = array();
 foreach ($languages as $language)

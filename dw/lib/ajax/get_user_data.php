@@ -24,11 +24,11 @@ if ($con)
 	}
 
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('map', 'loggedin', true);
+	bl\general\loadLanguageFile('map', 'loggedin', true);
 
 	$sql = '
 		SELECT

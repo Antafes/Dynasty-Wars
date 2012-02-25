@@ -1,8 +1,8 @@
 <?php
 include ('loggedin/header.php');
-lib_bl_general_loadLanguageFile('news');
+bl\general\loadLanguageFile('news');
 //db: auslesen der news
-$parser = new wikiparser();
+$parser = new bl\wikiParser\WikiParser();
 $news_array = util\mysql\query('
 	SELECT
 		n.*,

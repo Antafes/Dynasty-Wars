@@ -1,18 +1,18 @@
 <?php
 require_once('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('messages');
+bl\general\loadLanguageFile('messages');
 $smarty->assign('lang', $lang);
 
 //check for read messages that are older than 14 days and mark them as deleted
-lib_bl_messages_checkReadMessages($_SESSION['user']->getUID());
+bl\messages\checkReadMessages($_SESSION['user']->getUID());
 
 if (!$_GET['mmode'])
 {
-	$messages = lib_bl_messages_getMessages($_SESSION['user']->getUID(), array(1, 2));
-	$eventMessages = lib_bl_messages_getMessages($_SESSION['user']->getUID(), array(3, 4));
-	$messageCount = lib_bl_messages_getCounts($messages);
-	$eventMessageCount = lib_bl_messages_getCounts($eventMessages);
+	$messages = bl\messages\getMessages($_SESSION['user']->getUID(), array(1, 2));
+	$eventMessages = bl\messages\getMessages($_SESSION['user']->getUID(), array(3, 4));
+	$messageCount = bl\messages\getCounts($messages);
+	$eventMessageCount = bl\messages\getCounts($eventMessages);
 	$smarty->assign('messageCount', $messageCount);
 	$smarty->assign('eventMessageCount', $eventMessageCount);
 }
@@ -25,8 +25,8 @@ elseif ($_GET['mmode'] == 'received') //received messages
 		{
 			$msgid = $_POST['delete'][$i];
 
-			if (lib_bl_messages_checkUser($msgid, $_SESSION['user']->getUID(), 1))
-				lib_bl_messages_markAsDeletedRecipient($msgid, true);
+			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
+				bl\messages\markAsDeletedRecipient($msgid, true);
 			else
 				$n = $msgids;
 		}
@@ -36,7 +36,7 @@ elseif ($_GET['mmode'] == 'received') //received messages
 
 	if ($_GET["do"] == "archive")
 	{
-		if (lib_bl_messages_archive($_GET['msgid']))
+		if (bl\messages\archive($_GET['msgid']))
 		{
 			$smarty->assign('infoMessage', $lang['archived']);
 			unset($_GET['msgid']);
@@ -44,14 +44,14 @@ elseif ($_GET['mmode'] == 'received') //received messages
 	}
 
 	if (!$_GET['msgid'])
-		$smarty->assign('messages', lib_bl_messages_getMessages($_SESSION['user']->getUID(), array(1, 2)));
+		$smarty->assign('messages', bl\messages\getMessages($_SESSION['user']->getUID(), array(1, 2)));
 	else
 	{
-		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
+		if (bl\messages\checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
-			$smarty->assign('message', lib_bl_messages_getMessage($_GET['msgid']));
-			$readerg = lib_bl_messages_markRead($_GET['msgid']);
-			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
+			$smarty->assign('message', bl\messages\getMessage($_GET['msgid']));
+			$readerg = bl\messages\markRead($_GET['msgid']);
+			$messageArray = bl\messages\getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
 				$uid_sender = $messageArray["uid_sender"];
@@ -65,7 +65,7 @@ elseif ($_GET['mmode'] == 'received') //received messages
 				$sender_nick = "Kaiser";
 		}
 		else
-			lib_bl_general_redirect('index.php?chose=messages');
+			bl\general\redirect('index.php?chose=messages');
 	}
 }
 elseif ($_GET['mmode'] == "sent") //sent messages
@@ -77,7 +77,7 @@ elseif ($_GET['mmode'] == "sent") //sent messages
 		{
 			$msgid = $_POST['delete'][$i];
 
-			if (lib_bl_messages_checkUser($msgid, $_SESSION['user']->getUID(), 1))
+			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
 				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
 			else
 				$n = $msgids;
@@ -87,14 +87,14 @@ elseif ($_GET['mmode'] == "sent") //sent messages
 	}
 
 	if (!$_GET['msgid'])
-		$smarty->assign('messages', lib_bl_messages_getSentMessages($_SESSION['user']->getUID(), array(1, 2)));
+		$smarty->assign('messages', bl\messages\getSentMessages($_SESSION['user']->getUID(), array(1, 2)));
 	else
 	{
-		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 2))
+		if (bl\messages\checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 2))
 		{
-			$smarty->assign('message', lib_bl_messages_getSentMessage($_GET['msgid']));
-			$readerg = lib_bl_messages_markRead($_GET['msgid']);
-			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
+			$smarty->assign('message', bl\messages\getSentMessage($_GET['msgid']));
+			$readerg = bl\messages\markRead($_GET['msgid']);
+			$messageArray = bl\messages\getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
 				$uid_sender = $messageArray["uid_sender"];
@@ -108,7 +108,7 @@ elseif ($_GET['mmode'] == "sent") //sent messages
 				$sender_nick = "Kaiser";
 		}
 		else
-			lib_bl_general_redirect('index.php?chose=messages');
+			bl\general\redirect('index.php?chose=messages');
 	}
 }
 elseif ($_GET['mmode'] == "archive") //archived messages
@@ -120,7 +120,7 @@ elseif ($_GET['mmode'] == "archive") //archived messages
 		{
 			$msgid = $_POST['delete'][$i];
 
-			if (lib_bl_messages_checkUser($msgid, $_SESSION['user']->getUID(), 1))
+			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
 				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
 			else
 				$n = $msgids;
@@ -130,14 +130,14 @@ elseif ($_GET['mmode'] == "archive") //archived messages
 	}
 
 	if (!$_GET['msgid'])
-		$smarty->assign('messages', lib_bl_messages_getArchivedMessages($_SESSION['user']->getUID(), array(1, 2)));
+		$smarty->assign('messages', bl\messages\getArchivedMessages($_SESSION['user']->getUID(), array(1, 2)));
 	else
 	{
-		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
+		if (bl\messages\checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
-			$smarty->assign('message', lib_bl_messages_getArchivedMessage($_GET['msgid']));
-			$readerg = lib_bl_messages_markRead($_GET['msgid']);
-			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
+			$smarty->assign('message', bl\messages\getArchivedMessage($_GET['msgid']));
+			$readerg = bl\messages\markRead($_GET['msgid']);
+			$messageArray = bl\messages\getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
 				$uid_sender = $messageArray["uid_sender"];
@@ -151,7 +151,7 @@ elseif ($_GET['mmode'] == "archive") //archived messages
 				$sender_nick = "Kaiser";
 		}
 		else
-			lib_bl_general_redirect('index.php?chose=messages');
+			bl\general\redirect('index.php?chose=messages');
 	}
 }
 elseif ($_GET['mmode'] == "event") //event messages
@@ -163,7 +163,7 @@ elseif ($_GET['mmode'] == "event") //event messages
 		{
 			$msgid = $_POST['delete'][$i];
 
-			if (lib_bl_messages_checkUser($msgid, $_SESSION['user']->getUID(), 1))
+			if (bl\messages\checkUser($msgid, $_SESSION['user']->getUID(), 1))
 				lib_bl_general_delMessage($msgid, $_SESSION['user']->getUID());
 			else
 				$n = $msgids;
@@ -173,14 +173,14 @@ elseif ($_GET['mmode'] == "event") //event messages
 	}
 
 	if (!$_GET['msgid'])
-		$smarty->assign('messages', lib_bl_messages_getMessages($_SESSION['user']->getUID(), array(3, 4)));
+		$smarty->assign('messages', bl\messages\getMessages($_SESSION['user']->getUID(), array(3, 4)));
 	else
 	{
-		if (lib_bl_messages_checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
+		if (bl\messages\checkUser($_GET['msgid'], $_SESSION['user']->getUID(), 1))
 		{
-			$smarty->assign('message', lib_bl_messages_getMessage($_GET['msgid']));
-			$readerg = lib_bl_messages_markRead($_GET['msgid']);
-			$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
+			$smarty->assign('message', bl\messages\getMessage($_GET['msgid']));
+			$readerg = bl\messages\markRead($_GET['msgid']);
+			$messageArray = bl\messages\getMessage($_GET['msgid']);
 			if (count($messageArray) > 0)
 			{
 				$uid_sender = $messageArray["uid_sender"];
@@ -194,7 +194,7 @@ elseif ($_GET['mmode'] == "event") //event messages
 				$sender_nick = "Kaiser";
 		}
 		else
-			lib_bl_general_redirect('index.php?chose=messages');
+			bl\general\redirect('index.php?chose=messages');
 	}
 }
 elseif ($_GET['mmode'] == "new") //write message
@@ -202,7 +202,7 @@ elseif ($_GET['mmode'] == "new") //write message
 	if (!$_POST['sent'])
 	{
 		$smarty->assign('recipient', 1);
-		$smarty->assign('message', array('recipient' => lib_bl_general_uid2nick($_GET['recipient'])));
+		$smarty->assign('message', array('recipient' => bl\general\uid2nick($_GET['recipient'])));
 	}
 	elseif ($_POST['sent'] == 1)
 	{
@@ -210,10 +210,10 @@ elseif ($_GET['mmode'] == "new") //write message
 		{
 			if ($_POST['recipient'] && $_POST['message'])
 			{
-				$recipientUID = lib_bl_general_nick2uid($_POST['recipient']);
+				$recipientUID = bl\general\nick2uid($_POST['recipient']);
 				if ($recipientUID)
 				{
-					$senderg = lib_bl_general_sendMessage($_SESSION['user']->getUID(), $recipientUID, $_POST['title'], $_POST['message'], 1);
+					$senderg = bl\general\sendMessage($_SESSION['user']->getUID(), $recipientUID, $_POST['title'], $_POST['message'], 1);
 
 					if ($senderg)
 						$smarty->assign('infoMessage', sprintf($lang['messageSent'], $_POST['recipient']));
@@ -234,12 +234,12 @@ elseif ($_GET['mmode'] == "aw") //answer
 {
 	if (!$_POST['message'])
 	{
-		$messageArray = lib_bl_messages_getMessage($_GET['msgid']);
+		$messageArray = bl\messages\getMessage($_GET['msgid']);
 
 		if ($messageArray)
 		{
 			$exp_msg = explode("\n", $messageArray['message']);
-			$new_message = sprintf($lang["oldMessage"], lib_bl_general_uid2nick($messageArray['uid_sender']));
+			$new_message = sprintf($lang["oldMessage"], bl\general\uid2nick($messageArray['uid_sender']));
 
 			for ($n = 0; $n < count($exp_msg); $n++)
 			{
@@ -277,7 +277,7 @@ elseif ($_GET['mmode'] == "aw") //answer
 			$smarty->assign('message', array(
 				'title' => $aw_title,
 				'message' => $new_message,
-				'recipient' => lib_bl_general_uid2nick($messageArray['uid_sender']),
+				'recipient' => bl\general\uid2nick($messageArray['uid_sender']),
 			) + $messageArray);
 			$smarty->assign('recipient', 1);
 		}
@@ -288,10 +288,10 @@ elseif ($_GET['mmode'] == "aw") //answer
 		{
 			if ($_POST['recipient'] && $_POST['message'])
 			{
-				$recipientUID = lib_bl_general_nick2uid($_POST['recipient']);
+				$recipientUID = bl\general\nick2uid($_POST['recipient']);
 				if ($recipientUID)
 				{
-					$senderg = lib_bl_general_sendMessage($_SESSION['user']->getUID(), $recipientUID, $_POST['title'], $_POST['message'], 1);
+					$senderg = bl\general\sendMessage($_SESSION['user']->getUID(), $recipientUID, $_POST['title'], $_POST['message'], 1);
 
 					if ($senderg)
 						$smarty->assign('infoMessage', sprintf($lang['messageSent'], $_POST['recipient']));
@@ -312,10 +312,10 @@ elseif ($_GET['mmode'] == 'newall') //write a message to all players
 {
 	if ($_POST['message'])
 	{
-		$userList = lib_bl_user_getACPUserList();
+		$userList = bl\user\getACPUserList();
 
 		foreach ($userList as $user)
-			lib_bl_general_sendMessage($_SESSION['user']->getUID(), $user['uid'], $_POST['title'], $_POST['message'], 2);
+			bl\general\sendMessage($_SESSION['user']->getUID(), $user['uid'], $_POST['title'], $_POST['message'], 2);
 
 		$smarty->assign('infoMessage', $lang['messagesSent']);
 	}

@@ -1,8 +1,8 @@
 <?php
 include ('loggedout/header.php');
-lib_bl_general_loadLanguageFile('news', 'loggedout');
+bl\general\loadLanguageFile('news', 'loggedout');
 //db: auslesen der news
-$parser = new wikiparser();
+$parser = new bl\wikiParser\WikiParser();
 $news_array = util\mysql\query('
 	SELECT
 		n.*,

@@ -20,18 +20,18 @@ if ($con)
 		$new_item_list[$part->name] = utf8_decode($part->value);
 	$item_list = $new_item_list;
 
-	$_SESSION['user'] = new UserCls();
+	$_SESSION['user'] = new bl\user\UserCls();
 	$_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 	$lang['lang'] = $_SESSION['user']->getLanguage();
-	lib_bl_general_loadLanguageFile('general', '', true);
-	lib_bl_general_loadLanguageFile('tribunal', 'loggedin', true);
+	bl\general\loadLanguageFile('general', '', true);
+	bl\general\loadLanguageFile('tribunal', 'loggedin', true);
 
-	$result = lib_bl_tribunal_blockComments($item_list['tid'], $item_list['block']);
+	$result = bl\tribunal\blockComments($item_list['tid'], $item_list['block']);
 
 	if ($result > 0)
 	{
-		$hearing = lib_bl_tribunal_getHearing($item_list['tid']);
+		$hearing = bl\tribunal\getHearing($item_list['tid']);
 
 		$html = '<a href="javascript:;" onclick="';
 		$html .= htmlentities('blockComments(this, "lib/ajax/block_comments.php", ');

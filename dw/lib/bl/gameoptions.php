@@ -1,20 +1,24 @@
 <?php
+namespace bl\gameOptions;
+
 /**
  * get the specified menu entry
  * @author Neithan
  * @param string $entryName
  * @return array
  */
-function lib_bl_gameOptions_getMenuEntry($entryName)
+function getMenuEntry($entryName)
 {
 	return dal\gameOptions\getMenuEntry($entryName);
 }
+
 /**
  * get all menu entries
  * @author Neithan
+ * @param bool $visible default true
  * @return array
  */
-function lib_bl_gameOptions_getAllMenuEntries($visible = true)
+function getAllMenuEntries($visible = true)
 {
 	return dal\gameOptions\getAllMenuEntries($visible);
 }
@@ -27,9 +31,9 @@ function lib_bl_gameOptions_getAllMenuEntries($visible = true)
  * @param array $visible
  * @return void
  */
-function lib_bl_gameOptions_setAllMenuEntries($changedEntries, $sorts, $visible)
+function setAllMenuEntries($changedEntries, $sorts, $visible)
 {
-	$allEntries = lib_bl_gameOptions_getAllMenuEntries(false);
+	$allEntries = getAllMenuEntries(false);
 	dal\gameOptions\setAllMenuEntries(0, 0);
 	foreach ($allEntries as $entry)
 	{
@@ -43,7 +47,7 @@ function lib_bl_gameOptions_setAllMenuEntries($changedEntries, $sorts, $visible)
  * @author Neithan
  * @return array
  */
-function lib_bl_gameOptions_getGameOptions()
+function getGameOptions()
 {
 	$gameOptions = dal\gameOptions\getGameOptions();
 

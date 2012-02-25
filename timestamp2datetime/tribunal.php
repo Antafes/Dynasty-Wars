@@ -12,7 +12,7 @@ $sql = '
 		decision_date
 	FROM dw_tribunal
 ';
-$data = lib_util_mysqlQuery($sql, true);
+$data = util\mysql\query($sql, true);
 
 foreach ($data as $row)
 {
@@ -22,5 +22,5 @@ foreach ($data as $row)
 			decision_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $row['decision_date'])).'"
 		WHERE tid = '.mysql_real_escape_string($row['tid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

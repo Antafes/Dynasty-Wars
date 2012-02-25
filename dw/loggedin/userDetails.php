@@ -1,7 +1,7 @@
 <?php
 include("loggedin/header.php");
 
-lib_bl_general_loadLanguageFile('userDetails');
+bl\general\loadLanguageFile('userDetails');
 $smarty->assign('lang', $lang);
 
 if ($_GET["fromc"])
@@ -21,7 +21,7 @@ if ($_GET["fromc"])
 	$smarty->assign('fromc', $fromc);
 }
 
-$registeredUser = new UserCls();
+$registeredUser = new bl\user\UserCls();
 $registeredUser->loadByUID($_GET['reguid']);
 $smarty->assign('registeredUser', $registeredUser);
 $sql = '

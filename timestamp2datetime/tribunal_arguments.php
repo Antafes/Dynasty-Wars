@@ -11,7 +11,7 @@ $sql = '
 		date_added
 	FROM dw_tribunal_arguments
 ';
-$logEntries = lib_util_mysqlQuery($sql, true);
+$logEntries = util\mysql\query($sql, true);
 
 foreach ($logEntries as $logEntry)
 {
@@ -20,5 +20,5 @@ foreach ($logEntries as $logEntry)
 		SET added_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $logEntry['date_added'])).'"
 		WHERE aid = '.mysql_real_escape_string($logEntry['aid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

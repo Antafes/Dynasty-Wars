@@ -1,11 +1,13 @@
 <?php
+namespace bl\messages;
+
 /**
  * get all messages of the specified type(s)
  * @author Neithan
  * @param int/array $type
  * @return array
  */
-function lib_bl_messages_getMessages($uid, $type)
+function getMessages($uid, $type)
 {
 	$messagesArray = array();
 	if (is_array($type))
@@ -23,7 +25,7 @@ function lib_bl_messages_getMessages($uid, $type)
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['sender'] = lib_bl_general_uid2nick($message['uid_sender']);
+			$message['sender'] = bl\general\uid2nick($message['uid_sender']);
 		unset($message);
 	}
 
@@ -36,7 +38,7 @@ function lib_bl_messages_getMessages($uid, $type)
  * @param int $msgid
  * @return array
  */
-function lib_bl_messages_getMessage($msgid)
+function getMessage($msgid)
 {
 	global $lang;
 
@@ -63,7 +65,7 @@ function lib_bl_messages_getMessage($msgid)
  * @param int/array $type
  * @return array
  */
-function lib_bl_messages_getSentMessages($uid, $type)
+function getSentMessages($uid, $type)
 {
 	$messagesArray = array();
 	if (is_array($type))
@@ -81,7 +83,7 @@ function lib_bl_messages_getSentMessages($uid, $type)
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['recipient'] = lib_bl_general_uid2nick($message['uid_recipient']);
+			$message['recipient'] = bl\general\uid2nick($message['uid_recipient']);
 		unset($message);
 	}
 
@@ -89,12 +91,12 @@ function lib_bl_messages_getSentMessages($uid, $type)
 }
 
 /**
- * get the specified message
+ * get the specified sent message
  * @author Neithan
  * @param int $msgid
  * @return array
  */
-function lib_bl_messages_getSentMessage($msgid)
+function getSentMessage($msgid)
 {
 	global $lang;
 
@@ -120,7 +122,7 @@ function lib_bl_messages_getSentMessage($msgid)
  * @param int/array $type
  * @return array
  */
-function lib_bl_messages_getArchivedMessages($uid, $type)
+function getArchivedMessages($uid, $type)
 {
 	$messagesArray = array();
 	if (is_array($type))
@@ -138,7 +140,7 @@ function lib_bl_messages_getArchivedMessages($uid, $type)
 	if ($messagesArray)
 	{
 		foreach ($messagesArray as &$message)
-			$message['sender'] = lib_bl_general_uid2nick($message['uid_sender']);
+			$message['sender'] = bl\general\uid2nick($message['uid_sender']);
 		unset($message);
 	}
 
@@ -151,7 +153,7 @@ function lib_bl_messages_getArchivedMessages($uid, $type)
  * @param int $msgid
  * @return array
  */
-function lib_bl_messages_getArchivedMessage($msgid)
+function getArchivedMessage($msgid)
 {
 	global $lang;
 
@@ -159,7 +161,7 @@ function lib_bl_messages_getArchivedMessage($msgid)
 
 	if ($message)
 	{
-		$message['sender'] = lib_bl_general_uid2nick ($message['uid_sender']);
+		$message['sender'] = bl\general\uid2nick ($message['uid_sender']);
 		$messageDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $message['create_datetime']);
 		$message['sentDate'] = $messageDate->format($lang['messageTimeFormat']);
 	}
@@ -177,7 +179,7 @@ function lib_bl_messages_getArchivedMessage($msgid)
  * @param array $messages
  * @return int
  */
-function lib_bl_messages_getCounts($messages)
+function getCounts($messages)
 {
 	$counter = array(
 		'totalMessages' => 0,
@@ -201,7 +203,7 @@ function lib_bl_messages_getCounts($messages)
  * @param boolean $forceDeletion (default: false) will force the deletion of unread messages
  * @return int
  */
-function lib_bl_messages_markAsDeletedSender($msgid, $forceDeletion = false)
+function markAsDeletedSender($msgid, $forceDeletion = false)
 {
 	return dal\messages\markAsDeleted($msgid, 'sender', $forceDeletion);
 }
@@ -213,7 +215,7 @@ function lib_bl_messages_markAsDeletedSender($msgid, $forceDeletion = false)
  * @param boolean $forceDeletion (default: false) will force the deletion of unread messages
  * @return int
  */
-function lib_bl_messages_markAsDeletedRecipient($msgid, $forceDeletion = false)
+function markAsDeletedRecipient($msgid, $forceDeletion = false)
 {
 	return dal\messages\markAsDeleted($msgid, 'recipient', $forceDeletion);
 }
@@ -224,7 +226,7 @@ function lib_bl_messages_markAsDeletedRecipient($msgid, $forceDeletion = false)
  * @param int $msgid
  * @return int
  */
-function lib_bl_messages_markRead($msgid)
+function markRead($msgid)
 {
 	if (is_int($msgid))
 		return dal\messages\markRead ($msgid);
@@ -237,9 +239,9 @@ function lib_bl_messages_markRead($msgid)
  * as deleted.
  * @author Neithan
  */
-function lib_bl_messages_checkReadMessages($uid)
+function checkReadMessages($uid)
 {
-	$messages = lib_bl_messages_getMessages($uid, array(1, 2, 3, 4));
+	$messages = getMessages($uid, array(1, 2, 3, 4));
 
 	foreach ($messages as $message)
 	{
@@ -250,7 +252,7 @@ function lib_bl_messages_checkReadMessages($uid)
 			$dateDiff = $currentDate->diff($messageDate);
 
 			if ($dateDiff->d >= 14 || $dateDiff->m || $dateDiff->y)
-				lib_bl_messages_markAsDeletedRecipient($message['msgid']);
+				markAsDeletedRecipient($message['msgid']);
 		}
 	}
 }
@@ -261,7 +263,7 @@ function lib_bl_messages_checkReadMessages($uid)
  * @param int $msgid
  * @return int
  */
-function lib_bl_messages_archive($msgid)
+function archive($msgid)
 {
 	return dal\messages\archive($msgid);
 }
@@ -274,7 +276,7 @@ function lib_bl_messages_archive($msgid)
  * @param int $mode 1 for check recipient, 2 for check sender
  * @return <int> returns 1 if the message is for this user, otherwise 0
  */
-function lib_bl_messages_checkUser($msgid, $uid, $mode)
+function checkUser($msgid, $uid, $mode)
 {
 	if ($mode == 1)
 		$checkuid = dal\messages\checkRecipient($msgid);

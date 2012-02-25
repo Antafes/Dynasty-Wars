@@ -32,13 +32,13 @@ function lib_bl_troops_fight($tid, $target)
 {
 	global $lang;
 	$target_exp = explode(':', $target);
-	$troop = lib_bl_troops_getTroop($tid);
+	$troop = bl\troops\getTroop($tid);
 /*
 	if ($troop['pos_x'].':'.$troop['pos_y'] != $target)
 		return false;
 */
-	$target_uid = lib_dal_user_getUIDFromMapPosition($target_exp[0], $target_exp[1]);
-	$target_units = lib_bl_troops_getAtPos($target_uid, $target_exp[0], $target_exp[1], 'units', true, 'kind');
+	$target_uid = dal\user\getUIDFromMapPosition($target_exp[0], $target_exp[1]);
+	$target_units = bl\troops\getAtPosition($target_uid, $target_exp[0], $target_exp[1], 'units', true, 'kind');
 	$grouped_units = array(
 		'target' => new grouped_units(),
 		'attacker' => new grouped_units(),
@@ -48,7 +48,7 @@ function lib_bl_troops_fight($tid, $target)
 	$grouped_units['target']->setCityDefense($target_exp[0], $target_exp[1]);
 	$grouped_units['target']->setCityAttack($target_exp[0], $target_exp[1]);
 
-	$attacker_units = lib_bl_troops_getTroopUnits($tid, 'kind');
+	$attacker_units = bl\troops\getTroopUnits($tid, 'kind');
 	$grouped_units['attacker']->sortUnits($attacker_units);
 
 	$attacker_speed = $grouped_units['attacker']->getSpeed();
@@ -400,7 +400,7 @@ function lib_bl_troops_unitFight($attacker, $target, $city)
 						{
 							if ($key !== 'total_count' && $target_unit['count'] > 0)
 							{
-								$stats = lib_dal_troops_getUnitStats($target_unit['kind']);
+								$stats = dal\troops\getUnitStats($target_unit['kind']);
 
 								if (!$target_unit['escaping'])
 								{

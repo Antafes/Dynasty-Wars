@@ -1,8 +1,8 @@
 <?php
 include ('loggedout/header.php');
-lib_bl_general_loadLanguageFile('home', 'loggedout');
-lib_bl_general_loadLanguageFile('news', 'loggedout');
-$parser = new wikiparser();
+bl\general\loadLanguageFile('home', 'loggedout');
+bl\general\loadLanguageFile('news', 'loggedout');
+$parser = new bl\wikiParser\WikiParser();
 
 $smarty->assign('heading', $lang['lastnews']);
 

@@ -11,7 +11,7 @@ $sql = '
 		date
 	FROM dw_log
 ';
-$logEntries = lib_util_mysqlQuery($sql, true);
+$logEntries = util\mysql\query($sql, true);
 
 foreach ($logEntries as $logEntry)
 {
@@ -20,5 +20,5 @@ foreach ($logEntries as $logEntry)
 		SET log_datetime = "'.mysql_real_escape_string(date('Y-m-d H:i:s', $logEntry['date'])).'"
 		WHERE actid = '.mysql_real_escape_string($logEntry['actid']).'
 	';
-	lib_util_mysqlQuery($sql);
+	util\mysql\query($sql);
 }

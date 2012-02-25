@@ -8,7 +8,7 @@
 include('lib/bl/market.inc.php');
 include('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('market');
+bl\general\loadLanguageFile('market');
 $smarty->assign('lang', $lang);
 
 if (!$_GET['sub'] || $_GET['sub'] == 'offers')
@@ -25,13 +25,13 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 				$_POST['e_amount'] = $_POST['e_amount']*-1;
 
 			// important: check for negative numbers!!!
-			$res = lib_bl_market_placeResourceOnMarket(
+			$res = bl\market\placeResourceOnMarket(
 				$_SESSION['user']->getUID(),
 				$_POST['s_resource'],
 				$_POST['s_amount'],
 				$_POST['e_resource'],
 				$_POST['e_amount'],
-				lib_bl_market_calculateTax($_POST['s_resource'], $_POST['s_amount']),
+				bl\market\calculateTax($_POST['s_resource'], $_POST['s_amount']),
 				$city
 			);
 			if ($res)
@@ -43,14 +43,14 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 	// anul
 	if (isset($_GET['action']) && $_GET['action'] == 'anul')
 	{
-		$res = lib_bl_market_anull($_SESSION['user']->getUID(), $_GET['mid'], $city);
+		$res = bl\market\anull($_SESSION['user']->getUID(), $_GET['mid'], $city);
 		if ($res == 0)
 			$anulled = 1;
 		elseif ($res == -1)
 			$anulled = 2;
 		else
 			$anulled = 3;
-		lib_bl_general_redirect('index.php?chose=market&sub=offers&anulled='.$anulled);
+		bl\general\redirect('index.php?chose=market&sub=offers&anulled='.$anulled);
 	}
 
 	if ($_GET['anulled'])
@@ -59,7 +59,7 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 	// buy
 	if (isset($_GET['action']) && $_GET['action'] == 'buy')
 	{
-		$res = lib_bl_market_buy($_SESSION['user']->getUID(), $_GET['mid'], $city);
+		$res = bl\market\buy($_SESSION['user']->getUID(), $_GET['mid'], $city);
 		switch ($res)
 		{
 			case 0:
@@ -116,7 +116,7 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 	}
 
 	$smarty->assign('resultMessage', $message);
-	$offerArray = lib_bl_market_returnAllOffers();
+	$offerArray = bl\market\returnAllOffers();
 
 	if ($_GET['type'] == 'search')
 	{
@@ -138,7 +138,7 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 		if ($seller == '') $seller = '%';
 		if (!$complete) $complete = 0;
 // start searching, something is wrong here !!! (empty result)
-		$offerArray = lib_bl_market_search($s_res, $s_rs, $s_re, $e_res, $e_rs, $e_re, $complete, $seller);
+		$offerArray = bl\market\search($s_res, $s_rs, $s_re, $e_res, $e_rs, $e_re, $complete, $seller);
 	}
 
 	$smarty->assign('offersArray', $offerArray);
@@ -163,7 +163,7 @@ elseif ($_GET['sub'] == 'log')
 		'ASC' => $lang['asc'],
 	));
 
-	$offers = lib_bl_market_userOffers($_SESSION['user']->getUID(), $_POST['filter'], $_POST['order']);
+	$offers = bl\market\userOffers($_SESSION['user']->getUID(), $_POST['filter'], $_POST['order']);
 	$offersArray = array();
 
 	if ($offers)
@@ -175,7 +175,7 @@ elseif ($_GET['sub'] == 'log')
 				$class = 'anulled';
 			else
 			{
-				if ($offer['sid'] == $_SESSION['user']->getUID() && !lib_bl_market_isOpen($offer['mid']))
+				if ($offer['sid'] == $_SESSION['user']->getUID() && !bl\market\isOpen($offer['mid']))
 					$class = 'sold';
 				elseif ($offer['bid'] == 1)
 					$class = 'buyed';
@@ -187,8 +187,8 @@ elseif ($_GET['sub'] == 'log')
 			$offersArray[] = array(
 				'class' => $class,
 				'title' => $lang['item_'.$class],
-				'seller' => dal\user\uid2nick($offer['sid']),
-				'buyer' => ($offer['bid'] ? dal\user\uid2nick($offer['bid']) : 'N/A'),
+				'seller' => bl\general\uid2nick($offer['sid']),
+				'buyer' => ($offer['bid'] ? bl\general\uid2nick($offer['bid']) : 'N/A'),
 				'offer' => $lang[$offer['s_resource']],
 				'offer_amount' => util\math\numberFormat($offer['s_amount'], 0),
 				'request' => $lang[$offer['e_resource']],

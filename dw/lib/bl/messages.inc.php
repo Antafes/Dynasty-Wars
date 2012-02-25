@@ -1,3 +1,3 @@
 <?php
-include_once('lib/dal/messages.php');
-include_once('lib/bl/messages.php');
+require_once('lib/dal/messages.php');
+require_once('lib/bl/messages.php');

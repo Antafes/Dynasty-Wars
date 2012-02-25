@@ -26,8 +26,8 @@ if ($_POST['accept'] && $_GET['cid'] == $_SESSION['user']->getCID()) //accepting
 	');
 
 	//acceptation message
-	lib_bl_general_sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['acceptmsg'], $clanname), 3);
-	lib_bl_log_saveLog(4, $_SESSION['user']->getUID(), $_POST['entuid'], '');
+	bl\general\sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['acceptmsg'], $clanname), 3);
+	bl\log\saveLog(4, $_SESSION['user']->getUID(), $_POST['entuid'], '');
 	$rankid_new = util\mysql\query('
 		SELECT rankid FROM dw_clan_rank
 		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
@@ -54,8 +54,8 @@ elseif ($_POST['decline'] && ($_GET['cid'] == $_SESSION['user']->getCID())) //me
 	');
 
 	//decline message
-	lib_bl_general_sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['declinemsg'], $clanname), 3);
-	lib_bl_log_saveLog(5, $_SESSION['user']->getUID(), $_POST['entuid'], '');
+	bl\general\sendMessage(0, $_POST['entuid'], sprintf($lang['applicationat'], $clanname), sprintf($lang['declinemsg'], $clanname), 3);
+	bl\log\saveLog(5, $_SESSION['user']->getUID(), $_POST['entuid'], '');
 
 	util\mysql\query('
 		DELETE FROM dw_clan_applications
@@ -143,7 +143,7 @@ else
 		$usererg = util\mysql\query($sql);
 		if ($delerg && $delerg2 && $usererg)
 		{
-			lib_bl_log_saveLog(6, $_SESSION['user']->getUID(), 0, '');
+			bl\log\saveLog(6, $_SESSION['user']->getUID(), 0, '');
 			$del = 3;
 		}
 	}
@@ -335,7 +335,7 @@ else
 						';
 						util\mysql\query($sql);
 					}
-					lib_bl_general_redirect('index.php?chose=clan&cid='.$_GET['cid'].'&cmode=2&umode=1');
+					bl\general\redirect('index.php?chose=clan&cid='.$_GET['cid'].'&cmode=2&umode=1');
 				}
 				else
 				{
@@ -465,7 +465,7 @@ else
 		';
 		$membersList = util\mysql\query($sql, true);
 		$smarty->assign('membersListData', $membersList);
-		$usermapEntry = lib_bl_gameOptions_getMenuEntry('usermap');
+		$usermapEntry = bl\gameOptions\getMenuEntry('usermap');
 		$smarty->assign('usermapEnabled', $usermapEntry['active']);
 		$smarty->assign('encodeString', urlencode('clan§cid='.$_GET['cid'].'§cmode=1'));
 	}
@@ -478,7 +478,7 @@ else
 			$sent = false;
 			foreach ($recipients as $recipient)
 			{
-				$sentResult = lib_bl_general_sendMessage($_SESSION['user']->getUID(), $recipient, mysql_real_escape_string($title), mysql_real_escape_string($membermsg), 1);
+				$sentResult = bl\general\sendMessage($_SESSION['user']->getUID(), $recipient, mysql_real_escape_string($title), mysql_real_escape_string($membermsg), 1);
 				if ($sentResult)
 					$sent = true;
 			}

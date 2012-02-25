@@ -6,13 +6,15 @@
  *
  */
 
+namespace bl\map;
+
 /**
  * Returns the color of the specified terrain type
  * @author siyb
  * @param <image> $im the image of the map
  * @param <int> $type the terrain type
  */
-function lib_bl_map_getColorByTerrainType($im, $type) {
+function getColorByTerrainType($im, $type) {
 
 	// butt ugly, define in a namespace or something
 	$mColor['forest'] = imagecolorallocate($im, 0x33, 0x33, 0x00);
@@ -50,7 +52,7 @@ function lib_bl_map_getColorByTerrainType($im, $type) {
  * @param <image> $im the image of the map
  * @param <color> $color the color of the terrain
  */
-function lib_bl_map_getTerrainTypeByColor($im, $color) {
+function getTerrainTypeByColor($im, $color) {
 
 	// butt ugly, define in a namespace or something
 	$mColor['forest'] = imagecolorallocate($im, 0x33, 0x33, 0x00);
@@ -89,11 +91,11 @@ function lib_bl_map_getTerrainTypeByColor($im, $color) {
  * @param <int> $sizeFactor map scaling factor, currently only 1 and 2 are supported
  * @todo add variable scaling factor
  */
-function lib_bl_map_drawMapImage($mapFile, $sizeFactor = 1) {
+function drawMapImage($mapFile, $sizeFactor = 1) {
 	if ($sizeFactor != 2 &&  $sizeFactor != 1) die ('sizeFactor must be 1 or 2');
 
 	// map data
-	$mapData = lib_bl_map_formatMapArray(dal\map\getSortedMapData());
+	$mapData = formatMapArray(dal\map\getSortedMapData());
 
 	// our image
 	$im = @imagecreate(400*$sizeFactor, 250*$sizeFactor)
@@ -107,10 +109,10 @@ function lib_bl_map_drawMapImage($mapFile, $sizeFactor = 1) {
 			if (!array_key_exists($iterY, $mapData[$iterX])) $mapData[$iterX][$iterY] = 0;
 
 			// set color according to terrain type
-			$color = lib_bl_map_getColorByTerrainType($im, $mapData[$iterX][$iterY]);
+			$color = getColorByTerrainType($im, $mapData[$iterX][$iterY]);
 
 			// draw pixels
-			lib_bl_map_drawSomethingOnMap($im, $iterX, $iterY, $color, $sizeFactor);
+			drawSomethingOnMap($im, $iterX, $iterY, $color, $sizeFactor);
 		}
 	}
 	// draw image
@@ -124,7 +126,7 @@ function lib_bl_map_drawMapImage($mapFile, $sizeFactor = 1) {
  * @return <mysqlresultset> mapdata as returned by lib_dal_map_getSortedMapData()
  * @return <array> 2dim array containing the mapdata
  */
-function lib_bl_map_formatMapArray($mapData) {
+function formatMapArray($mapData) {
     foreach ($mapData as $row)
     {
         // if there is a city on the field, create a virtual terrain type
@@ -144,7 +146,7 @@ function lib_bl_map_formatMapArray($mapData) {
  * @param <int> $y y coord to draw
  * @param <type> $color
  */
-function lib_bl_map_drawSomethingOnMap($im, $x, $y, $color, $sizeFactor) {
+function drawSomethingOnMap($im, $x, $y, $color, $sizeFactor) {
     $x *= $sizeFactor; $y*= $sizeFactor;
     imagesetpixel($im, $x, $y, $color);
     imagesetpixel($im, $x+1, $y, $color);
@@ -159,7 +161,7 @@ function lib_bl_map_drawSomethingOnMap($im, $x, $y, $color, $sizeFactor) {
  * @param <type> $data mapdata to be drawn, must be assoc array with elements
  * map_y and map_x in order to draw!!!
  */
-function lib_bl_map_createPNGMap($mapFile, $sizeFactor, $data = -1) {
+function createPNGMap($mapFile, $sizeFactor, $data = -1) {
     header('Content-type: image/png');
     $im = imagecreatefrompng($mapFile);
     $cityColor = imagecolorallocate($im, 0xFF, 0x00, 0x00);
@@ -167,7 +169,7 @@ function lib_bl_map_createPNGMap($mapFile, $sizeFactor, $data = -1) {
     if ($data != -1) // draw data if there is any
         foreach ($data as $row)
         {
-            lib_bl_map_drawSomethingOnMap($im, $row['map_x'], $row['map_y'],
+            drawSomethingOnMap($im, $row['map_x'], $row['map_y'],
                 $cityColor, $sizeFactor);
         }
 
@@ -182,8 +184,8 @@ function lib_bl_map_createPNGMap($mapFile, $sizeFactor, $data = -1) {
  * @param <string> $mapFile the path to the mapfile
  * @param <int> $sizeFactor the sizefactor of the map
  */
-function lib_bl_map_drawUserCities($uid, $mapFile, $sizeFactor) {
-    lib_bl_map_createPNGMap($mapFile, $sizeFactor,
+function drawUserCities($uid, $mapFile, $sizeFactor) {
+    createPNGMap($mapFile, $sizeFactor,
         dal\user\returnAllCities($uid));
 }
 
@@ -194,8 +196,8 @@ function lib_bl_map_drawUserCities($uid, $mapFile, $sizeFactor) {
  * @param <string> $mapFile the path to the mapfile
  * @param <int> $sizeFactor the sizefactor of the map
  */
-function lib_bl_map_drawClanCities($cid, $mapFile, $sizeFactor) {
-    lib_bl_map_createPNGMap($mapFile, $sizeFactor,
+function drawClanCities($cid, $mapFile, $sizeFactor) {
+    createPNGMap($mapFile, $sizeFactor,
         dal\clan\returnAllCities($cid));
 }
 
@@ -205,8 +207,8 @@ function lib_bl_map_drawClanCities($cid, $mapFile, $sizeFactor) {
  * @param <string> $mapFile
  * @param <int> $sizeFactor
  */
-function lib_bl_map_drawAllCities($mapFile, $sizeFactor) {
-    lib_bl_map_createPNGMap($mapFile, $sizeFactor,
+function drawAllCities($mapFile, $sizeFactor) {
+    createPNGMap($mapFile, $sizeFactor,
         dal\map\returnAllCities());
 }
 
@@ -216,7 +218,7 @@ function lib_bl_map_drawAllCities($mapFile, $sizeFactor) {
  * @param int $type
  * @return string
  */
-function lib_bl_mapTerrain($type)
+function terrain($type)
 {
 	switch($type)
 	{
@@ -234,5 +236,3 @@ function lib_bl_mapTerrain($type)
 			break;
 	}
 }
-
-?>

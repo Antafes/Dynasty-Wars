@@ -1,7 +1,7 @@
 <?php
 include('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('units');
+bl\general\loadLanguageFile('units');
 
 $smarty->assign('lang', $lang);
 

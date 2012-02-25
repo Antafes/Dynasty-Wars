@@ -1,7 +1,7 @@
 <?php
 	include("loggedin/header.php");
 
-	lib_bl_general_loadLanguageFile('missionary');
+	bl\general\loadLanguageFile('missionary');
 
 	$religion = $_GET["religion"];
 	$ruid = $_GET["uid"];

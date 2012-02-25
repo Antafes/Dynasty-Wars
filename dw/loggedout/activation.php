@@ -1,6 +1,6 @@
 <?php
 include('loggedout/header.php');
-lib_bl_general_loadLanguageFile('activation', 'rest');
+bl\general\loadLanguageFile('activation', 'rest');
 
 $smarty->assign('lang', $lang);
 
@@ -17,7 +17,7 @@ if ($_REQUEST['id'])
 		if (strcasecmp($id2, $stat) == 0 && $id1)
 		{
 			$erg2 = util\mysql\query('UPDATE dw_user SET status = "" WHERE uid='.$id1.'');
-			lib_bl_log_saveLog(3, $id1, 0, '');
+			bl\log\saveLog(3, $id1, 0, '');
 			if ($erg2)
 				$errors['activated'] = 1;
 			else
