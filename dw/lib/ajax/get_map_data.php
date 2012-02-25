@@ -51,8 +51,8 @@ if ($con)
 		FROM dw_map m
 		LEFT JOIN dw_user u USING (uid)
 		LEFT JOIN dw_clan c USING (cid)
-		WHERE m.map_x BETWEEN '.mysql_real_escape_string($minX).' AND '.mysql_real_escape_string($maxX).'
-			AND m.map_y BETWEEN '.mysql_real_escape_string($minY).' AND '.mysql_real_escape_string($maxY).'
+		WHERE m.map_x BETWEEN '.util\mysql\sqlval($minX).' AND '.util\mysql\sqlval($maxX).'
+			AND m.map_y BETWEEN '.util\mysql\sqlval($minY).' AND '.util\mysql\sqlval($maxY).'
 		ORDER BY m.map_y, m.map_x
 	';
 	$mapRawData = util\mysql\query($sql);

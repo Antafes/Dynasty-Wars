@@ -120,11 +120,33 @@ function transactionRollback()
 }
 
 /**
- * escapes and wraps the given value
+ * Escapes and wraps the given value. If it's an array, all elements will be
+ * escaped separately
  * @param mixed $value
  * @return String
  */
-function sqlval($value)
+function sqlval($value, $wrap = true)
 {
-	return '"'.mysql_real_escape_string($value).'"';
+	if (is_array($value))
+	{
+		foreach ($value as &$row)
+			$row = sqlval($row, $wrap);
+		unset($row);
+
+		return $value;
+	}
+	else
+	{
+		$escapedString = '';
+
+		if ($wrap)
+			$escapedString .= '"';
+
+		$escapedString .= mysql_real_escape_string($value);
+
+		if ($wrap)
+			$escapedString .= '"';
+
+		return $escapedString;
+	}
 }

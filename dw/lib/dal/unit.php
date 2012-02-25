@@ -16,14 +16,14 @@ namespace dal\unit;
 function calcUnitPoints() {
     return
     \util\mysql\query(
-        "
+        '
         SELECT dw_user.uid, sum((food + wood + rock + iron + paper + koku) * count / 1000.0) AS points
         FROM dw_units
         JOIN dw_costs_u ON dw_units.kind = dw_costs_u.kind
         JOIN dw_user ON dw_user.uid = dw_units.uid
 		WHERE NOT deactivated
         GROUP BY uid
-        "
+        '
     , true);
 }
 
@@ -37,12 +37,12 @@ function getUnitCount($uid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT kind, sum(count) as count from dw_units
-            WHERE uid='%d'
+            WHERE uid=%d
             GROUP BY kind
-            ",
-            mysql_real_escape_string($uid)
+            ',
+            \util\mysql\sqlval($uid)
         )
     );
 }
@@ -53,7 +53,7 @@ function getUnitCount($uid) {
  * @return <int> 1 if yes 0 is not
  */
 function calculateUnitCosts() {
-    $result = \util\mysql\query("SELECT unitcosts FROM dw_game");
+    $result = \util\mysql\query('SELECT unitcosts FROM dw_game');
     if ($result)
     	return $result;
 }
@@ -74,8 +74,8 @@ function getUnits($kind, $uid)
 			pos_x,
 			pos_y
 		FROM dw_units
-		WHERE kind = '.$kind.'
-			AND uid = '.$uid.'
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+			AND uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql, true);
 }
@@ -92,18 +92,19 @@ function getUnits($kind, $uid)
 function getUnitCountByCoordinates($kind, $uid, $x, $y) {
 	return
 	\util\mysql\query(
-		sprintf("
+		sprintf('
 			SELECT
 				count
 			FROM dw_units
-			WHERE kind='%d'
-			AND uid ='%d'
-			AND pos_x='%d'
-			AND pos_y='%d'",
-			mysql_real_escape_string($kind),
-			mysql_real_escape_string($uid),
-			mysql_real_escape_string($x),
-			mysql_real_escape_string($y)
+			WHERE kind = %d
+			AND uid = %d
+			AND pos_x = %d
+			AND pos_y = %d
+			',
+			\util\mysql\sqlval($kind),
+			\util\mysql\sqlval($uid),
+			\util\mysql\sqlval($x),
+			\util\mysql\sqlval($y)
 		)
 	);
 }
@@ -116,7 +117,7 @@ function getUnitCountByCoordinates($kind, $uid, $x, $y) {
  */
 function checkDaimyo($uid)
 {
-	$sql = 'SELECT unid FROM dw_units WHERE uid = '.$uid.' AND kind = 19';
+	$sql = 'SELECT unid FROM dw_units WHERE uid = '.\util\mysql\sqlval($uid).' AND kind = 19';
 	return \util\mysql\query($sql);
 }
 
@@ -138,11 +139,11 @@ function createDaimyo($uid, $pos_x, $pos_y)
 			pos_x,
 			pos_y
 		) VALUES (
-			'.$uid.',
+			'.\util\mysql\sqlval($uid).',
 			19,
 			1,
-			'.$pos_x.',
-			'.$pos_y.'
+			'.\util\mysql\sqlval($pos_x).',
+			'.\util\mysql\sqlval($pos_y).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -157,7 +158,7 @@ function getUnit($unid)
 {
 	$sql = '
 		SELECT * FROM dw_units
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -171,7 +172,7 @@ function deleteUnit($unid)
 {
 	$sql = '
 		DELETE FROM dw_units
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
 	';
 	\util\mysql\query($sql);
 }

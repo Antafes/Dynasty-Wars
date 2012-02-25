@@ -116,29 +116,23 @@ function checkID($id)
  * @param int $uid
  * @return int returns 1 on success
  * 				 returns -1 if the entered passwords are not the same
- * 				 returns -2 if the old password is the same like the new
  */
 function changePassword($newpw, $newpww, $uid)
 {
 	global $lang;
 
-	if ($newpw === $newpww)
-	{
-		$pws = md5(mysql_real_escape_string($newpw));
-		$changed = changePassword($pws, $uid);
+	$changed = $_SESSION['user']->setPW($newpw, $newpww);
 
-		if ($changed)
-		{
-			$city = \bl\login\getMainCity($uid);
-			$id = \bl\login\createID($uid);
-			$_SESSION["lid"] = $id;
-			$_SESSION["city"] = $city;
-			$_SESSION["language"] = $lang["lang"];
-			removeRecoveryRequest($uid);
-			return 1;
-		}
-		else
-			return -2;
+	if ($changed)
+	{
+		$city = \bl\login\getMainCity($uid);
+		$id = \bl\login\createID($uid);
+		$_SESSION["lid"] = $id;
+		$_SESSION["city"] = $city;
+		$_SESSION["language"] = $lang["lang"];
+		removeRecoveryRequest($uid);
+		return 1;
+
 	}
 	else
 		return -1;

@@ -22,9 +22,9 @@ function addToResources($resource, $value, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
-		SET `'.mysql_real_escape_string($resource).'` = `'.mysql_real_escape_string($resource).'` + '.mysql_real_escape_string($value).'
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		SET `'.\util\mysql\sqlval($resource, false).'` = `'.\util\mysql\sqlval($resource, false).'` + '.\util\mysql\sqlval($value).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
     \util\mysql\query($sql);
 }
@@ -40,9 +40,9 @@ function addToResources($resource, $value, $x, $y)
 function returnResourceAmount($x, $y, $resource)
 {
 	$sql = '
-		SELECT `'.mysql_real_escape_string($resource).'` FROM `dw_res`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		SELECT `'.\util\mysql\sqlval($resource, false).'` FROM `dw_res`
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
     return \util\mysql\query($sql);
 }
@@ -58,9 +58,9 @@ function returnResourceAmount($x, $y, $resource)
 function getUpgradeLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `upgrade_lvl` FROM `dw_buildings`
-		WHERE `kind` = "'.mysql_real_escape_string($kind).'"
-			AND `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `kind` = '.\util\mysql\sqlval($kind).'
+			AND `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -75,8 +75,8 @@ function getUpgradeLevel($kind, $x, $y)
 function getResearchLevel($uid, $type)
 {
 	$sql = 'SELECT `lvl` FROM `dw_research`
-		WHERE `uid` = "'.mysql_real_escape_string($uid).'"
-			AND `type` = "'.mysql_real_escape_string($type).'"
+		WHERE `uid` = '.\util\mysql\sqlval($uid).'
+			AND `type` = '.\util\mysql\sqlval($type).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -92,9 +92,9 @@ function getResearchLevel($uid, $type)
 function getLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `lvl` FROM `dw_buildings`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
-			AND `kind` = "'.mysql_real_escape_string($kind).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
+			AND `kind` = '.\util\mysql\sqlval($kind).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -112,14 +112,14 @@ function updateAll($res, $x, $y)
 	$sql = '
 		UPDATE `dw_res`
 		SET `last_datetime` = NOW(),
-			`food` = "'.mysql_real_escape_string($res['food']).'",
-			`wood` = "'.mysql_real_escape_string($res['wood']).'",
-			`rock` = "'.mysql_real_escape_string($res['rock']).'",
-			`iron` = "'.mysql_real_escape_string($res['iron']).'",
-			`paper` = "'.mysql_real_escape_string($res['paper']).'",
-			`koku` = "'.mysql_real_escape_string($res['koku']).'"
-		WHERE `map_x` = '.mysql_real_escape_string($x).'
-			AND `map_y` = '.mysql_real_escape_string($y).'
+			`food` = '.\util\mysql\sqlval($res['food']).',
+			`wood` = '.\util\mysql\sqlval($res['wood']).',
+			`rock` = '.\util\mysql\sqlval($res['rock']).',
+			`iron` = '.\util\mysql\sqlval($res['iron']).',
+			`paper` = '.\util\mysql\sqlval($res['paper']).',
+			`koku` = '.\util\mysql\sqlval($res['koku']).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -135,8 +135,8 @@ function getPaperPercent($x, $y)
 {
 	$sql = '
 		SELECT paper_prod FROM dw_res
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -153,9 +153,9 @@ function changePaperPercent($percent, $x, $y)
 {
 	$sql = '
 		UPDATE dw_res
-		SET paper_prod="'.mysql_real_escape_string($percent).'"
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		SET paper_prod = '.\util\mysql\sqlval($percent).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -171,8 +171,8 @@ function getResourceBuildings($x, $y)
 {
 	$sql = '
 		SELECT kind, lvl FROM dw_buildings
-		WHERE map_x = '.mysql_real_escape_string($x).'
-			AND map_y = '.mysql_real_escape_string($y).'
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
 			AND kind BETWEEN 1 AND 6
 	';
 	return \util\mysql\query($sql, true);

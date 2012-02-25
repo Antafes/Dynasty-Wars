@@ -9,7 +9,10 @@ namespace dal\unit\train;
  */
 function unitPrices($kind)
 {
-	$sql = 'SELECT * FROM dw_costs_u WHERE kind = '.$kind;
+	$sql = '
+		SELECT * FROM dw_costs_u
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+	';
 	return \util\mysql\query($sql);
 }
 
@@ -21,7 +24,10 @@ function unitPrices($kind)
  */
 function trainTime($kind)
 {
-	$sql = 'SELECT btime FROM dw_buildtimes_unit WHERE kind = '.$kind;
+	$sql = '
+		SELECT btime FROM dw_buildtimes_unit
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+	';
 	return \util\mysql\query($sql);
 }
 
@@ -36,13 +42,13 @@ function removeResources($valuelist, $uid)
 {
 	$sql = '
 		UPDATE dw_res
-		SET food = food-'.$valuelist['food'].',
-			wood = wood-'.$valuelist['wood'].',
-			rock = rock-'.$valuelist['rock'].',
-			iron = iron-'.$valuelist['iron'].',
-			paper = paper-'.$valuelist['paper'].',
-			koku = koku-'.$valuelist['koku'].'
-		WHERE uid = '.$uid.'
+		SET food = food - '.\util\mysql\sqlval($valuelist['food']).',
+			wood = wood - '.\util\mysql\sqlval($valuelist['wood']).',
+			rock = rock - '.\util\mysql\sqlval($valuelist['rock']).',
+			iron = iron - '.\util\mysql\sqlval($valuelist['iron']).',
+			paper = paper - '.\util\mysql\sqlval($valuelist['paper']).',
+			koku = koku - '.\util\mysql\sqlval($valuelist['koku']).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -68,12 +74,12 @@ function startTrain($kind, $uid, $count, \DWDateTime $endTime, $city)
 			end_datetime,
 			city
 		) VALUES (
-			'.mysql_real_escape_string($kind).',
-			'.mysql_real_escape_string($uid).',
-			'.mysql_real_escape_string($count).',
+			'.\util\mysql\sqlval($kind).',
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($count).',
 			NOW(),
-			"'.mysql_real_escape_string($endTime->format()).'",
-			"'.mysql_real_escape_string($city).'"
+			'.\util\mysql\sqlval($endTime->format()).',
+			'.\util\mysql\sqlval($city).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -96,8 +102,8 @@ function checkTraining($uid, $city)
 			city,
 			kind
 		FROM dw_build_unit
-		WHERE uid = '.mysql_real_escape_string($uid).'
-			AND city = "'.mysql_real_escape_string($city).'"
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND city = '.\util\mysql\sqlval($city).'
 	';
 	return \util\mysql\query($sql, true);
 }
@@ -126,10 +132,10 @@ function checkPosition($uid, $map_x, $map_y, $kind)
 {
 	$sql = '
 		SELECT unid FROM dw_units
-		WHERE uid = '.$uid.'
-			AND pos_x = '.$map_x.'
-			AND pos_y = '.$map_y.'
-			AND kind = '.$kind.'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND pos_x = '.\util\mysql\sqlval($map_x).'
+			AND pos_y = '.\util\mysql\sqlval($map_y).'
+			AND kind = '.\util\mysql\sqlval($kind).'
 			AND NOT tid
 	';
 	return \util\mysql\query($sql);
@@ -144,7 +150,11 @@ function checkPosition($uid, $map_x, $map_y, $kind)
  */
 function addUnit($count, $unid)
 {
-	$sql = 'UPDATE dw_units SET count = count + '.$count.' WHERE unid = '.$unid;
+	$sql = '
+		UPDATE dw_units
+		SET count = count + '.\util\mysql\sqlval($count).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
+	';
 	return \util\mysql\query($sql);;
 }
 
@@ -168,11 +178,11 @@ function newUnit($uid, $kind, $count, $map_x, $map_y)
 			pos_x,
 			pos_y
 		) VALUES (
-			'.mysql_real_escape_string($uid).',
-			'.$kind.',
-			'.$count.',
-			'.$map_x.',
-			'.$map_y.'
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($kind).',
+			'.\util\mysql\sqlval($count).',
+			'.\util\mysql\sqlval($map_x).',
+			'.\util\mysql\sqlval($map_y).'
 		)
 	';
 	return \util\mysql\query($sql);

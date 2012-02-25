@@ -18,8 +18,8 @@ function exists($user)
 {
     return \util\mysql\query(
 		sprintf(
-            "SELECT count(*) FROM dw_user WHERE nick='%s'",
-            mysql_real_escape_string($user)
+            'SELECT count(*) FROM dw_user WHERE nick=%s',
+            \util\mysql\sqlval($user)
         )
     );
 }
@@ -38,8 +38,8 @@ function uid2nick($uid)
     return
         \util\mysql\query(
             sprintf(
-                "SELECT nick FROM dw_user WHERE uid = '%d'",
-                mysql_real_escape_string($uid)
+                'SELECT nick FROM dw_user WHERE uid = %d',
+                \util\mysql\sqlval($uid)
             )
         );
 }
@@ -54,8 +54,8 @@ function nick2uid($nick) {
     return
         \util\mysql\query(
             sprintf(
-                "SELECT uid FROM dw_user WHERE nick = '%s'",
-                mysql_real_escape_string($nick)
+                'SELECT uid FROM dw_user WHERE nick = %s',
+                \util\mysql\sqlval($nick)
             )
         );
 }
@@ -69,8 +69,8 @@ function returnCID($uid) {
     return
         \util\mysql\query(
             sprintf(
-                "SELECT cid FROM dw_user WHERE uid = %d",
-                mysql_real_escape_string($uid)
+                'SELECT cid FROM dw_user WHERE uid = %d',
+                \util\mysql\sqlval($uid)
             )
         );
 }
@@ -84,11 +84,11 @@ function returnAllCities($uid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT map_x, map_y FROM dw_map
-            WHERE uid = '%d'
-            ",
-            mysql_real_escape_string($uid)
+            WHERE uid = %d
+            ',
+            \util\mysql\sqlval($uid)
         )
     );
 }
@@ -103,7 +103,7 @@ function returnUID($email)
 {
 	$sql = '
 		SELECT `uid` FROM `dw_user`
-		WHERE `email` LIKE "'.mysql_real_escape_string($email).'"
+		WHERE `email` LIKE '.\util\mysql\sqlval($email).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -116,7 +116,10 @@ function returnUID($email)
  */
 function getClanRank($uid)
 {
-	$sql = 'SELECT cid, rankid FROM dw_user WHERE uid = '.$uid.'';
+	$sql = '
+		SELECT cid, rankid FROM dw_user
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+	';
 	return \util\mysql\query($sql);
 }
 
@@ -128,7 +131,11 @@ function getClanRank($uid)
  */
 function getClanLeaders($cid)
 {
-	$sql = 'SELECT uid FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).' AND rankid = 1';
+	$sql = '
+		SELECT uid FROM dw_user
+		WHERE cid = '.\util\mysql\sqlval($cid).'
+			AND rankid = 1
+	';
 	return \util\mysql\query($sql, true);
 }
 
@@ -143,8 +150,8 @@ function getUIDFromMapPosition($x, $y)
 {
 	$sql = '
 		SELECT uid FROM dw_map
-		WHERE map_x = '.mysql_real_escape_string($x).'
-			AND map_y = '.mysql_real_escape_string($y).'
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -159,7 +166,7 @@ function getUserInfos($uid)
 {
 	$sql = '
 		SELECT * FROM dw_user
-		WHERE uid = '.mysql_real_escape_string($uid).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -174,7 +181,7 @@ function getUIDFromTID($tid)
 {
 	$sql = '
 		SELECT uid FROM dw_troops
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }

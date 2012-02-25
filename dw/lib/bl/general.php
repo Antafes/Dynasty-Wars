@@ -286,7 +286,7 @@ function changePosition($uid, $x, $y, $city)
 			if ($terrain != 1 && $terrain != 5)
 			{
 				$erg3 = \dal\general\changePosition('uid = '.$uid);
-				$where = 'map_x='.mysql_real_escape_string($x).' AND map_y='.mysql_real_escape_string($y);
+				$where = 'map_x='.\util\mysql\sqlval($x).' AND map_y='.\util\mysql\sqlval($y);
 				$erg4 = \dal\general\changePosition($where, $uid, $city);
 
 				if ($erg3 && $erg4)

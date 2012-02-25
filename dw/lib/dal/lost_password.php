@@ -31,9 +31,9 @@ function insertRecovery($id, $time, $uid)
 		)
 		VALUES
 		(
-			"'.mysql_real_escape_string($id).'",
+			'.\util\mysql\sqlval($id).',
 			NOW(),
-			'.$uid.'
+			'.\util\mysql\sqlval($uid).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -50,7 +50,7 @@ function updateRecovery($id, $time)
 {
 	$sql = '
 		UPDATE dw_lostpw
-		SET mailid = "'.mysql_real_escape_string($id).'",
+		SET mailid = '.\util\mysql\sqlval($id).',
 			sent_time = NOW()
 	';
 	return \util\mysql\query($sql);
@@ -66,7 +66,7 @@ function getRecoveryRequest($uid)
 {
 	$sql = '
 		SELECT * FROM dw_lostpw
-		WHERE uid = '.mysql_real_escape_string($uid).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -79,6 +79,6 @@ function getRecoveryRequest($uid)
  */
 function removeRecoveryRequest($uid)
 {
-	$sql = 'DELETE FROM dw_lostpw WHERE uid = '.mysql_real_escape_string($uid).'';
+	$sql = 'DELETE FROM dw_lostpw WHERE uid = '.\util\mysql\sqlval($uid).'';
 	return \util\mysql\query($sql);
 }

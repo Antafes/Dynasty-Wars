@@ -26,7 +26,7 @@ function getAllCauses($lang)
 {
 	$sql = '
 		SELECT tcid, cause FROM dw_tribunal_causes
-		WHERE language = '.mysql_real_escape_string($lang).'
+		WHERE language = '.\util\mysql\sqlval($lang).'
 		ORDER BY sort
 	';
 	return \util\mysql\query($sql);
@@ -42,7 +42,7 @@ function getAllMessages($uid)
 {
 	$sql = '
 		SELECT msgid, title FROM dw_message
-		WHERE uid_recipient = '.mysql_real_escape_string($uid).'
+		WHERE uid_recipient = '.\util\mysql\sqlval($uid).'
 			AND ((read_datetime >= NOW()
 				OR read_datetime = 0)
 				OR archive = 1)
@@ -61,7 +61,7 @@ function getAllRules($lang)
 	$sql = '
 		SELECT ruid, paragraph, title
 		FROM dw_tribunal_rules
-		WHERE lang = "'.mysql_real_escape_string($lang).'"
+		WHERE lang = '.\util\mysql\sqlval($lang).'
 			AND !deleted
 		ORDER BY paragraph ASC
 	';
@@ -83,8 +83,8 @@ function getAllRuleTexts($ruid, $lang)
 			subclause,
 			description
 		FROM dw_tribunal_rules_texts
-		WHERE ruid = '.mysql_real_escape_string($ruid).'
-			AND lang = "'.mysql_real_escape_string($lang).'"
+		WHERE ruid = '.\util\mysql\sqlval($ruid).'
+			AND lang = '.\util\mysql\sqlval($lang).'
 			AND !deleted
 		ORDER BY clause, subclause
 	';
@@ -107,9 +107,9 @@ function insertRule($language, $paragraph, $title)
 			paragraph,
 			title
 		) VALUES (
-			"'.mysql_real_escape_string($language).'",
-			'.mysql_real_escape_string($paragraph).',
-			"'.mysql_real_escape_string($title).'"
+			'.\util\mysql\sqlval($language).',
+			'.\util\mysql\sqlval($paragraph).',
+			'.\util\mysql\sqlval($title).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -134,11 +134,11 @@ function insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
 			subclause,
 			description
 		) VALUES (
-			'.mysql_real_escape_string($ruid).',
-			"'.mysql_real_escape_string($language).'",
-			'.mysql_real_escape_string($clause).',
-			'.mysql_real_escape_string($subclause).',
-			"'.mysql_real_escape_string($text).'"
+			'.\util\mysql\sqlval($ruid).',
+			'.\util\mysql\sqlval($language).',
+			'.\util\mysql\sqlval($clause).',
+			'.\util\mysql\sqlval($subclause).',
+			'.\util\mysql\sqlval($text).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -155,9 +155,9 @@ function insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
 function deleteRule($table, $field, $key)
 {
 	$sql = '
-		UPDATE '.mysql_real_escape_string($table).'
+		UPDATE '.\util\mysql\sqlval($table, false).'
 		SET deleted = 1
-		WHERE '.mysql_real_escape_string($field).' = '.mysql_real_escape_string($key).'
+		WHERE '.\util\mysql\sqlval($field, false).' = '.\util\mysql\sqlval($key).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -181,10 +181,10 @@ function insertHearing($suitor, $accused, $cause, $description)
 			description,
 			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($suitor).',
-			'.mysql_real_escape_string($accused).',
-			"'.mysql_real_escape_string($cause).'",
-			"'.mysql_real_escape_string($description).'",
+			'.\util\mysql\sqlval($suitor).',
+			'.\util\mysql\sqlval($accused).',
+			'.\util\mysql\sqlval($cause).',
+			'.\util\mysql\sqlval($description).',
 			NOW()
 		)
 	';
@@ -208,9 +208,9 @@ function insertArgument($tid, $msgid, $from)
 			`from`,
 			added_datetime
 		) VALUES (
-			'.mysql_real_escape_string($tid).',
-			'.mysql_real_escape_string($msgid).',
-			"'.mysql_real_escape_string($from).'",
+			'.\util\mysql\sqlval($tid).',
+			'.\util\mysql\sqlval($msgid).',
+			'.\util\mysql\sqlval($from).',
 			NOW()
 		)
 	';
@@ -228,8 +228,8 @@ function getCause($tcid, $lang_id)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_causes
-		WHERE tcid = '.mysql_real_escape_string($tcid).'
-			AND language = '.mysql_real_escape_string($lang_id).'
+		WHERE tcid = '.\util\mysql\sqlval($tcid).'
+			AND language = '.\util\mysql\sqlval($lang_id).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -244,7 +244,7 @@ function getHearing($tid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -260,7 +260,7 @@ function getArguments($tid, $approved)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	if ($approved == false)
 		$sql .= '		AND approved = 1
@@ -279,8 +279,8 @@ function approveArgument($aid, $approved)
 {
 	$sql = '
 		UPDATE dw_tribunal_arguments
-		SET approved = '.mysql_real_escape_string($approved).'
-		WHERE aid = '.mysql_real_escape_string($aid).'
+		SET approved = '.\util\mysql\sqlval($approved).'
+		WHERE aid = '.\util\mysql\sqlval($aid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -296,8 +296,8 @@ function recallHearing($tid, $uid)
 	$sql = '
 		UPDATE dw_tribunal
 		SET deleted = 1,
-			deleted_by = '.mysql_real_escape_string($uid).'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+			deleted_by = '.\util\mysql\sqlval($uid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -312,7 +312,7 @@ function getArgument($aid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
-		WHERE aid = '.mysql_real_escape_string($aid).'
+		WHERE aid = '.\util\mysql\sqlval($aid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -329,10 +329,10 @@ function makeDecision($tid, $decision, $reason)
 {
 	$sql = '
 		UPDATE dw_tribunal
-		SET decision = "'.mysql_real_escape_string($decision).'",
-			reason = "'.mysql_real_escape_string($reason).'",
+		SET decision = '.\util\mysql\sqlval($decision).',
+			reason = '.\util\mysql\sqlval($reason).',
 			decision_datetime = NOW()
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -348,8 +348,8 @@ function blockComments($tid, $block)
 {
 	$sql = '
 		UPDATE dw_tribunal
-		SET block_comments = '.mysql_real_escape_string($block).'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET block_comments = '.\util\mysql\sqlval($block).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -372,7 +372,7 @@ function getComments($tid)
 			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 			AND !deleted
 		ORDER BY create_datetime
 	';
@@ -396,9 +396,9 @@ function saveComment($tid, $uid, $comment)
 			comment,
 			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($tid).',
-			'.mysql_real_escape_string($uid).',
-			"'.mysql_real_escape_string($comment).'",
+			'.\util\mysql\sqlval($tid).',
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($comment).',
 			NOW()
 		)
 	';
@@ -416,7 +416,7 @@ function deleteComment($tcoid)
 	$sql = '
 		UPDATE dw_tribunal_comments
 		SET deleted = 1
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -433,11 +433,11 @@ function editComment($tcoid, $comment, $uid)
 {
 	$sql = '
 		UPDATE dw_tribunal_comments
-		SET comment = "'.mysql_real_escape_string($comment).'",
-			last_changed_from = '.mysql_real_escape_string($uid).',
+		SET comment = '.\util\mysql\sqlval($comment).',
+			last_changed_from = '.\util\mysql\sqlval($uid).',
 			changed_datetime = NOW(),
 			changed_count = changed_count + 1
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -459,7 +459,7 @@ function getComment($tcoid)
 			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 			AND !deleted
 		ORDER BY create_datetime
 	';

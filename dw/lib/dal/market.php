@@ -23,7 +23,8 @@ function placeOnMarket(
 {
 	\util\mysql\query(
 		sprintf(
-			"INSERT INTO dw_market (
+			'
+			INSERT INTO dw_market (
 				`sid`,
 				`sx`,
 				`sy`,
@@ -35,26 +36,26 @@ function placeOnMarket(
 				`complete`,
 				`create_datetime`
 			) VALUES (
-				'%d',
-				'%d',
-				'%d',
-				'%s',
-				'%f',
-				'%s',
-				'%f',
-				'%d',
-				'%d',
+				%d,
+				%d,
+				%d,
+				%s,
+				%f,
+				%s,
+				%f,
+				%d,
+				%d,
 				NOW()
 			)
-			",
-			mysql_real_escape_string($uid),
-			mysql_real_escape_string($x),
-			mysql_real_escape_string($y),
-			mysql_real_escape_string($sellResource),
-			mysql_real_escape_string($sellAmount),
-			mysql_real_escape_string($exchangeResource),
-			mysql_real_escape_string($exchangeAmount),
-			mysql_real_escape_string($tax),
+			',
+			\util\mysql\sqlval($uid),
+			\util\mysql\sqlval($x),
+			\util\mysql\sqlval($y),
+			\util\mysql\sqlval($sellResource),
+			\util\mysql\sqlval($sellAmount),
+			\util\mysql\sqlval($exchangeResource),
+			\util\mysql\sqlval($exchangeAmount),
+			\util\mysql\sqlval($tax),
 			0
 		)
 	);
@@ -70,13 +71,13 @@ function placeOnMarket(
 function removeFromMarket($mid, $uid) {
 	\util\mysql\query(
 		sprintf(
-			"
+			'
 			UPDATE dw_market
-			SET complete = 1, bid = '%d'
-			WHERE mid = '%d'
-			",
-			mysql_real_escape_string($uid),
-			mysql_real_escape_string($mid)
+			SET complete = 1, bid = %d
+			WHERE mid = %d
+			',
+			\util\mysql\sqlval($uid),
+			\util\mysql\sqlval($mid)
 
 		)
 	);
@@ -93,11 +94,11 @@ function getOwner($mid)
 	return
 		\util\mysql\query(
 			sprintf(
-				"
+				'
 				SELECT sid FROM dw_market
-				WHERE mid = '%d'
-				",
-				mysql_real_escape_string($mid)
+				WHERE mid = %d
+				',
+				\util\mysql\sqlval($mid)
 			)
 		);
 }
@@ -112,11 +113,11 @@ function getOfferDetails($mid) {
 	return
 		\util\mysql\query(
 			sprintf(
-				"
+				'
 				SELECT * FROM dw_market
 				WHERE mid = %d
-				",
-				mysql_real_escape_string($mid)
+				',
+				\util\mysql\sqlval($mid)
 			)
 		);
 }
@@ -131,10 +132,10 @@ function returnAllOffers()
 	return
 	\util\mysql\query(
 		sprintf(
-			"
+			'
 			SELECT * FROM dw_market
 			WHERE complete = 0
-			"
+			'
 		),
 		true
 	);
@@ -150,11 +151,11 @@ function isOpen($mid) {
 	return
 		\util\mysql\query(
 			sprintf(
-				"
+				'
 				SELECT count(*) FROM dw_market
 				WHERE mid = %d AND complete = 0
-				",
-				mysql_real_escape_string($mid)
+				',
+				\util\mysql\sqlval($mid)
 			)
 		);
 }
@@ -168,23 +169,23 @@ function isOpen($mid) {
  * ALL will be used
  * @return <array> containing all offers the user was ever involved in
  */
-function userOffers($uid, $filter, $order = "DESC")
+function userOffers($uid, $filter, $order = 'DESC')
 {
-	$join = "JOIN dw_user ON dw_user.uid = dw_market.sid OR dw_user.uid = dw_market.bid";
-	if ($filter == "BUYER")
-		$join = "JOIN dw_user ON dw_user.uid = dw_market.bid";
-	if ($filter == "SELLER")
-		$join = "JOIN dw_user ON dw_user.uid = dw_market.sid";
+	$join = 'JOIN dw_user ON dw_user.uid = dw_market.sid OR dw_user.uid = dw_market.bid';
+	if ($filter == 'BUYER')
+		$join = 'JOIN dw_user ON dw_user.uid = dw_market.bid';
+	if ($filter == 'SELLER')
+		$join = 'JOIN dw_user ON dw_user.uid = dw_market.sid';
 	$sql = sprintf(
-		"
+		'
 		SELECT sid, bid, s_resource, s_amount, e_resource, e_amount, tax, create_datetime, mid FROM dw_market
 		%s
 		WHERE dw_user.uid = %d
 		ORDER BY create_datetime %s
-		",
-		mysql_real_escape_string($join),
-		mysql_real_escape_string($uid),
-		mysql_real_escape_string($order)
+		',
+		\util\mysql\sqlval($join),
+		\util\mysql\sqlval($uid),
+		\util\mysql\sqlval($order)
 	);
 	return \util\mysql\query($sql, true);
 }
@@ -205,7 +206,7 @@ function userOffers($uid, $filter, $order = "DESC")
 function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 {
 	$sql = sprintf(
-		"
+		'
 		SELECT resource, sum(amount) AS amount FROM
 		(
 		 SELECT s_resource AS resource, sum(s_amount) AS amount FROM
@@ -233,11 +234,11 @@ function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 		 GROUP BY resource
 		) AS dw_market_sales
 		GROUP BY resource
-		",
-		mysql_real_escape_string($completeS),
-		mysql_real_escape_string($limitS),
-		mysql_real_escape_string($completeE),
-		mysql_real_escape_string($limitE)
+		',
+		\util\mysql\sqlval($completeS),
+		\util\mysql\sqlval($limitS),
+		\util\mysql\sqlval($completeE),
+		\util\mysql\sqlval($limitE)
 	);
 	return \util\mysql\query($sql);
 }
@@ -262,24 +263,24 @@ function search(
 )
 {
 	$sql = sprintf(
-		"
+		'
 		SELECT * FROM dw_market
 		JOIN dw_user ON dw_user.uid = dw_market.sid
-		WHERE s_resource LIKE '%s'
-		AND e_resource LIKE '%s'
-		AND s_amount BETWEEN '%d' AND '%d'
-		AND e_amount BETWEEN '%d' AND '%d'
-		AND complete = '%d'
-		AND nick LIKE '%s'
-		",
-		mysql_real_escape_string($Sresource),
-		mysql_real_escape_string($Eresource),
-		mysql_real_escape_string($SvalueRangeStart),
-		mysql_real_escape_string($SvalueRangeEnd),
-		mysql_real_escape_string($EvalueRangeStart),
-		mysql_real_escape_string($EvalueRangeEnd),
-		mysql_real_escape_string($complete),
-		mysql_real_escape_string($seller)
+		WHERE s_resource LIKE %s
+		AND e_resource LIKE %s
+		AND s_amount BETWEEN %d AND %d
+		AND e_amount BETWEEN %d AND %d
+		AND complete = %d
+		AND nick LIKE %s
+		',
+		\util\mysql\sqlval($Sresource),
+		\util\mysql\sqlval($Eresource),
+		\util\mysql\sqlval($SvalueRangeStart),
+		\util\mysql\sqlval($SvalueRangeEnd),
+		\util\mysql\sqlval($EvalueRangeStart),
+		\util\mysql\sqlval($EvalueRangeEnd),
+		\util\mysql\sqlval($complete),
+		\util\mysql\sqlval($seller)
 	);
 	return \util\mysql\query($sql, true);
 }

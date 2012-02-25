@@ -18,14 +18,14 @@ function surrounding($lx, $hx, $ly, $hy, $x, $y)
 		SELECT map_x, map_y, terrain FROM dw_map
 		WHERE (
 				(
-					(map_x BETWEEN '.$lx.' AND '.$hx.')
-					AND map_y = '.$ly.'
+					(map_x BETWEEN '.\util\mysql\sqlval($lx).' AND '.\util\mysql\sqlval($hx).')
+					AND map_y = '.\util\mysql\sqlval($ly).'
 				) OR (
-					(map_x BETWEEN '.$lx.' AND '.$hx.')
-					AND map_y = '.$hy.'
+					(map_x BETWEEN '.\util\mysql\sqlval($lx).' AND '.\util\mysql\sqlval($hx).')
+					AND map_y = '.\util\mysql\sqlval($hy).'
 				) OR (
-					(map_x = '.$lx.' OR map_x = '.$hx.')
-					AND map_y = '.$y.'
+					(map_x = '.\util\mysql\sqlval($lx).' OR map_x = '.\util\mysql\sqlval($hx).')
+					AND map_y = '.\util\mysql\sqlval($y).'
 				)
 			)
 			AND NOT (terrain = 1 OR terrain = 5)
@@ -41,7 +41,7 @@ function surrounding($lx, $hx, $ly, $hy, $x, $y)
  */
 function getTroop($tid)
 {
-	$sql = 'SELECT * FROM dw_troops WHERE tid = '.$tid;
+	$sql = 'SELECT * FROM dw_troops WHERE tid = '.\util\mysql\sqlval($tid).'';
 	$GLOBALS['firePHP']->log($sql, 'getTroop->query');
 	return \util\mysql\query($sql);
 }
@@ -55,9 +55,17 @@ function getTroop($tid)
  */
 function getPosition($uid, $kind)
 {
-	$sql = 'SELECT DISTINCT pos_x, pos_y FROM dw_'.$kind.' WHERE uid = '.$uid;
+	$sql = '
+		SELECT DISTINCT
+			pos_x,
+			pos_y
+		FROM '.\util\mysql\sqlval('dw_'.$kind, false).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+	';
+
 	if ($kind == 'units')
 		$sql .= ' AND NOT tid';
+
 	return \util\mysql\query($sql, true);
 }
 
@@ -83,9 +91,9 @@ function getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy)
 				res,
 				amount
 			FROM dw_troops
-			WHERE pos_x = '.$posx.'
-				AND pos_y = '.$posy.'
-				AND uid = '.mysql_real_escape_string($uid).'
+			WHERE pos_x = '.\util\mysql\sqlval($posx).'
+				AND pos_y = '.\util\mysql\sqlval($posy).'
+				AND uid = '.\util\mysql\sqlval($uid).'
 			ORDER BY tid
 		';
 	}
@@ -97,11 +105,11 @@ function getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy)
 				kind,
 				count
 			FROM dw_units
-			WHERE pos_x = '.$posx.'
-				AND pos_y = '.$posy.'
-				AND uid = '.mysql_real_escape_string($uid).'
+			WHERE pos_x = '.\util\mysql\sqlval($posx).'
+				AND pos_y = '.\util\mysql\sqlval($posy).'
+				AND uid = '.\util\mysql\sqlval($uid).'
 				'.(!$getAll ? 'AND NOT tid' : '').'
-			ORDER BY '.$orderBy.'
+			ORDER BY '.\util\mysql\sqlval($orderBy, false).'
 		';
 	}
 	return \util\mysql\query($sql, true);
@@ -118,10 +126,10 @@ function getTroopUnits($tid, $orderBy)
 {
 	$sql = '
 		SELECT * FROM dw_units
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	if($orderBy)
-		$sql .= 'ORDER BY '.$orderBy;
+		$sql .= 'ORDER BY '.\util\mysql\sqlval($orderBy, false);
 	$GLOBALS['firePHP']->log($sql, 'getTroopUnits->query');
 	return \util\mysql\query($sql, true);
 }
@@ -144,10 +152,10 @@ function createTroop($uid, $posx, $posy, $name)
 			pos_y,
 			name
 		) VALUES (
-			'.$uid.',
-			'.$posx.',
-			'.$posy.',
-			"'.mysql_real_escape_string($name).'"
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($posx).',
+			'.\util\mysql\sqlval($posy).',
+			'.\util\mysql\sqlval($name).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -164,8 +172,8 @@ function addUnits($unid, $tid)
 {
 	$sql = '
 		UPDATE dw_units
-		SET tid = '.mysql_real_escape_string($tid).'
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		SET tid = '.\util\mysql\sqlval($tid).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -178,7 +186,7 @@ function addUnits($unid, $tid)
  */
 function getUnitCount($unid)
 {
-	$sql = 'SELECT count, kind FROM dw_units WHERE unid = '.mysql_real_escape_string($unid);
+	$sql = 'SELECT count, kind FROM dw_units WHERE unid = '.\util\mysql\sqlval($unid);
 	return \util\mysql\query($sql);
 }
 
@@ -190,7 +198,11 @@ function getUnitCount($unid)
  */
 function removeFromUNID($unid, $count)
 {
-	$sql = 'UPDATE dw_units SET count = '.$count.' WHERE unid = '.mysql_real_escape_string($unid);
+	$sql = '
+		UPDATE dw_units
+		SET count = '.\util\mysql\sqlval($count).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
+	';
 	\util\mysql\query($sql);
 }
 
@@ -214,7 +226,11 @@ function checkCanAttack()
  */
 function checkTarget($tx, $ty)
 {
-	$sql = 'SELECT uid FROM dw_map WHERE map_x = '.$tx.' AND map_y = '.$ty;
+	$sql = '
+		SELECT uid FROM dw_map
+		WHERE map_x = '.\util\mysql\sqlval($tx).'
+			AND map_y = '.\util\mysql\sqlval($ty).'
+	';
 	return \util\mysql\query($sql);
 }
 
@@ -226,7 +242,7 @@ function checkTarget($tx, $ty)
  */
 function checkTargetClan($tuid)
 {
-	$sql = 'SELECT cid FROM dw_user WHERE uid = '.mysql_real_escape_string($tuid);
+	$sql = 'SELECT cid FROM dw_user WHERE uid = '.\util\mysql\sqlval($tuid);
 	return \util\mysql\query($sql);
 }
 
@@ -250,11 +266,11 @@ function sendTroop($tid, $tx, $ty, $type, \DWDateTime $endtime)
 			type,
 			end_datetime
 		) VALUES (
-			'.mysql_real_escape_string($tid).',
-			'.mysql_real_escape_string($tx).',
-			'.mysql_real_escape_string($ty).',
-			'.mysql_real_escape_string($type).',
-			"'.mysql_real_escape_string($endtime->format()).'"
+			'.\util\mysql\sqlval($tid).',
+			'.\util\mysql\sqlval($tx).',
+			'.\util\mysql\sqlval($ty).',
+			'.\util\mysql\sqlval($type).',
+			'.\util\mysql\sqlval($endtime->format()).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -272,9 +288,9 @@ function addResourceToTroop($tid, $res, $amount)
 {
 	$sql = '
 		UPDATE dw_troops
-		SET res = "'.mysql_real_escape_string($res).'",
-			amount = '.mysql_real_escape_string($amount).'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET res = '.\util\mysql\sqlval($res).',
+			amount = '.\util\mysql\sqlval($amount).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -291,7 +307,7 @@ function checkTroops($tuid)
 		SELECT dw_troops_move.tid
 		FROM dw_troops_move
 		LEFT OUTER JOIN dw_troops ON dw_troops_move.tid = dw_troops.tid
-		WHERE uid = '.mysql_real_escape_string($tuid).'
+		WHERE uid = '.\util\mysql\sqlval($tuid).'
 	';
 	$GLOBALS['firePHP']->log($sql, 'checkTroops-SQL');
 	return \util\mysql\query($sql, true);
@@ -312,7 +328,7 @@ function checkTroop($tid)
 			ty,
 			type
 		FROM dw_troops_move
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -324,7 +340,7 @@ function checkTroop($tid)
  */
 function endMoving($tid)
 {
-	$sql = 'DELETE FROM dw_troops_move WHERE tid = '.mysql_real_escape_string($tid);
+	$sql = 'DELETE FROM dw_troops_move WHERE tid = '.\util\mysql\sqlval($tid);
 	\util\mysql\query($sql);
 }
 
@@ -336,7 +352,7 @@ function endMoving($tid)
  */
 function getMaxTID($tuid)
 {
-	$sql = 'SELECT max(tid) FROM `dw_troops` WHERE uid = '.mysql_real_escape_string($tuid);
+	$sql = 'SELECT max(tid) FROM `dw_troops` WHERE uid = '.\util\mysql\sqlval($tuid);
 	return \util\mysql\query($sql);
 }
 
@@ -351,9 +367,9 @@ function changeTroopPosition($tid, $x, $y)
 {
 	$sql = '
 		UPDATE dw_troops
-		SET pos_x = '.$x.',
-			pos_y = '.$y.'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET pos_x = '.\util\mysql\sqlval($x).',
+			pos_y = '.\util\mysql\sqlval($y).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	\util\mysql\query($sql);
 }
@@ -369,9 +385,9 @@ function changeUnitsPosition($tid, $x, $y)
 {
 	$sql = '
 		UPDATE dw_units
-		SET pos_x = '.$x.',
-			pos_y = '.$y.'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET pos_x = '.\util\mysql\sqlval($x).',
+			pos_y = '.\util\mysql\sqlval($y).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	\util\mysql\query($sql);
 }
@@ -387,8 +403,8 @@ function checkTroopUnits($kind, $tid)
 {
 	$sql = '
 		SELECT unid FROM dw_units
-		WHERE tid = '.mysql_real_escape_string($tid).'
-			AND kind = '.mysql_real_escape_string($kind).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
+			AND kind = '.\util\mysql\sqlval($kind).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -400,7 +416,7 @@ function checkTroopUnits($kind, $tid)
  */
 function deleteUnit($unid)
 {
-	$sql = 'DELETE FROM dw_units WHERE unid = '.mysql_real_escape_string($unid);
+	$sql = 'DELETE FROM dw_units WHERE unid = '.\util\mysql\sqlval($unid);
 	\util\mysql\query($sql);
 }
 
@@ -414,8 +430,8 @@ function rename($tid, $name)
 {
 	$sql = '
 		UPDATE dw_troops
-		SET name = "'.mysql_real_escape_string($name).'"
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET name = '.\util\mysql\sqlval($name).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	\util\mysql\query($sql);
 }
@@ -427,7 +443,7 @@ function rename($tid, $name)
  */
 function deleteTroop($tid)
 {
-	$sql = 'DELETE FROM dw_troops WHERE tid = '.mysql_real_escape_string($tid);
+	$sql = 'DELETE FROM dw_troops WHERE tid = '.\util\mysql\sqlval($tid);
 	\util\mysql\query($sql);
 }
 
@@ -441,7 +457,7 @@ function resetTID($tid)
 	$sql = '
 		UPDATE dw_units
 		SET tid = 0
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	\util\mysql\query($sql);
 }
@@ -457,8 +473,8 @@ function getIsle($x, $y)
 {
 	$sql = '
 		SELECT isle FROM dw_map
-		WHERE map_x = '.mysql_real_escape_string($x).'
-			AND map_y = '.mysql_real_escape_string($y).'
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -471,7 +487,7 @@ function getIsle($x, $y)
  */
 function loaded($tid)
 {
-	$sql = 'SELECT res, amount FROM dw_troops WHERE tid = '.mysql_real_escape_string($tid);
+	$sql = 'SELECT res, amount FROM dw_troops WHERE tid = '.\util\mysql\sqlval($tid);
 	return \util\mysql\query($sql);
 }
 
@@ -485,7 +501,7 @@ function getUnitStats($kind)
 {
 	$sql = '
 		SELECT * FROM dw_unit_stats
-		WHERE kind = '.mysql_real_escape_string($kind).'
+		WHERE kind = '.\util\mysql\sqlval($kind).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -500,8 +516,8 @@ function updateUnitCount($unid, $count)
 {
 	$sql = '
 		UPDATE dw_units
-		SET count = '.mysql_real_escape_string($count).'
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		SET count = '.\util\mysql\sqlval($count).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -528,7 +544,7 @@ function removeFromTroop($unid)
 	$sql = '
 		UPDATE dw_units
 		SET tid = 0
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
 	';
 	return \util\mysql\query($sql);
 }

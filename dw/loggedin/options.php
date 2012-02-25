@@ -64,14 +64,14 @@ if ($_GET['leave'] == 2)
 	$sql = '
 		SELECT COUNT(*)
 		FROM dw_user
-		WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+		WHERE cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 	';
 	$users = util\mysql\query($sql);
 	$sql = '
 		SELECT COUNT(u.uid)
 		FROM dw_user u
 		JOIN dw_clan_rank cr USING (rankid)
-		WHERE u.uid = '.mysql_real_escape_string($_SESSION['user']->getUid()).'
+		WHERE u.uid = '.util\mysql\sqlval($_SESSION['user']->getUid()).'
 			AND cr.admin
 		GROUP BY u.uid
 	';
@@ -84,7 +84,7 @@ if ($_GET['leave'] == 2)
 			$sql = '
 				SELECT rankid
 				FROM dw_clan_rank
-				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+				WHERE cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 					AND admin
 			';
 			$adminRankID = util\mysql\query($sql);
@@ -93,7 +93,7 @@ if ($_GET['leave'] == 2)
 				SELECT u.uid
 				FROM dw_user u
 				JOIN dw_clan_rank cr USING (rankid)
-				WHERE u.cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+				WHERE u.cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 					AND !cr.standard
 					AND !u.deleted
 				ORDER BY RAND()
@@ -106,7 +106,7 @@ if ($_GET['leave'] == 2)
 				$sql = '
 					SELECT u.uid
 					FROM dw_user u
-					WHERE u.cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+					WHERE u.cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 						AND !u.deleted
 					ORDER BY RAND()
 					LIMIT 1
@@ -123,12 +123,12 @@ if ($_GET['leave'] == 2)
 		{
 			$sql = '
 				DELETE FROM dw_clan
-				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+				WHERE cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 			';
 			$deleteResult = util\mysql\query($sql);
 			$sql = '
 				DELETE FROM dw_clan_rank
-				WHERE cid = '.mysql_real_escape_string($_SESSION['user']->getCID()).'
+				WHERE cid = '.util\mysql\sqlval($_SESSION['user']->getCID()).'
 			';
 			$delerg2 = util\mysql\query($sql);
 		}

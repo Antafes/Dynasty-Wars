@@ -21,10 +21,10 @@ function saveLog($type, $actor, $concerned, $extra)
 			type
 		) VALUES (
 			NOW(),
-			"'.mysql_real_escape_string($actor).'",
-			"'.mysql_real_escape_string($concerned).'",
-			"'.mysql_real_escape_string($extra).'",
-			'.mysql_real_escape_string($type).')
+			'.\util\mysql\sqlval($actor).',
+			'.\util\mysql\sqlval($concerned).',
+			'.\util\mysql\sqlval($extra).',
+			'.\util\mysql\sqlval($type).')
 	';
 	return \util\mysql\query($sql);
 }

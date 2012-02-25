@@ -11,8 +11,8 @@ namespace dal\buildings;
 function selectAll($x, $y)
 {
 	$sql = 'SELECT * FROM `dw_buildings`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 			AND `kind` < 23
 	';
 	return \util\mysql\query($sql);
@@ -28,8 +28,8 @@ function selectAll($x, $y)
 function getHarbour($x, $y)
 {
 	$sql = 'SELECT `harbour` FROM `dw_map`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"';
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'';
 	return \util\mysql\query($sql);
 }
 
@@ -44,10 +44,10 @@ function getHarbour($x, $y)
 function selectBuilding($x, $y, $pos)
 {
 	if ($pos)
-		$buildplace = 'AND `position` = "'.mysql_real_escape_string($pos).'"';
+		$buildplace = 'AND `position` = '.\util\mysql\sqlval($pos).'';
 	$sql = 'SELECT * FROM `dw_buildings`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 			'.$buildplace.'
 	';
 	return \util\mysql\query($sql, true);
@@ -70,7 +70,7 @@ function prices($kind)
 			paper,
 			koku
 		FROM dw_costs_b
-		WHERE kind = "'.mysql_real_escape_string($kind).'"
+		WHERE kind = '.\util\mysql\sqlval($kind).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -87,8 +87,8 @@ function prices($kind)
 function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 {
 	$sql = 'SELECT food, wood, rock, iron, paper, koku FROM dw_costs_b_upgr
-		WHERE kind="'.mysql_real_escape_string($kind).'"
-			AND `kind_u` = "'.mysql_real_escape_string($kind_u).'"
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+			AND `kind_u` = '.\util\mysql\sqlval($kind_u).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -101,7 +101,7 @@ function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
  */
 function checkReligion($uid)
 {
-	$sql = 'SELECT `religion` FROM `dw_user` WHERE `uid` = '.mysql_real_escape_string($uid);
+	$sql = 'SELECT `religion` FROM `dw_user` WHERE `uid` = '.\util\mysql\sqlval($uid);
 	return \util\mysql\query($sql);
 }
 
@@ -122,9 +122,9 @@ function getBuildingByKind($kind, $x, $y)
 			`bid`,
 			`position`
 		FROM `dw_buildings`
-		WHERE `kind` = '.mysql_real_escape_string($kind).'
-			AND `map_x` = '.mysql_real_escape_string($x).'
-			AND `map_y` = '.mysql_real_escape_string($y);
+		WHERE `kind` = '.\util\mysql\sqlval($kind).'
+			AND `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y);
 	return \util\mysql\query($sql);
 }
 
@@ -139,9 +139,9 @@ function getBuildingByKind($kind, $x, $y)
 function getTime($kind, $upgrade, $u_lvl)
 {
 	if ($upgrade == 0)
-		$sql = 'SELECT `btime` FROM `dw_buildtimes` WHERE `kind` = '.mysql_real_escape_string($kind);
+		$sql = 'SELECT `btime` FROM `dw_buildtimes` WHERE `kind` = '.\util\mysql\sqlval($kind);
 	elseif ($upgrade == 1)
-		$sql = 'SELECT `upgrtime` FROM `dw_buildtimes_upgr` WHERE `kind` = '.mysql_real_escape_string($kind).' AND `kind_u` = '.mysql_real_escape_string($u_lvl);
+		$sql = 'SELECT `upgrtime` FROM `dw_buildtimes_upgr` WHERE `kind` = '.\util\mysql\sqlval($kind).' AND `kind_u` = '.\util\mysql\sqlval($u_lvl);
 	return \util\mysql\query($sql);
 }
 
@@ -163,8 +163,8 @@ function checkBuild($x, $y)
 			`dw_buildings`.`position`
 		FROM `dw_buildings`
 		INNER JOIN `dw_build` USING (`bid`)
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 		ORDER BY `end_datetime` ASC
 	';
 $GLOBALS['firePHP']->log($sql, 'checkBuild sql');
@@ -191,11 +191,11 @@ function insertBuilding($uid, $x, $y, $kind, $position)
 			`kind`,
 			`position`
 		) VALUES (
-			"'.mysql_real_escape_string($uid).'",
-			"'.mysql_real_escape_string($x).'",
-			"'.mysql_real_escape_string($y).'",
-			"'.mysql_real_escape_string($kind).'",
-			"'.mysql_real_escape_string($position).'"
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($x).',
+			'.\util\mysql\sqlval($y).',
+			'.\util\mysql\sqlval($kind).',
+			'.\util\mysql\sqlval($position).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -218,10 +218,10 @@ function startBuilding($bid, $upgrade, \DWDateTime $endTime)
 			`start_datetime`,
 			`end_datetime`
 		) VALUES (
-			"'.mysql_real_escape_string($bid).'",
-			"'.mysql_real_escape_string($upgrade).'",
+			'.\util\mysql\sqlval($bid).',
+			'.\util\mysql\sqlval($upgrade).',
 			NOW(),
-			"'.mysql_real_escape_string($endTime->format('Y-m-d H:i:s')).'"
+			'.\util\mysql\sqlval($endTime->format()).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -236,8 +236,8 @@ function startBuilding($bid, $upgrade, \DWDateTime $endTime)
 function insertBuildPlace($bid, $buildplace)
 {
 	$sql = '
-		UPDATE `dw_buildings` SET `position` = "'.mysql_real_escape_string($buildplace).'"
-		WHERE `bid` = "'.mysql_real_escape_string($bid).'"
+		UPDATE `dw_buildings` SET `position` = '.\util\mysql\sqlval($buildplace).'
+		WHERE `bid` = '.\util\mysql\sqlval($bid).'
 	';
 	\util\mysql\query($sql);
 }
@@ -259,7 +259,7 @@ function getBuildInfo($bid)
 			`kind`
 		FROM `dw_build`
 		LEFT OUTER JOIN `dw_buildings` ON `dw_build`.`bid` = `dw_buildings`.`bid`
-		WHERE `dw_build`.`bid` = "'.mysql_real_escape_string($bid).'"
+		WHERE `dw_build`.`bid` = '.\util\mysql\sqlval($bid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -271,7 +271,7 @@ function getBuildInfo($bid)
  */
 function removeFromBuildList($bid)
 {
-	$sql = 'DELETE FROM `dw_build` WHERE `bid` = "'.mysql_real_escape_string($bid).'"';
+	$sql = 'DELETE FROM `dw_build` WHERE `bid` = '.\util\mysql\sqlval($bid).'';
 	\util\mysql\query($sql);
 }
 
@@ -284,9 +284,9 @@ function updateBuilding($valuelist)
 {
 	$sql = '
 		UPDATE `dw_buildings`
-		SET `lvl` = "'.mysql_real_escape_string($valuelist['lvl']).'",
-			`upgrade_lvl` = "'.mysql_real_escape_string($valuelist['ulvl']).'"
-		WHERE `bid` = "'.mysql_real_escape_string($valuelist['bid']).'"
+		SET `lvl` = '.\util\mysql\sqlval($valuelist['lvl']).',
+			`upgrade_lvl` = '.\util\mysql\sqlval($valuelist['ulvl']).'
+		WHERE `bid` = '.\util\mysql\sqlval($valuelist['bid']).'
 	';
 	\util\mysql\query($sql);
 }
@@ -301,8 +301,8 @@ function updateBuilding($valuelist)
 function getDefense($x, $y)
 {
 	$sql = 'SELECT * FROM `dw_buildings`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 			AND `kind` > 22
 	';
 	return \util\mysql\query($sql, true);
@@ -322,8 +322,8 @@ function getStats($kind, $upgrade_lvl)
 			defense,
 			attack
 		FROM dw_building_stats
-		WHERE kind = '.mysql_real_escape_string($kind).'
-			AND upgrade_lvl = '.mysql_real_escape_string($upgrade_lvl).'
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+			AND upgrade_lvl = '.\util\mysql\sqlval($upgrade_lvl).'
 	';
 	return \util\mysql\query($sql);
 }

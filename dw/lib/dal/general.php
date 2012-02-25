@@ -12,8 +12,8 @@ function getResources($x, $y)
 {
 	$sql = '
 		SELECT * FROM `dw_res`
-		WHERE `map_x` = '.mysql_real_escape_string($x).'
-			AND `map_y` = '.mysql_real_escape_string($y).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -26,7 +26,7 @@ function getResources($x, $y)
  */
 function getLanguageByUID($uid)
 {
-	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
+	$sql = 'SELECT language FROM dw_user WHERE uid='.\util\mysql\sqlval($uid);
 	return \util\mysql\query($sql);
 }
 
@@ -85,12 +85,12 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 			message,
 			type
 		) VALUES (
-			'.mysql_real_escape_string($uid_sender).',
-			'.mysql_real_escape_string($uid_recipient).',
+			'.\util\mysql\sqlval($uid_sender).',
+			'.\util\mysql\sqlval($uid_recipient).',
 			NOW(),
-			"'.mysql_real_escape_string($title).'",
-			"'.mysql_real_escape_string($message).'",
-			'.mysql_real_escape_string($type).'
+			'.\util\mysql\sqlval($title).',
+			'.\util\mysql\sqlval($message).',
+			'.\util\mysql\sqlval($type).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -105,7 +105,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
  */
 function deactivateUser($uid, $state)
 {
-	$sql = 'UPDATE dw_user SET deactivated = '.mysql_real_escape_string($state).' WHERE uid = '.mysql_real_escape_string($uid).'';
+	$sql = 'UPDATE dw_user SET deactivated = '.\util\mysql\sqlval($state).' WHERE uid = '.\util\mysql\sqlval($uid).'';
 	return \util\mysql\query($sql);
 }
 
@@ -117,7 +117,7 @@ function deactivateUser($uid, $state)
  */
 function setClanLeader($uid)
 {
-	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.mysql_real_escape_string($uid).'';
+	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.\util\mysql\sqlval($uid).'';
 	return \util\mysql\query($sql);
 }
 
@@ -131,8 +131,8 @@ function setClanLeader($uid)
 function deleteFrom($table, $where)
 {
 	$sql = '
-		DELETE FROM '.mysql_real_escape_string($table).'
-		WHERE '.mysql_real_escape_string($where).'
+		DELETE FROM '.\util\mysql\sqlval($table, false).'
+		WHERE '.\util\mysql\sqlval($where).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -145,7 +145,7 @@ function deleteFrom($table, $where)
  */
 function updateMap($uid)
 {
-	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.mysql_real_escape_string($uid).'';
+	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.\util\mysql\sqlval($uid).'';
 	return \util\mysql\query($sql);
 }
 
@@ -160,7 +160,7 @@ function deleteBuildings($uid)
 	$sql = '
 		DELETE FROM dw_buildings, dw_build
 		USING dw_buildings LEFT JOIN dw_build USING (bid)
-		WHERE dw_buildings.uid = '.mysql_real_escape_string($uid).'
+		WHERE dw_buildings.uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -177,9 +177,9 @@ function changePosition($where, $uid = 0, $city = '')
 {
 	$sql = '
 		UPDATE dw_map
-		SET uid = '.mysql_real_escape_string($uid).',
-			city = "'.mysql_real_escape_string($city).'"
-		WHERE '.mysql_real_escape_string($where);
+		SET uid = '.\util\mysql\sqlval($uid).',
+			city = '.\util\mysql\sqlval($city).'
+		WHERE '.\util\mysql\sqlval($where);
 	return \util\mysql\query($sql);
 }
 
@@ -193,7 +193,7 @@ function checkMenuEntry($entry_name)
 {
 	$sql = '
 		SELECT active FROM dw_game_menu
-		WHERE menu_name = "'.mysql_real_escape_string($entry_name).'"
+		WHERE menu_name = '.\util\mysql\sqlval($entry_name).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -209,7 +209,7 @@ function getUnreadMessagesCount($recipient)
 	$sql = '
 		SELECT COUNT(msgid) msg_count
 		FROM dw_message
-		WHERE uid_recipient = '.mysql_real_escape_string($recipient).'
+		WHERE uid_recipient = '.\util\mysql\sqlval($recipient).'
 			AND unread = 1
 			AND !del_recipient
 	';
@@ -227,7 +227,7 @@ function getMissionary($uid)
 	$sql = '
 		SELECT COUNT(*)
 		FROM dw_missionary
-		WHERE uid='.mysql_real_escape_string($uid).'
+		WHERE uid='.\util\mysql\sqlval($uid).'
 	';
 	return (int)\util\mysql\query($sql);
 }
@@ -242,7 +242,7 @@ function checkLanguageIsActive($language)
 	$sql = '
 		SELECT language
 		FROM dw_languages
-		WHERE language = "'.mysql_real_escape_string($language).'"
+		WHERE language = '.\util\mysql\sqlval($language).'
 			AND active
 	';
 	return (bool)\util\mysql\query($sql);

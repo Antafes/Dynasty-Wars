@@ -33,11 +33,11 @@ function updateCoordinates($uid, $city, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_map`
-		SET `uid` = "'.mysql_real_escape_string($uid).'",
-			`city` = "'.mysql_real_escape_string($city).'",
+		SET `uid` = '.\util\mysql\sqlval($uid).',
+			`city` = '.\util\mysql\sqlval($city).',
 			`maincity` = 1
-		WHERE `map_x` = '.$x.'
-			AND `map_y` = '.$y.'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -63,12 +63,12 @@ function insertUser($nick, $pws, $email, $random, $language)
 			status,
 			language
 		) VALUES (
-			"'.mysql_real_escape_string($nick).'",
-			"'.mysql_real_escape_string($pws).'",
-			"'.mysql_real_escape_string($email).'",
+			'.\util\mysql\sqlval($nick).',
+			'.\util\mysql\sqlval($pws).',
+			'.\util\mysql\sqlval($email).',
 			NOW(),
-			"'.mysql_real_escape_string($random).'",
-			"'.mysql_real_escape_string($language).'"
+			'.\util\mysql\sqlval($random).',
+			'.\util\mysql\sqlval($language).'
 		)
 	';
 	return \util\mysql\query($sql);
@@ -84,10 +84,10 @@ function insertResources($uid, $x, $y)
 {
 	$sql = '
 		INSERT INTO dw_res
-		SET uid = '.mysql_real_escape_string($uid).',
+		SET uid = '.\util\mysql\sqlval($uid).',
 			last_datetime = NOW(),
-			map_x = '.mysql_real_escape_string($x).',
-			map_y = '.mysql_real_escape_string($y).'
+			map_x = '.\util\mysql\sqlval($x).',
+			map_y = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql, true); //with the second parameter an insert returns the number of affected rows
 }
@@ -111,14 +111,14 @@ function insertBuildings($uid, $map_x, $map_y)
 			lvl,
 			upgrade_lvl,
 			position
-		) VALUES ('.$uid.', '.$map_x.', '.$map_y.', 19, 0, 0, 1),
-			('.$uid.', '.$map_x.', '.$map_y.', 1, 0, 0, 2),
-			('.$uid.', '.$map_x.', '.$map_y.', 2, 0, 0, 3),
-			('.$uid.', '.$map_x.', '.$map_y.', 3, 0, 0, 4),
-			('.$uid.', '.$map_x.', '.$map_y.', 4, 0, 0, 5),
-			('.$uid.', '.$map_x.', '.$map_y.', 5, 0, 0, 6),
-			('.$uid.', '.$map_x.', '.$map_y.', 6, 0, 0, 7),
-			('.$uid.', '.$map_x.', '.$map_y.', 22, 0, 0, 0)
+		) VALUES ('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 19, 0, 0, 1),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 1, 0, 0, 2),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 2, 0, 0, 3),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 3, 0, 0, 4),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 4, 0, 0, 5),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 5, 0, 0, 6),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 6, 0, 0, 7),
+			('.\util\mysql\sqlval($uid).', '.\util\mysql\sqlval($map_x).', '.\util\mysql\sqlval($map_y).', 22, 0, 0, 0)
 	';
 	return \util\mysql\query($sql);
 }
@@ -131,6 +131,6 @@ function insertBuildings($uid, $map_x, $map_y)
  */
 function insertPoints($uid)
 {
-	$sql = 'INSERT INTO dw_points (uid) VALUES ('.$uid.')';
+	$sql = 'INSERT INTO dw_points (uid) VALUES ('.\util\mysql\sqlval($uid).')';
 	return \util\mysql\query($sql);
 }

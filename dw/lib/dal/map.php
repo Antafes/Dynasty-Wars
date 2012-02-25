@@ -56,8 +56,8 @@ function getTerrain($x, $y)
 {
 	$sql = '
 		SELECT terrain FROM dw_map
-		WHERE map_x = '.mysql_real_escape_string($x).'
-			AND map_y = '.mysql_real_escape_string($y).'
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -72,7 +72,7 @@ function getUsersMainCity($uid)
 {
 	$sql = '
 		SELECT map_x, map_y FROM dw_map
-		WHERE uid = '.mysql_real_escape_string($uid).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 			AND maincity = 1
 	';
 	return \util\mysql\query($sql);

@@ -56,7 +56,7 @@ elseif ($_GET['chose'] == 'units')
 //new messages
 $sql = '
 	SELECT COUNT(msgid) FROM dw_message
-	WHERE uid_recipient = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+	WHERE uid_recipient = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 		AND unread
 ';
 $new_msg = util\mysql\query($sql);
@@ -160,7 +160,7 @@ $cities = util\mysql\query('
 		CONCAT(map_x, ":", map_y) coords,
 		city
 	FROM dw_map
-	WHERE uid = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+	WHERE uid = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 	ORDER BY `city`
 ', true);
 $smarty->assign('cities', $cities);

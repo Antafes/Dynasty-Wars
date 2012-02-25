@@ -17,26 +17,26 @@ namespace dal\clan;
  * @param <float> $amount the amount of the resource to be added to the bank
  */
 function addToBank($uid, $resource, $amount) {
-    $escapedUid = mysql_real_escape_string($uid);
+    $escapedUid = \util\mysql\sqlval($uid);
     \util\mysql\query(
         sprintf(
-            "
+            '
             INSERT INTO dw_clan_bank
             ( cid, uid, forUid, resource, amount)
             VALUES
             (
-                (SELECT cid FROM dw_user WHERE uid='%d'),
-                '%d',
-                '%d',
-                '%s',
-                '%f'
+                (SELECT cid FROM dw_user WHERE uid=%d),
+                %d
+                %d,
+                %s,
+                %f
             );
-            ",
+            ',
             $escapedUid,
             $escapedUid,
             $escapedUid,
-            mysql_real_escape_string($resource),
-            mysql_real_escape_string($amount)
+            \util\mysql\sqlval($resource),
+            \util\mysql\sqlval($amount)
 
         )
     );
@@ -52,26 +52,26 @@ function addToBank($uid, $resource, $amount) {
  * @param <type> $amount the amount of the resource
  */
 function removeFromBank($uid, $forUid, $resource, $amount) {
-    $escapedUid = mysql_real_escape_string($uid);
+    $escapedUid = \util\mysql\sqlval($uid);
     \util\mysql\query(
         sprintf(
-            "
+            '
             INSERT INTO dw_clan_bank
             ( cid, uid, forUid, resource, amount)
             VALUES
             (
-                (SELECT cid FROM dw_user WHERE uid='%d'),
-                '%d',
-                '%d',
-                '%s',
-                '%f'
+                (SELECT cid FROM dw_user WHERE uid=%d),
+                %d,
+                %d,
+                %s,
+                %f
             );
-            ",
+            ',
             $escapedUid,
             $escapedUid,
-            mysql_real_escape_string($forUid),
-            mysql_real_escape_string($resource),
-            mysql_real_escape_string($amount*-1)
+            \util\mysql\sqlval($forUid),
+            \util\mysql\sqlval($resource),
+            \util\mysql\sqlval($amount*-1)
         )
     );
 }
@@ -85,11 +85,11 @@ function listBankTransactions($cid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT * FROM dw_clan_bank
-            WHERE cid='%d'
-            ",
-            mysql_real_escape_string($cid)
+            WHERE cid=%d
+            ',
+            \util\mysql\sqlval($cid)
         )
     );
 }
@@ -105,13 +105,13 @@ function listBankTransactionsPerUser($cid, $uid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT * FROM dw_clan_bank
-            WHERE cid='%d'
-            AND uid='%d'
-            ",
-            mysql_real_escape_string($cid),
-            mysql_real_escape_string($uid)
+            WHERE cid=%d
+            AND uid=%d
+            ',
+            \util\mysql\sqlval($cid),
+            \util\mysql\sqlval($uid)
         )
     );
 }
@@ -126,14 +126,14 @@ function returnSavings($uid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT resource, sum(amount) FROM dw_clan_bank
             JOIN dw_clan ON dw_clan_bank.cid = dw_clan.cid
             JOIN dw_user ON dw_clan.cid = dw_user.cid
-            WHERE dw_user.uid='%d'
+            WHERE dw_user.uid = %d
             GROUP BY resource
-            ",
-            mysql_real_escape_string($uid)
+            ',
+            \util\mysql\sqlval($uid)
         )
     );
 }
@@ -149,12 +149,13 @@ function returnAllCities($cid) {
     return
     \util\mysql\query(
         sprintf(
-            "
+            '
             SELECT map_x, map_y, dw_map.uid as uid, dw_clan.cid as cid FROM dw_map
             JOIN dw_user ON dw_map.uid = dw_user.uid
             JOIN dw_clan ON dw_user.cid = dw_clan.cid
-            WHERE dw_clan.cid = '%d'",
-            mysql_real_escape_string($cid)
+            WHERE dw_clan.cid = %d
+			',
+            \util\mysql\sqlval($cid)
         )
     );
 }
@@ -167,6 +168,6 @@ function returnAllCities($cid) {
  */
 function getAllUser($cid)
 {
-	$sql = 'SELECT * FROM dw_user WHERE cid = '.mysql_real_escape_string($cid).'';
+	$sql = 'SELECT * FROM dw_user WHERE cid = '.\util\mysql\sqlval($cid).'';
 	return \util\mysql\query($sql, true);
 }

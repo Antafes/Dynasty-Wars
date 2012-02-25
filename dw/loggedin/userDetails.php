@@ -29,7 +29,7 @@ $sql = '
 		clanname,
 		clantag
 	FROM dw_clan
-	WHERE cid = '.mysql_real_escape_string($registeredUser->getCID()).'
+	WHERE cid = '.\util\mysql\sqlval($registeredUser->getCID()).'
 ';
 $smarty->assign('clan', util\mysql\query($sql));
 

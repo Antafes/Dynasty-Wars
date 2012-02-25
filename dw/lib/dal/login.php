@@ -20,7 +20,7 @@ function getAllData($uid)
 			language,
 			deactivated
 		FROM dw_user
-		WHERE uid = '.$uid.'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
 	$r = \util\mysql\query($sql);
 	return $r;
@@ -49,7 +49,7 @@ function setLastLogin($uid)
 	$sql = '
 		UPDATE dw_user
 		SET last_login_datetime = NOW()
-		WHERE uid='.mysql_real_escape_string($uid).'
+		WHERE uid='.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -63,6 +63,6 @@ function setLastLogin($uid)
  */
 function getMainCity($uid, $add_where = ' AND maincity = 1')
 {
-	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.$uid.$add_where.'';
+	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.\util\mysql\sqlval($uid).\util\mysql\sqlval($add_where, false).'';
 	return \util\mysql\query($sql);
 }

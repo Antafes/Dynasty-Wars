@@ -65,9 +65,9 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		foreach ($superAdmins as $superAdmin)
 		{
 			if (!$where)
-				$where = 'uid = '.mysql_real_escape_string($superAdmin);
+				$where = 'uid = '.util\mysql\sqlval($superAdmin);
 			else
-				$where .= ' OR uid = '.mysql_real_escape_string($superAdmin);
+				$where .= ' OR uid = '.util\mysql\sqlval($superAdmin);
 		}
 
 		$truncateArray = array(
@@ -121,7 +121,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		var_dump($_POST['board']);
 		$sql = '
 			UPDATE dw_game
-			SET board="'.mysql_real_escape_string($_POST['board']).'"
+			SET board = '.util\mysql\sqlval($_POST['board']).'
 		';
 		if (util\mysql\query($sql))
 		{
@@ -135,7 +135,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 		$new_error_report = $_POST['errorReporting'][0] + $_POST['errorReporting'][1] + $_POST['errorReporting'][2] + $_POST['errorReporting'][3];
 		$sql = '
 			UPDATE dw_game
-			SET error_report = '.mysql_real_escape_string($new_error_report).'
+			SET error_report = '.util\mysql\sqlval($new_error_report).'
 		';
 		if (util\mysql\query($sql))
 		{
@@ -148,7 +148,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 	{
 		$sql = '
 			UPDATE dw_game
-			SET unitcosts = '.mysql_real_escape_string($_POST['unitCosts']).'
+			SET unitcosts = '.util\mysql\sqlval($_POST['unitCosts']).'
 		';
 		util\mysql\query($sql);
 
@@ -168,7 +168,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 	{
 		$sql = '
 			UPDATE dw_game
-			SET canattack = "'.mysql_real_escape_string($_POST['canAttack']).'"
+			SET canattack = '.util\mysql\sqlval($_POST['canAttack']).'
 		';
 		util\mysql\query($sql);
 
@@ -188,7 +188,7 @@ if ($_GET['gameOptionsSub'] == 'common' || !$_GET['gameOptionsSub'])
 	{
 		$sql = '
 			UPDATE dw_game
-			SET version = "'.mysql_real_escape_string($_POST['version']).'"
+			SET version = '.util\mysql\sqlval($_POST['version']).'
 		';
 		if (util\mysql\query($sql))
 		{

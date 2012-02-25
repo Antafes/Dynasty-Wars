@@ -12,7 +12,7 @@ function getMenuEntry($entryName)
 	$sql = '
 		SELECT *
 		FROM dw_game_menu
-		WHERE menu_name = "'.mysql_real_escape_string($entryName).'"
+		WHERE menu_name = '.\util\mysql\sqlval($entryName).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -44,10 +44,10 @@ function setMenuEntry($game_menu_id, $active, $sort, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
-		SET active = '.mysql_real_escape_string($active).',
-			sort = '.mysql_real_escape_string($sort).',
-			visible = '.mysql_real_escape_string($visible).'
-		WHERE game_menu_id = '.mysql_real_escape_string($game_menu_id).'
+		SET active = '.\util\mysql\sqlval($active).',
+			sort = '.\util\mysql\sqlval($sort).',
+			visible = '.\util\mysql\sqlval($visible).'
+		WHERE game_menu_id = '.\util\mysql\sqlval($game_menu_id).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -63,8 +63,8 @@ function setAllMenuEntries($active, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
-		SET active = '.mysql_real_escape_string($active).',
-			visible = '.mysql_real_escape_string($visible).'
+		SET active = '.\util\mysql\sqlval($active).',
+			visible = '.\util\mysql\sqlval($visible).'
 	';
 	return \util\mysql\query($sql);
 }

@@ -12,10 +12,10 @@ function getMessages($uid, $type, $for, $archived = 0)
 {
 	$sql = '
 		SELECT * FROM dw_message
-		WHERE uid_'.$for.' = '.mysql_real_escape_string($uid).'
-			AND type = '.mysql_real_escape_string($type).'
-			AND !del_'.$for.'
-			AND archive = '.mysql_real_escape_string($archived).'
+		WHERE uid_'.$for.' = '.\util\mysql\sqlval($uid).'
+			AND type = '.\util\mysql\sqlval($type).'
+			AND '.\util\mysql\sqlval('!del_'.$for, false).'
+			AND archive = '.\util\mysql\sqlval($archived).'
 		ORDER BY create_datetime DESC
 	';
 	return \util\mysql\query($sql, true);
@@ -32,9 +32,9 @@ function getMessage($msgid, $for, $archived = 0)
 {
 	$sql = '
 		SELECT * FROM dw_message
-		WHERE msgid = '.mysql_real_escape_string($msgid).'
-			AND !del_'.$for.'
-			AND archive = '.mysql_real_escape_string($archived).'
+		WHERE msgid = '.\util\mysql\sqlval($msgid).'
+			AND '.\util\mysql\sqlval('!del_'.$for, false).'
+			AND archive = '.\util\mysql\sqlval($archived).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -53,8 +53,8 @@ function markAsDeleted($msgid, $deleteFor, $forceDeletion)
 	{
 		$sql = '
 			UPDATE dw_message
-			SET del_'.$deleteFor.' = 1
-			WHERE msgid = '.mysql_real_escape_string($msgid).'
+			SET '.\util\mysql\sqlval('del_'.$deleteFor, false).' = 1
+			WHERE msgid = '.\util\mysql\sqlval($msgid).'
 		';
 
 		if (!$forceDeletion)
@@ -78,7 +78,7 @@ function markRead($msgid)
 		UPDATE dw_message
 		SET unread = 0,
 			read_datetime = NOW()
-		WHERE msgid = '.mysql_real_escape_string($msgid).'
+		WHERE msgid = '.\util\mysql\sqlval($msgid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -94,7 +94,7 @@ function archive($msgid)
 	$sql = '
 		UPDATE dw_message
 		SET archive = 1
-		WHERE msgid = '.mysql_real_escape_string($msgid).'
+		WHERE msgid = '.\util\mysql\sqlval($msgid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -107,7 +107,7 @@ function archive($msgid)
  */
 function checkRecipient($msgid)
 {
-	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
+	$sql = 'SELECT uid_recipient FROM dw_message WHERE msgid='.\util\mysql\sqlval($msgid).'';
 	return \util\mysql\query($sql);
 }
 /**
@@ -118,6 +118,6 @@ function checkRecipient($msgid)
  */
 function checkSender($msgid)
 {
-	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid="'.mysql_real_escape_string($msgid).'"';
+	$sql = 'SELECT uid_sender FROM dw_message WHERE msgid='.\util\mysql\sqlval($msgid).'';
 	return \util\mysql\query($sql);
 }

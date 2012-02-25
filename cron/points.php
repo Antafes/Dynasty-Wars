@@ -21,7 +21,7 @@ for ($n = 0; $n < $lines; $n++)
 	$sql = '
 		SELECT lvl, upgrade_lvl
 		FROM dw_buildings
-		WHERE uid = "'.$users[$n]['uid'].'"
+		WHERE uid = '.util\mysql\sqlval($users[$n]['uid']).'
 	';
 	$buildings = util\mysql\query($sql, true);
 	$lines2 = count($buildings);
@@ -35,10 +35,9 @@ for ($n = 0; $n < $lines; $n++)
 	bl\unit\checkDaimyo($users[$n]['uid']);
 	$sql = '
 		UPDATE dw_points
-		SET unit_points = "'.round($unit_points[$users[$n]['uid']], 0).'",
-			building_points = '.$building_points.'
-		WHERE uid = "'.$users[$n]['uid'].'"
+		SET unit_points = '.util\mysql\sqlval(round($unit_points[$users[$n]['uid']], 0)).',
+			building_points = '.util\mysql\sqlval($building_points).'
+		WHERE uid = '.util\mysql\sqlval($users[$n]['uid']).'
 	';
 	$erg3 = util\mysql\query($sql);
 }
-?>

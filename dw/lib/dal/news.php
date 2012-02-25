@@ -25,7 +25,7 @@ function getEntry($nid)
 {
 	$sql = '
 		SELECT * FROM dw_news
-		WHERE nid = '.mysql_real_escape_string($nid).'
+		WHERE nid = '.\util\mysql\sqlval($nid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -49,10 +49,10 @@ function save($title, $content, $uid, $nick)
 			text,
 			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($uid).',
-			"'.mysql_real_escape_string($nick).'",
-			"'.mysql_real_escape_string($title).'",
-			"'.mysql_real_escape_string($content).'",
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($nick).',
+			'.\util\mysql\sqlval($title).',
+			'.\util\mysql\sqlval($content).',
 			NOW()
 		)
 	';
@@ -73,13 +73,13 @@ function update($nid, $title, $content, $changerUID, $changerNick)
 {
 	$sql = '
 		UPDATE dw_news
-		SET title = "'.mysql_real_escape_string($title).'",
-			text = "'.mysql_real_escape_string($content).'",
-			changed_uid = '.mysql_real_escape_string($changerUID).',
-			changed_nick = "'.mysql_real_escape_string($changerNick).'",
+		SET title = '.\util\mysql\sqlval($title).',
+			text = '.\util\mysql\sqlval($content).',
+			changed_uid = '.\util\mysql\sqlval($changerUID).',
+			changed_nick = '.\util\mysql\sqlval($changerNick).',
 			changed = changed + 1,
 			changed_datetime = NOW()
-		WHERE nid = '.mysql_real_escape_string($nid).'
+		WHERE nid = '.\util\mysql\sqlval($nid).'
 	';
 	return \util\mysql\query($sql);
 }

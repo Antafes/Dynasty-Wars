@@ -67,32 +67,31 @@ if (!$reg_closed)
 				}
 				else
 				{
-					$helperg = mysql_query("SELECT count(*) FROM dw_map WHERE city='".mysql_real_escape_string($city)."'", $con);
-					if ($helperg)
-						$c = mysql_result($helperg, 0);
+					$sql = 'SELECT count(*) FROM dw_map WHERE city='.util\mysql\sqlval($city).'';
+					$c = util\mysql\query($sql);
+
 					if ($c)
 					{
 						$err['city'] = 1;
 						unset($city);
 					}
+
 					if ($pw === $pww)
 					{
-						$pws = md5(mysql_real_escape_string($pw));
-						$erg = mysql_query('SELECT nick FROM dw_user', $con);
-						if ($erg)
+						$pws = md5($pw);
+						$sql = 'SELECT nick FROM dw_user';
+						$registeredNicks = util\mysql\query($sql, true);
+
+						foreach ($registeredNicks as $registeredNick)
 						{
-							$zeilen = mysql_num_rows($erg);
-							while ($n < $zeilen)
+							if (strcasecmp($nick, $registeredNick) == 0)
 							{
-								$regnick = mysql_result($erg, $n, 0);
-								if ((strcasecmp($nick, $regnick) == 0))
-								{
-									$err['doublename'] = 1;
-									unset($nick);
-								}
-								$n = $n + 1;
+								$err['doublename'] = 1;
+								unset($nick);
 							}
+
 						}
+
 						if ($nick && $pw && $pww && $email && $city)
 							$err['registration'] = bl\register\createNewUser($nick, $pws, $email, $city);
 					}

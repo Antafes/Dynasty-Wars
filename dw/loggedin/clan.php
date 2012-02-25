@@ -29,7 +29,7 @@ else //search for clans
 						clanname,
 						clantag
 					FROM dw_clan
-					WHERE clanname like "%'.mysql_real_escape_string($clanname).'%"
+					WHERE clanname like '.util\mysql\sqlval('%'.$clanname.'%').'
 				';
 			}
 			elseif ($clantag) //searching for clan tag
@@ -40,7 +40,7 @@ else //search for clans
 						clanname,
 						clantag
 					FROM dw_clan
-					WHERE clantag = "'.mysql_real_escape_string($clantag).'"
+					WHERE clantag = '.util\mysql\sqlval($clantag).'
 				';
 			}
 
@@ -53,7 +53,7 @@ else //search for clans
 					$sql = '
 						SELECT COUNT(*)
 						FROM dw_user
-						WHERE cid = '.mysql_real_escape_string($clan['cid']).'
+						WHERE cid = '.util\mysql\sqlval($clan['cid']).'
 							AND !deactivated
 						GROUP BY cid
 					';
@@ -75,9 +75,9 @@ else //search for clans
 					clantag,
 					founder
 				) VALUES (
-					"'.mysql_real_escape_string($clanname).'",
-					"'.mysql_real_escape_string($clantag).'",
-					"'.mysql_real_escape_string($_SESSION['user']->getNick()).'"
+					'.util\mysql\sqlval($clanname).',
+					'.util\mysql\sqlval($clantag).',
+					'.util\mysql\sqlval($_SESSION['user']->getNick()).'
 				)
 			';
 			$cid = util\mysql\query($sql);
@@ -87,8 +87,8 @@ else //search for clans
 					unit_points,
 					building_points
 				) VALUES (
-					'.mysql_real_escape_string($points['unit_points']).',
-					'.mysql_real_escape_string($points['building_points']).'
+					'.util\mysql\sqlval($points['unit_points']).',
+					'.util\mysql\sqlval($points['building_points']).'
 				)
 			';
 			util\mysql\query($sql);
@@ -99,12 +99,12 @@ else //search for clans
 					admin,
 					standard
 				) VALUES (
-					'.mysql_real_escape_string($cid).',
+					'.util\mysql\sqlval($cid).',
 					2,
 					0,
 					1
 				), (
-					'.mysql_real_escape_string($cid).',
+					'.util\mysql\sqlval($cid).',
 					1,
 					1,
 					0
@@ -127,7 +127,7 @@ else //search for clans
 		$sql = '
 			SELECT lvl
 			FROM dw_buildings
-			WHERE uid = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+			WHERE uid = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 				AND kind = 13
 		';
 		$smarty->assign('gardenLvl', util\mysql\query($sql));

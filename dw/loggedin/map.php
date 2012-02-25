@@ -57,8 +57,8 @@ $sql = '
 		u.deactivated
 	FROM dw_map m
 	LEFT JOIN dw_user u USING (uid)
-	WHERE m.map_x BETWEEN '.mysql_real_escape_string($min_x).' AND '.mysql_real_escape_string($max_x).'
-		AND m.map_y BETWEEN '.mysql_real_escape_string($min_y).' AND '.mysql_real_escape_string($max_y).'
+	WHERE m.map_x BETWEEN '.util\mysql\sqlval($min_x).' AND '.util\mysql\sqlval($max_x).'
+		AND m.map_y BETWEEN '.util\mysql\sqlval($min_y).' AND '.util\mysql\sqlval($max_y).'
 	ORDER BY m.map_y, m.map_x
 ';
 $mapRawData = util\mysql\query($sql);

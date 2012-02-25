@@ -41,7 +41,7 @@ if ($con)
 		FROM dw_map m
 		JOIN dw_user u USING (uid)
 		LEFT JOIN dw_clan c USING (cid)
-		WHERE m.uid = '.mysql_real_escape_string($_GET['uid']).'
+		WHERE m.uid = '.util\mysql\sqlval($_GET['uid']).'
 	';
 	$data = util\mysql\query($sql);
 
