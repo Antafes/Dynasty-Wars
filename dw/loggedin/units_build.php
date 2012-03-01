@@ -140,6 +140,7 @@ else
 			$prices = bl\unit\train\unitPrices($unitKind);
 			$check = bl\buildings\resourceCheck($food, $wood, $rock, $iron, $paper, $koku, $prices['food'], $prices['wood'], $prices['rock'], $prices['iron'], $prices['paper'], $prices['koku']);
 			$picture = bl\unit\train\getUnitPicture($unitKind);
+			$unitAmount = bl\unit\train\getTrainingUnits($_SESSION['user']->getUID(), $_SESSION['user']->getMainCity(), $unitKind);
 
 			$unitList[] = array(
 				'kind' => $unitKind,
@@ -152,6 +153,7 @@ else
 				'check' => $check,
 				'buildTime' => bl\general\formatTime(bl\unit\train\trainTime($unitKind), 'h:m:s'),
 				'capacity' => number_format($cap[$unitKind], 0, $lang['decimals'], $lang['thousands']),
+				'unitAmount' => $unitAmount,
 			);
 		}
 	}

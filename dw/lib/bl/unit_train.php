@@ -127,7 +127,7 @@ function train($kind, $count, $uid, $city)
 		$sum_prices["paper"] = $prices["paper"]*$count;
 		$sum_prices["koku"] = $prices["koku"]*$count;
 		$endTime = new \DWDateTime();
-		$endTime->add(new DateInterval('PT'.(trainTime($kind) * $count)));
+		$endTime->add(new \DateInterval('PT'.(trainTime($kind) * $count).'S'));
 		$erg1 = \dal\unit\train\removeResources($sum_prices, $uid);
 		$erg2 = \dal\unit\train\startTrain($kind, $uid, $count, $endTime, $city);
 
@@ -243,4 +243,18 @@ function getUnitPicture($kind)
 		return $picturesArray[$kind];
 	else
 		return 'no_picture';
+}
+
+/**
+ * get the amount of currently trained units
+ * @param int $uid
+ * @param String $city
+ * @return int
+ */
+function getTrainingUnits($uid, $city, $kind)
+{
+	if (is_array($city))
+		$city = $city['map_x'].':'.$city['map_y'];
+
+	return \dal\unit\train\getTrainingUnits($uid, $city, $kind);
 }

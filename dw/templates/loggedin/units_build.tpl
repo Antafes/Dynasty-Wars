@@ -32,7 +32,10 @@
 				</div>
 				<div class=" left build_button">
 					{if $trainCheck.ok}
-					<span id="{$unit.kind}"></span>
+						{if $unit.unitAmount}
+							{$unit.unitAmount} {$lang.units|htmlentities}<br />
+						{/if}
+						<span id="{$unit.kind}"></span>
 					{else}
 					<input type="text" name="count" size="4" value="{$unit.maxBuildable}" />
 					<input type="submit" name="build" value="{$build}"{if !$unit.check || $own_uid} disabled="disabled"{/if} /><br />

@@ -187,3 +187,21 @@ function newUnit($uid, $kind, $count, $map_x, $map_y)
 	';
 	return \util\mysql\query($sql);
 }
+
+/**
+ * get the amount of currently trained units
+ * @param int $uid
+ * @param String $city
+ * @param int $kind
+ * @return int
+ */
+function getTrainingUnits($uid, $city, $kind)
+{
+	$sql = '
+		SELECT count FROM dw_build_unit
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND city = '.\util\mysql\sqlval($city).'
+			AND kind = '.\util\mysql\sqlval($kind).'
+	';
+	return \util\mysql\query($sql);
+}
