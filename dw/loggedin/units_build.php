@@ -125,7 +125,7 @@ else
 	foreach ($sortedUnitsArray as $unitKind => $currentUnit)
 	{
 		$building = $buildings[$currentUnit['building']];
-		if ($building['bid'] && $building['ulvl'] >= $currentUnit['ulvl'])
+		if ($building && $building['bid'] && $building['ulvl'] >= $currentUnit['ulvl'])
 		{
 			$unit = bl\unit\getUnits($unitKind, $_SESSION['user']->getUID());
 			if ($unit)

@@ -44,21 +44,22 @@ if (!$_GET['buildplace'])
 		19 => array('top' => 222, 'left' => 458),
 		20 => array('top' => 370, 'left' => 376),
 		21 => array('top' => 424, 'left' => 290),
-		22 => array('top' => 500, 'left' => 300)
 	);
 	$max_buildplaces = 19;
-	if ($religion != 1)
-		$max_buildplaces++;
 	$check_geisha_factory = bl\buildings\checkGeishaAndFactory($city);
+
 	if ($check_geisha_factory['geisha'])
 		$max_buildplaces++;
+
 	if ($check_geisha_factory['factory'])
 		$max_buildplaces++;
-	$season = bl\general\getSeason();
-	/*if ($season == 1)
-		$season = 'summer';
-	elseif ($season == 2)
-		$season = 'winter';*/
+
+//	$season = bl\general\getSeason();
+//	if ($season == 1)
+//		$season = 'summer';
+//	elseif ($season == 2)
+//		$season = 'winter';
+
 	$season = 'summer'; //this is a temporary solution, because there are no winter pics for the city background
 	$terrain = 'grass';
 
@@ -68,7 +69,6 @@ if (!$_GET['buildplace'])
 	)));
 	$smarty->assign('maxBuildplaces', $max_buildplaces + 1); // + 1 for the loop in smarty
 	$smarty->assign('buildingPositions', $city_position);
-	$smarty->assign('wayPart', bl\buildings\getBuildPlacePicture($city, 'way_part'));
 
 	$building_pictures = array();
 	for ($i = 1; $i <= $max_buildplaces; $i++)

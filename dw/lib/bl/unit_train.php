@@ -13,7 +13,12 @@ function checkBuildings($city)
 
 	$buildings = array();
 	foreach($kinds as $kind)
-		$buildings[$kind] = \bl\buildings\getBuildingByKind($kind, $city);
+	{
+		$building = \bl\buildings\getBuildingByKind($kind, $city);
+
+		if ($building)
+			$buildings[$kind] = $building;
+	}
 
 	return $buildings;
 }

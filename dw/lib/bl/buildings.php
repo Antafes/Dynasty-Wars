@@ -47,9 +47,9 @@ function getHarbour($x, $y)
 }
 
 /**
- * get the pic
+ * get the picture for the build place
  * @author Neithan
- * @global array $$lang
+ * @global array $lang
  * @param int $city
  * @param int $building
  * @param int $new_building
@@ -58,13 +58,24 @@ function getHarbour($x, $y)
 function getBuildPlacePicture($city, $building, $new_building = 0)
 {
 	global $lang;
+
 	$cityexp = explode(':', $city);
-	$building_pics = array(
+
+	/**
+	 * An array for the build place picture.
+	 * Structure could be:
+	 *		if the building has only one upgrade level or variant:
+	 *			array(0 => 'imagename')
+	 *		if the building has several upgrade levels or variants:
+	 *			array(1 => 'imagename1', 2 => 'imagename2', ...)
+	 */
+	$building_pictures = array(
 		1 => array(0 => 'ricefield'),
 		2 => array(0 => 'woodcutter'),
 		3 => array(0 => 'quarry'),
 		4 => array(0 => 'ironmine'),
 		5 => array(0 => 'papermill'),
+		6 => array(0 => 'tradepost', 1 => 'harbour'),
 		7 => array(1 => 'archer', 2 => 'archer', 3 => 'archer', 4 => 'archer'),
 		8 => array(1 => 'spear', 2 => 'spear', 3 => 'spear', 4 => 'spear'),
 		9 => array(1 => 'teahouse', 2 => 'teahouse', 3 => 'teahouse', 4 => 'teahouse'),
@@ -86,35 +97,38 @@ function getBuildPlacePicture($city, $building, $new_building = 0)
 		25 => array(1 => 'camp', 2 => 'camp', 3 => 'camp')
 	);
 	$has_harbour = getHarbour($cityexp[0], $cityexp[1]);
-	if ($has_harbour)
-		$building_pics[6] = array(0 => 'harbour');
-	else
-		$building_pics[6] = array(0 => 'tradepost');
-	$season = \bl\general\getSeason($con);
-	/*if ($season == 1)
-		$path = 'pictures/city/grass/summer/';
-	elseif ($season == 2)
-		$path = 'pictures/city/grass/winter/';*/
+
+//	$season = \bl\general\getSeason();
+//	if ($season == 1)
+//		$path = 'pictures/city/grass/summer/';
+//	elseif ($season == 2)
+//		$path = 'pictures/city/grass/winter/';
 	$path = 'pictures/city/grass/summer/'; //this is a temporary solution
+
 	if (is_array($building) || !$building)
 	{
-		if (($building['lvl'] == 0 || !$building) && $new_building == 0)
+		if (($building['lvl'] == 0 || !$building) && $new_building == 0) //there is no building on this place
 			$html = '<img src="'.$path.'buildplace.gif" alt="'.$lang['buildplace'].'" title="'.$lang['buildplace'].'" />';
 		elseif ($new_building == 1 || $building['lvl'])
 		{
-			if ($building['kind'] != 6)
-				$name = htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]);
-			elseif ($building['kind'] == 6)
+			if ($building['kind'] == 6)
+			{
 				$name = htmlentities($lang['building_names'][$building['kind']][$has_harbour]);
+				$picture = $building_pictures[$building['kind']][$has_harbour];
+			}
+			else
+			{
+				$name = htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]);
+				$picture = $building_pictures[$building['kind']][$building['ulvl']];
+			}
 
 			$html = '<img src="'.$path.'buildings/';
-			$html .= $building_pics[$building['kind']][$building['ulvl']];
+			$html .= $picture;
 			$html .= '.gif" alt="'.$name.'"';
 			$html .= ' title="'.$name.' ('.$building['lvl'].')"/>';
 		}
 	}
-	elseif (is_string($building))
-		$html = '<img src="'.$path.'way_part.gif" alt="" />';
+
 	$html .= "\n";
 	return $html;
 }
@@ -402,7 +416,9 @@ function checkBuildable($uid, $kind, $x, $y)
 			{
 				if ($kind == 1 || $kind == 2 || $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
 					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 13 || $kind == 14 || $kind == 16 || $kind == 17
-					|| $kind == 18 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
+					|| $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
+					return 1;
+				elseif ($kind == 18 && $_SESSION['user']->getReligion() == 1)
 					return 1;
 				else
 					return 0;
@@ -413,7 +429,9 @@ function checkBuildable($uid, $kind, $x, $y)
 			{
 				if ($kind == 1 || $kind == 2 or $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
 					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 13 || $kind == 14 || $kind == 16 || $kind == 17
-					|| $kind == 18 || $kind == 20 || $kind == 21 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
+					|| $kind == 20 || $kind == 21 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
+					return 1;
+				elseif ($kind == 18 && $_SESSION['user']->getReligion() == 1)
 					return 1;
 				else
 					return 0;
@@ -421,7 +439,10 @@ function checkBuildable($uid, $kind, $x, $y)
 			}
 			case 6:
 			{
-				return 1;
+				if ($kind == 18 && $_SESSION['user']->getReligion() == 2)
+					return 0;
+				else
+					return 1;
 				break;
 			}
 		}
@@ -834,9 +855,15 @@ function getBuildingByKind($kind, $city)
 	$x = $cityexp[0];
 	$y = $cityexp[1];
 	$buildings = \dal\buildings\getBuildingByKind($kind, $x, $y);
-	$build['lvl'] = $buildings['lvl'];
-	$build['ulvl'] = $buildings['ulvl'];
-	$build['bid'] = $buildings['bid'];
-	$build['position'] = $buildings['position'];
+	$build = array();
+
+	if ($buildings)
+	{
+		$build['lvl'] = $buildings['lvl'];
+		$build['ulvl'] = $buildings['ulvl'];
+		$build['bid'] = $buildings['bid'];
+		$build['position'] = $buildings['position'];
+	}
+
 	return $build;
 }

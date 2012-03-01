@@ -419,4 +419,23 @@ class UserCls {
 			if ($city['maincity'])
 				return $city;
 	}
+
+	public function setReligionToChristianity()
+	{
+		//set the new religion
+		$sql = '
+			UPDATE dw_user
+			SET religion = 2
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		\util\mysql\query($sql);
+
+		//remove all built buddhist temples
+		$sql = '
+			DELETE FROM dw_buildings
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+				AND kind = 18
+		';
+		\util\mysql\query($sql);
+	}
 }

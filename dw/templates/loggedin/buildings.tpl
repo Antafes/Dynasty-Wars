@@ -2,11 +2,6 @@
 			<div class="heading">{$buildings}</div>
 			<div class="buildings" style="background-image: url({$cityBackground})">
 				{section name=buildplaces start=1 loop=$maxBuildplaces step=1}
-					{if $smarty.section.buildplaces.index == 22}
-				<div class="buildplace" style="top: 510px; left: 338px;">
-					{$wayPart}
-				</div>
-					{/if}
 				<div class="buildplace" style="top: {$buildingPositions[$smarty.section.buildplaces.index].top}px; left: {$buildingPositions[$smarty.section.buildplaces.index].left}px;">
 					<a href="index.php?chose=buildings&amp;buildplace={$smarty.section.buildplaces.index}">
 						{$buildingPictures[$smarty.section.buildplaces.index]}
