@@ -29,7 +29,7 @@ if ($login == 1)
 	if ($blocked)
 		$err['blocked'] = 1;
 
-	if ($_SESSION['user'])
+	if (is_object($_SESSION['user']))
 	{
 		if (($login_closed == 1) && ($_SESSION['user']->getGameRank() < 1))
 			$err['login_closed'] = 1;
