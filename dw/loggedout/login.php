@@ -25,12 +25,18 @@ if ($login == 1)
 	$login_closed = bl\login\checkLogin();
 	if ($status)
 		$err['status'] = 1;
+
 	if ($blocked)
 		$err['blocked'] = 1;
-	if (($login_closed == 1) && ($_SESSION['user']->getGameRank() < 1))
-		$err['login_closed'] = 1;
-	elseif (($login_closed == 2) && ($_SESSION['user']->getGameRank() < 2))
-		$err['login_closed'] = 2;
+
+	if ($_SESSION['user'])
+	{
+		if (($login_closed == 1) && ($_SESSION['user']->getGameRank() < 1))
+			$err['login_closed'] = 1;
+		elseif (($login_closed == 2) && ($_SESSION['user']->getGameRank() < 2))
+			$err['login_closed'] = 2;
+	}
+
 	if (
 		(strcasecmp($user, $reguser) == 0 && $pws === $regpw)
 		&& !$err['status']
