@@ -282,9 +282,9 @@ class UserCls {
 	{
 		$lastLogin = new \DWDateTime($this->last_login);
 		$tmp = new \DWDateTime();
-		$sub1 = $tmp->sub(new DateInterval('P5D'));
+		$sub1 = $tmp->sub(new \DateInterval('P5D'));
 		$tmp = new \DWDateTime();
-		$sub2 = $tmp->sub(new DateInterval('P14D'));
+		$sub2 = $tmp->sub(new \DateInterval('P14D'));
 
 		if ($lastLogin < $sub2)
 			return 'red';
