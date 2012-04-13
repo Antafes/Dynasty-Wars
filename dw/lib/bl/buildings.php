@@ -643,13 +643,13 @@ function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
 		{
 			$btime = buildTime($building['kind'], $building['lvl'], 1, $building['ulvl']);
 			$endTime = new \DWDateTime();
-			$endTime->add(new DateInterval('PT'.$btime.'S'));
+			$endTime->add(new \DateInterval('PT'.$btime.'S'));
 		}
 		else
 		{
 			$btime = buildTime($building['kind'], $building['lvl']);
 			$endTime = new \DWDateTime();
-			$endTime->add(new DateInterval('PT'.$btime.'S'));
+			$endTime->add(new \DateInterval('PT'.$btime.'S'));
 		}
 
 		if ($building['bid'] == 0)
