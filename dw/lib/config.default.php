@@ -1,9 +1,11 @@
 <?php
 //access data for the database
-$server = 'localhost';
-$seruser = '';
-$serpw = '';
-$serdb = '';
+$GLOBALS['db'] = array(
+	'server' => 'localhost',
+	'user' => '',
+	'password' => '',
+	'db' => 'dwars',
+);
 
 //enable/disable debug
 $debug = true;

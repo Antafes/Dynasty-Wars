@@ -2,7 +2,7 @@
 namespace util\mysql;
 
 /**
- * handles the mysql_query
+ * handles the MySQL queries
  * if the query is a select, it returns an array if there is only one value, otherwise it returns the value
  * if the query is an update, replace or delete from, it returns the number of affected rows
  * if the query is an insert, it returns the last insert id
@@ -13,24 +13,31 @@ namespace util\mysql;
  */
 function query($sql, $noTransform = false)
 {
-	global $con, $debug, $firePHP_debug, $smarty_debug;
+	global $debug, $firePHP_debug, $smarty_debug;
+
+	$mysql = \util\mysql\connect();
 
 	$sql = ltrim($sql);
 	if ($debug == true)
-		$res = mysql_query($sql, $con);
+	{
+		$res = $mysql->query($sql);
+	}
 	else
-		$res = @mysql_query($sql, $con);
+	{
+		$res = @$mysql->query($sql);
+	}
+
 	if (!$res && $debug)
 	{
 		if ($firePHP_debug && $GLOBALS['firePHP']->getEnabled())
 		{
-			$GLOBALS['firePHP']->log(mysql_error(), 'database error');
+			$GLOBALS['firePHP']->log($mysql->error, 'database error');
 			$GLOBALS['firePHP']->trace('database backtrace');
 		}
 		else
 		{
 			$backtrace = debug_backtrace();
-			$html = '<br />Datenbank Fehler '.mysql_error().'<br /><br />';
+			$html = '<br />Datenbank Fehler '.$mysql->error.'<br /><br />';
 			$html .= $sql.'<br />';
 			$html .= '<table>';
 			foreach ($backtrace as $part)
@@ -52,41 +59,42 @@ function query($sql, $noTransform = false)
 		}
 	}
 
-	if ($res)
+	if (is_object($res))
 	{
-
 		if (substr($sql,0,6) == "SELECT")
 		{
 			$out = array();
-			if (mysql_num_rows($res) > 1 || ($noTransform && mysql_num_rows($res) > 0))
+
+			if ($res->num_rows > 1 || ($noTransform && $res->num_rows > 0))
 			{
-				while($line = mysql_fetch_array($res,MYSQL_ASSOC))
-					$out[] = $line;
+				$out = $res->fetch_all(MYSQLI_ASSOC);
 			}
-			elseif (mysql_num_rows($res) == 1 && !$noTransform)
+			elseif ($res->num_rows == 1 && !$noTransform)
 			{
-				$out = mysql_fetch_array($res,MYSQL_ASSOC);
+				$out = $res->fetch_assoc();
+
 				if (count($out) == 1)
 					$out = current($out);
 			}
 			else
 				$out = false;
+
 			return $out;
 		}
 
-		if (substr($sql,0,6) == "INSERT" and $noTransform == false)
-		    return mysql_insert_id($con);
-		elseif (substr($sql,0,6) == "INSERT" and $noTransform == true)
-			return mysql_affected_rows($con);
+		if (substr($sql,0,6) == "INSERT" && $noTransform == false)
+		    return $mysql->insert_id;
+		elseif (substr($sql,0,6) == "INSERT" && $noTransform == true)
+			return $mysql->affected_rows;
 
 		if (substr($sql,0,6) == "UPDATE")
-			return mysql_affected_rows($con);
+			return $mysql->affected_rows;
 
 		if (substr($sql,0,7) == "REPLACE")
-			return mysql_affected_rows($con);
+			return $mysql->affected_rows;
 
 		if (substr($sql,0,11) == "DELETE FROM")
-			return mysql_affected_rows($con);
+			return $mysql->affected_rows;
 	}
 	else
 		return false;
@@ -127,6 +135,8 @@ function transactionRollback()
  */
 function sqlval($value, $wrap = true)
 {
+	$mysql = \util\mysql\connect();
+
 	if (is_array($value))
 	{
 		foreach ($value as &$row)
@@ -142,11 +152,44 @@ function sqlval($value, $wrap = true)
 		if ($wrap)
 			$escapedString .= '"';
 
-		$escapedString .= mysql_real_escape_string($value);
+		$escapedString .= $mysql->real_escape_string($value);
 
 		if ($wrap)
 			$escapedString .= '"';
 
 		return $escapedString;
 	}
+}
+
+/**
+ * Handles the MySQL connection.
+ * Should only be used in sqlval() and query()
+ * @author Neithan
+ * @staticvar \mysqli $mysql
+ * @return \mysqli
+ */
+function connect()
+{
+	static $mysql;
+
+	if (!is_object($mysql))
+	{
+		$mysql = new \mysqli($GLOBALS['db']['server'], $GLOBALS['db']['user'], $GLOBALS['db']['password']);
+
+		if ($mysql->connect_error)
+		{
+			bl\general\loadLanguageFile('errors', 'rest');
+			require_once(__DIR__.'/../loggedout/header.php');
+			echo $lang['nodb'].'<br /><a href=\"mailto:admin@dynasty-wars.de\">admin@dynasty-wars.de</a>';
+			require_once(__DIR__.'/../loggedout/footer.php');
+			exit;
+		}
+		else
+		{
+			$mysql->set_charset('utf8');
+			$mysql->select_db($GLOBALS['db']['db']);
+		}
+	}
+
+	return $mysql;
 }
