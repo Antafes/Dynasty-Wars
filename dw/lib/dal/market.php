@@ -24,29 +24,17 @@ function placeOnMarket(
 	\util\mysql\query(
 		sprintf(
 			'
-			INSERT INTO dw_market (
-				`sid`,
-				`sx`,
-				`sy`,
-				`s_resource`,
-				`s_amount`,
-				`e_resource`,
-				`e_amount`,
-				`tax`,
-				`complete`,
-				`create_datetime`
-			) VALUES (
-				%d,
-				%d,
-				%d,
-				%s,
-				%f,
-				%s,
-				%f,
-				%d,
-				%d,
-				NOW()
-			)
+			INSERT INTO dw_market
+			SET `sid` = %s,
+				`sx` = %s,
+				`sy` = %s,
+				`s_resource` = %s,
+				`s_amount` = %s,
+				`e_resource` = %s,
+				`e_amount` = %s,
+				`tax` = %s,
+				`complete` = %s,
+				`create_datetime` = NOW()
 			',
 			\util\mysql\sqlval($uid),
 			\util\mysql\sqlval($x),
@@ -73,8 +61,8 @@ function removeFromMarket($mid, $uid) {
 		sprintf(
 			'
 			UPDATE dw_market
-			SET complete = 1, bid = %d
-			WHERE mid = %d
+			SET complete = 1, bid = %s
+			WHERE mid = %s
 			',
 			\util\mysql\sqlval($uid),
 			\util\mysql\sqlval($mid)
@@ -96,7 +84,7 @@ function getOwner($mid)
 			sprintf(
 				'
 				SELECT sid FROM dw_market
-				WHERE mid = %d
+				WHERE mid = %s
 				',
 				\util\mysql\sqlval($mid)
 			)
@@ -115,7 +103,7 @@ function getOfferDetails($mid) {
 			sprintf(
 				'
 				SELECT * FROM dw_market
-				WHERE mid = %d
+				WHERE mid = %s
 				',
 				\util\mysql\sqlval($mid)
 			)
@@ -153,7 +141,7 @@ function isOpen($mid) {
 			sprintf(
 				'
 				SELECT count(*) FROM dw_market
-				WHERE mid = %d AND complete = 0
+				WHERE mid = %s AND complete = 0
 				',
 				\util\mysql\sqlval($mid)
 			)
@@ -180,12 +168,12 @@ function userOffers($uid, $filter, $order = 'DESC')
 		'
 		SELECT sid, bid, s_resource, s_amount, e_resource, e_amount, tax, create_datetime, mid FROM dw_market
 		%s
-		WHERE dw_user.uid = %d
+		WHERE dw_user.uid = %s
 		ORDER BY create_datetime %s
 		',
-		\util\mysql\sqlval($join),
+		$join,
 		\util\mysql\sqlval($uid),
-		\util\mysql\sqlval($order)
+		$order
 	);
 	return \util\mysql\query($sql, true);
 }
@@ -213,9 +201,9 @@ function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 		 (
 		   SELECT s_resource, s_amount
 		   FROM dw_market
-		   WHERE complete = %d
+		   WHERE complete = %s
 		   AND sid <> bid
-		   ORDER BY timestamp DESC
+		   ORDER BY create_datetime DESC
 		   LIMIT %d
 		 ) AS dw_market_sales_sub1
 		 GROUP BY resource
@@ -226,9 +214,9 @@ function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 		 (
 		   SELECT e_resource, e_amount
 		   FROM dw_market
-		   WHERE complete = %d
+		   WHERE complete = %s
 		   AND sid <> bid
-		   ORDER BY timestamp DESC
+		   ORDER BY create_datetime DESC
 		   LIMIT %d
 		 ) AS dw_market_sales_sub2
 		 GROUP BY resource
@@ -236,10 +224,11 @@ function sales($limitS = 25, $limitE = 25, $completeS = 1, $completeE = 1)
 		GROUP BY resource
 		',
 		\util\mysql\sqlval($completeS),
-		\util\mysql\sqlval($limitS),
+		\intval($limitS), //using intval because sqlval will kill the query
 		\util\mysql\sqlval($completeE),
-		\util\mysql\sqlval($limitE)
+		\intval($limitE)
 	);
+
 	return \util\mysql\query($sql);
 }
 
@@ -268,9 +257,9 @@ function search(
 		JOIN dw_user ON dw_user.uid = dw_market.sid
 		WHERE s_resource LIKE %s
 		AND e_resource LIKE %s
-		AND s_amount BETWEEN %d AND %d
-		AND e_amount BETWEEN %d AND %d
-		AND complete = %d
+		AND s_amount BETWEEN %s AND %s
+		AND e_amount BETWEEN %s AND %s
+		AND complete = %s
 		AND nick LIKE %s
 		',
 		\util\mysql\sqlval($Sresource),

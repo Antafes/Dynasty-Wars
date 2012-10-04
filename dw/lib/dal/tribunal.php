@@ -265,6 +265,7 @@ function getArguments($tid, $approved)
 	if ($approved == false)
 		$sql .= '		AND approved = 1
 	';
+
 	return \util\mysql\query($sql, true);
 }
 

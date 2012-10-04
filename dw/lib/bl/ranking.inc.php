@@ -1,3 +1,3 @@
 <?php
-require_once('lib/dal/ranking.php');
-require_once('lib/bl/ranking.php');
+require_once(__DIR__.'/../dal/ranking.php');
+require_once(__DIR__.'/../bl/ranking.php');

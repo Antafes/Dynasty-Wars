@@ -238,17 +238,21 @@ class UserCls {
 		}
 	}
 
-	public function getDescription(){
+	public function getDescription()
+	{
 		return $this->description;
 	}
 
-	public function setDescription($newValue){
+	public function setDescription($newValue)
+	{
 		$sql = '
 			UPDATE dw_user
 			SET description = '.\util\mysql\sqlval($newValue).'
 			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
-		return (bool)(\util\mysql\query($sql));
+		$this->description = $newValue;
+
+		return \util\mysql\query($sql) > 0 ? true : false;
 	}
 
 	public function getLastLogin()

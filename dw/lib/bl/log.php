@@ -150,7 +150,7 @@ function prepareEntries($page)
 		$html .= '
 			<tr>
 				<td class="logAction">
-					'.htmlentities(types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $logDateTime)).'
+					'.types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $logDateTime).'
 				</td>
 				<td class="logDate">
 					'.$logDateTime->format($lang['acptimeformat']).'

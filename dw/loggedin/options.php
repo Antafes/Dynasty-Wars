@@ -37,7 +37,13 @@ if ($_GET['textchange'])
 {
 	$_SESSION['user']->setDescription($_POST['description']);
 	$_SESSION['user']->setLanguage($_POST['language']);
-	$_SESSION['language'] = $_POST['language'];
+
+	if ($_SESSION['language'])
+		$_SESSION['language'] = $_POST['language'];
+
+	if ($_COOKIE['language'])
+		setcookie('language', $_POST['language'], time()+604800, '', '.dynasty-wars.de');
+
 	$smarty->assign('infoMessage', $lang['descriptionChanged']);
 }
 

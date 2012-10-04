@@ -159,7 +159,7 @@ function alpRand()
 function signRand()
 {
 	$x = rand(1, 5);
-	$sign = array(1 => "!", 2 => "ง", 3 => "$", 4 => "(", 5 => ")");
+	$sign = array(1 => "!", 2 => "ยง", 3 => "$", 4 => "(", 5 => ")");
 	return $sign[$x];
 }
 

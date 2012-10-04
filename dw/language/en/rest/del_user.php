@@ -1,3 +1,3 @@
 <?php
-	$lang["del_user"] = "Dein Account wurde erfolgreich gelöscht.";
+	$lang["del_user"] = "Dein Account wurde erfolgreich gelÃ¶scht.";
 ?>

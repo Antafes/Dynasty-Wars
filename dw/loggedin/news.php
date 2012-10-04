@@ -15,7 +15,7 @@ $news_array = util\mysql\query('
 	ORDER BY nid DESC
 ', true);
 
-$smarty->assign('heading', htmlentities($lang['news']));
+$smarty->assign('heading', $lang['news']);
 
 if ($news_array)
 {
@@ -27,7 +27,7 @@ if ($news_array)
 	$news = array();
 	for ($i = 0, $n = 5 * $page - 5, $p = 5 * $page; $n < $p && $n < $lines; $n++, $i++)
 	{
-		$news[$i]['title'] = htmlentities($news_array[$n]['title']);
+		$news[$i]['title'] = $news_array[$n]['title'];
 
 		if ($news_array[$n]['creator'])
 		{
@@ -47,7 +47,7 @@ if ($news_array)
 				$count = 'ein';
 
 			$dateChanged = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_array[$n]['changed_datetime']);
-			$news[$i]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, $dateChanged->format($lang['timeformat']), $news_array[$n]['changer']));
+			$news[$i]['changed'] = sprintf($lang['newschanged'], $count, $dateChanged->format($lang['timeformat'], $news_array[$n]['changer']));
 		}
 	}
 
@@ -61,7 +61,7 @@ if ($news_array)
             $smarty->assign('pages', $pages_array);
 }
 else
-	$smarty->assign('no_news', htmlentities($lang['nonews']));
+	$smarty->assign('no_news', $lang['nonews']);
 
 include ('loggedin/footer.php');
 $smarty->display($smarty->template_dir[0].'news.tpl');

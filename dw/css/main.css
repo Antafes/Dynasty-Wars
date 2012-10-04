@@ -326,6 +326,11 @@ span.news2 {
 	position: relative;
 }
 
+.buildings #build_dialog
+{
+	display: none;
+}
+
 .heading {
 	text-align: center;
 	font-weight: bold;
@@ -411,9 +416,11 @@ span.news2 {
 	position: absolute;
 }
 
-.build_list {
+.build_list
+{
+	/*display: none;*/
 	width: 600px;
-	margin: 0px 30px;
+	margin: 10px 30px 0;
 	text-align: center;
 	vertical-align: top;
 }
@@ -446,6 +453,11 @@ span.news2 {
 
 .build_list .defense {
 	background-color: #7a8be4;
+}
+
+.build_list #build_list_dummy
+{
+	display: none;
 }
 
 input {
@@ -565,6 +577,11 @@ textarea {
 	width: 100%;
 }
 
+.tribunal .inner_content
+{
+	width: 630px;
+}
+
 #new_hearing
 {
 	width: 500px;
@@ -574,7 +591,7 @@ textarea {
 .hearing_column
 {
 	float: left;
-	width: 196px;
+	width: 194px;
 	min-height: 150px;
 	border: 1px solid #990000;
 	padding: 2px;

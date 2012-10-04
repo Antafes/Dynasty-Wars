@@ -1,3 +1,3 @@
 <?php
-require_once('lib/dal/news.php');
-require_once('lib/bl/news.php');
+require_once(__DIR__.'/../dal/news.php');
+require_once(__DIR__.'/../bl/news.php');

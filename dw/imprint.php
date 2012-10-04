@@ -2,9 +2,9 @@
 include('loggedout/header.php');
 include('language/'.$lang['lang'].'/rest/imprint.php');
 
-$smarty->assign('heading', htmlentities($lang['imprint']));
-$smarty->assign('coding', htmlentities($lang['coding']));
-$smarty->assign('graphics', htmlentities($lang['graphics']));
+$smarty->assign('heading', $lang['imprint']);
+$smarty->assign('coding', $lang['coding']);
+$smarty->assign('graphics', $lang['graphics']);
 
 include('loggedout/footer.php');
 

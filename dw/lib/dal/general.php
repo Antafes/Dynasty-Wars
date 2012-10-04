@@ -80,7 +80,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 		INSERT INTO dw_message (
 			uid_sender,
 			uid_recipient,
-			date,
+			create_datetime,
 			title,
 			message,
 			type
@@ -256,7 +256,7 @@ function getFallbackLanguage()
 {
 	$sql = '
 		SELECT language
-		FROM dw_language
+		FROM dw_languages
 		WHERE fallback
 	';
 	return \util\mysql\query($sql);

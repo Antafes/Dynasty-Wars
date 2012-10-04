@@ -113,12 +113,12 @@ function getBuildPlacePicture($city, $building, $new_building = 0)
 		{
 			if ($building['kind'] == 6)
 			{
-				$name = htmlentities($lang['building_names'][$building['kind']][$has_harbour]);
+				$name = $lang['building_names'][$building['kind']][$has_harbour];
 				$picture = $building_pictures[$building['kind']][$has_harbour];
 			}
 			else
 			{
-				$name = htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]);
+				$name = $lang['building_names'][$building['kind']][$building['ulvl']];
 				$picture = $building_pictures[$building['kind']][$building['ulvl']];
 			}
 
@@ -581,7 +581,7 @@ function buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
 	}
 	else
 		$time = (int)\dal\buildings\getTime($kind, $upgrade, $u_lvl);
-	return $time;
+	return \round($time);
 }
 
 /**

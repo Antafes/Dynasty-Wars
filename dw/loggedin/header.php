@@ -130,6 +130,7 @@ $rock = $ressources['rock'];
 $iron = $ressources['iron'];
 $paper = $ressources['paper'];
 $koku = $ressources['koku'];
+
 $troops_moving = bl\troops\checkMoving($_SESSION['user']->getUID());
 $tids = bl\troops\checkTroops($_SESSION['user']->getUID());
 $bodyonload = sprintf('r(%d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f);'."\n", $food, $wood, $rock, $iron, $paper, $koku,
@@ -184,7 +185,7 @@ foreach ($menuEntries as $menu_entry)
 			$menu .= '">';
 			if ($menu_entry['active'] == 1)
 				$menu .= '<a href="index.php?chose='.$menu_entry['menu_name'].'" class="a2">';
-			$menu .= htmlentities($lang[$menu_entry['menu_name']]);
+			$menu .= $lang[$menu_entry['menu_name']];
 			if ($menu_entry['active'] == 1)
 				$menu .= '</a>';
 			$menu .= '</div>';
@@ -213,7 +214,7 @@ foreach ($menuEntries as $menu_entry)
 
 		if ($menu_entry['active'] == 1)
 			$menu .= '<a href="'.$link.'" class="a2">';
-		$menu .= htmlentities(($lang[$menu_entry['menu_name']] ? $lang[$menu_entry['menu_name']] : $menu_entry['menu_name']));
+		$menu .= ($lang[$menu_entry['menu_name']] ? $lang[$menu_entry['menu_name']] : $menu_entry['menu_name']);
 		if ($menu_entry['active'] == 1)
 			$menu .= '</a>';
 
@@ -234,10 +235,10 @@ if ($own_uid || $_SESSION['user']->getGameRank())
 	if ($own_uid)
 	{
 		$own_nick = bl\general\uid2nick($own_uid);
-		$special_line .= htmlentities($own_nick).' eingeloggt als '.htmlentities($nick).'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
+		$special_line .= $own_nick.' eingeloggt als '.$nick.'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
 	}
 	if ($_SESSION['user']->getGameRank() >= 1)
-		$special_line .= htmlentities($lang['gameRank'][$_SESSION['user']->getGameRank()]);
+		$special_line .= $lang['gameRank'][$_SESSION['user']->getGameRank()];
 	else
 		$special_line .= '&nbsp;';
 	$special_line .= '</div>';
@@ -252,12 +253,12 @@ $smarty->assign('ressources', array(
 	'paper' => $lang['paper'],
 	'koku' => $lang['koku'],
 	'storage' => $lang['storage'],
-	'food_escaped' => htmlentities($lang['food']),
-	'wood_escaped' => htmlentities($lang['wood']),
-	'rock_escaped' => htmlentities($lang['rock']),
-	'iron_escaped' => htmlentities($lang['iron']),
-	'paper_escaped' => htmlentities($lang['paper']),
-	'koku_escaped' => htmlentities($lang['koku']),
-	'storage_escaped' => htmlentities($lang['storage']),
+	'food_escaped' => $lang['food'],
+	'wood_escaped' => $lang['wood'],
+	'rock_escaped' => $lang['rock'],
+	'iron_escaped' => $lang['iron'],
+	'paper_escaped' => $lang['paper'],
+	'koku_escaped' => $lang['koku'],
+	'storage_escaped' => $lang['storage'],
 ));
 $smarty->assign('storage', $max_storage);

@@ -1,24 +1,24 @@
 <div class="gameMenu">
 	<form method="post" action="index.php?chose=acp&amp;sub=gameoptions&amp;gameOptionsSub=menu" name="change_menu">
-		<div class="subheading">{$lang.gameMenu|htmlentities}</div>
+		<div class="subheading">{$lang.gameMenu}</div>
 		<table>
 			<tr>
 				<th class="menuEntry">
-					{$lang.menuEntry|htmlentities}
+					{$lang.menuEntry}
 				</th>
 				<th class="entryActive">
-					{$lang.entryActive|htmlentities}
+					{$lang.entryActive}
 				</th>
 				<th class="sorting">
-					{$lang.sorting|htmlentities}
+					{$lang.sorting}
 				</th>
 				<th class="visibility">
-					{$lang.visibility|htmlentities}
+					{$lang.visibility}
 				</th>
 			</tr>
 			{foreach from=$menuEntries item=menuEntry}
 				<tr>
-					<td class="menuEntry">{$lang[$menuEntry['menu_name']]|htmlentities}</td>
+					<td class="menuEntry">{$lang[$menuEntry['menu_name']]}</td>
 					<td class="entryActive">
 						<input type="checkbox" name="entries[{$menuEntry.game_menu_id}]"{if $menuEntry.active} checked="checked"{/if} />
 					</td>
@@ -39,7 +39,7 @@
 			{/foreach}
 			<tr>
 				<td colspan="4" style="text-align: center;">
-					<input type="submit" value="{$lang.change|htmlentities}" />
+					<input type="submit" value="{$lang.change}" />
 				</td>
 			</tr>
 		</table>

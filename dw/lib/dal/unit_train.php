@@ -115,7 +115,7 @@ function checkTraining($uid, $city)
  */
 function removeFromTrainList($tid)
 {
-	$sql = 'DELETE FROM dw_build_unit WHERE tid = '.util\mysql\sqlval($tid).'';
+	$sql = 'DELETE FROM dw_build_unit WHERE tid = '.\util\mysql\sqlval($tid).'';
 	\util\mysql\query($sql);
 }
 

@@ -175,9 +175,11 @@ else
 					SET public_text = '.util\mysql\sqlval($newpublic_text).'
 					WHERE cid = '.util\mysql\sqlval($_GET['cid']).'
 				';
+
 				if (util\mysql\query($sql))
 					$clan['public_text'] = $newpublic_text;
 			}
+
 			if ($newinternal_text || $_POST['changing'])
 			{
 				//changing of the clan internal text
@@ -186,6 +188,7 @@ else
 					SET internal_text = '.util\mysql\sqlval($newinternal_text).'
 					WHERE cid = '.util\mysql\sqlval($_GET['cid']).'
 				';
+
 				if (util\mysql\query($sql))
 					$clan['internal_text'] = $newinternal_text;
 			}
@@ -194,6 +197,7 @@ else
 		{
 			$rank = (int)$_GET['rank'];
 			$del = $_GET['del'];
+
 			if (!$_GET['do'])
 			{
 				$sql = '
@@ -294,22 +298,17 @@ else
 					if (!$rank)
 					{
 						$sql = '
-							INSERT INTO dw_clan_rankname (rankname)
-							VALUES ('.util\mysql\sqlval($rankname).')
+							INSERT INTO dw_clan_rankname
+							SET rankname = '.util\mysql\sqlval($rankname).'
 						';
 						$new_rnid = util\mysql\query($sql);
+
 						$sql = '
-							INSERT INTO dw_clan_rank (
-								cid,
-								rankid,
-								rnid,
-								standard
-							) VALUES (
-								'.util\mysql\sqlval($_GET['cid']).',
-								'.util\mysql\sqlval($newrankid).',
-								'.util\mysql\sqlval($new_rnid).',
-								'.util\mysql\sqlval($standard).'
-							)
+							INSERT INTO dw_clan_rank
+							SET cid = '.util\mysql\sqlval($_GET['cid']).',
+								rankid = '.util\mysql\sqlval($newrankid).',
+								rnid = '.util\mysql\sqlval($new_rnid).',
+								standard = '.util\mysql\sqlval($standard).'
 						';
 						$erg1 = util\mysql\query($sql);
 						if ($erg1)
@@ -390,7 +389,7 @@ else
 
 			$rankList = array();
 			foreach ($ranks as $rank)
-				$rankList[$rank['rankid']] = htmlentities($rank['rankname']);
+				$rankList[$rank['rankid']] = $rank['rankname'];
 
 			$smarty->assign('rankList', $rankList);
 			/**
@@ -468,7 +467,7 @@ else
 		$smarty->assign('membersListData', $membersList);
 		$usermapEntry = bl\gameOptions\getMenuEntry('usermap');
 		$smarty->assign('usermapEnabled', $usermapEntry['active']);
-		$smarty->assign('encodeString', urlencode('clan§cid='.$_GET['cid'].'§cmode=1'));
+		$smarty->assign('encodeString', urlencode('clanï¿½cid='.$_GET['cid'].'ï¿½cmode=1'));
 	}
 	elseif ($cmode == 3 && $_SESSION['user']->getCID() == $_GET['cid'] && !$own_uid) //message to all members
 	{

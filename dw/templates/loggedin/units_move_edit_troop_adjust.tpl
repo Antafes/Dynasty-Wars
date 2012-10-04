@@ -1,18 +1,18 @@
 <form method="post" name="addform" action="index.php?chose=units&amp;sub=move&amp;mode=edit&amp;tid={$smarty.get.tid}&amp;do={$smarty.get.do}">
 	<div class="subheading">
-		{$heading|htmlentities}
+		{$heading}
 	</div>
 	{if $unitList}
 	<div class="edit_unit add">
 		<div class="row">
 			<div class="left bold">
-				{$units|htmlentities}
+				{$units}
 			</div>
 			<div class="middle bold">
-				{$quantity|htmlentities}
+				{$quantity}
 			</div>
 			<div class="right bold">
-				{$maxCount|htmlentities}
+				{$maxCount}
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -20,7 +20,7 @@
 		{foreach from=$unitList item=unit}
 		<div class="row">
 			<div class="left">
-				{$unit.name|htmlentities}
+				{$unit.name}
 			</div>
 			<div class="middle">
 				<input type="text" name="amount{$i}" id="unit_amount{$i}" value="0" size="5" />
@@ -38,13 +38,13 @@
 		{if $changed}
 		<div class="row">
 			<div class="both">
-				{$changed|htmlentities}
+				{$changed}
 			</div>
 		</div>
 		{/if}
 		<div class="row">
 			<div class="both">
-				<input type="submit" name="{$smarty.get.do}" value="{if $smarty.get.do == 'remove'}{$lang.remove|htmlentities}{else}{$lang.add|htmlentities}{/if}" />
+				<input type="submit" name="{$smarty.get.do}" value="{if $smarty.get.do == 'remove'}{$lang.remove}{else}{$lang.add}{/if}" />
 				<input type="hidden" name="count" value="{$i}" />
 			</div>
 		</div>
@@ -53,14 +53,14 @@
 	<div class="edit_unit add">
 		<div class="row">
 			<div class="both">
-				{$noUnits|htmlentities}
+				{$noUnits}
 			</div>
 		</div>
 	</div>
 	{/if}
 	<div class="row">
 		<div class="both">
-			<a href="index.php?chose=units&amp;sub=move&amp;mode=edit&amp;tid={$smarty.get.tid}">{$back|htmlentities}</a>
+			<a href="index.php?chose=units&amp;sub=move&amp;mode=edit&amp;tid={$smarty.get.tid}">{$back}</a>
 		</div>
 	</div>
 </form>

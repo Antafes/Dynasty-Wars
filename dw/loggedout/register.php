@@ -10,7 +10,7 @@ $closed = mysql_query('SELECT reg_closed FROM dw_game', $con);
 if ($closed)
 	$reg_closed = mysql_result($closed, 0);
 
-$smarty->assign('heading', htmlentities($lang['registration']));
+$smarty->assign('heading', $lang['registration']);
 
 if (!$reg_closed)
 {
@@ -141,51 +141,51 @@ if (!$reg_closed)
 		$errors = array();
 
 		if ($err['name'])
-			$errors['name_blocked'] = htmlentities($lang['nameblocked']);
+			$errors['name_blocked'] = $lang['nameblocked'];
 
 		if ($err['city'])
-			$errors['city_doubled'] = htmlentities($lang['doublecity']);
+			$errors['city_doubled'] = $lang['doublecity'];
 
 		if ($err['email'])
-			$errors['wrong_mailformat'] = htmlentities($lang['mailformat']);
+			$errors['wrong_mailformat'] = $lang['mailformat'];
 
 		if ($err['missing'])
-			$errors['missing'] = nl2br(htmlentities($err['missing']));
+			$errors['missing'] = nl2br($err['missing']);
 
 		if ($err['doublename'])
-			$errors['name_doubled'] = htmlentities($lang['doublename']);
+			$errors['name_doubled'] = $lang['doublename'];
 
 		if ($err['pw<>pww'])
-			$errors['pw<>pww'] = htmlentities($lang['pw<>pww']);
+			$errors['pw<>pww'] = $lang['pw<>pww'];
 
 		if ($err['wrong_captcha'])
-			$errors['captcha_wrong'] = htmlentities($lang['captcha_wrong']);
+			$errors['captcha_wrong'] = $lang['captcha_wrong'];
 
 		if ($err['registration'] == 1)
-			$errors['registration'] = nl2br(htmlentities($lang['registerok']));
+			$errors['registration'] = nl2br($lang['registerok']);
 		else
-			$errors['registration'] = htmlentities($lang['registerfailed']);
+			$errors['registration'] = $lang['registerfailed'];
 
 		$smarty->assign('errors', $errors);
 	}
 
-	$smarty->assign('name', htmlentities($lang['name']));
-	$smarty->assign('entered_nick', htmlentities($nick));
-	$smarty->assign('max_length_nick', htmlentities($lang['max20']));
-	$smarty->assign('password', htmlentities($lang['password']));
-	$smarty->assign('repeat_password', htmlentities($lang['rep_password']));
-	$smarty->assign('email', htmlentities($lang['email']));
-	$smarty->assign('entered_email', htmlentities($email));
-	$smarty->assign('city', htmlentities($lang['city']));
-	$smarty->assign('help_alt', htmlentities($lang['help']));
-	$smarty->assign('city_description', htmlentities($lang['citydesc']));
-	$smarty->assign('entered_city', htmlentities($city));
-	$smarty->assign('max_length_city', htmlentities($lang['max20']));
+	$smarty->assign('name', $lang['name']);
+	$smarty->assign('entered_nick', $nick);
+	$smarty->assign('max_length_nick', $lang['max20']);
+	$smarty->assign('password', $lang['password']);
+	$smarty->assign('repeat_password', $lang['rep_password']);
+	$smarty->assign('email', $lang['email']);
+	$smarty->assign('entered_email', $email);
+	$smarty->assign('city', $lang['city']);
+	$smarty->assign('help_alt', $lang['help']);
+	$smarty->assign('city_description', $lang['citydesc']);
+	$smarty->assign('entered_city', $city);
+	$smarty->assign('max_length_city', $lang['max20']);
 	$smarty->assign('recaptcha', $recaptcha_html);
-	$smarty->assign('button_register', htmlentities($lang['register']));
+	$smarty->assign('button_register', $lang['register']);
 }
 elseif ($reg_closed == 1)
-	$smarty->assign('reg_closed', htmlentities($lang['noreg']));
+	$smarty->assign('reg_closed', $lang['noreg']);
 
 include('loggedout/footer.php');
 

@@ -3,7 +3,7 @@ include('loggedout/header.php');
 include('lib/bl/lost_password.inc.php');
 bl\general\loadLanguageFile('lost_password', 'loggedout');
 
-$smarty->assign('heading', htmlentities($lang['lost_password']));
+$smarty->assign('heading', $lang['lost_password']);
 $smarty->assign('id', $_GET['id']);
 
 if (!$_GET['id'])
@@ -15,15 +15,15 @@ if (!$_GET['id'])
 	if ($sent)
 	{
 		if ($sent == 1)
-			$smarty->assign('sent', htmlentities($lang['successful']));
+			$smarty->assign('sent', $lang['successful']);
 		elseif ($sent == -1)
-			$smarty->assign('sent', htmlentities($lang['no_user_found']));
+			$smarty->assign('sent', $lang['no_user_found']);
 		elseif ($sent == -2)
-			$smarty->assign('sent', htmlentities($lang['no_email']));
+			$smarty->assign('sent', $lang['no_email']);
 	}
 
-	$smarty->assign('email', htmlentities($lang['email']));
-	$smarty->assign('button_send', htmlentities($lang['send']));
+	$smarty->assign('email', $lang['email']);
+	$smarty->assign('button_send', $lang['send']);
 }
 elseif ($_GET['id'])
 {
@@ -41,17 +41,17 @@ elseif ($_GET['id'])
 		if ($error)
 		{
 			if ($error == -1)
-				echo htmlentities($lang['passwords_not_equal']);
+				echo $lang['passwords_not_equal'];
 			elseif ($error == -2)
-				echo htmlentities($lang['same_as_old']);
+				echo $lang['same_as_old'];
 		}
 
-		$smarty->assign('new_password', htmlentities($lang['newpw']));
-		$smarty->assign('repeat_password', htmlentities($lang['reppw']));
-		$smarty->assign('change', htmlentities($lang['change']));
+		$smarty->assign('new_password', $lang['newpw']);
+		$smarty->assign('repeat_password', $lang['reppw']);
+		$smarty->assign('change', $lang['change']);
 	}
 	else
-		$smarty->assign('wrong_id', htmlentities($lang['wrong_id']));
+		$smarty->assign('wrong_id', $lang['wrong_id']);
 }
 
 $smarty->display($smarty->template_dir[0].'lost_password.tpl');

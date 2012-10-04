@@ -188,7 +188,7 @@ function insertHearing($suitor, $accused, $cause, $description, $arguments)
 		$tid = \dal\tribunal\insertHearing($suitor, $accused_uid, $cause, $description);
 		addArgument($tid, $arguments, 'suitor');
 		$accused_lang = \bl\general\getLanguageByUID($accused_uid);
-		include('language/'.$accused_lang.'/ingame/tribunal.php');
+		\bl\general\loadLanguageFile('tribunal', 'loggedin', false, $accused_lang);
 		\bl\general\sendMessage($suitor, $accused_uid, $lang['info_title'], sprintf($lang['info_msg'], $tid), 3);
 		return false;
 	}
@@ -244,6 +244,7 @@ function getHearing($tid)
 	if ($hearing)
 	{
 		$getAllArguments = false;
+
 		if ($_SESSION['user']->getGameRank() > 1 && $_SESSION['user']->getUID() != $hearing['accused']
 			&& $_SESSION['user']->getUID() != $hearing['suitor'] && !$own_uid)
 			$getAllArguments = true;
@@ -296,24 +297,29 @@ function getArguments($tid, $approved)
 
 	$arguments = \dal\tribunal\getArguments($tid, $approved);
 
-	foreach ($arguments as &$argument)
+	if (is_array($arguments))
 	{
-		if ($_SESSION['user']->getGameRank() > 1 && !$own_uid)
+		foreach ($arguments as &$argument)
 		{
-			if ($argument['approved'] == 1)
-				$approved = ' ['.$lang['approved'].']';
-			elseif ($argument['approved'] == -1)
-				$approved = ' ['.$lang['not_approved'].']';
-			else
-				$approved = ' ['.$lang['no_approve'].']';
-		}
+			if ($_SESSION['user']->getGameRank() > 1 && !$own_uid)
+			{
+				if ($argument['approved'] == 1)
+					$approved = ' ['.$lang['approved'].']';
+				elseif ($argument['approved'] == -1)
+					$approved = ' ['.$lang['not_approved'].']';
+				else
+					$approved = ' ['.$lang['no_approve'].']';
+			}
 
-		$argument['approvedText'] = $approved;
-		$argument['message'] = \bl\messages\getMessage($argument['msgid']);
-		$argument['formattedDateAdded'] = date($lang['acptimeformat'], $argument['date_added']);
-		$argument['fromNick'] = \bl\general\uid2nick($argument['from']);
+			$argument['approvedText'] = $approved;
+			$argument['message'] = \bl\messages\getMessage($argument['msgid']);
+			$argument['formattedDateAdded'] = date($lang['acptimeformat'], $argument['date_added']);
+			$argument['fromNick'] = \bl\general\uid2nick($argument['from']);
+		}
+		unset($argument);
 	}
-	unset($argument);
+	else
+		$arguments = array();
 
 	return $arguments;
 }

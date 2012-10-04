@@ -12,6 +12,7 @@ if ($_GET['sub'] == 'hearings' || !$_GET['sub'])
 	if (!$_GET['id'])
 	{
 		$hearings = bl\tribunal\getAllHearings();
+//		var_dump($hearings);
 		$smarty->assign('hearings', ($hearings ? $hearings : array()));
 		$smarty->assign('hearingsCount', count($hearings));
 	}

@@ -5,9 +5,9 @@ $lang += array(
 	'actionslog' => 'Aktionslog',
 	'resmanagement' => 'Rohstoffverwaltung',
 	'gameoptions' => 'Spieloptionen',
-	'change' => 'Ändern',
+	'change' => 'Ã„ndern',
 	'switch' => 'Wechseln',
-	'delete' => 'Löschen',
+	'delete' => 'LÃ¶schen',
 	'noadmin' => "Zugriff verweigert.\nDu bist kein Administrator!",
 	'notOwnUID' => "Zugriff verweigert.\nDu bist in einem anderen Account eingeloggt!",
 );

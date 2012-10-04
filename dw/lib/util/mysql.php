@@ -59,7 +59,7 @@ function query($sql, $noTransform = false)
 		}
 	}
 
-	if (is_object($res))
+	if ($res || is_object($res))
 	{
 		if (substr($sql,0,6) == "SELECT")
 		{
@@ -165,11 +165,13 @@ function sqlval($value, $wrap = true)
  * Handles the MySQL connection.
  * Should only be used in sqlval() and query()
  * @author Neithan
+ * @global array $lang
  * @staticvar \mysqli $mysql
  * @return \mysqli
  */
 function connect()
 {
+	global $lang;
 	static $mysql;
 
 	if (!is_object($mysql))
@@ -186,7 +188,7 @@ function connect()
 		}
 		else
 		{
-			$mysql->set_charset('utf8');
+			$mysql->set_charset($GLOBALS['db']['charset']);
 			$mysql->select_db($GLOBALS['db']['db']);
 		}
 	}

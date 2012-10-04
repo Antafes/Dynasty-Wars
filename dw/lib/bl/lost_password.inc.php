@@ -1,7 +1,7 @@
 <?php
-require_once('lib/dal/lost_password.php');
-require_once('lib/dal/user.php');
-require_once('lib/bl/lost_password.php');
-require_once('lib/bl/register.php');
-require_once('lib/bl/options.inc.php');
-require_once('lib/bl/login.inc.php');
+require_once(__DIR__.'/../dal/lost_password.php');
+require_once(__DIR__.'/../dal/user.php');
+require_once(__DIR__.'/../bl/lost_password.php');
+require_once(__DIR__.'/../bl/register.php');
+require_once(__DIR__.'/../bl/options.inc.php');
+require_once(__DIR__.'/../bl/login.inc.php');

@@ -1,7 +1,7 @@
 <?php
 include ('loggedout/header.php');
 bl\general\loadLanguageFile('login', 'loggedout');
-unset ($err);
+
 $login = $_POST['login'];
 $user = $_POST['nick'];
 $pw = $_POST['pw'];
@@ -67,29 +67,29 @@ if ($login == 1)
 			$err['failed_login'] = true;
 
 		if ($err['failed_login'])
-			$error = htmlentities($lang['loginfailed']);
+			$error = $lang['loginfailed'];
 		elseif ($err['status'])
-			$error = nl2br(htmlentities($lang['noactivation']));
+			$error = nl2br($lang['noactivation']);
 		elseif ($err['blocked'])
-			$error = nl2br(htmlentities($lang['blocked']));
+			$error = nl2br($lang['blocked']);
 		elseif ($err['login_closed'] == 1)
-			$error = htmlentities($lang['onlyadmin']);
+			$error = $lang['onlyadmin'];
 		elseif ($err['login_closed'] == 2)
-			$error = htmlentities($lang['loginclosed']);
+			$error = $lang['loginclosed'];
 		elseif ($deactivated)
-			$error = nl2br(htmlentities($lang['deactivated']));
+			$error = nl2br($lang['deactivated']);
 
 		$smarty->assign('error', $error);
-		$smarty->assign('back', htmlentities($lang['back']));
+		$smarty->assign('back', $lang['back']);
 	}
 }
 else
 {
-	$smarty->assign('name', htmlentities($lang['name']));
-	$smarty->assign('password', htmlentities($lang['password']));
-	$smarty->assign('remind_login', htmlentities($lang['remindlogin']));
-	$smarty->assign('login_button', htmlentities($lang['login']));
-	$smarty->assign('lost_password', htmlentities($lang['lost_password']));
+	$smarty->assign('name', $lang['name']);
+	$smarty->assign('password', $lang['password']);
+	$smarty->assign('remind_login', $lang['remindlogin']);
+	$smarty->assign('login_button', $lang['login']);
+	$smarty->assign('lost_password', $lang['lost_password']);
 }
 
 include ('loggedout/footer.php');

@@ -1,35 +1,35 @@
 {include file="header.tpl"}
 <form method="post" action="index.php?chose=ressources">
 	<div class="heading">
-		{$heading|htmlentities}
+		{$heading}
 	</div>
 	<div class="content">
 		<table>
 			<tr>
 				<td width="140" class="table_tc">&nbsp;</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.food|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.ricefield}
+					{$ressources.food}<br/>
+					{$textLevel} {$buildingLevels.ricefield}
 				</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.wood|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.lumberjack}
+					{$ressources.wood}<br/>
+					{$textLevel} {$buildingLevels.lumberjack}
 				</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.rock|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.quarry}
+					{$ressources.rock}<br/>
+					{$textLevel} {$buildingLevels.quarry}
 				</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.iron|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.ironmine}
+					{$ressources.iron}<br/>
+					{$textLevel} {$buildingLevels.ironmine}
 				</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.paper|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.papermill}
+					{$ressources.paper}<br/>
+					{$textLevel} {$buildingLevels.papermill}
 				</td>
 				<td width="84" class="table_tc_red_border">
-					{$ressources.koku|htmlentities}<br/>
-					{$textLevel|htmlentities} {$buildingLevels.tradePostHarbour}
+					{$ressources.koku}<br/>
+					{$textLevel} {$buildingLevels.tradePostHarbour}
 				</td>
 			</tr>
 			{foreach from=$ressourceList item=ressource}
@@ -45,16 +45,16 @@
 			{/foreach}
 		</table>
 		<div class="paperProduction">
-			<div class="heading">{$textPaperProduction|htmlentities}</div>
+			<div class="heading">{$textPaperProduction}</div>
 			{if $textRateChanged}
 			<div class="info">
-				{$textRateChanged|htmlentities}
+				{$textRateChanged}
 			</div>
 			{/if}
 			<div class="content">
 				<div class="row">
 					<div class="left">
-						{$textWoodCosts|htmlentities}
+						{$textWoodCosts}
 					</div>
 					<div class="right">
 						{$woodCosts}
@@ -63,7 +63,7 @@
 				</div>
 				<div class="row">
 					<div class="left">
-						{$textProductionFactor|htmlentities}
+						{$textProductionFactor}
 					</div>
 					<div class="right">
 						{* this function creates the html for a dropdown field *}
@@ -73,7 +73,7 @@
 				</div>
 				<div class="row">
 					<div class="both">
-						<input type="submit" name="changeprod" value="{$textChange|htmlentities}" />
+						<input type="submit" name="changeprod" value="{$textChange}" />
 					</div>
 				</div>
 			</div>

@@ -8,25 +8,25 @@
 	">
 		{if $recipient}
 		<div class="left">
-			{$lang.recipient|htmlentities}:
+			{$lang.recipient}:
 		</div>
 		<div class="right">
-			<input type="text" name="recipient" value="{$message.recipient|htmlentities}" />
+			<input type="text" name="recipient" value="{$message.recipient}" />
 		</div>
 		<div class="clear"></div>
 		{/if}
 		<div class="left">
-			{$lang.title|htmlentities}:
+			{$lang.title}:
 		</div>
 		<div class="right">
-			<input type="text" name="title" value="{$message.title|htmlentities}" />
+			<input type="text" name="title" value="{$message.title}" />
 		</div>
 		<div class="clear"></div>
 		<div class="message">
-			<textarea name="message" rows="15" cols="67">{$message.message|htmlentities}</textarea>
+			<textarea name="message" rows="15" cols="67">{$message.message}</textarea>
 		</div>
 		<div class="button">
-			<input type="submit" value="{$lang.send|htmlentities}" />
+			<input type="submit" value="{$lang.send}" />
 			<input type="hidden" name="sent" value="1" />
 		</div>
 	</form>

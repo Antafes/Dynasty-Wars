@@ -5,5 +5,5 @@ $lang += array(
 	'position' => 'Position',
 	'points' => 'Punkte',
 	'description' => 'Beschreibung',
-	'back' => 'Zurück',
+	'back' => 'ZurÃ¼ck',
 );

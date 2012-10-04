@@ -1,10 +1,10 @@
 <div class="log">
-	<div class="subheading">{$lang.actionslog|htmlentities}</div>
+	<div class="subheading">{$lang.actionslog}</div>
 	<div class="list">
 		<table>
 			<tr>
-				<th class="logAction">{$lang.action|htmlentities}</th>
-				<th class="logDate">{$lang.date|htmlentities}</th>
+				<th class="logAction">{$lang.action}</th>
+				<th class="logDate">{$lang.date}</th>
 			</tr>
 			{$log}
 		</table>

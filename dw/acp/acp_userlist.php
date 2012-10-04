@@ -11,7 +11,7 @@ if ($_GET['reguid'])
 
 if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2)
 {
-	$smarty->assign('fromc', urlencode('acp§sub=userlist§reguid='));
+	$smarty->assign('fromc', urlencode('acpÂ§sub=userlistÂ§reguid='));
 
 	if (isset($_POST['nregadmin']))
 	{

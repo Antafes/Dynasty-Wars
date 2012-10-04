@@ -34,14 +34,15 @@ function uid2nick($uid)
 {
 	global $lang;
 
-    if (!$uid) return $lang['emperor'];
-    return
-        \util\mysql\query(
-            sprintf(
-                'SELECT nick FROM dw_user WHERE uid = %d',
-                \util\mysql\sqlval($uid)
-            )
-        );
+    if (!$uid)
+		return $lang['emperor'];
+
+	$sql = sprintf(
+		'SELECT nick FROM dw_user WHERE uid = %s',
+		\util\mysql\sqlval($uid)
+	);
+
+    return \util\mysql\query($sql);
 }
 
 /**

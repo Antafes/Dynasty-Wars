@@ -21,7 +21,7 @@ $news_home = util\mysql\query('
 if ($news_home)
 {
 	$news = array();
-	$news[0]['title'] = htmlentities($news_home['title']);
+	$news[0]['title'] = $news_home['title'];
 
 	if ($news_home['creator'])
 	{
@@ -41,16 +41,16 @@ if ($news_home)
 			$count = 'ein';
 
 		$changedDate = \DWDateTime::createFromFormat('Y-m-d H:i:s', $news_home['changed_datetime']);
-		$news[0]['changed'] = htmlentities(sprintf($lang['newschanged'], $count, $changedDate->format($lang['timeformat']), $news_home['changer']));
+		$news[0]['changed'] = sprintf($lang['newschanged'], $count, $changedDate->format($lang['timeformat']), $news_home['changer']);
 	}
 	$smarty->assign('news', $news);
 
-	$smarty->assign('more_news', htmlentities($lang['morenews']));
+	$smarty->assign('more_news', $lang['morenews']);
 
-	$smarty->assign('news_from', htmlentities($lang['from']));
+	$smarty->assign('news_from', $lang['from']);
 }
 else
-	$smarty->assign('no_news', htmlentities($lang['nonews']));
+	$smarty->assign('no_news', $lang['nonews']);
 include ('loggedout/footer.php');
 
 $smarty->display($smarty->template_dir[0].'home.tpl');

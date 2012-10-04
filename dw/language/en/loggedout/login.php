@@ -13,6 +13,6 @@
 	$lang["blocked"] = "The account is blocked!\n												To remove the block contact an administrator!";
 	$lang["onlyadmin"] = "At the moment only administrators can log in.";
 	$lang["loginclosed"] = "The login is closed.";
-	$lang["nocode"] = "Zahlencode: falls hier kein Code angezeigt wird, bitte die Grafiken für diese Seite laden.";
+	$lang["nocode"] = "Zahlencode: falls hier kein Code angezeigt wird, bitte die Grafiken fÃ¼r diese Seite laden.";
 	$lang['lost_password'] = 'Forgotten password';
 ?>

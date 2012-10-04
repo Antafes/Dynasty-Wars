@@ -1,4 +1,4 @@
 <?php
-require_once('lib/dal/login.php');
-require_once('lib/dal/user.php');
-require_once('lib/bl/login.php');
+require_once(__DIR__.'/../dal/login.php');
+require_once(__DIR__.'/../dal/user.php');
+require_once(__DIR__.'/../bl/login.php');

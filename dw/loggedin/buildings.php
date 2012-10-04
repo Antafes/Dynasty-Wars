@@ -75,15 +75,16 @@ if (!$_GET['buildplace'])
 		$building_pictures[$i] = bl\buildings\getBuildPlacePicture($city, $buildings[$i]);
 	$smarty->assign('buildingPictures', $building_pictures);
 
+	// $is_building is filled in header.php
 	$smarty->assign('isBuilding', $is_building);
+	$smarty->assign('buildList', $lang['build_list']);
+
+	$build_items = array();
 	if ($is_building)
-	{
-		$smarty->assign('buildList', $lang['build_list']);
-		$build_items = array();
 		foreach ($is_building as $build)
 			$build_items[$build['kind']] = $lang['building_names'][$build['kind']][$build['ulvl']];
-		$smarty->assign('buildItems', $build_items);
-	}
+
+	$smarty->assign('buildItems', $build_items);
 	$template_file = 'buildings.tpl';
 }
 elseif (is_numeric($_GET['buildplace']))
@@ -106,13 +107,13 @@ elseif (is_numeric($_GET['buildplace']))
 			$smarty->assign('notBuildable', 1);
 
 		if ($building['kind'] != 6)
-			$smarty->assign('buildingName', htmlentities($lang['building_names'][$building['kind']][$building['ulvl']]));
+			$smarty->assign('buildingName', $lang['building_names'][$building['kind']][$building['ulvl']]);
 		elseif ($building['kind'] == 6)
-			$smarty->assign('buildingName', htmlentities($lang['building_names'][$building['kind']][$has_harbour]));
+			$smarty->assign('buildingName', $lang['building_names'][$building['kind']][$has_harbour]);
 
 		if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]))
 		{
-			$smarty->assign('levelInfo', htmlentities($lang['level']));
+			$smarty->assign('levelInfo', $lang['level']);
 			$smarty->assign('level', $building['lvl']);
 		}
 
@@ -126,11 +127,11 @@ elseif (is_numeric($_GET['buildplace']))
 				$smarty->assign('buildingPicture', bl\buildings\getBuildPlacePicture($city, $building, 1));
 
 			if ($building['kind'] != 6)
-				$smarty->assign('buildingDescription', htmlentities($lang['descr'][$building['kind']]));
+				$smarty->assign('buildingDescription', $lang['descr'][$building['kind']]);
 			elseif ($building['kind'] == 6)
-				$smarty->assign('buildingDescription', htmlentities($lang['descr'][$building['kind']][$has_harbour]));
+				$smarty->assign('buildingDescription', $lang['descr'][$building['kind']][$has_harbour]);
 
-			$smarty->assign('lvlup', htmlentities($lang['lvlup']));
+			$smarty->assign('lvlup', $lang['lvlup']);
 			$smarty->assign('buildingRessources', array(
 				'food' => util\math\numberFormat($prices['food'], 0),
 				'wood' => util\math\numberFormat($prices['wood'], 0),
@@ -157,11 +158,11 @@ elseif (is_numeric($_GET['buildplace']))
 
 			$smarty->assign('canBuild', $can_build);
 			$smarty->assign('freeBuildPosition', bl\buildings\checkFreeBuildPosition($city, $building['kind']));
-			$smarty->assign('build', htmlentities($lang['build']));
+			$smarty->assign('build', $lang['build']);
 			$smarty->assign('buildTime', bl\general\formatTime($time, 'd h:m:s'));
 		}
 		elseif (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityexp[0], $cityexp[1]) == 0)
-			$smarty->assign('notYetBuildable', htmlentities($lang['not_yet_buildable']));
+			$smarty->assign('notYetBuildable', $lang['not_yet_buildable']);
 
 		if ($has_upgrades)
 		{
@@ -187,7 +188,7 @@ elseif (is_numeric($_GET['buildplace']))
 				$can_upgrade['resCheck'] = bl\buildings\resourceCheck($res_values);
 				$can_upgrade['upgradeCheck'] = bl\buildings\checkUpgradeable($building['kind'], $city);
 				$smarty->assign('canUpgrade', $can_upgrade);
-				$smarty->assign('upgrade', htmlentities($lang['upgrade']));
+				$smarty->assign('upgrade', $lang['upgrade']);
 				$smarty->assign('upgradeTime', bl\general\formatTime($u_time, 'd h:m:s'));
 			}
 		}
@@ -196,7 +197,7 @@ elseif (is_numeric($_GET['buildplace']))
 		{
 			$smarty->assign('showDefenseBuildings', true);
 			$defense = bl\buildings\getDefense($city);
-			$smarty->assign('defense', htmlentities($lang['defense']));
+			$smarty->assign('defense', $lang['defense']);
 			$smarty->assign('upgradeLevel', $building['ulvl']);
 
 			if ($building['ulvl'] >= 2)
@@ -208,9 +209,9 @@ elseif (is_numeric($_GET['buildplace']))
 				));
 			}
 			elseif ($building['ulvl'] < 2)
-				$smarty->assign('noBuild', htmlentities($lang['nobuild']));
+				$smarty->assign('noBuild', $lang['nobuild']);
 		}
-		$smarty->assign('back', htmlentities($lang['back']));
+		$smarty->assign('back', $lang['back']);
 
 		$template_file = 'buildplace.tpl';
 	}
@@ -221,7 +222,7 @@ elseif (is_numeric($_GET['buildplace']))
 		else
 			$buildables = bl\buildings\getNotBuilt($cityexp[0], $cityexp[1], $_SESSION['user']->getUID(), 1);
 		$smarty->assign('buildables', $buildables);
-		$smarty->assign('newBuilding', htmlentities($lang['new_building']));
+		$smarty->assign('newBuilding', $lang['new_building']);
 
 		if (count($buildables))
 		{
@@ -271,7 +272,7 @@ elseif (is_numeric($_GET['buildplace']))
 
 					$smarty_buildings[] = array(
 						'kind' => $buildable['kind'],
-						'name' => htmlentities($lang['building_names'][$buildable['kind']][$buildable['ulvl']]),
+						'name' => $lang['building_names'][$buildable['kind']][$buildable['ulvl']],
 						'image' => bl\buildings\getBuildPlacePicture($city, $buildable, 1),
 						'prices' => $prices_formatted,
 						'time' => bl\general\formatTime($time, 'd h:m:s'),
@@ -283,11 +284,11 @@ elseif (is_numeric($_GET['buildplace']))
 
 			$smarty->assign('buildablesCount', count($smarty_buildings));
 			$smarty->assign('buildingsList', $smarty_buildings);
-			$smarty->assign('back', htmlentities($lang['back']));
+			$smarty->assign('back', $lang['back']);
 		}
 
 		if (count($smarty_buildings) === 0)
-			$smarty->assign('noBuilding', htmlentities($lang['no_building']));
+			$smarty->assign('noBuilding', $lang['no_building']);
 		$template_file = 'buildings_list.tpl';
 	}
 }

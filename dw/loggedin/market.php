@@ -148,10 +148,13 @@ if (!$_GET['sub'] || $_GET['sub'] == 'offers')
 }
 elseif ($_GET['sub'] == 'log')
 {
-	if (!isset($_POST['filter']))
-		$_POST['filter'] = 'ALL';
-	if (!isset($_POST['order']))
-		$_POST['filter'] = 'DESC';
+	$filter = $_POST['filter'];
+	if (!$filter)
+		$filter = 'ALL';
+
+	$order = $_POST['order'];
+	if (!$order || $order != 'ASC')
+		$order = 'DESC';
 
 	$smarty->assign('filterArray', array(
 		'ALL' => $lang['all'],
@@ -163,7 +166,7 @@ elseif ($_GET['sub'] == 'log')
 		'ASC' => $lang['asc'],
 	));
 
-	$offers = bl\market\userOffers($_SESSION['user']->getUID(), $_POST['filter'], $_POST['order']);
+	$offers = bl\market\userOffers($_SESSION['user']->getUID(), $filter, $order);
 	$offersArray = array();
 
 	if ($offers)

@@ -77,8 +77,20 @@ i38.src = "pictures/unload.png";
 i39 = new Image();
 i39.src = "pictures/unload_c.png";
 
-function changePic(ImageName, ImageObjektName) {
+function changePic(ImageName, ImageObjektName)
+{
 	document.images[ImageName].src = eval(ImageObjektName + ".src")
+}
+
+$(function() {
+	setBorderHeight();
+});
+
+function setBorderHeight()
+{
+	var height = $('.background').height();
+	$('.left_border').height(height);
+	$('.right_border').height(height);
 }
 
 function slideToggleView(element)
@@ -147,13 +159,6 @@ function cloneSubClause(element, text)
 	$(clone).children('textarea').attr('name', 'description[' + parent +'][subclauses][][text]');
 }
 
-$(function()
-{
-	var height = $('.background').height();
-	$('.left_border').height(height);
-	$('.right_border').height(height);
-});
-
 function showDialog(element, width)
 {
 	if (!width)
@@ -171,7 +176,7 @@ function showDialog(element, width)
 function showEditingDialog(element, target, path, saveButton, cancelButton, width)
 {
 	var submitButton;
-	
+
 	if (!width)
 		width = 300;
 
@@ -181,10 +186,10 @@ function showEditingDialog(element, target, path, saveButton, cancelButton, widt
 		autoOpen: false,
 		width: width,
 		buttons: {
-			'save': function() 
+			'save': function()
 			{
 				var itemList = $('#' + target).children('form').serializeArray();
-				$.get(path, {items: JSON.stringify(itemList)}, function(data) 
+				$.get(path, {items: JSON.stringify(itemList)}, function(data)
 				{
 					data = JSON.parse(data);
 					if (data['status'] == 'ok')

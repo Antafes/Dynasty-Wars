@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 <div class="missionary">
 	{if $smarty.get.religion == 'accept'}
-		{$lang.acceptmsg|htmlentities}
+		{$lang.acceptmsg}
 	{else}
-		{$lang.declinemsg|htmlentities}
+		{$lang.declinemsg}
 	{/if}
 </div>
 {include file="footer.tpl"}

@@ -1,28 +1,28 @@
 <div id="user_info" class="hidden">
     <div class="row">
-        <div class="left">{$lang.since|htmlentities}: </div>
+        <div class="left">{$lang.since}: </div>
         <div class="r" id="register"></div>
     </div>
     <div class="row">
-        <div class="left">{$lang.position|htmlentities}: </div>
+        <div class="left">{$lang.position}: </div>
         <div class="r" id="pos"></div>
     </div>
     <div class="row">
-        <div class="left">{$lang.points|htmlentities}: </div>
+        <div class="left">{$lang.points}: </div>
         <div class="r" id="points"></div>
     </div>
     <div class="row">
-        <div class="left">{$lang.clan|htmlentities}: </div>
+        <div class="left">{$lang.clan}: </div>
         <div class="r" id="clan"></div>
     </div>
 </div>
 <table width="100%">
 	<tr>
-		<th>{$lang.rank|htmlentities}</th>
-		<th>{$lang.player|htmlentities}</th>
-		<th>{$lang.units|htmlentities}</th>
-		<th>{$lang.buildings|htmlentities}</th>
-		<th>{$lang.total|htmlentities}</th>
+		<th>{$lang.rank}</th>
+		<th>{$lang.player}</th>
+		<th>{$lang.units}</th>
+		<th>{$lang.buildings}</th>
+		<th>{$lang.total}</th>
 		<th>&nbsp;</th>
 	</tr>
     {foreach from=$rank_list item=value key=nr}

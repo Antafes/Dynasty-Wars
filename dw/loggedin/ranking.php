@@ -7,10 +7,10 @@ $smarty->assign('lang', $lang);
 
 $rank_tab = $_GET['rank_tab'];
 
-$smarty->assign('heading', htmlentities($lang['ranking']));
+$smarty->assign('heading', $lang['ranking']);
 
-$smarty->assign('link_player', '<a href="index.php?chose=ranking&amp;rank_tab=1">'.htmlentities($lang['player']).'</a>');
-$smarty->assign('link_clans', '<a href="index.php?chose=ranking&amp;rank_tab=2">'.htmlentities($lang['clans']).'</a>');
+$smarty->assign('link_player', '<a href="index.php?chose=ranking&amp;rank_tab=1">'.$lang['player'].'</a>');
+$smarty->assign('link_clans', '<a href="index.php?chose=ranking&amp;rank_tab=2">'.$lang['clans'].'</a>');
 
 if (($rank_tab == 1) || (!$rank_tab))
 {

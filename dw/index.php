@@ -117,17 +117,6 @@ if ($user->getUID())
 		bl\general\redirect(util\html\createLink(array('chose' => 'home'), true));
 	}
 
-	if ($_POST['language'] && $_SESSION['language'])
-	{
-		$_SESSION['language'] = $_POST['language'];
-		bl\general\redirect(util\html\createLink(array('chose' => 'options'), true));
-	}
-	elseif ($_POST['language'] && $_COOKIE['language'])
-	{
-		setcookie('language', $_POST['language'], time()+604800, '', '.dynasty-wars.de');
-		bl\general\redirect(util\html\createLink(array('chose' => 'options'), true));
-	}
-
 	if ($_GET['chose'] == 'logout')
 		require_once ('loggedin/logout.php');
 	else
@@ -248,6 +237,9 @@ if ($user->getUID())
 }
 else
 {
+	if ($_GET['chose'] == 'logout')
+		\bl\general\redirect('index.php');
+
 	$smarty->setTemplateDir('templates/loggedout/');
 	switch ($_GET['chose']){
 		case 'home':

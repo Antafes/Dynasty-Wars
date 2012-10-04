@@ -50,7 +50,7 @@
 ?>
 									<table width="670" border="0" class="box_3">
 										<tr>
-											<th width="670" class="box_8"><font size="5"><?php echo htmlentities($lang['b_defense']) ?></font></th>
+											<th width="670" class="box_8"><font size="5"><?php echo $lang['b_defense'] ?></font></th>
 										</tr>
 										<tr>
 											<td width="670" class="box_3">&nbsp;</td>
@@ -60,7 +60,7 @@
 ?>
 										<tr>
 											<td width="670" class="box_8">
-												<?php echo htmlentities($lang['nobuild']) ?>
+												<?php echo $lang['nobuild'] ?>
 											</td>
 										</tr>
 <?php
@@ -79,29 +79,29 @@
 												<table width="660" border="0" class="box_3">
 													<tr>
 														<td width="140" class="box_6">
-															<img src="pictures/defense/wall.png" alt="<?php echo htmlentities($lang['wall'][1]) ?>" title="<?php echo htmlentities($lang['wall'][1]) ?>"/>
+															<img src="pictures/defense/wall.png" alt="<?php echo $lang['wall'][1] ?>" title="<?php echo $lang['wall'][1] ?>"/>
 														</td>
 														<td width="520" class="box_2">
 															<strong><?php
 	if ($wall['upgrade_lvl'] <= 1) {
-		echo htmlentities($lang['wall'][1]);
+		echo $lang['wall'][1];
 	} else {
-		echo htmlentities($lang['wall'][$wall['upgrade_lvl']]);
+		echo $lang['wall'][$wall['upgrade_lvl']];
 	}
-?></strong> (<?php echo htmlentities($lang['b_level']) ?>: <?php if ($wall['lvl']) { echo $wall['lvl']; } else {  echo '0'; }?>)<br />
-															<?php echo nl2br(htmlentities($lang["b_descr"][1])) ?><br />
+?></strong> (<?php echo $lang['b_level'] ?>: <?php if ($wall['lvl']) { echo $wall['lvl']; } else {  echo '0'; }?>)<br />
+															<?php echo nl2br($lang["b_descr"][1]) ?><br />
 															<table width="510" height="100" border="0" class="box_3">
 																<tr>
 																	<td width="510" colspan="2" class="box_3">&nbsp;</td>
 																</tr>
 																<tr>
 																	<td width="410" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_lvlup"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_lvlup"] ?>:</strong><br />
 <?php
 	$check = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices["food"], $prices["wood"], $prices["rock"], $prices["iron"], $prices["paper"], $prices["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if ($build_check["ok"] and $build_check["class"] == 2) {
@@ -112,8 +112,8 @@
 	} else {
 ?>
 																	<td width="100" class="box_6">
-																		<input type="submit" name="construct" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check == 0 or $wall["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, 1, $wall["lvl"], $con), "h:m:s") ?></strong>
+																		<input type="submit" name="construct" value="<?php echo $lang["b_build"] ?>"<?php if (($check == 0 or $wall["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, 1, $wall["lvl"], $con), "h:m:s") ?></strong>
 <?php
 	}
 ?>
@@ -121,22 +121,22 @@
 																</tr>
 																<tr>
 																	<td width="420" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_upgrade"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_upgrade"] ?>:</strong><br />
 <?php
 	$check2 = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices_upgr["food"], $prices_upgr["wood"], $prices_upgr["rock"], $prices_upgr["iron"], $prices_upgr["paper"], $prices_upgr["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if (!$build_check["ok"] or $build_check["class"] != 2) {
 ?>
 																	<td width="100" class="box_8">
-																		<input type="submit" name="upgrade" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check2 == 0 or $wall["upgrade_lvl"] >= 4 or $wall["lvl"]<$wall["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
+																		<input type="submit" name="upgrade" value="<?php echo $lang["b_build"] ?>"<?php if (($check2 == 0 or $wall["upgrade_lvl"] >= 4 or $wall["lvl"]<$wall["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
 <?php
 		if ($wall["upgrade_lvl"] < 4) {
 ?>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, "1.".$wall["upgrade_lvl"], $wall["lvl"], $con), "h:m:s") ?></strong>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, "1.".$wall["upgrade_lvl"], $wall["lvl"], $con), "h:m:s") ?></strong>
 <?php
 		}
 ?>
@@ -165,29 +165,29 @@
 												<table width="660" border="0" class="box_3">
 													<tr>
 														<td width="140" class="box_6">
-															<img src="pictures/defense/tower.png" alt="<?php echo htmlentities($lang["tower"][1]) ?>" title="<?php echo htmlentities($lang["tower"][1]) ?>"/>
+															<img src="pictures/defense/tower.png" alt="<?php echo $lang["tower"][1] ?>" title="<?php echo $lang["tower"][1] ?>"/>
 														</td>
 														<td width="520" class="box_2">
 															<strong><?php
 	if ($tower["upgrade_lvl"] <= 1) {
-		echo htmlentities($lang["tower"][1]);
+		echo $lang["tower"][1];
 	} else {
-		echo htmlentities($lang["tower"][$tower["upgrade_lvl"]]);
+		echo $lang["tower"][$tower["upgrade_lvl"]];
 	}
-?></strong> (<?php echo htmlentities($lang["b_level"]) ?>: <?php if ($tower["lvl"]) { echo $tower["lvl"]; } else {  echo "0"; }?>)<br />
-															<?php echo nl2br(htmlentities($lang["b_descr"][2])) ?><br />
+?></strong> (<?php echo $lang["b_level"] ?>: <?php if ($tower["lvl"]) { echo $tower["lvl"]; } else {  echo "0"; }?>)<br />
+															<?php echo nl2br($lang["b_descr"][2]) ?><br />
 															<table width="510" height="100" border="0" class="box_3">
 																<tr>
 																	<td width="510" colspan="2" class="box_3">&nbsp;</td>
 																</tr>
 																<tr>
 																	<td width="410" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_lvlup"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_lvlup"] ?>:</strong><br />
 <?php
 	$check = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices["food"], $prices["wood"], $prices["rock"], $prices["iron"], $prices["paper"], $prices["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if ($build_check["ok"] and $build_check["class"] == 2) {
@@ -198,8 +198,8 @@
 	} else {
 ?>
 																	<td width="100" class="box_6">
-																		<input type="submit" name="construct" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check == 0 or $tower["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, 2, $tower["lvl"], $con), "h:m:s") ?></strong>
+																		<input type="submit" name="construct" value="<?php echo $lang["b_build"] ?>"<?php if (($check == 0 or $tower["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, 2, $tower["lvl"], $con), "h:m:s") ?></strong>
 <?php
 	}
 ?>
@@ -207,22 +207,22 @@
 																</tr>
 																<tr>
 																	<td width="420" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_upgrade"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_upgrade"] ?>:</strong><br />
 <?php
 	$check2 = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices_upgr["food"], $prices_upgr["wood"], $prices_upgr["rock"], $prices_upgr["iron"], $prices_upgr["paper"], $prices_upgr["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if (!$build_check["ok"] or $build_check["class"] != 2) {
 ?>
 																	<td width="100" class="box_8">
-																		<input type="submit" name="upgrade" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check2 == 0 or $tower["upgrade_lvl"] >= 4 or $tower["lvl"]<$tower["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
+																		<input type="submit" name="upgrade" value="<?php echo $lang["b_build"] ?>"<?php if (($check2 == 0 or $tower["upgrade_lvl"] >= 4 or $tower["lvl"]<$tower["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
 <?php
 		if ($tower["upgrade_lvl"] < 4) {
 ?>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, "2.".$tower["upgrade_lvl"], $tower["lvl"], $con), "h:m:s") ?></strong>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, "2.".$tower["upgrade_lvl"], $tower["lvl"], $con), "h:m:s") ?></strong>
 <?php
 		}
 ?>
@@ -254,29 +254,29 @@
 												<table width="660" border="0" class="box_3">
 													<tr>
 														<td width="140" class="box_6">
-															<img src="pictures/defense/camp.png" alt="<?php echo htmlentities($lang["camp"][1]) ?>" title="<?php echo htmlentities($lang["camp"][1]) ?>"/>
+															<img src="pictures/defense/camp.png" alt="<?php echo $lang["camp"][1] ?>" title="<?php echo $lang["camp"][1] ?>"/>
 														</td>
 														<td width="520" class="box_2">
 															<strong><?php
 	if ($camp["upgrade_lvl"] <= 1) {
-		echo htmlentities($lang["camp"][1]);
+		echo $lang["camp"][1];
 	} else {
-		echo htmlentities($lang["camp"][$camp["upgrade_lvl"]]);
+		echo $lang["camp"][$camp["upgrade_lvl"]];
 	}
-?></strong> (<?php echo htmlentities($lang["b_level"]) ?>: <?php if ($camp["lvl"]) { echo $camp["lvl"]; } else {  echo "0"; }?>)<br />
-															<?php echo nl2br(htmlentities($lang["b_descr"][3])) ?><br />
+?></strong> (<?php echo $lang["b_level"] ?>: <?php if ($camp["lvl"]) { echo $camp["lvl"]; } else {  echo "0"; }?>)<br />
+															<?php echo nl2br($lang["b_descr"][3]) ?><br />
 															<table width="510" height="100" border="0" class="box_3">
 																<tr>
 																	<td width="510" colspan="2" class="box_3">&nbsp;</td>
 																</tr>
 																<tr>
 																	<td width="410" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_lvlup"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_lvlup"] ?>:</strong><br />
 <?php
 	$check = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices["food"], $prices["wood"], $prices["rock"], $prices["iron"], $prices["paper"], $prices["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if ($build_check["ok"] and $build_check["class"] == 2) {
@@ -287,8 +287,8 @@
 	} else {
 ?>
 																	<td width="100" class="box_6">
-																		<input type="submit" name="construct" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check == 0 or $camp["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, 3, $camp["lvl"], $con), "h:m:s") ?></strong>
+																		<input type="submit" name="construct" value="<?php echo $lang["b_build"] ?>"<?php if (($check == 0 or $camp["upgrade_lvl"] < 1) or $own_uid) {?> disabled="disabled"<?php } ?>/><br/>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, 3, $camp["lvl"], $con), "h:m:s") ?></strong>
 <?php
 	}
 ?>
@@ -296,22 +296,22 @@
 																</tr>
 																<tr>
 																	<td width="420" height="50" class="box_7">
-																		<strong><?php echo htmlentities($lang["b_upgrade"]) ?>:</strong><br />
+																		<strong><?php echo $lang["b_upgrade"] ?>:</strong><br />
 <?php
 	$check2 = rescheck($food, $wood, $rock, $iron, $paper, $koku, $prices_upgr["food"], $prices_upgr["wood"], $prices_upgr["rock"], $prices_upgr["iron"], $prices_upgr["paper"], $prices_upgr["koku"]);
 ?>
-																		<strong><?php echo htmlentities($lang["food"]) ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo htmlentities($lang["wood"]) ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo htmlentities($lang["rock"]) ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
-																		<?php echo htmlentities($lang["iron"]) ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo htmlentities($lang["paper"]) ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo htmlentities($lang["koku"]) ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
+																		<strong><?php echo $lang["food"] ?>:&nbsp;<?php echo number_format($prices_upgr["food"], 0, ",", ".") ?> <?php echo $lang["wood"] ?>:&nbsp;<?php echo number_format($prices_upgr["wood"], 0, ",", ".") ?> <?php echo $lang["rock"] ?>:&nbsp;<?php echo number_format($prices_upgr["rock"], 0, ",", ".") ?><br/>
+																		<?php echo $lang["iron"] ?>:&nbsp;<?php echo number_format($prices_upgr["iron"], 0, ",", ".") ?> <?php echo $lang["paper"] ?>:&nbsp;<?php echo number_format($prices_upgr["paper"], 0, ",", ".") ?> <?php echo $lang["koku"] ?>:&nbsp;<?php echo number_format($prices_upgr["koku"], 0, ",", ".") ?></strong>
 																	</td>
 <?php
 	if (!$build_check["ok"] or $build_check["class"] != 2) {
 ?>
 																	<td width="100" class="box_8">
-																		<input type="submit" name="upgrade" value="<?php echo htmlentities($lang["b_build"]) ?>"<?php if (($check2 == 0 or $camp["upgrade_lvl"] >= 3 or $camp["lvl"]<$camp["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
+																		<input type="submit" name="upgrade" value="<?php echo $lang["b_build"] ?>"<?php if (($check2 == 0 or $camp["upgrade_lvl"] >= 3 or $camp["lvl"]<$camp["upgrade_lvl"]*10) or $own_uid) {?> disabled="disabled"<?php }?>/><br/>
 <?php
 		if ($camp["upgrade_lvl"] < 3) {
 ?>
-																		<strong><?php echo htmlentities($lang["b_time"]) ?>:<br/><?php echo format_time(build_time(2, "3.".$camp["upgrade_lvl"], $camp["lvl"], $con), "h:m:s") ?></strong>
+																		<strong><?php echo $lang["b_time"] ?>:<br/><?php echo format_time(build_time(2, "3.".$camp["upgrade_lvl"], $camp["lvl"], $con), "h:m:s") ?></strong>
 <?php
 		}
 ?>

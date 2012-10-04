@@ -1,4 +1,4 @@
 <?php
-	$lang["acceptmsg"] = "Nach einer längeren Unterhaltung mit dem Missionar, habt Ihr Euch dazu Entschieden die neue Religion in Euren Gebieten zu verbreiten. Ihr könnt nun außerdem eine Kirche in allen von Euch kontrollierten Städten bauen.";
-	$lang["declinemsg"] = "Kurz nach dem erscheinen des Missionars hattet Ihr ihn wieder aus Eurer Stadt verwiesen. Falls Ihr es euch doch noch anders überlegen wollt, müsst Ihr warten bis ein anderer Missionar sich zu Euch verirrt hat.";
+	$lang["acceptmsg"] = "Nach einer lÃ¤ngeren Unterhaltung mit dem Missionar, habt Ihr Euch dazu Entschieden die neue Religion in Euren Gebieten zu verbreiten. Ihr kÃ¶nnt nun auÃŸerdem eine Kirche in allen von Euch kontrollierten StÃ¤dten bauen.";
+	$lang["declinemsg"] = "Kurz nach dem erscheinen des Missionars hattet Ihr ihn wieder aus Eurer Stadt verwiesen. Falls Ihr es euch doch noch anders Ã¼berlegen wollt, mÃ¼sst Ihr warten bis ein anderer Missionar sich zu Euch verirrt hat.";
 ?>

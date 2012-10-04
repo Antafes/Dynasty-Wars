@@ -124,9 +124,9 @@ function buy($uid, $mid, $city)
 			$lang["buy_msg"],
 			\dal\user\uid2nick($uid),
 			$offerDetails['s_amount'],
-			htmlentities($lang[$offerDetails['s_resource']]),
+			$lang[$offerDetails['s_resource']],
 			$offerDetails['e_amount'],
-			htmlentities($lang[$offerDetails['e_resource']])
+			$lang[$offerDetails['e_resource']]
 		),
 		3
 	);
