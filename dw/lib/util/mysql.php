@@ -67,7 +67,11 @@ function query($sql, $noTransform = false)
 
 			if ($res->num_rows > 1 || ($noTransform && $res->num_rows > 0))
 			{
-				$out = $res->fetch_all(MYSQLI_ASSOC);
+				if (method_exists('mysqli_result', 'fetch_all'))
+					$out = $res->fetch_all(MYSQLI_ASSOC);
+				else
+					while ($row = $res->fetch_assoc())
+						$out[] = $row;
 			}
 			elseif ($res->num_rows == 1 && !$noTransform)
 			{
