@@ -42,3 +42,49 @@ function createLink($valuelist = '', $for_redirect = false)
 	}
 	return $link;
 }
+
+/**
+ * load a js file in smarty
+ * use only the filename without ending
+ * @param String $file
+ */
+function load_js($file)
+{
+	if (!is_array($_SESSION['scripts']['file']))
+		$_SESSION['scripts']['file'] = array();
+
+	if (!in_array($file, $_SESSION['scripts']['file']))
+		$_SESSION['scripts']['file'][] = $file;
+}
+
+/**
+ * load a js script in smarty
+ * @param String $script contains only the js!
+ */
+function load_js_script($script)
+{
+	$_SESSION['scripts']['script'][] = $script;
+}
+
+/**
+ * load a js ready script in smarty
+ * @param String $script contains only the js!
+ */
+function load_js_ready_script($script)
+{
+	$_SESSION['scripts']['ready_script'][] = $script;
+}
+
+/**
+ * load a css file in smarty
+ * use only the filename without ending
+ * @param String $file
+ */
+function load_css($file)
+{
+	if (!is_array($_SESSION['css']['file']))
+		$_SESSION['css']['file'] = array();
+
+	if (!in_array($file, $_SESSION['css']['file']))
+		$_SESSION['css']['file'][] = $file;
+}

@@ -143,7 +143,7 @@ function buildingsIncome($type, $basic, $lvl, $city)
  */
 function income($type, $cycle, $lvl, $city)
 {
-	require_once('lib/bl/unit.inc.php');
+	require_once(__DIR__.'/unit.inc.php');
 
 	$cityexp = explode(':', $city);
 	$basic = basicIncome($type, $city);
@@ -188,7 +188,7 @@ function income($type, $cycle, $lvl, $city)
 /**
  * calculating the new ressources
  * @author Neithan
- * @param int $range
+ * @param int $paddy
  * @param int $lumberjack
  * @param int $quarry
  * @param int $ironmine
@@ -197,10 +197,19 @@ function income($type, $cycle, $lvl, $city)
  * @param string $city
  * @return array
  */
-function newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city)
+function newResources($city)
 {
-	$cityexp = explode(':', $city);
-	$res = \bl\general\getResources($cityexp[0], $cityexp[1]);
+	require_once(__DIR__.'/buildings.php');
+
+	$cityExp = explode(':', $city);
+	$res = \bl\general\getResources($cityExp[0], $cityExp[1]);
+
+	$paddy = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 2);
+	$lumberjack = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 3);
+	$quarry = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 4);
+	$ironmine = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 5);
+	$papermill = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 6);
+	$tradepost = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 7);
 
 	$food = (float)$res['food'];
 	$wood = (float)$res['wood'];
@@ -214,12 +223,12 @@ function newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $trad
 	$past_time = $diff->getSeconds();
 	$storage = \bl\general\getMaxStorage($city);
 
-	$newres['food'] = $food + ($past_time * income(1, 's', $range, $city));
-	$newres['wood'] = $wood + ($past_time * income(2, 's', $lumberjack, $city));
-	$newres['rock'] = $rock + ($past_time * income(3, 's', $quarry, $city));
-	$newres['iron'] = $iron + ($past_time * income(4, 's', $ironmine, $city));
-	$newres['paper'] = $paper + ($past_time * income(5, 's', $papermill, $city));
-	$newres['koku'] = $koku + ($past_time * income(6, 's', $tradepost, $city));
+	$newres['food'] = $food + ($past_time * income(1, 's', $paddy['lvl'], $city));
+	$newres['wood'] = $wood + ($past_time * income(2, 's', $lumberjack['lvl'], $city));
+	$newres['rock'] = $rock + ($past_time * income(3, 's', $quarry['lvl'], $city));
+	$newres['iron'] = $iron + ($past_time * income(4, 's', $ironmine['lvl'], $city));
+	$newres['paper'] = $paper + ($past_time * income(5, 's', $papermill['lvl'], $city));
+	$newres['koku'] = $koku + ($past_time * income(6, 's', $tradepost['lvl'], $city));
 
 	if ($food >= $storage)
 		$newres['food'] = $food;

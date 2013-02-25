@@ -143,40 +143,20 @@ function getBuildPlacePicture($city, $building, $new_building = 0)
  */
 function selectBuilding($x, $y, $pos)
 {
-	$res = \dal\buildings\selectBuilding($x, $y, $pos);
+	$result = \dal\buildings\selectBuilding($x, $y, $pos);
+	$building = array();
 
-	if ($res)
+	if ($result)
 	{
-		$count = count($res);
-		if ($count > 0 && $pos)
-		{
-			unset($building);
-			$n = 0;
-			while ($n < $count) {
-				$building['bid'] = (int)$res[$n]['bid'];
-				$building['kind'] = (int)$res[$n]['kind'];
-				$building['lvl'] = (int)$res[$n]['lvl'];
-				$building['ulvl'] = (int)$res[$n]['upgrade_lvl'];
-				$building['position'] = (int)$res[$n]['position'];
-				$n++;
-			}
-		}
-		elseif ($count > 0 && !$pos)
-		{
-			unset($building);
-			$n = 0;
-			while ($n < $count) {
-				$building[$n]['bid'] = $res[$n]['bid'];
-				$building[$n]['kind'] = $res[$n]['kind'];
-				$building[$n]['lvl'] = $res[$n]['lvl'];
-				$building[$n]['ulvl'] = $res[$n]['upgrade_lvl'];
-				$building[$n]['position'] = $res[$n]['position'];
-				$n++;
-			}
-		}
+		$building['bid'] = (int)$result['bid'];
+		$building['kind'] = (int)$result['kind'];
+		$building['lvl'] = (int)$result['lvl'];
+		$building['ulvl'] = (int)$result['upgrade_lvl'];
+		$building['position'] = (int)$result['position'];
 	}
 	else
 	{
+		// for the first seven build places the building is fixed
 		if ($pos < 8)
 		{
 			$new_building = array(
@@ -190,10 +170,8 @@ function selectBuilding($x, $y, $pos)
 			);
 			$building = $new_building[$pos];
 		}
-		elseif ($pos > 7)
-		{
-		}
 	}
+
 	return $building;
 }
 

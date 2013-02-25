@@ -9,6 +9,8 @@ include('lib/bl/market.inc.php');
 include('loggedin/header.php');
 
 bl\general\loadLanguageFile('market');
+\util\html\load_css('market');
+
 $smarty->assign('lang', $lang);
 
 if (!$_GET['sub'] || $_GET['sub'] == 'offers')

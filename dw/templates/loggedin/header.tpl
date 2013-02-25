@@ -6,21 +6,9 @@
 <meta http-equiv="cache-control" content="no-cache" />
 <meta name="copyright" content="&copy; 2005 - {$smarty.now|date_format:"%Y"} by Neithan" />
 <title>{$title}</title>
-<link rel="stylesheet" type="text/css" href="css/main.css" />
-<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.10.custom.css" />
-{$marketCSS}
 <link rel="shortcut icon" type="image/x-icon" href="pictures/favicon.ico" />
-<script language="javascript" type="text/javascript" src="lib/js/jquery-1.5.1.min.js"></script>
-<script language="javascript" type="text/javascript" src="lib/js/jquery-ui-1.8.10.custom.min.js"></script>
-<script language="javascript" type="text/javascript" src="lib/js/jquery.qtip-1.0.0-rc3.min.js"></script>
-<script language="javascript" type="text/javascript" src="lib/js/res.js"></script>
-<script language="javascript" type="text/javascript" src="lib/js/several.js"></script>
-<script language="javascript" type="text/javascript" src="lib/js/ranking_ajax.js"></script>
-{$mapJS}
-{$unitsJS}
-{$timerJS}
-{$tribunalAjaxJS}
-{$readyJS}
+{include_css}
+{include_js}
 </head>
 <body>
 	<div class="wrapper">
@@ -34,7 +22,7 @@
 				<div class="fan"></div>
 				<div class="no_content">
 					<form method="post" action="index.php?chose={$chose}" name='cityform'>
-						<select name="citychange" onchange="$(this).parent().submit()" class="s1">
+						<select id="cityChange" name="citychange" class="s1">
 							{foreach from=$cities item=city}
 							<option value="{$city.coords}"{if $userInfos.city == $city.coords} selected="selected"{/if}>
 								{$city.city} [{$city.coords}]

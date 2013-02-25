@@ -67,7 +67,7 @@ function sendLostPasswordMail($email)
 		{
 			$uid = \dal\user\returnUID($email);
 			$user = \dal\user\getUserInfos($uid);
-			$link = DIR_WS_INDEX.'?chose=lost_password&id='.$id;
+			$link = $GLOBALS['config']['dir_ws_index'].'?chose=lost_password&id='.$id;
 			$message = sprintf($lang['email_html'], $link, date($lang['timeformat']), date($lang['clockformat']));
 			\bl\general\sendMail($user['email'], $lang['subject'], $message);
 			$rec_check = \dal\lostPassword\checkRecoveries($uid);

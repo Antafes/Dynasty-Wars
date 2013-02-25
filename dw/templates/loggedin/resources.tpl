@@ -9,7 +9,7 @@
 				<td width="140" class="table_tc">&nbsp;</td>
 				<td width="84" class="table_tc_red_border">
 					{$ressources.food}<br/>
-					{$textLevel} {$buildingLevels.ricefield}
+					{$textLevel} {$buildingLevels.paddy}
 				</td>
 				<td width="84" class="table_tc_red_border">
 					{$ressources.wood}<br/>

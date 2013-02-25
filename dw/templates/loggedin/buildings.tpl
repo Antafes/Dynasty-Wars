@@ -8,7 +8,7 @@
 					</a>
 				</div>
 				{/section}
-				<div id="build_dialog">
+				<div id="build_dialog" class="build_dialog">
 					<div class="heading"></div>
 					<div class="building_pic left"></div>
 					<div class="description right"></div>
@@ -93,7 +93,6 @@
 					</form>
 				</div>
 			</div>
-			{if $isBuilding}
 			<div class="build_list">
 				<div class="heading">
 					{$buildList}
@@ -120,5 +119,4 @@
 					<strong><span></span></strong>
 				</div>
 			</div>
-			{/if}
 {include file="footer.tpl"}

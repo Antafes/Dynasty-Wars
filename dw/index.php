@@ -23,6 +23,12 @@ else
 	$GLOBALS['firePHP']->registerAssertionHandler($convertAssertionErrorsToExceptions=true, $throwAssertionExceptions=false);
 }
 
+// reset the js scripts and css that should be shown
+unset(
+	$_SESSION['scripts'],
+	$_SESSION['css']
+);
+
 $smarty->assign('title', 'Dynasty Wars');
 
 $lang['lang'] = bl\general\getLanguageByUID();

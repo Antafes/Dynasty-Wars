@@ -50,7 +50,7 @@ function selectBuilding($x, $y, $pos)
 			AND `map_y` = '.\util\mysql\sqlval($y).'
 			'.$buildplace.'
 	';
-	return \util\mysql\query($sql, true);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -167,7 +167,7 @@ function checkBuild($x, $y)
 			AND `map_y` = '.\util\mysql\sqlval($y).'
 		ORDER BY `end_datetime` ASC
 	';
-$GLOBALS['firePHP']->log($sql, 'checkBuild sql');
+
 	return \util\mysql\query($sql, true);
 }
 

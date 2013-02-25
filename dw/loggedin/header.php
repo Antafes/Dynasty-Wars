@@ -41,18 +41,6 @@ $smarty->assign('userInfos', array(
 include('lib/bl/resource.inc.php');
 $gameOptions = util\mysql\query('SELECT board, adminmail, version FROM dw_game');
 
-if ($_GET['chose'] == 'buildings')
-{
-	include('lib/bl/buildings.inc.php');
-//check for running build
-	if ($_GET['chose'] == 'buildings' && !$_GET['buildplace'])
-		$is_building = bl\buildings\checkBuild($_SESSION['user']->getUID(), $city);
-}
-elseif ($_GET['chose'] == 'units')
-{
-	include('lib/bl/unit.inc.php');
-	$train_check = bl\unit\train\checkTraining($_SESSION['user']->getUID(), $city);
-}
 //new messages
 $sql = '
 	SELECT COUNT(msgid) FROM dw_message
@@ -90,7 +78,7 @@ if ($res_buildings)
 	{
 		switch($res_building['kind']){
 			case 1:
-				$ricefield = $res_building['lvl'];
+				$paddy = $res_building['lvl'];
 				break;
 			case 2:
 				$lumberjack = $res_building['lvl'];
@@ -109,8 +97,8 @@ if ($res_buildings)
 				break;
 		}
 	}
-	if (!$ricefield)
-		$ricefield = 0;
+	if (!$paddy)
+		$paddy = 0;
 	if (!$lumberjack)
 		$lumberjack = 0;
 	if (!$quarry)
@@ -123,37 +111,21 @@ if ($res_buildings)
 		$tradepost = 0;
 }
 $max_storage = bl\general\getMaxStorage($city);
-$ressources = bl\resource\newResources($ricefield, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
-$food = $ressources['food'];
-$wood = $ressources['wood'];
-$rock = $ressources['rock'];
-$iron = $ressources['iron'];
-$paper = $ressources['paper'];
-$koku = $ressources['koku'];
+$resources = bl\resource\newResources($city);
+$food = $resources['food'];
+$wood = $resources['wood'];
+$rock = $resources['rock'];
+$iron = $resources['iron'];
+$paper = $resources['paper'];
+$koku = $resources['koku'];
 
-$troops_moving = bl\troops\checkMoving($_SESSION['user']->getUID());
-$tids = bl\troops\checkTroops($_SESSION['user']->getUID());
 $bodyonload = sprintf('r(%d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f);'."\n", $food, $wood, $rock, $iron, $paper, $koku,
-	bl\resource\income(1, 's', $ricefield, $city), bl\resource\income(2, 's', $lumberjack, $city), bl\resource\income(3, 's', $quarry, $city),
+	bl\resource\income(1, 's', $paddy, $city), bl\resource\income(2, 's', $lumberjack, $city), bl\resource\income(3, 's', $quarry, $city),
 	bl\resource\income(4, 's', $ironmine, $city), bl\resource\income(5, 's', $papermill, $city), bl\resource\income(6, 's', $tradepost, $city),
 	$max_storage
 );
-if ($is_building)
-	foreach ($is_building as $build)
-		$bodyonload .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", $build['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $build['bid']);
 
-if ($_GET['chose'] == 'units' && $train_check['ok'] && $_GET['sub'] != 'move')
-	$bodyonload .= sprintf('timer(\'%s\', \'%s\', %u);'."\n", $train_check['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $train_check['kind']);
-elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving && !$_GET['mode'])
-{
-	foreach ($tids as $tid)
-	{
-		$troop = bl\troops\checkTroop($tid);
-		$bodyonload .= sprintf('timer(%u, %u);'."\n", $troop['end_datetime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $tid);
-	}
-}
-
-$smarty->assign('readyJS', util\html\createReadyScript($bodyonload));
+\util\html\load_js_ready_script($bodyonload);
 
 //selection of the map position
 $cities = util\mysql\query('
@@ -262,3 +234,15 @@ $smarty->assign('ressources', array(
 	'storage_escaped' => $lang['storage'],
 ));
 $smarty->assign('storage', $max_storage);
+
+// load css files
+\util\html\load_css('main');
+\util\html\load_css('jquery-ui-1.8.10.custom');
+
+// load js files
+\util\html\load_js('jquery-1.5.1.min');
+\util\html\load_js('jquery-ui-1.8.10.custom.min');
+\util\html\load_js('jquery.qtip-1.0.0-rc3.min');
+\util\html\load_js('res');
+\util\html\load_js('several');
+\util\html\load_js('timer');

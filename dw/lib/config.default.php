@@ -16,5 +16,5 @@ $firePHP_debug = false;
 $smarty_debug = false;
 
 //paths
-define('DIR_WS', 'http://dynasty-wars.de');
-define('DIR_WS_INDEX', 'http://dynasty-wars.de/index.php');
+$GLOBALS['config']['dir_ws'] = 'http://dynasty-wars.de';
+$GLOBALS['config']['dir_ws_index'] = 'http://dynasty-wars.de/index.php';

@@ -15,3 +15,10 @@ if ($gameOptions['board'])
 $smarty->assign('menu_login', $lang['login']);
 $smarty->assign('menu_register', $lang['register']);
 $smarty->assign('menu_imprint', $lang['imprint']);
+
+// load css files
+\util\html\load_css('main');
+
+// load js files
+\util\html\load_js('jquery-1.5.1.min');
+\util\html\load_js('several');

@@ -292,7 +292,6 @@ function checkIsle($posx, $posy, $tx, $ty)
 function checkTroops($tuid)
 {
 	$tids = \dal\troops\checkTroops($tuid);
-	$GLOBALS['firePHP']->log($tids, 'checkTroops-TIDS');
 
 	$return = array();
 	if ($tids)

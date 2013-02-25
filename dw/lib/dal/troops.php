@@ -42,7 +42,7 @@ function surrounding($lx, $hx, $ly, $hy, $x, $y)
 function getTroop($tid)
 {
 	$sql = 'SELECT * FROM dw_troops WHERE tid = '.\util\mysql\sqlval($tid).'';
-	$GLOBALS['firePHP']->log($sql, 'getTroop->query');
+
 	return \util\mysql\query($sql);
 }
 
@@ -130,7 +130,7 @@ function getTroopUnits($tid, $orderBy)
 	';
 	if($orderBy)
 		$sql .= 'ORDER BY '.\util\mysql\sqlval($orderBy, false);
-	$GLOBALS['firePHP']->log($sql, 'getTroopUnits->query');
+
 	return \util\mysql\query($sql, true);
 }
 
@@ -309,7 +309,7 @@ function checkTroops($tuid)
 		LEFT OUTER JOIN dw_troops ON dw_troops_move.tid = dw_troops.tid
 		WHERE uid = '.\util\mysql\sqlval($tuid).'
 	';
-	$GLOBALS['firePHP']->log($sql, 'checkTroops-SQL');
+
 	return \util\mysql\query($sql, true);
 }
 

@@ -105,8 +105,8 @@ function createNewUser($nick, $pws, $email, $city)
 		$random2 .= "/";
 		$random2 .= $random;
 		$header = "From: Dynasty Wars <support@dynasty-wars.de>";
-		$activation_link = DIR_WS_INDEX.'?chose=activation&amp;id='.$random2;
-		$homepage_link = DIR_WS_INDEX.'?chose=activation';
+		$activation_link = $GLOBALS['config']['dir_ws_index'].'?chose=activation&amp;id='.$random2;
+		$homepage_link = $GLOBALS['config']['dir_ws_index'].'?chose=activation';
 		\bl\general\sendMail($email, $lang['subject'], sprintf($lang['message'], $nick, $activation_link, $homepage_link, $random2));
 		\bl\log\saveLog (1, $new_uid, 0, "");
 		return 1;
