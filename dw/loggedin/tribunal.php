@@ -3,6 +3,8 @@ include('lib/bl/tribunal.inc.php');
 include('loggedin/header.php');
 
 bl\general\loadLanguageFile('tribunal');
+\util\html\load_js('tribunal_ajax');
+
 $smarty->assign('lang', $lang);
 
 $parser = new bl\wikiParser\WikiParser;

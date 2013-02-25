@@ -19,5 +19,4 @@ require_once(__DIR__.'/../util/html.php');
 require_once(__DIR__.'/../util/math.php');
 require_once(__DIR__.'/../util/dateTime.php');
 require_once(__DIR__.'/../util/dateInterval.php');
-//require_once(__DIR__.'/../smarty/Smarty.class.php');
 require_once(__DIR__.'/../smarty3/Smarty.class.php');

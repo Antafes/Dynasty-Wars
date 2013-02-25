@@ -442,4 +442,13 @@ class UserCls {
 		';
 		\util\mysql\query($sql);
 	}
+
+	public function checkCity($x, $y)
+	{
+		foreach ($this->cities as $city)
+			if ($city['map_x'] == $x && $city['map_y'] == $y)
+				return true;
+
+		return false;
+	}
 }

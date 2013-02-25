@@ -277,6 +277,18 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 }
 else
 {
+	$troops_moving = bl\troops\checkMoving($_SESSION['user']->getUID());
+	$tids = bl\troops\checkTroops($_SESSION['user']->getUID());
+
+	if ($troops_moving)
+	{
+		foreach ($tids as $tid)
+		{
+			$troop = bl\troops\checkTroop($tid);
+			$bodyonload .= sprintf('timer(%u, %u);'."\n", $troop['end_datetime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $tid);
+		}
+	}
+
 	$unitSmarty->assign('textUnitMove', $lang['unitmove']);
 	$unitSmarty->assign('textCreateTroop', $lang['create_troop']);
 	$unitSmarty->assign('textTroops', $lang['troops']);

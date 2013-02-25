@@ -8,16 +8,24 @@ $unit = $_GET['unit'];
 $build = $_POST['build'];
 $count = $_POST['count'];
 
+$train_check = bl\unit\train\checkTraining($_SESSION['user']->getUID(), $city);
+
+$readyScript = '';
+if ($train_check['ok'])
+	$readyScript .= sprintf('timer(\'%s\', \'%s\', %u);'."\n", $train_check['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $train_check['kind']);
+
+\util\html\load_js_ready_script($readyScript);
+
 if ($build && $unit && $count)
 {
 	$train = bl\unit\train\train($unit, $count, $_SESSION['user']->getUID(), $city);
-	$ressources = bl\resource\newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
-	$food = $ressources['food'];
-	$wood = $ressources['wood'];
-	$rock = $ressources['rock'];
-	$iron = $ressources['iron'];
-	$paper = $ressources['paper'];
-	$koku = $ressources['koku'];
+	$resources = bl\resource\newResources($city);
+	$food = $resources['food'];
+	$wood = $resources['wood'];
+	$rock = $resources['rock'];
+	$iron = $resources['iron'];
+	$paper = $resources['paper'];
+	$koku = $resources['koku'];
 	$train_check = bl\unit\train\checkTraining($_SESSION['user']->getUID(), $city);
 }
 

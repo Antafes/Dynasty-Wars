@@ -418,7 +418,7 @@ span.news2 {
 
 .build_list
 {
-	/*display: none;*/
+	display: none;
 	width: 600px;
 	margin: 10px 30px 0;
 	text-align: center;
@@ -1473,6 +1473,14 @@ textarea {
 	height: 352px;
 }
 
+.map .map_body .navi_top img,
+.map .map_body .navi_bottom img,
+.map .map_body .navi_left img,
+.map .map_body .navi_right img
+{
+	cursor: pointer;
+}
+
 .map .map_body .viewport
 {
 	float: left;
@@ -1725,4 +1733,13 @@ textarea {
 .options .optionsContent .option table .title
 {
 	width: 165px;
+}
+
+.build_dialog
+{
+	position: absolute;
+	background-color: #ffff66;
+	width: 500px;
+	left: 50px;
+	top: 100px;
 }

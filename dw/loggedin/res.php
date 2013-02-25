@@ -16,7 +16,7 @@ if ($_POST['changeprod'])
 $smarty->assign('textLevel', $lang['lvl']);
 $smarty->assign('heading', $lang['ressources']);
 $smarty->assign('buildingLevels', array(
-	'ricefield' => $ricefield,
+	'paddy' => $paddy,
 	'lumberjack' => $lumberjack,
 	'quarry' => $quarry,
 	'ironmine' => $ironmine,
@@ -35,7 +35,7 @@ $smarty->assign('ressourceList', array(
 	),
 	'buildings' => array(
 		'title' => $lang['buildingincome'],
-		'food' => bl\resource\buildingsIncome(1, bl\resource\basicIncome(1, $city), $ricefield, $city),
+		'food' => bl\resource\buildingsIncome(1, bl\resource\basicIncome(1, $city), $paddy, $city),
 		'wood' => bl\resource\buildingsIncome(2, bl\resource\basicIncome(2, $city), $lumberjack, $city),
 		'rock' => bl\resource\buildingsIncome(3, bl\resource\basicIncome(3, $city), $quarry, $city),
 		'iron' => bl\resource\buildingsIncome(4, bl\resource\basicIncome(4, $city), $ironmine, $city),
@@ -62,7 +62,7 @@ $smarty->assign('ressourceList', array(
 	),
 	'incomePerHour' => array(
 		'title' => $lang['income/h'],
-		'food' => bl\resource\income(1, 'h', $ricefield, $city),
+		'food' => bl\resource\income(1, 'h', $paddy, $city),
 		'wood' => bl\resource\income(2, 'h', $lumberjack, $city),
 		'rock' => bl\resource\income(3, 'h', $quarry, $city),
 		'iron' => bl\resource\income(4, 'h', $ironmine, $city),
@@ -71,7 +71,7 @@ $smarty->assign('ressourceList', array(
 	),
 	'incomePerDay' => array(
 		'title' => $lang['income/d'],
-		'food' => bl\resource\income(1, 'd', $ricefield, $city),
+		'food' => bl\resource\income(1, 'd', $paddy, $city),
 		'wood' => bl\resource\income(2, 'd', $lumberjack, $city),
 		'rock' => bl\resource\income(3, 'd', $quarry, $city),
 		'iron' => bl\resource\income(4, 'd', $ironmine, $city),

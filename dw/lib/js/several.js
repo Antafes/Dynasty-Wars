@@ -84,6 +84,9 @@ function changePic(ImageName, ImageObjektName)
 
 $(function() {
 	setBorderHeight();
+	$('#cityChange').change(function() {
+		$(this).parent().submit()
+	});
 });
 
 function setBorderHeight()

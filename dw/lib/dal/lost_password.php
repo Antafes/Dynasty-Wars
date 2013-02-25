@@ -26,7 +26,7 @@ function insertRecovery($id, $time, $uid)
 	$sql = '
 		INSERT INTO dw_lostpw (
 			mailid,
-			sent_time,
+			sent_datetime,
 			uid
 		)
 		VALUES

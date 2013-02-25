@@ -3,11 +3,22 @@ include('loggedin/header.php');
 include('lib/bl/buildings.inc.php');
 
 bl\general\loadLanguageFile('building');
+\util\html\load_js('timer');
+//\util\html\load_js('buildings');
 
 $template_file = '';
 
 if (!$_GET['buildplace'])
 {
+	$is_building = bl\buildings\checkBuild($_SESSION['user']->getUID(), $city);
+
+	$readyScript = '';
+	if ($is_building)
+		foreach ($is_building as $build)
+			$readyScript .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", $build['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $build['bid']);
+
+	\util\html\load_js_ready_script($readyScript);
+
 	if ($_POST['sub_build'] || $_POST['sub_upgrade'])
 	{
 		if ($_POST['sub_upgrade'])
@@ -91,7 +102,7 @@ elseif (is_numeric($_GET['buildplace']))
 {
 	$cityexp = explode(':', $city);
 	$building = bl\buildings\selectBuilding($cityexp[0], $cityexp[1], $_GET['buildplace']);
-	$ressources = bl\resource\newResources($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
+	$resources = bl\resource\newResources($city);
 
 	if ($building['lvl'] || ($building['lvl'] == 0 && $_GET['buildplace'] < 8))
 	{
@@ -142,12 +153,12 @@ elseif (is_numeric($_GET['buildplace']))
 			));
 
 			$res_values = array(
-				'res_food' => $ressources['food'],
-				'res_wood' => $ressources['wood'],
-				'res_rock' => $ressources['rock'],
-				'res_iron' => $ressources['iron'],
-				'res_paper' => $ressources['paper'],
-				'res_koku' => $ressources['koku'],
+				'res_food' => $resources['food'],
+				'res_wood' => $resources['wood'],
+				'res_rock' => $resources['rock'],
+				'res_iron' => $resources['iron'],
+				'res_paper' => $resources['paper'],
+				'res_koku' => $resources['koku'],
 			);
 			if (is_array($prices))
 				$res_values += $prices;
@@ -176,12 +187,12 @@ elseif (is_numeric($_GET['buildplace']))
 					$upgrade_price = util\math\numberFormat($upgrade_price, 0);
 				$smarty->assign('upgradePrices', $upgrade_prices);
 				$res_values = array(
-					'res_food' => $ressources['food'],
-					'res_wood' => $ressources['wood'],
-					'res_rock' => $ressources['rock'],
-					'res_iron' => $ressources['iron'],
-					'res_paper' => $ressources['paper'],
-					'res_koku' => $ressources['koku'],
+					'res_food' => $resources['food'],
+					'res_wood' => $resources['wood'],
+					'res_rock' => $resources['rock'],
+					'res_iron' => $resources['iron'],
+					'res_paper' => $resources['paper'],
+					'res_koku' => $resources['koku'],
 				);
 				if (is_array($prices_upgr))
 					$res_values += $prices_upgr;
@@ -259,12 +270,12 @@ elseif (is_numeric($_GET['buildplace']))
 						'koku' => util\math\numberFormat($prices['koku'], 0),
 					);
 					$res_values = array(
-						'res_food' => $ressources['food'],
-						'res_wood' => $ressources['wood'],
-						'res_rock' => $ressources['rock'],
-						'res_iron' => $ressources['iron'],
-						'res_paper' => $ressources['paper'],
-						'res_koku' => $ressources['koku'],
+						'res_food' => $resources['food'],
+						'res_wood' => $resources['wood'],
+						'res_rock' => $resources['rock'],
+						'res_iron' => $resources['iron'],
+						'res_paper' => $resources['paper'],
+						'res_koku' => $resources['koku'],
 					);
 
 					if (is_array($prices))

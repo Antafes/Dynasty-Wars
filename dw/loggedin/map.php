@@ -3,7 +3,7 @@ include('loggedin/header.php');
 include('lib/bl/map.inc.php');
 
 bl\general\loadLanguageFile('map');
-
+\util\html\load_js('map');
 
 $smarty->assign('lang', $lang);
 
