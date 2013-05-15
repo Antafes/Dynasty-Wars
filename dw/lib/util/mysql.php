@@ -217,6 +217,7 @@ function connect()
 function migration_manager($post)
 {
 	$migration_files_dir = $GLOBALS['config']['migrations_dir'];
+	$web_path = $GLOBALS['config']['dir_ws_migrations'];
 
 	$migration_files = array();
 	$dh = \opendir($migration_files_dir);
@@ -233,14 +234,14 @@ function migration_manager($post)
 	if ($post['initialize'])
 	{
 		\util\mysql\initialize_migration();
-		\bl\general\redirect($GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php');
+		\bl\general\redirect($web_path.'/../db_migrations/migrations.php');
 	}
 
 	if ($post['create_new'])
 	{
 		$last_migration_number = \substr(end($migration_files), 0, -4);
 		file_put_contents($migration_files_dir.'/'.($last_migration_number+1).'.php', "<?php\n\n\$DB_MIGRATION = array(\n\n\t'description' => function () {\n\t\treturn '';\n\t},\n\n\t'up' => function (\$migration_metadata) {\n\n\t\t\$results = array();\n\n\t\t\$results[] = \util\mysql\query_raw('\n\t\t\t\n\t\t');\n\n\t\treturn !in_array(false, \$results);\n\n\t},\n\n\t'down' => function (\$migration_metadata) {\n\n\t\t\$result = \util\mysql\query_raw('\n\t\t\tALTER TABLE tbl CHANGE col col_to_delete TEXT\n\t\t');\n\n\t\treturn !!\$result;\n\n\t}\n\n);");
-		\bl\general\redirect($GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php');
+		\bl\general\redirect($web_path.'/../db_migrations/migrations.php');
 	}
 
 	if ($post['apply'] || $post['unapply'])
@@ -272,29 +273,29 @@ function migration_manager($post)
 					if ($post['unapply'])
 					{
 						\util\mysql\mark_migration_unapplied($filename);
-						\bl\general\redirect($GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php');
+						\bl\general\redirect($web_path.'/../db_migrations/migrations.php');
 					}
 					else
 					{
 						\util\mysql\mark_migration_applied($filename);
-						\bl\general\redirect($GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php');
+						\bl\general\redirect($web_path.'/../db_migrations/migrations.php');
 					}
 				}
 //				elseif (\is_string($result))
 //				{
 //					$message = '<div style="font-family: sans-serif; font-size: 13px;">Message from migration file '.\htmlentities($filename).': <b>'.\htmlentities($result).'</b><br><br></div>';
-//					$message .= '<a href="'.$GLOBALS['config']['dir_ws'].'/../migrations.php">Back</a>';
+//					$message .= '<a href="'.$web_path.'/../migrations.php">Back</a>';
 //
 //					if ($post['unapply'])
 //					{
-//						$message .= '<a href="'.$GLOBALS['config']['dir_ws'].'/../migrations.php?'
+//						$message .= '<a href="'.$web_path.'/../migrations.php?'
 //					}
 //				}
 				else
 				{
 					$message = '<div style="font-family: sans-serif; font-size: 13px;">There has been a problem '.($post['unapply'] ? 'unapplying' : 'applying').' '.\htmlentities($filename).'<br></div>';
 					$message .= $result;
-					$message .= '<a href="'.$GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php">Back</a>';
+					$message .= '<a href="'.$web_path.'/../db_migrations/migrations.php">Back</a>';
 					return $message;
 				}
 			}
@@ -332,16 +333,16 @@ function migration_manager($post)
 					<td class="df_migration_manager_filename_col">'.\htmlentities($filename).'</td>
 					<td class="df_migration_manager_description_col">'.\htmlentities($description).'</td>
 					<td class="df_migration_manager_applied_col">'.($applied ? '&#x2714;' : ' ').'</td>
-					<td class="df_migration_manager_apply_col">'.(!$applied ? '<a href="'.$GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php?apply=1&amp;filename='.\urlencode($filename).'">' : '').'Apply'.(!$applied ? '</a>' : '').'</td>
-					<td class="df_migration_manager_unapply_col">'.($applied ? '<a href="'.$GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php?unapply=1&amp;filename='.\urlencode($filename).'">' : '').'Unapply'.($applied ? '</a>' : '').'</td>
+					<td class="df_migration_manager_apply_col">'.(!$applied ? '<a href="'.$web_path.'/../db_migrations/migrations.php?apply=1&amp;filename='.\urlencode($filename).'">' : '').'Apply'.(!$applied ? '</a>' : '').'</td>
+					<td class="df_migration_manager_unapply_col">'.($applied ? '<a href="'.$web_path.'/../db_migrations/migrations.php?unapply=1&amp;filename='.\urlencode($filename).'">' : '').'Unapply'.($applied ? '</a>' : '').'</td>
 				</tr>
 			';
 		}
 
 		$message .= '
 			<tr><td colspan="5">
-				'.(!$all_applied ? '<a href="'.$GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php?next=1&amp;apply=1">' : '').'Apply next'.(!$all_applied ? '</a>' : '').'
-				'.(is_writable($migration_files_dir) ? '<a href="'.$GLOBALS['config']['dir_ws'].'/../db_migrations/migrations.php?create_new=1">' : '').'Create new'.(is_writable($migration_files_dir) ? '</a>' : '').'
+				'.(!$all_applied ? '<a href="'.$web_path.'/../db_migrations/migrations.php?next=1&amp;apply=1">' : '').'Apply next'.(!$all_applied ? '</a>' : '').'
+				'.(is_writable($migration_files_dir) ? '<a href="'.$web_path.'/../db_migrations/migrations.php?create_new=1">' : '').'Create new'.(is_writable($migration_files_dir) ? '</a>' : '').'
 			</td></tr>
 		';
 		$message .= '</table>';

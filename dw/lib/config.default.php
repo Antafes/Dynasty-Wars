@@ -18,3 +18,6 @@ $smarty_debug = false;
 //paths
 $GLOBALS['config']['dir_ws'] = 'http://dynasty-wars.de';
 $GLOBALS['config']['dir_ws_index'] = 'http://dynasty-wars.de/index.php';
+
+$GLOBALS['config']['migrations_dir'] = '';
+$GLOBALS['config']['dir_ws_migrations'] = '';
