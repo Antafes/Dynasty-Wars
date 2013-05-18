@@ -52,10 +52,10 @@ function getHarbour($x, $y)
  * @global array $lang
  * @param int $city
  * @param int $building
- * @param int $new_building
+ * @param bool $new_building
  * @return string
  */
-function getBuildPlacePicture($city, $building, $new_building = 0)
+function getBuildPlacePicture($city, $building, $new_building = false)
 {
 	global $lang;
 
@@ -107,9 +107,9 @@ function getBuildPlacePicture($city, $building, $new_building = 0)
 
 	if (is_array($building) || !$building)
 	{
-		if (($building['lvl'] == 0 || !$building) && $new_building == 0) //there is no building on this place
+		if (($building['lvl'] == 0 || !$building) && !$new_building) //there is no building on this place
 			$html = '<img src="'.$path.'buildplace.gif" alt="'.$lang['buildplace'].'" title="'.$lang['buildplace'].'" />';
-		elseif ($new_building == 1 || $building['lvl'])
+		elseif ($new_building || $building['lvl'])
 		{
 			if ($building['kind'] == 6)
 			{
@@ -304,34 +304,38 @@ function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
 function getNotBuilt($x, $y, $uid, $def = 0)
 {
 	$main = selectBuilding($x, $y, 1);
+
 	if ($main['lvl'] < 1)
 		return array();
+
 	$religion = checkReligion($uid);
 	$buildable = array();
+
 	if ($def == 0)
 	{
 		$built = selectAll($x, $y, 1);
 		$i = 7;
-		$maxi = 22;
+		$maxI = 22;
 	}
 	else
 	{
-		$built = getDefense($x.':'.$y, 1);
+		$built = getDefense($x.':'.$y);
 		$i = 23;
-		$maxi = 25;
+		$maxI = 25;
 	}
-	for (; $i <= $maxi; $i++)
+
+	for (; $i <= $maxI; $i++)
 	{
 		$lvl = 0;
 		$ulvl = 0;
-		$allready_built = 0;
+		$already_built = 0;
 		if ($built)
 		{
 			foreach ($built as $built_part)
 			{
 				if ($i == $built_part['kind'])
 				{
-					$allready_built = 1;
+					$already_built = 1;
 					$lvl = $built_part['lvl'];
 					$ulvl = $built_part['ulvl'];
 					$position = $built_part['position'];
@@ -340,7 +344,7 @@ function getNotBuilt($x, $y, $uid, $def = 0)
 		}
 		if ((!$ulvl || $ulvl == 0) && getUpgradeable($i))
 			$ulvl = 1;
-		if (($allready_built == 0 || ($allready_built == 1 && !$position)) && ($i != 19 || $i != 11 || $i != 15 || ($religion == 1 && $i != 21)))
+		if (($already_built == 0 || ($already_built == 1 && !$position)) && ($i != 19 || $i != 11 || $i != 15 || ($religion == 1 && $i != 21)))
 			$buildable[] = array('kind' => $i, 'lvl' => $lvl, 'ulvl' => $ulvl);
 	}
 	return $buildable;
@@ -568,11 +572,11 @@ function buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
  * @param int $buildplace
  * @param int $uid
  * @param string $city
- * @param int $upgrade default = 0
+ * @param bool $upgrade default = false
  * @param int $kind default = ''
  * @return int returns 1 if the build is started, otherwise 0
  */
-function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
+function build($buildplace, $uid, $city, $upgrade = false, $kind = '')
 {
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
@@ -633,7 +637,7 @@ function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
 		if ($building['bid'] == 0)
 			$building['bid'] = \dal\buildings\insertBuilding($uid, $x, $y, $building['kind'], $buildplace);
 
-		$erg2 = \dal\buildings\startBuilding($building['bid'], $upgrade, $endTime);
+		$buildStarted = \dal\buildings\startBuilding($building['bid'], $upgrade, $endTime);
 
 		if ($building['bid'] && !$building['position'])
 			\dal\buildings\insertBuildPlace($building['bid'], $buildplace);
@@ -646,7 +650,7 @@ function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
 			$res['iron'] = $helpres['iron'] - $prices['iron'];
 			$res['paper'] = $helpres['paper'] - $prices['paper'];
 			$res['koku'] = $helpres['koku'] - $prices['koku'];
-			$erg3 = \bl\resource\updateAll($res, $city);
+			$resourcesUpdated = \bl\resource\updateAll($res, $city);
 		}
 		else
 		{
@@ -656,10 +660,10 @@ function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
 			$res['iron'] = $helpres['iron'] - $prices_upgr['iron'];
 			$res['paper'] = $helpres['paper'] - $prices_upgr['paper'];
 			$res['koku'] = $helpres['koku'] - $prices_upgr['koku'];
-			$erg3 = \bl\resource\updateAll($res, $city);
+			$resourcesUpdated = \bl\resource\updateAll($res, $city);
 		}
 
-		if ($erg2 && $erg3)
+		if ($buildStarted && $resourcesUpdated)
 			return 1;
 		else
 			return 0;
@@ -678,13 +682,10 @@ function build($buildplace, $uid, $city, $upgrade = 0, $kind = '')
  */
 function checkBuild($uid, $city) {
 	$cityexp = explode(":", $city);
-	$x = $cityexp[0];
-	$y = $cityexp[1];
-	$buildlist = \dal\buildings\checkBuild($x, $y);
+	$buildlist = \dal\buildings\checkBuild($cityexp[0], $cityexp[1]);
 
 	if (is_array($buildlist))
 	{
-		$x = 0;
 		foreach ($buildlist as $parts)
 		{
 			$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $parts['end_datetime']);
@@ -693,14 +694,13 @@ function checkBuild($uid, $city) {
 				buildComplete($parts['bid']);
 			else
 			{
-				$running[$x]['endtime'] = $endtime;
-				$running[$x]['kind'] = $parts['kind'];
-				$running[$x]['ulvl'] = $parts['ulvl'];
-				if ($running[$x]['ulvl'] == 0 && getUpgradeable($running[$x]['kind']))
-					$running[$x]['ulvl'] = 1;
-				$running[$x]['bid'] = $parts['bid'];
-				$running[$x]['position'] = $parts['position'];
-				$x++;
+				$running[] = array(
+					'endtime' => $endtime,
+					'kind' => $parts['kind'],
+					'ulvl' => ($parts['ulvl'] == 0 && getUpgradeable($parts['kind']) ? 1 : $parts['ulvl']),
+					'bid' => $parts['bid'],
+					'position' => $parts['position'],
+				);
 			}
 		}
 	}
@@ -791,30 +791,23 @@ function checkGeishaAndFactory($city)
  * get the defense buildings
  * @author Neithan
  * @param string $city
- * @param int $not_built default = 0
  * @return array
  */
-function getDefense($city, $not_built = 0)
+function getDefense($city)
 {
 	$cityexp = explode(":", $city);
-	$x = $cityexp[0];
-	$y = $cityexp[1];
-	$defense = \dal\buildings\getDefense($x, $y);
+	$defenseBuildings = \dal\buildings\getDefense($cityexp[0], $cityexp[1]);
 
-	$count = count($defense);
 	$defenseList = array();
-	for ($n = 0; $n < $count; $n++)
+	foreach ($defenseBuildings as $defense)
 	{
-		if ($not_built)
-			$x = $n;
-		else
-			$x = $defense[$n]['position'];
-
-		$defenseList[$x]['bid'] = $defense[$n]['bid'];
-		$defenseList[$x]['kind'] = $defense[$n]['kind'];
-		$defenseList[$x]['lvl'] = $defense[$n]['lvl'];
-		$defenseList[$x]['ulvl'] = $defense[$n]['upgrade_lvl'];
-		$defenseList[$x]['position'] = $defense[$n]['position'];
+		$defenseList[] = array(
+			'bid' => $defense['bid'],
+			'kind' => $defense['kind'],
+			'lvl' => $defense['lvl'],
+			'ulvl' => $defense['upgrade_lvl'],
+			'position' => $defense['position'],
+		);
 	}
 
 	return $defenseList;
