@@ -237,11 +237,11 @@ $smarty->assign('storage', $max_storage);
 
 // load css files
 \util\html\load_css('main');
-\util\html\load_css('jquery-ui-1.8.10.custom');
+\util\html\load_css('jquery-ui-1.10.3.custom');
 
 // load js files
-\util\html\load_js('jquery-1.5.1.min');
-\util\html\load_js('jquery-ui-1.8.10.custom.min');
+\util\html\load_js('jquery-1.9.1.min');
+\util\html\load_js('jquery-ui-1.10.3.custom.min');
 \util\html\load_js('jquery.qtip-1.0.0-rc3.min');
 \util\html\load_js('res');
 \util\html\load_js('several');
