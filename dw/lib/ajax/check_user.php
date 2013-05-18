@@ -13,8 +13,8 @@ $_SESSION['user'] = new bl\user\UserCls();
 $_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 $lang['lang'] = $_SESSION['user']->getLanguage();
-bl\general\loadLanguageFile('general', '', true);
-bl\general\loadLanguageFile('units', 'loggedin', true);
+bl\general\loadLanguageFile('general', '');
+bl\general\loadLanguageFile('units', 'loggedin');
 
 $error_text = '';
 $error_type = 0;

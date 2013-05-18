@@ -23,7 +23,7 @@ $_SESSION['user'] = new bl\user\UserCls();
 $_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 $lang['lang'] = $_SESSION['user']->getLanguage();
-bl\general\loadLanguageFile('map', 'loggedin', true);
+bl\general\loadLanguageFile('map', 'loggedin');
 
 $sql = '
 	SELECT

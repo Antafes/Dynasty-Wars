@@ -21,8 +21,8 @@ $_SESSION['user'] = new bl\user\UserCls();
 $_SESSION['user']->loadByUID($_SESSION['user']->getUIDFromId($_SESSION['lid']));
 
 $lang['lang'] = $_SESSION['user']->getLanguage();
-bl\general\loadLanguageFile('general', '', true);
-bl\general\loadLanguageFile('tribunal', 'loggedin', true);
+bl\general\loadLanguageFile('general', '');
+bl\general\loadLanguageFile('tribunal', 'loggedin');
 
 $result = bl\tribunal\makeDecision($item_list['ajax_id'], $item_list['decision'], $item_list['reason']);
 if ($result > 0)

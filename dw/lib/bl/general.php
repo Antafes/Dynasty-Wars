@@ -473,7 +473,7 @@ function getMissionary($uid)
  * @param String $userLang if set, $lang will be returned
  * @return void/array
  */
-function loadLanguageFile($page, $location = 'loggedin', $isAjax = false, $userLang = null)
+function loadLanguageFile($page, $location = 'loggedin', $userLang = null)
 {
 	global $lang;
 
@@ -485,12 +485,7 @@ function loadLanguageFile($page, $location = 'loggedin', $isAjax = false, $userL
 	if (!\dal\general\checkLanguageIsActive($usedLang))
 		$usedLang = \dal\general\getFallbackLanguage();
 
-	$path = '';
-
-	if ($isAjax)
-		$path .= '../../';
-
-	$path .= 'language/'.$usedLang.'/'.($location ? $location.'/' : '');
+	$path = __DIR__.'/../../language/'.$usedLang.'/'.($location ? $location.'/' : '');
 	include_once($path.$page.'.php');
 
 	if ($userLang)
