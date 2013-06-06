@@ -14,8 +14,14 @@ if (!$_GET['buildplace'])
 
 	$readyScript = '';
 	if ($is_building)
+	{
 		foreach ($is_building as $build)
 			$readyScript .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", $build['endtime']->format('F d, Y H:i:s'), date('F d, Y H:i:s'), $build['bid']);
+
+		$readyScript .= <<<HTM
+$('.build_list').show();
+HTM;
+	}
 
 	\util\html\load_js_ready_script($readyScript);
 
