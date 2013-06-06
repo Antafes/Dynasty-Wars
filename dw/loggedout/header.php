@@ -20,5 +20,5 @@ $smarty->assign('menu_imprint', $lang['imprint']);
 \util\html\load_css('main');
 
 // load js files
-\util\html\load_js('jquery-1.5.1.min');
+\util\html\load_js('jquery-1.9.1.min');
 \util\html\load_js('several');

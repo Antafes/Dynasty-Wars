@@ -52,23 +52,20 @@ if (!$new_msg)
 	$new_msg = 0;
 
 if ($_GET['chose'] == 'market')
-	$smarty->assign('marketCSS', '<link rel="stylesheet" type="text/css" href="css/market.css" />');
+	\util\html\load_css('market');
 
 if ($_GET['chose'] == 'map')
-{
-	$mapJS = '<script language="javascript" type="text/javascript" src="lib/js/map.js"></script>';
-	$smarty->assign('mapJS', $mapJS);
-}
+	\util\html\load_js('map');
 elseif ($_GET['chose'] == 'buildings' || $_GET['chose'] == 'units')
 {
 	if ($_GET['chose'] == 'units')
-		$smarty->assign('unitsJS', '<script language="javascript" type="text/javascript" src="lib/js/unit.js"></script>');
+		\util\html\load_js('unit');
 
 	if (($_GET['chose'] == 'units' && (!$_GET['sub'] || $_GET['sub'] == 'build')) || $_GET['chose'] == 'buildings')
-		$smarty->assign('timerJS', '<script language="javascript" type="text/javascript" src="lib/js/timer.js"></script>');
+		\util\html\load_js('timer');
 }
 elseif ($_GET['chose'] == 'tribunal')
-	$smarty->assign('tribunalAjaxJS', '<script language="javascript" type="text/javascript" src="lib/js/tribunal_ajax.js"></script>');
+	\util\html\load_js('tribunal_ajax');
 
 //actualising the ressources
 $res_buildings = bl\resource\getResourceBuildings($city);
@@ -245,4 +242,3 @@ $smarty->assign('storage', $max_storage);
 \util\html\load_js('jquery.qtip-1.0.0-rc3.min');
 \util\html\load_js('res');
 \util\html\load_js('several');
-\util\html\load_js('timer');
