@@ -224,7 +224,7 @@ function getUpgradeable($kind)
  */
 function prices($kind, $lvl, $has_harbour, $city)
 {
-	$factor = 0.220;
+	$factor = 1.220;
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
@@ -253,12 +253,12 @@ function prices($kind, $lvl, $has_harbour, $city)
 		$oldprice = $prices;
 		for ($n = 0; $n < $lvl; $n++)
 		{
-			$oldprice['food'] = $oldprice['food']+$oldprice['food']*$factor;
-			$oldprice['wood'] = $oldprice['wood']+$oldprice['wood']*$factor;
-			$oldprice['rock'] = $oldprice['rock']+$oldprice['rock']*$factor;
-			$oldprice['iron'] = $oldprice['iron']+$oldprice['iron']*$factor;
-			$oldprice['paper'] = $oldprice['paper']+$oldprice['paper']*$factor;
-			$oldprice['koku'] = $oldprice['koku']+$oldprice['koku']*$factor;
+			$oldprice['food'] *= $factor;
+			$oldprice['wood'] *= $factor;
+			$oldprice['rock'] *= $factor;
+			$oldprice['iron'] *= $factor;
+			$oldprice['paper'] *= $factor;
+			$oldprice['koku'] *= $factor;
 		}
 		return $oldprice;
 	}
