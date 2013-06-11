@@ -1,6 +1,18 @@
-body {
+body
+{
 	font-family: "Times New Roman", Times, serif;
 	background-color: #FFFFFF;
+	color: #980E23;
+}
+
+.ui-widget
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 1em;
+}
+
+.ui-widget-content
+{
 	color: #980E23;
 }
 
@@ -344,12 +356,6 @@ span.news2 {
 	margin: 0px 100px;
 }
 
-.building .res {
-	position: relative;
-	margin-top: 20px;
-	clear: both;
-}
-
 .build_button {
 	position: absolute;
 	width: 150px;
@@ -366,17 +372,6 @@ span.news2 {
 	left: 300px;
 	text-align: center;
 	vertical-align: middle;
-}
-
-.building .res_pics {
-	text-align: center;
-	vertical-align: top;
-	height: 24px;
-	width: 75px;
-}
-
-.building .res_pic {
-	max-width: 20px;
 }
 
 .building_pic
@@ -466,14 +461,17 @@ input {
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px !important;
 }
 
-input[disabled='disabled'] {
+input[disabled='disabled'],
+input:disabled {
 	background-color: #d1bc79;
 	color: #888888;
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px;
 }
 
 select {
@@ -482,6 +480,7 @@ select {
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px !important;
 }
 
 .s1 {
@@ -1737,9 +1736,48 @@ textarea {
 
 .build_dialog
 {
-	position: absolute;
 	background-color: #ffff66;
-	width: 500px;
-	left: 50px;
-	top: 100px;
+}
+
+.build_dialog .res_pics
+{
+	text-align: center;
+	vertical-align: top;
+	height: 24px;
+	width: 75px;
+}
+
+.build_dialog .res_pic
+{
+	max-width: 20px;
+}
+
+.build_dialog .res
+{
+	position: relative;
+	margin-top: 20px;
+	clear: both;
+}
+
+.build_dialog .close
+{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.build_dialog .not_yet_buildable
+{
+	margin-bottom: 5px;
+}
+
+.buildings .ui-widget-overlay
+{
+	position: absolute;
+}
+
+.buildings .ui-widget-content
+{
+	background: none;
+	background-color: #ffff66;
 }

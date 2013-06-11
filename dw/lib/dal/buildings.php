@@ -45,6 +45,7 @@ function selectBuilding($x, $y, $pos)
 {
 	if ($pos)
 		$buildplace = 'AND `position` = '.\util\mysql\sqlval($pos).'';
+
 	$sql = 'SELECT * FROM `dw_buildings`
 		WHERE `map_x` = '.\util\mysql\sqlval($x).'
 			AND `map_y` = '.\util\mysql\sqlval($y).'

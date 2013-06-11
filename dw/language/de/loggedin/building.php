@@ -119,17 +119,17 @@ $lang += array(
 	),
 	//other words
 	'level' => 'Stufe',
-	'lvlup' => 'Stufe erhöhen',
+	'levelUp' => 'Stufe erhöhen',
 	'upgrade' => 'Erweitern',
 	'build' => 'Bauen',
 	'time' => 'Dauer',
 	'defense' => 'Verteidigungsanlagen',
 	'nobuild' => 'Es können noch keine Verteidigungsanlagen gebaut werden.',
-	'new_building' => 'Neues Gebäude',
-	'no_building' => 'Es stehen momentan keine weiteren Gebäude zur Auswahl.',
-	'not_yet_buildable' => 'Dieses Gebäude kann noch nicht gebaut werden.',
-	'build_list' => 'Bauliste',
-	'buildplace' => 'Bauplatz',
+	'newBuilding' => 'Neues Gebäude',
+	'noBuilding' => 'Es stehen momentan keine weiteren Gebäude zur Auswahl.',
+	'notYetBuildable' => 'Dieses Gebäude kann noch nicht gebaut werden.',
+	'buildList' => 'Bauliste',
+	'buildPlace' => 'Bauplatz',
 	//description of the buildings
 	'descr' => array(
 		1 => 'Auf den Reisfeldern eures Reiches bauen Eure Bauern das wichtigste Nahrungsmittel Japans an, den Reis.',

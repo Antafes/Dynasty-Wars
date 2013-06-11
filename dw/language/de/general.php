@@ -6,4 +6,5 @@ $lang += array(
 	'decimal' => ',',
 	'thousands' => '.',
 	'emperor' => 'Kaiser',
+	'close' => 'Schließen',
 );
