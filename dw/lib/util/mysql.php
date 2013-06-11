@@ -101,7 +101,7 @@ function query($sql, $noTransform = false, $raw = false)
 			return $mysql->affected_rows;
 
 		if ($raw)
-			return $mysql->affected_rows;
+			return $res;
 	}
 	else
 		return false;
@@ -239,8 +239,12 @@ function migration_manager($post)
 
 	if ($post['create_new'])
 	{
-		$last_migration_number = \substr(end($migration_files), 0, -4);
-		file_put_contents($migration_files_dir.'/'.($last_migration_number+1).'.php', "<?php\n\n\$DB_MIGRATION = array(\n\n\t'description' => function () {\n\t\treturn '';\n\t},\n\n\t'up' => function (\$migration_metadata) {\n\n\t\t\$results = array();\n\n\t\t\$results[] = \util\mysql\query_raw('\n\t\t\t\n\t\t');\n\n\t\treturn !in_array(false, \$results);\n\n\t},\n\n\t'down' => function (\$migration_metadata) {\n\n\t\t\$result = \util\mysql\query_raw('\n\t\t\tALTER TABLE tbl CHANGE col col_to_delete TEXT\n\t\t');\n\n\t\treturn !!\$result;\n\n\t}\n\n);");
+		$filename = date('Y-m-d_His');
+
+		if ($post['name'])
+			$filename .= '-'.$post['name'];
+
+		file_put_contents($migration_files_dir.'/'.$filename.'.php', "<?php\n\n\$DB_MIGRATION = array(\n\n\t'description' => function () {\n\t\treturn '';\n\t},\n\n\t'up' => function (\$migration_metadata) {\n\n\t\t\$results = array();\n\n\t\t\$results[] = \util\mysql\query_raw('\n\t\t\t\n\t\t');\n\n\t\treturn !in_array(false, \$results);\n\n\t},\n\n\t'down' => function (\$migration_metadata) {\n\n\t\t\$result = \util\mysql\query_raw('\n\t\t\tALTER TABLE tbl CHANGE col col_to_delete TEXT\n\t\t');\n\n\t\treturn !!\$result;\n\n\t}\n\n);");
 		\bl\general\redirect($web_path.'/migrations.php');
 	}
 
@@ -306,6 +310,17 @@ function migration_manager($post)
 	if (\util\mysql\is_migrations_initialized())
 	{
 		$message = '
+			<script language="javascript" type="text/javascript" src="../dw/lib/js/jquery-1.9.1.min.js"></script>
+			<script language="javascript" type="text/javascript">
+				$(function() {
+					$("#addNew").click(function(e) {
+						e.preventDefault();
+						var name = prompt("Name of the file (optional)");
+						var target = $(this).attr("href") + "&name=" + name;
+						window.location.href = target;
+					});
+				});
+			</script>
 			<style type="text/css">
 				table.df_migration_manager { font-family: sans-serif; font-size: 13px; border-spacing: 0px 3px; }
 				table.df_migration_manager td { background-color: #EEEEEE; padding: 0px 4px; }
@@ -342,7 +357,7 @@ function migration_manager($post)
 		$message .= '
 			<tr><td colspan="5">
 				'.(!$all_applied ? '<a href="'.$web_path.'/migrations.php?next=1&amp;apply=1">' : '').'Apply next'.(!$all_applied ? '</a>' : '').'
-				'.(is_writable($migration_files_dir) ? '<a href="'.$web_path.'/migrations.php?create_new=1">' : '').'Create new'.(is_writable($migration_files_dir) ? '</a>' : '').'
+				'.(is_writable($migration_files_dir) ? '<a id="addNew" href="'.$web_path.'/migrations.php?create_new=1">' : '').'Create new'.(is_writable($migration_files_dir) ? '</a>' : '').'
 			</td></tr>
 		';
 		$message .= '</table>';

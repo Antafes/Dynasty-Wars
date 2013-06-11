@@ -3,7 +3,7 @@
 $DB_MIGRATION = array(
 
 	'description' => function () {
-		return 'switch of resource data type';
+		return 'switch resource datatype to BIGINT';
 	},
 
 	'up' => function ($migration_metadata) {
@@ -26,7 +26,7 @@ $DB_MIGRATION = array(
 
 	'down' => function ($migration_metadata) {
 
-		$result = \util\mysql\query_raw('
+		$results[] = \util\mysql\query_raw('
 			ALTER TABLE `dw_res`
 				CHANGE COLUMN `food` `food` INT NOT NULL DEFAULT "1000" AFTER `map_y`,
 				CHANGE COLUMN `wood` `wood` INT NOT NULL DEFAULT "1000" AFTER `food`,
