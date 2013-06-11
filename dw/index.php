@@ -2,7 +2,7 @@
 //session: start
 session_start();
 //db zugangsdaten
-require_once('lib/config.php');
+require_once('lib/config.default.php');
 //funktionen
 require_once('lib/bl/login.inc.php');
 require_once('lib/bl/general.inc.php');

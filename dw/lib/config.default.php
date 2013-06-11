@@ -21,3 +21,6 @@ $GLOBALS['config']['dir_ws_index'] = 'http://dynasty-wars.de/index.php';
 
 $GLOBALS['config']['migrations_dir'] = '';
 $GLOBALS['config']['dir_ws_migrations'] = '';
+
+if (file_exists(__DIR__.'/config.php'))
+	require_once(__DIR__.'/config.php');
