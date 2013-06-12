@@ -108,15 +108,16 @@ function fillBuildplace(dialog, buildPlace, building)
 		e.preventDefault();
 	});
 
-	var ajaxData = {
-		type: 'build',
-		buildPlace: buildPlace,
-		city: $('#cityChange').val(),
-		kind: building.kind
-	};
 	dialog.children('form').children('.res.build').children('.build_button').children('input').unbind('click');
 	dialog.children('form').children('.res.build').children('.build_button').children('input').click(function() {
 		showAjaxLoading(dialog);
+
+		var ajaxData = {
+			type: 'build',
+			buildPlace: buildPlace,
+			city: $('#cityChange').val(),
+			kind: building.kind
+		};
 		$.post('lib/ajax/build.php', ajaxData, function(response) {
 			if (!response.error.length)
 			{
@@ -151,14 +152,15 @@ function fillBuildplace(dialog, buildPlace, building)
 
 		dialog.children('form').children('.res.upgrade').children('.build_time').text(building.upgradeTime);
 
-		var ajaxData = {
-			type: 'upgrade',
-			buildPlace: buildPlace,
-			city: $('#cityChange').val()
-		};
 		dialog.children('form').children('.res.upgrade').children('.build_button').children('input').unbind('click');
 		dialog.children('form').children('.res.upgrade').children('.build_button').children('input').click(function() {
 			showAjaxLoading(dialog);
+
+			var ajaxData = {
+				type: 'upgrade',
+				buildPlace: buildPlace,
+				city: $('#cityChange').val()
+			};
 			$.post('lib/ajax/build.php', ajaxData, function(response) {
 				if (!response.error.length)
 				{
