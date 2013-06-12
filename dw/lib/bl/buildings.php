@@ -312,7 +312,7 @@ function getNotBuilt($city, $def = 0)
 		return array();
 
 	$religion = $_SESSION['user']->getReligion();
-	$buildable = array();
+	$notBuilt = array();
 
 	if ($def == 0)
 	{
@@ -331,7 +331,8 @@ function getNotBuilt($city, $def = 0)
 	{
 		$lvl = 0;
 		$ulvl = 0;
-		$already_built = 0;
+		$already_built = false;
+		$position = 0;
 
 		if ($built)
 		{
@@ -339,7 +340,7 @@ function getNotBuilt($city, $def = 0)
 			{
 				if ($i == $built_part['kind'])
 				{
-					$already_built = 1;
+					$already_built = true;
 					$lvl = $built_part['lvl'];
 					$ulvl = $built_part['ulvl'];
 					$position = $built_part['position'];
@@ -350,11 +351,13 @@ function getNotBuilt($city, $def = 0)
 		if ((!$ulvl || $ulvl == 0) && getUpgradeable($i))
 			$ulvl = 1;
 
-		if (($already_built == 0 || ($already_built == 1 && !$position))
+		if ((!$already_built || ($already_built && !$position))
 			&& (($i == 18 && $religion === 1) || ($i == 21 && $religion === 2)))
-			$buildable[] = array('kind' => $i, 'lvl' => $lvl, 'ulvl' => $ulvl);
+		{
+			$notBuilt[] = array('kind' => $i, 'lvl' => $lvl, 'ulvl' => $ulvl);
+		}
 	}
-	return $buildable;
+	return $notBuilt;
 }
 
 /**
