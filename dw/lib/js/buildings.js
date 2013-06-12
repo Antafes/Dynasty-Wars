@@ -85,7 +85,9 @@ function fillBuildplace(dialog, buildPlace, building)
 	dialog.children('.description').text(building.buildingDescription);
 
 	if (!building.notYetBuildable)
-		dialog.children('.not_yet_buildable').remove();
+		dialog.children('.not_yet_buildable').hide();
+	else
+		dialog.children('.not_yet_buildable').show();
 
 	var resources = dialog.children('form').children('.res.build').children('table').children('tbody');
 	resources.children('tr:first').children('td.food').text(building.buildingResources.food);
@@ -130,7 +132,7 @@ function fillBuildplace(dialog, buildPlace, building)
 	});
 
 	if (!building.hasUpgrades)
-		dialog.children('form').children('.res.upgrade').remove();
+		dialog.children('form').children('.res.upgrade').hide();
 	else
 	{
 		var resources = dialog.children('form').children('.res.upgrade').children('table').children('tbody');
@@ -170,6 +172,7 @@ function fillBuildplace(dialog, buildPlace, building)
 				hideAjaxLoading();
 			});
 		});
+		dialog.children('form').children('.res.upgrade').show();
 	}
 
 	if (building.showDefenseBuildings)

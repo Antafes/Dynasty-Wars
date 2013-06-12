@@ -273,9 +273,9 @@ function prices($kind, $lvl, $has_harbour, $city)
  * @param int $upgrade_lvl
  * @return array containing the prices
  */
-function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
+function upgradePrices($kind, $upgrade_lvl)
 {
-	$prices = \dal\buildings\upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl);
+	$prices = \dal\buildings\upgradePrices($kind, $upgrade_lvl);
 
 	if (is_array($prices))
 	{
