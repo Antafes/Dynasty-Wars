@@ -344,7 +344,7 @@ class UserCls {
 	}
 
 	public function getReligion(){
-		return $this->religion;
+		return (int) $this->religion;
 	}
 
 	public function getDeactivated(){
