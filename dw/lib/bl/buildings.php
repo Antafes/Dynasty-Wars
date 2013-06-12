@@ -411,9 +411,11 @@ function checkBuildable($uid, $kind, $x, $y)
 			{
 				if ($kind == 1 || $kind == 2 or $kind == 3 || $kind == 4 || $kind == 5 || $kind == 6 || $kind == 7 || $kind == 8
 					|| $kind == 9 || $kind == 10 || $kind == 12 || $kind == 13 || $kind == 14 || $kind == 16 || $kind == 17
-					|| $kind == 20 || $kind == 21 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
+					|| $kind == 20 || $kind == 22 || $kind == 23 || $kind == 24 || $kind == 25)
 					return 1;
 				elseif ($kind == 18 && $_SESSION['user']->getReligion() == 1)
+					return 1;
+				elseif ($kind == 21 && $_SESSION['user']->getReligion() == 2)
 					return 1;
 				else
 					return 0;
@@ -423,6 +425,8 @@ function checkBuildable($uid, $kind, $x, $y)
 			{
 				if ($kind == 18 && $_SESSION['user']->getReligion() == 2)
 					return 0;
+				elseif ($kind == 21 && $_SESSION['user']->getReligion() == 2)
+					return 1;
 				else
 					return 1;
 				break;
