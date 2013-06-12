@@ -223,7 +223,6 @@ $smarty->assign('storage', $max_storage);
 // load js files
 \util\html\load_js('jquery-1.9.1.min');
 \util\html\load_js('jquery-ui-1.10.3.custom.min');
-\util\html\load_js('jquery.qtip-1.0.0-rc3.min');
 \util\html\load_js('res');
 \util\html\load_js('several');
 \util\html\load_js('ajax_helper');

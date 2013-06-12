@@ -170,37 +170,20 @@ function moveMap(xAdd, yAdd)
 
 function createMapToolTip(target, uid)
 {
-	target.qtip({
-		content: {
-			url: 'lib/ajax/get_user_data.php',
-			data: {'uid': uid},
-			method: 'get'
-		},
-		position: {
-			corner: {
-				target: 'topRight',
-				tooltip: 'bottomLeft'
-			},
-			adjust: {
-				screen: true
+	$(document).tooltip({
+		items: '.city',
+		content: function(callback) {
+			var that = $(this);
+
+			if (that.data('userData'))
+				callback(that.data('userData'));
+			else
+			{
+				$.get('lib/ajax/get_user_data.php', {'uid': uid}, function(response) {
+					that.data('userData', response);
+					callback(response);
+				});
 			}
-		},
-		style: {
-			tip: {
-				corner: 'bottomLeft',
-				size: {
-					x: 8,
-					y: 8
-				}
-			},
-			border: {
-				width: 1,
-				color: '#990000'
-			},
-			backgroundColor: '#FCDF7E',
-			color: '#980E23'
-		},
-		show: 'mouseover',
-		hide: 'mouseout'
+		}
 	});
 }
