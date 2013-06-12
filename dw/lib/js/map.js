@@ -173,14 +173,12 @@ function createMapToolTip(target, uid)
 	$(document).tooltip({
 		items: '.city',
 		content: function(callback) {
-			var that = $(this);
-
-			if (that.data('userData'))
-				callback(that.data('userData'));
+			if (target.data('userData'))
+				callback(target.data('userData'));
 			else
 			{
 				$.get('lib/ajax/get_user_data.php', {'uid': uid}, function(response) {
-					that.data('userData', response);
+					target.data('userData', response);
 					callback(response);
 				});
 			}
