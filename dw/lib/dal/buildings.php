@@ -328,3 +328,16 @@ function getStats($kind, $upgrade_lvl)
 	';
 	return \util\mysql\query($sql);
 }
+
+function getUsedBuildPlaces($x, $y)
+{
+	$sql = '
+		SELECT `position`
+		FROM dw_buildings
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
+			AND position NOT IN (23, 24, 25)
+		ORDER BY `position`
+	';
+	return \util\mysql\query($sql, true);
+}

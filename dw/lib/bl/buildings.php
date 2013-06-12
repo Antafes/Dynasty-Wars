@@ -301,14 +301,17 @@ function upgradePrices($kind, $upgrade_lvl)
  * @param int $def
  * @return array containing the not built buildings
  */
-function getNotBuilt($x, $y, $uid, $def = 0)
+function getNotBuilt($city, $def = 0)
 {
+	$cityexp = explode(":", $city);
+	$x = $cityexp[0];
+	$y = $cityexp[1];
 	$main = selectBuilding($x, $y, 1);
 
 	if ($main['lvl'] < 1)
 		return array();
 
-	$religion = checkReligion($uid);
+	$religion = $_SESSION['user']->getReligion();
 	$buildable = array();
 
 	if ($def == 0)
@@ -329,6 +332,7 @@ function getNotBuilt($x, $y, $uid, $def = 0)
 		$lvl = 0;
 		$ulvl = 0;
 		$already_built = 0;
+
 		if ($built)
 		{
 			foreach ($built as $built_part)
@@ -342,9 +346,12 @@ function getNotBuilt($x, $y, $uid, $def = 0)
 				}
 			}
 		}
+
 		if ((!$ulvl || $ulvl == 0) && getUpgradeable($i))
 			$ulvl = 1;
-		if (($already_built == 0 || ($already_built == 1 && !$position)) && ($i != 19 || $i != 11 || $i != 15 || ($religion == 1 && $i != 21)))
+
+		if (($already_built == 0 || ($already_built == 1 && !$position))
+			&& (($i == 18 && $religion === 1) || ($i == 21 && $religion === 2)))
 			$buildable[] = array('kind' => $i, 'lvl' => $lvl, 'ulvl' => $ulvl);
 	}
 	return $buildable;
@@ -567,6 +574,7 @@ function buildTime($kind, $lvl, $upgrade = 0, $u_lvl = 0)
 	}
 	else
 		$time = (int)\dal\buildings\getTime($kind, $upgrade, $u_lvl);
+
 	return \round($time);
 }
 
@@ -841,4 +849,23 @@ function getBuildingByKind($kind, $city)
 	}
 
 	return $build;
+}
+
+/**
+ * returns all used build places
+ *
+ * @author friend8
+ * @param string $city
+ * @return array
+ */
+function getUsedBuildPlaces($city)
+{
+	$cityexp = explode(":", $city);
+	$rawUsedBuildPlaces = \dal\buildings\getUsedBuildPlaces($cityexp[0], $cityexp[1]);
+	$usedBuildPlaces = array();
+
+	foreach ($rawUsedBuildPlaces as $buildPlace)
+		$usedBuildPlaces[] = $buildPlace['position'];
+
+	return $usedBuildPlaces;
 }

@@ -28,7 +28,6 @@ if ($_POST['sub_build'] || $_POST['sub_upgrade'])
 
 $cityexp = explode(':', $city);
 $buildings = bl\buildings\selectAll($cityexp[0], $cityexp[1]);
-$religion = bl\buildings\checkReligion($_SESSION['user']->getUID());
 $city_position = array(
 	1 => array('top' => 255, 'left' => 278),
 	2 => ($buildings[2]['lvl'] == 0 ? array('top' => 460, 'left' => 384) : array('top' => 410, 'left' => 384)),
@@ -52,14 +51,7 @@ $city_position = array(
 	20 => array('top' => 370, 'left' => 376),
 	21 => array('top' => 424, 'left' => 290),
 );
-$max_buildplaces = 19;
-$check_geisha_factory = bl\buildings\checkGeishaAndFactory($city);
-
-if ($check_geisha_factory['geisha'])
-	$max_buildplaces++;
-
-if ($check_geisha_factory['factory'])
-	$max_buildplaces++;
+$max_buildplaces = max(array_keys($city_position));
 
 //	$season = bl\general\getSeason();
 //	if ($season == 1)
@@ -76,6 +68,9 @@ $smarty->assign('cityBackground', util\html\createLink(array(
 )));
 $smarty->assign('maxBuildplaces', $max_buildplaces + 1); // + 1 for the loop in smarty
 $smarty->assign('buildingPositions', $city_position);
+$smarty->assign('usedBuildPlaces', \bl\buildings\getUsedBuildPlaces($city));
+$notBuilt = \bl\buildings\getNotBuilt($city);
+$smarty->assign('notBuiltCount', count($notBuilt));
 
 $building_pictures = array();
 for ($i = 1; $i <= $max_buildplaces; $i++)

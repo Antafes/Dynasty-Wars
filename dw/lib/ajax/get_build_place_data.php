@@ -170,9 +170,9 @@ if ($_GET['buildPlace'])
 			$smarty_buildings = array();
 
 			if ($_GET['buildPlace'] < 23)
-				$buildables = bl\buildings\getNotBuilt($cityExp[0], $cityExp[1], $_SESSION['user']->getUID());
+				$buildables = bl\buildings\getNotBuilt($city);
 			else
-				$buildables = bl\buildings\getNotBuilt($cityExp[0], $cityExp[1], $_SESSION['user']->getUID(), 1);
+				$buildables = bl\buildings\getNotBuilt($city, 1);
 
 			if ($buildables)
 			{

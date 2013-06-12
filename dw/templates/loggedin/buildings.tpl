@@ -2,11 +2,14 @@
 			<div class="heading">{$buildings}</div>
 			<div class="buildings" style="background-image: url({$cityBackground})">
 				{section name=buildplaces start=1 loop=$maxBuildplaces step=1}
-				<div class="buildplace" style="top: {$buildingPositions[$smarty.section.buildplaces.index].top}px; left: {$buildingPositions[$smarty.section.buildplaces.index].left}px;">
-					<a id="place{$smarty.section.buildplaces.index}" href="javascript:;">
-						{$buildingPictures[$smarty.section.buildplaces.index]}
-					</a>
-				</div>
+					{in_array var=$usedBuildPlaces value=$smarty.section.buildplaces.index assign='used'}
+					{if $used || $notBuiltCount > 0}
+						<div class="buildplace" style="top: {$buildingPositions[$smarty.section.buildplaces.index].top}px; left: {$buildingPositions[$smarty.section.buildplaces.index].left}px;">
+							<a id="place{$smarty.section.buildplaces.index}" href="javascript:;">
+								{$buildingPictures[$smarty.section.buildplaces.index]}
+							</a>
+						</div>
+					{/if}
 				{/section}
 				<div id="build_dialog" class="build_dialog">
 					<div class="close"><a href="javascript:;">{$lang.close}</a></div>
