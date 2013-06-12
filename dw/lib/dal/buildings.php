@@ -85,11 +85,11 @@ function prices($kind)
  * @param int $upgrade_lvl
  * @return array
  */
-function upgradePrices($kind, $kind_u, $lvl, $upgrade_lvl)
+function upgradePrices($kind, $upgrade_lvl)
 {
 	$sql = 'SELECT food, wood, rock, iron, paper, koku FROM dw_costs_b_upgr
 		WHERE kind = '.\util\mysql\sqlval($kind).'
-			AND `kind_u` = '.\util\mysql\sqlval($kind_u).'
+			AND `kind_u` = '.\util\mysql\sqlval($upgrade_lvl).'
 	';
 	return \util\mysql\query($sql);
 }

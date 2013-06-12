@@ -98,7 +98,7 @@ if ($_GET['buildPlace'])
 
 			if ($has_upgrades)
 			{
-				$prices_upgr = $upgrade_prices = bl\buildings\upgradePrices($building['kind'], $building['ulvl'], $building['lvl'], $building['ulvl']);
+				$prices_upgr = $upgrade_prices = bl\buildings\upgradePrices($building['kind'], $building['ulvl']);
 
 				if (is_array($upgrade_prices))
 				{
