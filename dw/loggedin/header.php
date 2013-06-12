@@ -51,22 +51,6 @@ $new_msg = util\mysql\query($sql);
 if (!$new_msg)
 	$new_msg = 0;
 
-if ($_GET['chose'] == 'market')
-	\util\html\load_css('market');
-
-if ($_GET['chose'] == 'map')
-	\util\html\load_js('map');
-elseif ($_GET['chose'] == 'buildings' || $_GET['chose'] == 'units')
-{
-	if ($_GET['chose'] == 'units')
-		\util\html\load_js('unit');
-
-	if (($_GET['chose'] == 'units' && (!$_GET['sub'] || $_GET['sub'] == 'build')) || $_GET['chose'] == 'buildings')
-		\util\html\load_js('timer');
-}
-elseif ($_GET['chose'] == 'tribunal')
-	\util\html\load_js('tribunal_ajax');
-
 //actualising the ressources
 $res_buildings = bl\resource\getResourceBuildings($city);
 if ($res_buildings)

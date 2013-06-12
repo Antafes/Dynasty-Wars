@@ -32,7 +32,7 @@ function smarty_function_load_js($params, Smarty_Internal_Template $template)
 		$template->smarty->trigger_error('load_js: missing "file" or "script" parameter');
 
 	if (in_array('file', array_keys($params)) && in_array('script', array_keys($params)))
-			$template->smarty->trigger_error('load_js: only "file" or "script" parameter allowed');
+		$template->smarty->trigger_error('load_js: only "file" or "script" parameter allowed');
 
 	if (!is_array($_SESSION['scripts']['file']))
 		$_SESSION['scripts']['file'] = array();
