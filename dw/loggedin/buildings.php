@@ -51,9 +51,8 @@ $city_position = array(
 	19 => array('top' => 222, 'left' => 458),
 	20 => array('top' => 370, 'left' => 376),
 	21 => array('top' => 424, 'left' => 290),
-	22 => array('top' => 423, 'left' => 290),
 );
-$max_buildplaces = 20;
+$max_buildplaces = 19;
 $check_geisha_factory = bl\buildings\checkGeishaAndFactory($city);
 
 if ($check_geisha_factory['geisha'])
