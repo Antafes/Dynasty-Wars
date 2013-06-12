@@ -28,16 +28,31 @@ $(function() {
 		var x = $(this).children('input[name=x]').val();
 		var y = $(this).children('input[name=y]').val();
 		moveMap(x - mapX, y - mapY);
-//		$(this).children('input[name=x]').val(x);
-//		$(this).children('input[name=y]').val(y);
 	});
 	$('#position_change').children('input[name=x]').val(mapX);
 	$('#position_change').children('input[name=y]').val(mapY);
 	for (var key in uidList)
 	{
 		var user = uidList[key];
-		createMapToolTip($('.viewport').children('.y' + user.y).children('.x' + user.x).children().children(), user.uid);
+		var target = $('.viewport').children('.y' + user.y).children('.x' + user.x).children().children();
+		target.data('userId', user.uid);
 	}
+	$(document).tooltip({
+		items: '.city',
+		content: function(callback) {
+			var that = $(this);
+			var uid = that.data('userId');
+			if (that.data('userData'))
+				callback(that.data('userData'));
+			else
+			{
+				$.get('lib/ajax/get_user_data.php', {'uid': uid}, function(response) {
+					that.data('userData', response);
+					callback(response);
+				});
+			}
+		}
+	});
 });
 
 function moveMap(xAdd, yAdd)
@@ -142,13 +157,7 @@ function moveMap(xAdd, yAdd)
 					{
 						currentColumn.html('<a href="index.php?chose=usermap&amp;reguid=' + column.uid + '&amp;fromc=map"></a>');
 						currentColumn.children().html('<img class="city i1" src="' + backgroundPath +  (column.uid == -1 ? 'harbour' : 'city' + (column.terrain == 4 ? '_mountain' : '')) + '.gif" />');
-						createMapToolTip(currentColumn.children().children(), column.uid);
-//						currentColumn.children().children().mouseover(function() {
-//							ToolTip(column.map_x + ':' + column.map_y, column.city, column.nick, column.clanname, column.clantag);
-//						});
-//						currentColumn.children().children().mouseout(function() {
-//							start('Details');
-//						});
+						currentColumn.children().children().data('userId', column.uid);
 					}
 				}
 			}
@@ -165,25 +174,5 @@ function moveMap(xAdd, yAdd)
 
 		$('#position_change').children('input[name=x]').val(mapX);
 		$('#position_change').children('input[name=y]').val(mapY);
-	});
-}
-
-function createMapToolTip(target, uid)
-{
-	$(document).tooltip({
-		items: '.city',
-		content: function(callback) {
-			var that = $(this);
-
-			if (that.data('userData'))
-				callback(that.data('userData'));
-			else
-			{
-				$.get('lib/ajax/get_user_data.php', {'uid': uid}, function(response) {
-					that.data('userData', response);
-					callback(response);
-				});
-			}
-		}
 	});
 }
