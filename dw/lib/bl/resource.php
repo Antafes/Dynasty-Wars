@@ -373,7 +373,8 @@ function hasEnoughOf($x, $y, $resource, $amount)
  * @param int $x
  * @param int $y
  */
-function addToResources($resource, $value, $x, $y)
+function addToResources($resource, $value, $city)
 {
-	\dal\resource\addToResources($resource, $value, $x, $y);
+	$cityExp = explode(':', $city);
+	\dal\resource\addToResources($resource, $value, $cityExp[0], $cityExp[1]);
 }

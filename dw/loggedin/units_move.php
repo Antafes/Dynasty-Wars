@@ -196,7 +196,6 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 	if ($_POST['send'])
 	{
 		$errors = array();
-		$cityexp = explode(':', $city);
 		$value = bl\troops\checkTarget($_POST['tx'], $_POST['ty']);
 		if ($value)
 		{
@@ -207,7 +206,7 @@ elseif ($_GET['mode'] == 'send' || $_GET['mode'] == 'goback')
 				if ($capCheck)
 				{
 					if ($_POST['movekind'] == 2)
-						bl\resource\addToResources($_POST['resselect'], $_POST['rescount']*-1, $cityexp[0], $cityexp[1]);
+						bl\resource\addToResources($_POST['resselect'], $_POST['rescount']*-1, $city);
 					bl\troops\sendTroop($_GET['tid'], $_POST['tx'], $_POST['ty'], $_POST['movekind'], $_POST['resselect'], round($_POST['rescount']));
 					$unitSmarty->assign('sent', 1);
 					$unitSmarty->assign('textSent', $lang['sent']);
