@@ -37,7 +37,7 @@ if ($_GET['buildPlace'])
 			if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityExp[0], $cityExp[1]) == 0)
 				$building['notBuildable'] = 1;
 
-			if (!$building['ulvl'])
+			if (!$building['ulvl'] && $has_upgrades)
 				$building['ulvl'] = 1;
 
 			if ($building['kind'] != 6)
