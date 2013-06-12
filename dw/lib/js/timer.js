@@ -19,7 +19,10 @@ function timer(datetime, nowDatetime, target)
     var now = new Date(nowDatetime);
     var diff = Math.round((end - now) / 1000);
     if (diff <= 0)
+	{
         window.location.reload();
+		return;
+	}
 
     var helper = diff % 60;
     var s = helper;
