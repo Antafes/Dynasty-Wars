@@ -1,16 +1,16 @@
 <div class="subheading">
-	{$editTroop|htmlentities}
+	{$editTroop}
 </div>
 <div class="edit_unit">
 	<div class="row">
 		<div class="left">
 			<div class="heading">
-				{$units|htmlentities}
+				{$units}
 			</div>
 			{foreach from=$unitList item=unit}
 			<div class="row">
 				<div class="left">
-					{$unit.name|htmlentities}
+					{$unit.name}
 				</div>
 				<div class="right">
 					{$unit.count}
@@ -31,7 +31,7 @@
 				<div class="heading">&nbsp;</div>
 				<div class="row">
 					<div class="left">
-						{$name|htmlentities}:
+						{$name}:
 					</div>
 					<div class="right">
 						<input type="text" name="tname" value="{$troop.name}" maxlength="20" size="15" />
@@ -50,19 +50,19 @@
 	<div class="row" style="margin-top: 10px;">
 		<div class="left" style="text-align: center;">
 			<a href="index.php?chose=units&amp;sub=move&amp;mode=edit&amp;tid={$smarty.get.tid}&amp;do=add">
-				{$add|htmlentities}
+				{$add}
 			</a>
 		</div>
 		<div class="right" style="text-align: center;">
 			<a href="index.php?chose=units&amp;sub=move&amp;mode=edit&amp;tid={$smarty.get.tid}&amp;do=remove">
-				{$remove|htmlentities}
+				{$remove}
 			</a>
 		</div>
 		<br class="clear" />
 	</div>
 	<div class="row">
 		<div class="both">
-			<a href="index.php?chose=units&amp;sub=move">{$back|htmlentities}</a>
+			<a href="index.php?chose=units&amp;sub=move">{$back}</a>
 		</div>
 	</div>
 </div>

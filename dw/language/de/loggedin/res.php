@@ -2,7 +2,7 @@
 $lang += array(
 	'lvl' => 'Stufe',
 	'basicincome' => 'Grundeinkommen',
-	'buildingincome' => 'Geb‰udeeinkommen',
+	'buildingincome' => 'Geb√§udeeinkommen',
 	'upgrades' => 'Verbesserungen',
 	'costs' => 'Verbrauch',
 	'income/h' => 'Einkommen / Stunde',
@@ -10,6 +10,6 @@ $lang += array(
 	'paperprod' => 'Papierproduktion',
 	'woodcosts' => 'Holzverbrauch',
 	'prodfactor' => 'Produktionsfaktor',
-	'change' => 'ƒndern',
-	'prodchanged' => 'Produktion ge‰ndert.',
+	'change' => '√Ñndern',
+	'prodchanged' => 'Produktion ge√§ndert.',
 );

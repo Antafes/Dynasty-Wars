@@ -2,8 +2,8 @@
 include('loggedin/header.php');
 include('lib/bl/map.inc.php');
 
-lib_bl_general_loadLanguageFile('map');
-
+bl\general\loadLanguageFile('map');
+\util\html\load_js('map');
 
 $smarty->assign('lang', $lang);
 
@@ -12,24 +12,24 @@ $x = $_GET['x'];
 $y = $_GET['y'];
 $ox = $_GET['ox'];
 $oy = $_GET['oy'];
-if ($_POST['x'] and $_POST['y'] and !$x and !$y) {
+if ($_POST['x'] && $_POST['y'] && !$x && !$y) {
 	$x = $_POST['x'];
 	$y = $_POST['y'];
-} elseif (!$_POST['x'] and !$_POST['y'] and !$x and !$y) {
+} elseif (!$_POST['x'] && !$_POST['y'] && !$x && !$y) {
 	$city_exp = explode(':', $city);
 	$x = $city_exp[0];
 	$y = $city_exp[1];
 }
 if ($x > 394)
 	$x = 394;
-elseif ($y <= 90 and $x < 299)
+elseif ($y <= 90 && $x < 299)
 	$x = 299;
 elseif ($x < 6)
 	$x = 6;
 
 if ($y > 244)
 	$y = 244;
-elseif ($x <= 293 and $y < 96)
+elseif ($x <= 293 && $y < 96)
 	$y = 96;
 elseif ($y < 6)
 	$y = 6;
@@ -38,7 +38,7 @@ $min_x = $x - 8;
 $min_y = $y - 8;
 $max_x = $x + 8;
 $max_y = $y + 8;
-$season = lib_bl_general_getSeason();
+$season = bl\general\getSeason();
 if ($season == 1)
 	$path = 'pictures/map/summer/';
 elseif ($season == 2)
@@ -57,11 +57,11 @@ $sql = '
 		u.deactivated
 	FROM dw_map m
 	LEFT JOIN dw_user u USING (uid)
-	WHERE m.map_x BETWEEN '.mysql_real_escape_string($min_x).' AND '.mysql_real_escape_string($max_x).'
-		AND m.map_y BETWEEN '.mysql_real_escape_string($min_y).' AND '.mysql_real_escape_string($max_y).'
+	WHERE m.map_x BETWEEN '.util\mysql\sqlval($min_x).' AND '.util\mysql\sqlval($max_x).'
+		AND m.map_y BETWEEN '.util\mysql\sqlval($min_y).' AND '.util\mysql\sqlval($max_y).'
 	ORDER BY m.map_y, m.map_x
 ';
-$mapRawData = lib_util_mysqlQuery($sql);
+$mapRawData = util\mysql\query($sql);
 
 $uidList = array();
 $mapData = array();
@@ -78,7 +78,7 @@ foreach ($mapRawData as $position)
 	}
 
 	$mapData[$row][] = array(
-		'image' => lib_bl_mapTerrain($position['terrain']).'.png',
+		'image' => bl\map\terrain($position['terrain']).'.png',
 	) + $position;
 
 	if ($position['uid'])

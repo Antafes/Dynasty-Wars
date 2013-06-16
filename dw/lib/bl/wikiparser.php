@@ -1,5 +1,7 @@
 <?php
-class wikiparser {
+namespace bl\wikiParser;
+
+class WikiParser {
 
 	var $preg_replacements;
 
@@ -18,7 +20,7 @@ class wikiparser {
 		$length = strlen($layer);
 		for ($i = 0; $i <= $length; $i++)
 		{
-			if (substr($layer, $i+1, 1) != \'*\' and $stars > $i)
+			if (substr($layer, $i+1, 1) != \'*\' && $stars > $i)
 			{
 				while ($stars >= $i+1)
 				{
@@ -26,12 +28,12 @@ class wikiparser {
 					$stars--;
 				}
 			}
-			if (substr($layer, $i, 1) == \'*\' and $stars < $i)
+			if (substr($layer, $i, 1) == \'*\' && $stars < $i)
 			{
 				$stars++;
 				$new_text .= "<ul>\n";
 			}
-			if ($i == $stars and substr($layer, $i+1, 1) != \'*\')
+			if ($i == $stars && substr($layer, $i+1, 1) != \'*\')
 				$new_text .= "<li>";
 			if (substr($layer, $i+1, 1) != \'*\')
 			{
@@ -46,8 +48,8 @@ class wikiparser {
 
 	function __construct() {
 		$this->preg_replacements = array( //Die Ersetzungen, die eh da sind
-			'/===\s*(.*?)\s*===/' => "<h3>$1</h3>\n",										//Überschrift 3. Ordnung
-			'/==\s*(.*?)\s*==/' => "<h2>$1</h2>\n",											//Überschrift 2. Ordnung
+			'/===\s*(.*?)\s*===/' => "<h3>$1</h3>\n",										//Ãœberschrift 3. Ordnung
+			'/==\s*(.*?)\s*==/' => "<h2>$1</h2>\n",											//Ãœberschrift 2. Ordnung
 			'/\[\[Bild\:(.*?)\|(.*?)\]\]/' => "<div class=\"image\">\n<img src=\"$1\" alt=\"$2\"><br />\n$2</div>\n",																					//Bild mit Beschreibung
 			'/\[\[Bild\:(.*?)\]\]/' => '<img src="$1" alt="$1">',							//Bild ohne Beschreibung
 			'/\[\[(.[^\|]*?)\]\]/' => '<a href="$1">$1</a>',						//Interne Links
@@ -67,7 +69,7 @@ class wikiparser {
 
 	//Erwartete Argumente:
 	// $array = array($pattern1 => $replace1, $pattern2 => $replace2, ...)
-	//Rückgabewerte: array(array($pattern1,$pattern2,...),array($replace1,$replace2,...))
+	//RÃ¼ckgabewerte: array(array($pattern1,$pattern2,...),array($replace1,$replace2,...))
 	function prepareRegArray($array) {
 		$retval = array(array(),array());
 		foreach($array as $key => $val) {
@@ -78,7 +80,7 @@ class wikiparser {
 	}
 
 	//set_array
-	//Für benutzerdefinierte Ersetzungsregeln, $isReg steuert ob die Ersetzung ein regulärer Ausdruck ist
+	//FÃ¼r benutzerdefinierte Ersetzungsregeln, $isReg steuert ob die Ersetzung ein regulÃ¤rer Ausdruck ist
 
 	//Erwartete Argumente:
 	// Wenn $isReg==true:
@@ -86,7 +88,7 @@ class wikiparser {
 	// Ansonsten:
 	//  $array = array($from1 => $to1, $from2 => $to2, ...)
 	// $isReg = boolean
-	//Rückgabewerte: keine
+	//RÃ¼ckgabewerte: keine
 	function setArray($array,$isReg=false) {
 		if($isReg) {
 			$array = $this->prepare_reg_array($array);
@@ -98,11 +100,11 @@ class wikiparser {
 	}
 
 	//clear_array
-	//Benutzerdefinierte Ersetzungsregeln löschen, $isReg steuert ob die regulären Ausdrücke oder die normalen gelöscht werden
+	//Benutzerdefinierte Ersetzungsregeln lÃ¶schen, $isReg steuert ob die regulÃ¤ren AusdrÃ¼cke oder die normalen gelÃ¶scht werden
 
 	//Erwartete Argumente:
 	// $isReg = boolean
-	//Rückgabewerte: keine
+	//RÃ¼ckgabewerte: keine
 	function clearArray($isReg=false) {
 		if($isReg)
 			$this->preg_user_replacements = array(array(),array());
@@ -111,12 +113,12 @@ class wikiparser {
 	}
 
 	//create_callback
-	//Benutzerdefinierte Callbacks über preg_replace_callback
+	//Benutzerdefinierte Callbacks Ã¼ber preg_replace_callback
 
-	//Auf die Treffer des regulären Ausdrucks kann mit $matches[n] zugegriffen werden
+	//Auf die Treffer des regulÃ¤ren Ausdrucks kann mit $matches[n] zugegriffen werden
 	//Erwartete Argumente:
 	// $array = array($pattern1 => $function1, $pattern2 => $function2, ...)
-	//Rückgabewerte: keine
+	//RÃ¼ckgabewerte: keine
 	function createCallback($array) {
 		foreach($array as $key=>$val) {
 			$this->callbacks .= '$string = preg_replace_callback(\''.$key.'\', create_function(\'$matches\', \''.strtr($val,array('\''=>'\\\'')).'\'), $string);';
@@ -124,13 +126,13 @@ class wikiparser {
 	}
 
 	//parseIt
-	//Ausführung des ganzen Geparse
+	//AusfÃ¼hrung des ganzen Geparse
 
-	//Erst werden die Callback-Funktionen durchgeführt (sofern vorhanden), dann kommen die benutzerdefinierten
+	//Erst werden die Callback-Funktionen durchgefÃ¼hrt (sofern vorhanden), dann kommen die benutzerdefinierten
 	//Ersetzungsmuster und zum Schluss die vordefinierten Muster.
 	//Erwartete Argumente:
 	// $string = string
-	//Rückgabewerte: Der geparste String $string
+	//RÃ¼ckgabewerte: Der geparste String $string
 	function parseIt($string)
 	{
 		$stars = 0;
@@ -146,8 +148,8 @@ class wikiparser {
 
 			if ($length > 0)
 			{
-				if (substr_compare($part, '[code]', 0, $length, true) != 0 and substr_compare($part, '[html]', 0, $length, true) != 0)
-					$part = htmlentities($part);
+				if (substr_compare($part, '[code]', 0, $length, true) != 0 && substr_compare($part, '[html]', 0, $length, true) != 0)
+					$part = $part;
 
 				$string .= $part;
 			}

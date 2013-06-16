@@ -1,4 +1,6 @@
 <?php
+namespace bl\resource;
+
 /**
  * basic income of the area
  * @author Neithan
@@ -6,9 +8,11 @@
  * @param string $city
  * @return int
  */
-function lib_bl_resource_basicIncome($kind, $city) {
+function basicIncome($kind, $city)
+{
 	$cityexp = explode(':', $city);
-	$upgrade = lib_dal_resource_getUpgrLvl(19, $cityexp[0], $cityexp[1]);
+	$upgrade = \dal\resource\getUpgradeLevel(19, $cityexp[0], $cityexp[1]);
+
 	if ($upgrade)
 	{
 		switch ($kind)
@@ -26,7 +30,7 @@ function lib_bl_resource_basicIncome($kind, $city) {
 			case 5:
 				if ($upgrade >= 2)
 				{
-					$factor = lib_bl_resource_getPaperPercent($x, $y);
+					$factor = getPaperPercent($x, $y);
 					return 100*($factor/100);
 				}
 				break;
@@ -67,22 +71,25 @@ function lib_bl_resource_basicIncome($kind, $city) {
  * @param string $city
  * @return int
  */
-function lib_bl_resource_incomeUpgrades($type, $city) {
+function incomeUpgrades($type, $city)
+{
 	$cityexp = explode(':', $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$lvl = lib_bl_resource_getLvl(19, $x, $y);
-	$palace = lib_bl_resource_getLvl(13, $x, $y);
+	$lvl = getLevel(19, $x, $y);
+	$palace = getLevel(13, $x, $y);
+
 	if ($palace)
 	{
-		if ($type == 1 or  $type == 2 or $type == 3 or $type == 4)
+		if ($type == 1 ||  $type == 2 || $type == 3 || $type == 4)
 		{
 			if ($lvl <= 5)
 				return (int)($lvl * 20);
 			else
 				return 0;
 
-		} elseif ($type == 5 or $type == 6)
+		}
+		elseif ($type == 5 || $type == 6)
 		{
 			if ($lvl < 3)
 				return (int)($lvl * 20);
@@ -90,8 +97,6 @@ function lib_bl_resource_incomeUpgrades($type, $city) {
 				return (int)(($lvl + 1) * 20);
 			else
 				return 0;
-
-
 		}
 		elseif ($type == 7)
 		{
@@ -100,9 +105,9 @@ function lib_bl_resource_incomeUpgrades($type, $city) {
 			else
 				return 0;
 		}
-	} else {
-		return 0;
 	}
+	else
+		return 0;
 }
 
 /**
@@ -114,16 +119,16 @@ function lib_bl_resource_incomeUpgrades($type, $city) {
  * @param string $city the current active city (coordinates)
  * @return int
  */
-function lib_bl_resource_bIncome($type, $basic, $lvl, $city)
+function buildingsIncome($type, $basic, $lvl, $city)
 {
 	$cityexp = explode(':', $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	$upgrade = lib_dal_resource_getUpgrLvl(19, $x, $y);
+	$rate = 100;
+
 	if ($type == 5)
-		$rate = lib_bl_resource_getPaperPercent($x, $y);
-	else
-		$rate = 100;
+		$rate = getPaperPercent($x, $y);
+
 	return floor(($basic+(($lvl*2)*($rate/100)))*(($lvl/5)*($rate/100)));
 }
 
@@ -136,15 +141,18 @@ function lib_bl_resource_bIncome($type, $basic, $lvl, $city)
  * @param string $city
  * @return float|int
  */
-function lib_bl_resource_income($type, $cycle, $lvl, $city) {
-	include_once('lib/bl/unit.inc.php');
+function income($type, $cycle, $lvl, $city)
+{
+	require_once(__DIR__.'/unit.inc.php');
+
 	$cityexp = explode(':', $city);
-	$basic = lib_bl_resource_basicIncome($type, $city);
-	$upgrade = lib_bl_resource_incomeUpgrades($type, $city);
-	$costs['food'] = lib_bl_unit_calcTotalFoodCost($uid);
-	$costs['koku'] = lib_bl_unit_calcTotalKokuCost($uid);
-	$income = lib_bl_resource_bIncome($type, $basic, $lvl, $city)+$basic;
-	//$paperprod = lib_bl_resource_getpaperpercent($x, $y);
+	$basic = basicIncome($type, $city);
+	$upgrade = incomeUpgrades($type, $city);
+	$uid = \dal\user\getUIDFromMapPosition($cityexp[0], $cityexp[1]);
+	$costs['food'] = \bl\unit\calcTotalFoodCost($uid);
+	$costs['koku'] = \bl\unit\calcTotalKokuCost($uid);
+	$income = buildingsIncome($type, $basic, $lvl, $city)+$basic;
+	//$paperprod = \bl\resource\getPaperPercent($x, $y);
 
 	switch ($type)
 	{
@@ -152,7 +160,7 @@ function lib_bl_resource_income($type, $cycle, $lvl, $city) {
 			$income -= $costs['food'];
 			break;
 		case 2:
-			$income -= lib_bl_resource_woodCosts($cityexp[0], $cityexp[1]);
+			$income -= woodCosts($cityexp[0], $cityexp[1]);
 			break;
 		case 6:
 			$income -= $costs['koku'];
@@ -180,7 +188,7 @@ function lib_bl_resource_income($type, $cycle, $lvl, $city) {
 /**
  * calculating the new ressources
  * @author Neithan
- * @param int $range
+ * @param int $paddy
  * @param int $lumberjack
  * @param int $quarry
  * @param int $ironmine
@@ -189,41 +197,59 @@ function lib_bl_resource_income($type, $cycle, $lvl, $city) {
  * @param string $city
  * @return array
  */
-function lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city)
+function newResources($city)
 {
-	$cityexp = explode(':', $city);
-	$res = lib_bl_general_getRes($cityexp[0], $cityexp[1]);
-	if ($res) {
-		$food = (float)$res['food'];
-		$wood = (float)$res['wood'];
-		$rock = (float)$res['rock'];
-		$iron = (float)$res['iron'];
-		$paper = (float)$res['paper'];
-		$koku = (float)$res['koku'];
-		$last_time = (int)$res['last_time'];
-	}
-	$past_time = time()-$last_time;
-	$newres['food'] = $food+($past_time*lib_bl_resource_income(1, 's', $range, $city));
-	$newres['wood'] = $wood+($past_time*lib_bl_resource_income(2, 's', $lumberjack, $city));
-	$newres['rock'] = $rock+($past_time*lib_bl_resource_income(3, 's', $quarry, $city));
-	$newres['iron'] = $iron+($past_time*lib_bl_resource_income(4, 's', $ironmine, $city));
-	$newres['paper'] = $paper+($past_time*lib_bl_resource_income(5, 's', $papermill, $city));
-	$newres['koku'] = $koku+($past_time*lib_bl_resource_income(6, 's', $tradepost, $city));
-	$storage = lib_bl_general_getMaxStorage($city);
+	require_once(__DIR__.'/buildings.php');
+
+	$cityExp = explode(':', $city);
+	$res = \bl\general\getResources($cityExp[0], $cityExp[1]);
+
+	$paddy = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 2);
+	$lumberjack = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 3);
+	$quarry = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 4);
+	$ironmine = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 5);
+	$papermill = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 6);
+	$tradepost = \bl\buildings\selectBuilding($cityExp[0], $cityExp[1], 7);
+
+	$food = (float)$res['food'];
+	$wood = (float)$res['wood'];
+	$rock = (float)$res['rock'];
+	$iron = (float)$res['iron'];
+	$paper = (float)$res['paper'];
+	$koku = (float)$res['koku'];
+
+	$lastDateTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $res['last_datetime']);
+	$diff = $lastDateTime->diff(new \DWDateTime());
+	$past_time = $diff->getSeconds();
+	$storage = \bl\general\getMaxStorage($city);
+
+	$newres['food'] = $food + ($past_time * income(1, 's', $paddy['lvl'], $city));
+	$newres['wood'] = $wood + ($past_time * income(2, 's', $lumberjack['lvl'], $city));
+	$newres['rock'] = $rock + ($past_time * income(3, 's', $quarry['lvl'], $city));
+	$newres['iron'] = $iron + ($past_time * income(4, 's', $ironmine['lvl'], $city));
+	$newres['paper'] = $paper + ($past_time * income(5, 's', $papermill['lvl'], $city));
+	$newres['koku'] = $koku + ($past_time * income(6, 's', $tradepost['lvl'], $city));
+
 	if ($food >= $storage)
 		$newres['food'] = $food;
+
 	if ($wood >= $storage)
 		$newres['wood'] = $wood;
+
 	if ($rock >= $storage)
 		$newres['rock'] = $rock;
+
 	if ($iron >= $storage)
 		$newres['iron'] = $iron;
+
 	if ($paper >= $storage)
 		$newres['paper'] = $paper;
+
 	if ($koku >= $storage)
 		$newres['koku'] = $koku;
+
 	array_map(floor, $newres);
-	lib_bl_resource_updateAll($newres, $city);
+	updateAll($newres, $city);
 	return $newres;
 }
 
@@ -234,26 +260,28 @@ function lib_bl_resource_newRes($range, $lumberjack, $quarry, $ironmine, $paperm
  * @param int $y
  * @return int
  */
-function lib_bl_resource_woodCosts($x, $y) {
-	$woodcutter = lib_bl_resource_getLvl(2, $x, $y);
-	$papermill = lib_bl_resource_getLvl(5, $x, $y);
-	$pbasic = lib_bl_resource_basicIncome(5, $city);
-	$pupgrade = lib_bl_resource_incomeUpgrades(5, $city);
-	$paperprod = lib_bl_resource_bIncome(5, $pbasic, $papermill, $x.':'.$y)+$pbasic;
+function woodCosts($x, $y)
+{
+	$woodcutter = getLevel(2, $x, $y);
+	$papermill = getLevel(5, $x, $y);
+	$pbasic = basicIncome(5, $city);
+	$pupgrade = incomeUpgrades(5, $city);
+	$paperprod = buildingsIncome(5, $pbasic, $papermill, $x.':'.$y)+$pbasic;
 	$paperprod = $paperprod+($paperprod*($pupgrade/100));
-	$wbasic = lib_bl_resource_basicIncome(2, $city);
-	$wupgrade = lib_bl_resource_incomeUpgrades(2, $city);
-	$woodprod = lib_bl_resource_bIncome(2, $wbasic, $woodcutter, $x.':'.$y)+$wbasic;
+	$wbasic = basicIncome(2, $city);
+	$wupgrade = incomeUpgrades(2, $city);
+	$woodprod = buildingsIncome(2, $wbasic, $woodcutter, $x.':'.$y)+$wbasic;
 	$woodprod = $woodprod+($woodprod*($wupgrade/100));
-	if ($papermill) {
-		if ($paperprod > $woodprod*2) {
+
+	if ($papermill)
+	{
+		if ($paperprod > $woodprod*2)
 			return $woodprod;
-		} else {
+		else
 			return $paperprod/2;
-		}
-	} else {
-		return 0;
 	}
+	else
+		return 0;
 }
 
 /**
@@ -263,9 +291,9 @@ function lib_bl_resource_woodCosts($x, $y) {
  * @param int $y
  * @return int
  */
-function lib_bl_resource_getPaperPercent($x, $y)
+function getPaperPercent($x, $y)
 {
-	return lib_dal_resource_getPaperPercent($x, $y);
+	return \dal\resource\getPaperPercent($x, $y);
 }
 
 /**
@@ -276,8 +304,9 @@ function lib_bl_resource_getPaperPercent($x, $y)
  * @param int $y
  * @return int
  */
-function lib_bl_resource_changePaperPercent($percent, $x, $y) {
-	return lib_dal_resource_changePaperPercent($percent, $x, $y);
+function changePaperPercent($percent, $x, $y)
+{
+	return \dal\resource\changePaperPercent($percent, $x, $y);
 }
 
 /**
@@ -288,12 +317,10 @@ function lib_bl_resource_changePaperPercent($percent, $x, $y) {
  * @param int $time default 0
  * @return int
  */
-function lib_bl_resource_updateAll($res, $city, $time=0)
+function updateAll($res, $city)
 {
 	$cityexp = explode(':', $city);
-	if (!$time)
-		$time = time();
-	return lib_dal_resource_updateAll($res, $time, $cityexp[0], $cityexp[1]);
+	return \dal\resource\updateAll($res, $cityexp[0], $cityexp[1]);
 }
 
 /**
@@ -301,10 +328,10 @@ function lib_bl_resource_updateAll($res, $city, $time=0)
  * @param string $city
  * @return array
  */
-function lib_bl_resource_getResourceBuildings($city)
+function getResourceBuildings($city)
 {
 	$city_exp = explode(':', $city);
-	return lib_dal_resource_getResourceBuildings($city_exp[0], $city_exp[1]);
+	return \dal\resource\getResourceBuildings($city_exp[0], $city_exp[1]);
 }
 
 /**
@@ -314,9 +341,9 @@ function lib_bl_resource_getResourceBuildings($city)
  * @param int $y
  * @return int
  */
-function lib_bl_resource_getLvl($kind, $x, $y)
+function getLevel($kind, $x, $y)
 {
-	$lvl = lib_dal_resource_getLvl(19, $x, $y);
+	$lvl = \dal\resource\getLevel($kind, $x, $y);
 	if (!$lvl)
 		$lvl = 0;
 	return $lvl;
@@ -325,8 +352,29 @@ function lib_bl_resource_getLvl($kind, $x, $y)
 /**
  * Check if there is enough $resource present at $x,$y
  * @author siyb
+ * @param int $x
+ * @param int $y
+ * @param int $resource
+ * @param int $amount
+ * @return type
  */
-function lib_bl_resource_hasEnoughOf($x, $y, $resource, $amount) {
-	return ($amount <= lib_dal_resource_returnResourceAmount($x, $y, $sellResource));
+function hasEnoughOf($x, $y, $resource, $amount)
+{
+	return ($amount <= \dal\resource\returnResourceAmount($x, $y, $resource));
 }
-?>
+
+/**
+ * Will add the amout specified as $value to $uid's resource inventory of
+ * $resource. This function accepts negative values as well so that it can be
+ * used to remove units from the resource stock as well.
+ * @author Neithan
+ * @param String $resource
+ * @param int $value
+ * @param int $x
+ * @param int $y
+ */
+function addToResources($resource, $value, $city)
+{
+	$cityExp = explode(':', $city);
+	\dal\resource\addToResources($resource, $value, $cityExp[0], $cityExp[1]);
+}

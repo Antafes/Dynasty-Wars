@@ -1,4 +1,6 @@
 <?php
+namespace bl\log;
+
 /**
  * insert logmessages
  * @author Neithan
@@ -7,14 +9,15 @@
  * @param string $concerned
  * @param string $extra
  */
-function lib_bl_log_saveLog($type, $actor, $concerned, $extra)
+function saveLog($type, $actor, $concerned, $extra)
 {
-	$date = time();
 	if ($actor)
-		$nick_actor = lib_dal_user_uid2nick($actor);
+		$nick_actor = \dal\user\uid2nick($actor);
+
 	if ($concerned)
-		$nick_concerned = lib_dal_user_uid2nick($concerned);
-	lib_dal_log_saveLog($type, $nick_actor, $nick_concerned, $extra);
+		$nick_concerned = \dal\user\uid2nick($concerned);
+
+	\dal\log\saveLog($type, $nick_actor, $nick_concerned, $extra);
 }
 
 /**
@@ -26,7 +29,7 @@ function lib_bl_log_saveLog($type, $actor, $concerned, $extra)
  * @param int $type
  * @return string
  */
-function lib_bl_log_translateFailed($text, $user, $concerned, $type)
+function translateFailed($text, $user, $concerned, $type)
 {
 	$e_text = explode("%", $text);
 	$count = count($e_text);
@@ -34,14 +37,19 @@ function lib_bl_log_translateFailed($text, $user, $concerned, $type)
 	{
 		if (strcmp($e_text[$n],"DATE") == 0)
 			$e_text[$n] = date();
+
 		if (strcmp($e_text[$n],"TIME") == 0)
 			$e_text[$n] = time();
+
 		if (strcmp($e_text[$n],"USER") == 0)
 			$e_text[$n] = $user;
+
 		if (strcmp($e_text[$n],"CONCERNED") == 0)
 			$e_text[$n] = $concerned;
+
 		if (strcmp($e_text[$n],"TYPE") == 0)
 			$e_text[$n] = $type;
+
 		$c_text .= $e_text[$n];
 	}
 	return $c_text;
@@ -49,14 +57,14 @@ function lib_bl_log_translateFailed($text, $user, $concerned, $type)
 
 /**
  * translage log texts
- * @author Neithan
- * @param string $text
- * @param string $user
- * @param string $concerned
- * @param string $extra
- * @return string
+ * @param String $text
+ * @param String $user
+ * @param String $concerned
+ * @param String $extra
+ * @param \DWDateTime $dateTime
+ * @return String
  */
-function lib_bl_log_translateLog($text, $user, $concerned, $extra, $timestamp)
+function translateLog($text, $user, $concerned, $extra, \DWDateTime $dateTime)
 {
 	return str_replace(array(
 		'%DATE%',
@@ -65,8 +73,8 @@ function lib_bl_log_translateLog($text, $user, $concerned, $extra, $timestamp)
 		'%CONCERNED%',
 		'%EXTRA%',
 	), array(
-		date('d.m.Y', $timestamp),
-		date('H:i:s', $timestamp),
+		$dateTime->format('d.m.Y'),
+		$dateTime->format('H:i:s'),
 		$user,
 		$concerned,
 		$extra,
@@ -80,46 +88,32 @@ function lib_bl_log_translateLog($text, $user, $concerned, $extra, $timestamp)
  * @param int $con_user
  * @param int $type
  */
-function lib_bl_log_failed($user, $con_user, $type)
+function failed($user, $con_user, $type)
 {
-	$username = lib_dal_user_uid2nick($user);
-	$con_username = lib_dal_user_uid2nick($con_user);
+	$username = \dal\user\uid2nick($user);
+	$con_username = \dal\user\uid2nick($con_user);
 	$header = "From: Dynasty Wars <support@dynastywars.de>";
 	$subject = $lang["failedlog_title"];
-	$message = lib_bl_log_translateFailed($lang["failedlog"], $username, $con_username, $type);
+	$message = translateFailed($lang["failedlog"], $username, $con_username, $type);
 	mail($email, $subject, $message, $header);
 }
 
 /**
- * new registration
- * @author Neithan
- * @param int $uid_actor
- * @return <int> returns 1 if the log entry has been successfully saved, otherwise 0
- */
-function lib_bl_log_newReg($uid_actor)
-{
-	$actor = lib_dal_user_uid2nick($uid_actor);
-	$date = time();
-	if (lib_dal_log_newReg($uid_actor))
-		return 1;
-	else
-		return 0;
-}
-
-/**
  * returns the log message
- * @author Neithan
- * @param string $actor
- * @param string $concerned
- * @param string $extra
+ * @global array $lang
  * @param int $type
- * @return string
+ * @param String $actor
+ * @param String $concerned
+ * @param String $extra
+ * @param \DWDateTime $dateTime
+ * @return String
  */
-function lib_bl_log_types($type, $actor, $concerned, $extra, $timestamp)
+function types($type, $actor, $concerned, $extra, \DWDateTime $dateTime)
 {
 	global $lang;
-	lib_bl_general_loadLanguageFile('log', 'acp');
-	return lib_bl_log_translateLog($lang["t".$type], $actor, $concerned, $extra, $timestamp);
+	\bl\general\loadLanguageFile('log', 'acp');
+
+	return translateLog($lang["t".$type], $actor, $concerned, $extra, $dateTime);
 }
 
 /**
@@ -127,9 +121,9 @@ function lib_bl_log_types($type, $actor, $concerned, $extra, $timestamp)
  * @author Neithan
  * @return array
  */
-function lib_bl_log_getLogEntries()
+function getLogEntries()
 {
-	return lib_dal_log_getLogEntries();
+	return \dal\log\getLogEntries();
 }
 
 /**
@@ -138,9 +132,11 @@ function lib_bl_log_getLogEntries()
  * @param int $page
  * @return string
  */
-function lib_bl_log_prepareEntries($page)
+function prepareEntries($page)
 {
-	$entries = lib_bl_log_getLogEntries();
+	global $lang;
+
+	$entries = getLogEntries();
 
 	$html = '';
 	for (
@@ -150,13 +146,14 @@ function lib_bl_log_prepareEntries($page)
 		$n < $p && $n < count($entries);
 		$n++)
 	{
+		$logDateTime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $entries[$n]['log_datetime']);
 		$html .= '
 			<tr>
 				<td class="logAction">
-					'.htmlentities(lib_bl_log_types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $entries[$n]['date'])).'
+					'.types($entries[$n]['type'], $entries[$n]['actor'], $entries[$n]['concerned'], $entries[$n]['extra'], $logDateTime).'
 				</td>
 				<td class="logDate">
-					'.date('d.m.Y H:i:s', $entries[$n]['date']).'
+					'.$logDateTime->format($lang['acptimeformat']).'
 				</td>
 		   </tr>
 	   ';
@@ -175,7 +172,7 @@ function lib_bl_log_prepareEntries($page)
  * @author Neithan
  * @return int
  */
-function lib_bl_log_getLogCount()
+function getLogCount()
 {
-	return count(lib_bl_log_getLogEntries());
+	return count(getLogEntries());
 }

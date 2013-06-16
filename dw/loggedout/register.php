@@ -1,6 +1,6 @@
 <?php
 include('loggedout/header.php');
-lib_bl_general_loadLanguageFile('register', 'loggedout');
+bl\general\loadLanguageFile('register', 'loggedout');
 
 unset($err);
 //einfuegen der registrierungsfunktionen
@@ -10,7 +10,7 @@ $closed = mysql_query('SELECT reg_closed FROM dw_game', $con);
 if ($closed)
 	$reg_closed = mysql_result($closed, 0);
 
-$smarty->assign('heading', htmlentities($lang['registration']));
+$smarty->assign('heading', $lang['registration']);
 
 if (!$reg_closed)
 {
@@ -29,7 +29,7 @@ if (!$reg_closed)
 	$c = 0;
 	if ($nick)
 	{
-		if (lib_bl_register_checkName($nick, $lang['notusable']))
+		if (bl\register\checkName($nick, $lang['notusable']))
 		{
 			$err['name'] = 1;
 			unset($nick);
@@ -47,12 +47,12 @@ if (!$reg_closed)
 
 		if ($resp->is_valid)
 		{
-			$check_email = lib_bl_register_checkMail($email);
+			$check_email = bl\register\checkMail($email);
 			if (!$check_email)
 				$err['email'] = 1;
 			else
 			{
-				if ((!$nick and !$err['name']) or !$pw or !$pww or !$email or !$city)
+				if ((!$nick && !$err['name']) || !$pw || !$pww || !$email || !$city)
 				{
 					if (!$nick)
 						$err['noname'] = 1;
@@ -67,34 +67,33 @@ if (!$reg_closed)
 				}
 				else
 				{
-					$helperg = mysql_query("SELECT count(*) FROM dw_map WHERE city='".mysql_real_escape_string($city)."'", $con);
-					if ($helperg)
-						$c = mysql_result($helperg, 0);
+					$sql = 'SELECT count(*) FROM dw_map WHERE city='.util\mysql\sqlval($city).'';
+					$c = util\mysql\query($sql);
+
 					if ($c)
 					{
 						$err['city'] = 1;
 						unset($city);
 					}
+
 					if ($pw === $pww)
 					{
-						$pws = md5(mysql_real_escape_string($pw));
-						$erg = mysql_query('SELECT nick FROM dw_user', $con);
-						if ($erg)
+						$pws = md5($pw);
+						$sql = 'SELECT nick FROM dw_user';
+						$registeredNicks = util\mysql\query($sql, true);
+
+						foreach ($registeredNicks as $registeredNick)
 						{
-							$zeilen = mysql_num_rows($erg);
-							while ($n < $zeilen)
+							if (strcasecmp($nick, $registeredNick) == 0)
 							{
-								$regnick = mysql_result($erg, $n, 0);
-								if ((strcasecmp($nick, $regnick) == 0))
-								{
-									$err['doublename'] = 1;
-									unset($nick);
-								}
-								$n = $n + 1;
+								$err['doublename'] = 1;
+								unset($nick);
 							}
+
 						}
-						if ($nick and $pw and $pww and $email and $city)
-							$err['registration'] = lib_bl_registerNew($nick, $pws, $email, $city);
+
+						if ($nick && $pw && $pww && $email && $city)
+							$err['registration'] = bl\register\createNewUser($nick, $pws, $email, $city);
 					}
 					else
 						$err['pw<>pww'] = 1;
@@ -105,28 +104,28 @@ if (!$reg_closed)
 			$err['wrong_captcha'] = 1;
 	}
 
-	if ($err['name'] or $err['city'] or $err['email'] or $err['noname'] or $err['nopw'] or $err['nopww'] or $err['noemail']
-			or $err['nocity'] or $err['doublename'] or $err['registration'] or $err['pw<>pww'] or $err['wrong_captcha'])
+	if ($err['name'] || $err['city'] || $err['email'] || $err['noname'] || $err['nopw'] || $err['nopww'] || $err['noemail']
+			|| $err['nocity'] || $err['doublename'] || $err['registration'] || $err['pw<>pww'] || $err['wrong_captcha'])
 	{
-		if ($err['noname'] or $err['nopw'] or $err['nopww'] or $err['noemail'] or $err['nocity'])
+		if ($err['noname'] || $err['nopw'] || $err['nopww'] || $err['noemail'] || $err['nocity'])
 		{
 			$err['missing'] = $lang['missing'];
 			if ($err['noname'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['name'];
-				if ($err['nopw'] or $err['nopww'] or $err['noemail'] or $err['nocity'])
+				if ($err['nopw'] || $err['nopww'] || $err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['nopw'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['password'];
-				if ($err['nopww'] or $err['noemail'] or $err['nocity'])
+				if ($err['nopww'] || $err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['nopww'])
 			{
 				$err['missing'] = $err['missing'].' '.$lang['rep_password'];
-				if ($err['noemail'] or $err['nocity'])
+				if ($err['noemail'] || $err['nocity'])
 					$err['missing'] = $err['missing'].',';
 			}
 			if ($err['noemail'])
@@ -142,51 +141,51 @@ if (!$reg_closed)
 		$errors = array();
 
 		if ($err['name'])
-			$errors['name_blocked'] = htmlentities($lang['nameblocked']);
+			$errors['name_blocked'] = $lang['nameblocked'];
 
 		if ($err['city'])
-			$errors['city_doubled'] = htmlentities($lang['doublecity']);
+			$errors['city_doubled'] = $lang['doublecity'];
 
 		if ($err['email'])
-			$errors['wrong_mailformat'] = htmlentities($lang['mailformat']);
+			$errors['wrong_mailformat'] = $lang['mailformat'];
 
 		if ($err['missing'])
-			$errors['missing'] = nl2br(htmlentities($err['missing']));
+			$errors['missing'] = nl2br($err['missing']);
 
 		if ($err['doublename'])
-			$errors['name_doubled'] = htmlentities($lang['doublename']);
+			$errors['name_doubled'] = $lang['doublename'];
 
 		if ($err['pw<>pww'])
-			$errors['pw<>pww'] = htmlentities($lang['pw<>pww']);
+			$errors['pw<>pww'] = $lang['pw<>pww'];
 
 		if ($err['wrong_captcha'])
-			$errors['captcha_wrong'] = htmlentities($lang['captcha_wrong']);
+			$errors['captcha_wrong'] = $lang['captcha_wrong'];
 
 		if ($err['registration'] == 1)
-			$errors['registration'] = nl2br(htmlentities($lang['registerok']));
+			$errors['registration'] = nl2br($lang['registerok']);
 		else
-			$errors['registration'] = htmlentities($lang['registerfailed']);
+			$errors['registration'] = $lang['registerfailed'];
 
 		$smarty->assign('errors', $errors);
 	}
 
-	$smarty->assign('name', htmlentities($lang['name']));
-	$smarty->assign('entered_nick', htmlentities($nick));
-	$smarty->assign('max_length_nick', htmlentities($lang['max20']));
-	$smarty->assign('password', htmlentities($lang['password']));
-	$smarty->assign('repeat_password', htmlentities($lang['rep_password']));
-	$smarty->assign('email', htmlentities($lang['email']));
-	$smarty->assign('entered_email', htmlentities($email));
-	$smarty->assign('city', htmlentities($lang['city']));
-	$smarty->assign('help_alt', htmlentities($lang['help']));
-	$smarty->assign('city_description', htmlentities($lang['citydesc']));
-	$smarty->assign('entered_city', htmlentities($city));
-	$smarty->assign('max_length_city', htmlentities($lang['max20']));
+	$smarty->assign('name', $lang['name']);
+	$smarty->assign('entered_nick', $nick);
+	$smarty->assign('max_length_nick', $lang['max20']);
+	$smarty->assign('password', $lang['password']);
+	$smarty->assign('repeat_password', $lang['rep_password']);
+	$smarty->assign('email', $lang['email']);
+	$smarty->assign('entered_email', $email);
+	$smarty->assign('city', $lang['city']);
+	$smarty->assign('help_alt', $lang['help']);
+	$smarty->assign('city_description', $lang['citydesc']);
+	$smarty->assign('entered_city', $city);
+	$smarty->assign('max_length_city', $lang['max20']);
 	$smarty->assign('recaptcha', $recaptcha_html);
-	$smarty->assign('button_register', htmlentities($lang['register']));
+	$smarty->assign('button_register', $lang['register']);
 }
 elseif ($reg_closed == 1)
-	$smarty->assign('reg_closed', htmlentities($lang['noreg']));
+	$smarty->assign('reg_closed', $lang['noreg']);
 
 include('loggedout/footer.php');
 

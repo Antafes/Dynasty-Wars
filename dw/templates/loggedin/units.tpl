@@ -1,11 +1,11 @@
 {include file="header.tpl"}
 <div class="units{if $sub == 'build' xor !$sub} build{/if}">
 	<div class="heading">
-		{$lang.units|htmlentities}
+		{$lang.units}
 	</div>
 	<div class="topmenu">
-		<a href="index.php?chose=units&amp;sub=build">{$lang.build|htmlentities}</a> |
-		<a href="index.php?chose=units&amp;sub=move">{$lang.move|htmlentities}</a>
+		<a href="index.php?chose=units&amp;sub=build">{$lang.build}</a> |
+		<a href="index.php?chose=units&amp;sub=move">{$lang.move}</a>
 	</div>
 	<div>
 		{$unitContent}

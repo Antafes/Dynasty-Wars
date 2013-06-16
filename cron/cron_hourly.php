@@ -1,5 +1,4 @@
 #!/usr/bin/php5
 <?php
-include('points.php');
-include('lostpw.php');
-?>
+require_once('points.php');
+require_once('lostpw.php');

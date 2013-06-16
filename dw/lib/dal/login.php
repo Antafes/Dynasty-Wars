@@ -1,11 +1,13 @@
 <?php
+namespace dal\login;
+
 /**
  * get all data of this user
  * @author Neithan
  * @param int $uid
  * @return array
  */
-function lib_dal_login_getAllData($uid)
+function getAllData($uid)
 {
 	$sql = '
 		SELECT
@@ -18,21 +20,23 @@ function lib_dal_login_getAllData($uid)
 			language,
 			deactivated
 		FROM dw_user
-		WHERE uid = '.$uid.'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
-	$r = lib_util_mysqlQuery($sql);
+	$r = \util\mysql\query($sql);
 	return $r;
 }
+
 /**
  * check for closed login
  * @author Neithan
  * @return int
  */
-function lib_dal_login_checkLogin()
+function checkLogin()
 {
 	$sql = 'SELECT login_closed FROM dw_game';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
+
 /**
  * set last login time
  * @author Neithan
@@ -40,15 +44,16 @@ function lib_dal_login_checkLogin()
  * @param int $lastlogin datetime in seconds
  * @return int
  */
-function lib_dal_login_setLastLogin($uid)
+function setLastLogin($uid)
 {
 	$sql = '
 		UPDATE dw_user
 		SET last_login_datetime = NOW()
-		WHERE uid='.mysql_real_escape_string($uid).'
+		WHERE uid='.\util\mysql\sqlval($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
+
 /**
  * get the maincity of this user
  * @author Neithan
@@ -56,9 +61,8 @@ function lib_dal_login_setLastLogin($uid)
  * @param int $uid
  * @return array
  */
-function lib_dal_login_getMainCity($uid, $add_where = ' AND maincity = 1')
+function getMainCity($uid, $add_where = ' AND maincity = 1')
 {
-	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.$uid.$add_where.'';
-	return lib_util_mysqlQuery($sql);
+	$sql = 'SELECT map_x, map_y FROM dw_map WHERE uid = '.\util\mysql\sqlval($uid).\util\mysql\sqlval($add_where, false).'';
+	return \util\mysql\query($sql);
 }
-?>

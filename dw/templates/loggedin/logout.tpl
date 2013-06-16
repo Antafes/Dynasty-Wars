@@ -1,3 +1,3 @@
 {include file="../loggedout/header.tpl"}
-{$lang.logoutSuccessful|htmlentities}
+<div class="center_text">{$lang.logoutSuccessful}</div>
 {include file="../loggedout/footer.tpl"}

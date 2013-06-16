@@ -1,12 +1,12 @@
 <?php
 include('loggedin/header.php');
-lib_bl_general_loadLanguageFile('clan');
+bl\general\loadLanguageFile('clan');
 
 unset($foundation);
 //requesting of get and post variables
 $clantag = $_POST['clantag'];
 $clanname = $_POST['clan'];
-if (isset($_GET['cid']) and is_numeric($_GET['cid']))
+if (isset($_GET['cid']) && is_numeric($_GET['cid']))
 	$cid = $_GET['cid'];
 
 $smarty->assign('lang', $lang);
@@ -29,7 +29,7 @@ else //search for clans
 						clanname,
 						clantag
 					FROM dw_clan
-					WHERE clanname like "%'.mysql_real_escape_string($clanname).'%"
+					WHERE clanname like '.util\mysql\sqlval('%'.$clanname.'%').'
 				';
 			}
 			elseif ($clantag) //searching for clan tag
@@ -40,11 +40,11 @@ else //search for clans
 						clanname,
 						clantag
 					FROM dw_clan
-					WHERE clantag = "'.mysql_real_escape_string($clantag).'"
+					WHERE clantag = '.util\mysql\sqlval($clantag).'
 				';
 			}
 
-			$clanData = lib_util_mysqlQuery($sql, true);
+			$clanData = util\mysql\query($sql, true);
 
 			if ($clanData) //showing of the found clan
 			{
@@ -53,11 +53,11 @@ else //search for clans
 					$sql = '
 						SELECT COUNT(*)
 						FROM dw_user
-						WHERE cid = '.mysql_real_escape_string($clan['cid']).'
+						WHERE cid = '.util\mysql\sqlval($clan['cid']).'
 							AND !deactivated
 						GROUP BY cid
 					';
-					$clan['users'] = lib_util_mysqlQuery($sql);
+					$clan['users'] = util\mysql\query($sql);
 				}
 				unset($clan);
 
@@ -67,7 +67,7 @@ else //search for clans
 	}
 	elseif ($_GET['newclan']) //clan foundation
 	{
-		if ($clanname and $clantag)
+		if ($clanname && $clantag)
 		{
 			$sql = '
 				INSERT INTO dw_clan (
@@ -75,23 +75,23 @@ else //search for clans
 					clantag,
 					founder
 				) VALUES (
-					"'.mysql_real_escape_string($clanname).'",
-					"'.mysql_real_escape_string($clantag).'",
-					"'.mysql_real_escape_string($_SESSION['user']->getNick()).'"
+					'.util\mysql\sqlval($clanname).',
+					'.util\mysql\sqlval($clantag).',
+					'.util\mysql\sqlval($_SESSION['user']->getNick()).'
 				)
 			';
-			$cid = lib_util_mysqlQuery($sql);
+			$cid = util\mysql\query($sql);
 			$points = $_SESSION['user']->getPoints();
 			$sql = '
 				INSERT INTO dw_clan_points (
 					unit_points,
 					building_points
 				) VALUES (
-					'.mysql_real_escape_string($points['unit_points']).',
-					'.mysql_real_escape_string($points['building_points']).'
+					'.util\mysql\sqlval($points['unit_points']).',
+					'.util\mysql\sqlval($points['building_points']).'
 				)
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 			$sql = '
 				INSERT INTO dw_clan_rank (
 					cid,
@@ -99,23 +99,23 @@ else //search for clans
 					admin,
 					standard
 				) VALUES (
-					'.mysql_real_escape_string($cid).',
+					'.util\mysql\sqlval($cid).',
 					2,
 					0,
 					1
 				), (
-					'.mysql_real_escape_string($cid).',
+					'.util\mysql\sqlval($cid).',
 					1,
 					1,
 					0
 				)
 			';
-			lib_util_mysqlQuery($sql);
+			util\mysql\query($sql);
 
 			if ($cid && $_SESSION['user']->setCID($cid) && $_SESSION['user']->setRankID(1))
 			{
-				lib_bl_log_saveLog(2, $_SESSION['user']->getUID(), 0, '');
-				lib_bl_general_redirect('index.php?chose=clan&cid='.$cid.'');
+				bl\log\saveLog(2, $_SESSION['user']->getUID(), 0, '');
+				bl\general\redirect('index.php?chose=clan&cid='.$cid.'');
 			}
 		}
 	}
@@ -127,10 +127,10 @@ else //search for clans
 		$sql = '
 			SELECT lvl
 			FROM dw_buildings
-			WHERE uid = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+			WHERE uid = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 				AND kind = 13
 		';
-		$smarty->assign('gardenLvl', lib_util_mysqlQuery($sql));
+		$smarty->assign('gardenLvl', util\mysql\query($sql));
 	}
 }
 

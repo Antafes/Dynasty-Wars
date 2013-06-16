@@ -1,22 +1,17 @@
 <?php
+require_once(dirname(__FILE__)."/../dw/lib/config.php");
+require_once(dirname(__FILE__).'/../dw/lib/util/mysql.php');
+require_once(dirname(__FILE__)."/../dw/lib/dal/unit.php");
+require_once(dirname(__FILE__).'/../dw/lib/dal/login.php');
+require_once(dirname(__FILE__)."/../dw/lib/bl/unit.php");
 
-include_once ("/var/www/dw/htdocs/lib/config.php");
-include_once ("/var/www/dw/htdocs/lib/bl/unit.php");
-include_once ("/var/www/dw/htdocs/lib/dal/unit.php");
-include_once ("/var/www/dw/htdocs/lib/util/mysql.php");
-/*
-include_once ("../dw/lib/config.php");
-include_once ("../dw/lib/bl/unit.php");
-include_once ("../dw/lib/dal/unit.php");
-include_once ('../dw/lib/util/mysql.php');
-*/
 $con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) or die("Fehler, keine Datenbank!");
+mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 $sql = 'SELECT uid FROM dw_user WHERE !deactivated';
-$users = lib_util_mysqlQuery($sql, true);
+$users = util\mysql\query($sql, true);
 $lines = count($users);
 
-$u_points = lib_bl_unit_calcUnitPoints();
+$u_points = bl\unit\calcUnitPoints();
 foreach ($u_points as $points)
 	$unit_points[$points['uid']] = $points['points'];
 
@@ -26,9 +21,9 @@ for ($n = 0; $n < $lines; $n++)
 	$sql = '
 		SELECT lvl, upgrade_lvl
 		FROM dw_buildings
-		WHERE uid = "'.$users[$n]['uid'].'"
+		WHERE uid = '.util\mysql\sqlval($users[$n]['uid']).'
 	';
-	$buildings = lib_util_mysqlQuery($sql, true);
+	$buildings = util\mysql\query($sql, true);
 	$lines2 = count($buildings);
 
 	for ($m = 0; $m < $lines2; $m++)
@@ -37,13 +32,12 @@ for ($n = 0; $n < $lines; $n++)
 	if (!$unit_points[$users[$n]['uid']])
 		$unit_points[$users[$n]['uid']] = 0;
 
-	lib_bl_unit_checkDaimyo($users[$n]['uid']);
+	bl\unit\checkDaimyo($users[$n]['uid']);
 	$sql = '
 		UPDATE dw_points
-		SET unit_points = "'.round($unit_points[$users[$n]['uid']], 0).'",
-			building_points = '.$building_points.'
-		WHERE uid = "'.$users[$n]['uid'].'"
+		SET unit_points = '.util\mysql\sqlval(round($unit_points[$users[$n]['uid']], 0)).',
+			building_points = '.util\mysql\sqlval($building_points).'
+		WHERE uid = '.util\mysql\sqlval($users[$n]['uid']).'
 	';
-	$erg3 = lib_util_mysqlQuery($sql);
+	$erg3 = util\mysql\query($sql);
 }
-?>

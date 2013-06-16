@@ -1,12 +1,14 @@
 <?php
+namespace bl\news;
+
 /**
  * get all news entries
  * @author Neithan
  * @return array
  */
-function lib_bl_news_getAllEntries()
+function getAllEntries()
 {
-	return lib_dal_news_getAllEntries();
+	return \dal\news\getAllEntries();
 }
 
 /**
@@ -15,9 +17,9 @@ function lib_bl_news_getAllEntries()
  * @param int $nid
  * @return array
  */
-function lib_bl_news_getEntry($nid)
+function getEntry($nid)
 {
-	return lib_dal_news_getEntry($nid);
+	return \dal\news\getEntry($nid);
 }
 
 /**
@@ -25,12 +27,12 @@ function lib_bl_news_getEntry($nid)
  * @author Neithan
  * @param String $title
  * @param String $content
- * @param UserCls $author
+ * @param \bl\user\UserCls $author
  * @return int
  */
-function lib_bl_news_save($title, $content, UserCls $author)
+function save($title, $content, \bl\user\UserCls $author)
 {
-	return lib_dal_news_save($title, $content, $author->getUID(), $author->getNick());
+	return \dal\news\save($title, $content, $author->getUID(), $author->getNick());
 }
 
 /**
@@ -39,10 +41,10 @@ function lib_bl_news_save($title, $content, UserCls $author)
  * @param int $nid
  * @param String $title
  * @param String $content
- * @param UserCls $changer
+ * @param \bl\user\UserCls $changer
  * @return int
  */
-function lib_bl_news_update($nid, $title, $content, UserCls $changer)
+function update($nid, $title, $content, \bl\user\UserCls $changer)
 {
-	return lib_dal_news_update($nid, $title, $content, $changer->getUID(), $changer->getNick());
+	return \dal\news\update($nid, $title, $content, $changer->getUID(), $changer->getNick());
 }

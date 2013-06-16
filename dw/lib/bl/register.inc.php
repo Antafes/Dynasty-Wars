@@ -1,5 +1,4 @@
 <?php
-include_once('lib/dal/register.php');
-include_once('lib/dal/user.php');
-include_once('lib/bl/register.php');
-?>
+require_once(__DIR__.'/../dal/register.php');
+require_once(__DIR__.'/../dal/user.php');
+require_once(__DIR__.'/../bl/register.php');

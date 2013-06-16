@@ -1,16 +1,18 @@
 <?php
+namespace dal\news;
+
 /**
  * get all news entries
  * @author Neithan
  * @return array
  */
-function lib_dal_news_getAllEntries()
+function getAllEntries()
 {
 	$sql = '
 		SELECT * FROM dw_news
-		ORDER BY date DESC
+		ORDER BY create_datetime DESC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -19,13 +21,13 @@ function lib_dal_news_getAllEntries()
  * @param int $nid
  * @return array
  */
-function lib_dal_news_getEntry($nid)
+function getEntry($nid)
 {
 	$sql = '
 		SELECT * FROM dw_news
-		WHERE nid = '.mysql_real_escape_string($nid).'
+		WHERE nid = '.\util\mysql\sqlval($nid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -37,7 +39,7 @@ function lib_dal_news_getEntry($nid)
  * @param String $nick
  * @return int
  */
-function lib_dal_news_save($title, $content, $uid, $nick)
+function save($title, $content, $uid, $nick)
 {
 	$sql = '
 		INSERT INTO dw_news (
@@ -45,16 +47,16 @@ function lib_dal_news_save($title, $content, $uid, $nick)
 			nick,
 			title,
 			text,
-			date
+			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($uid).',
-			"'.mysql_real_escape_string($nick).'",
-			"'.mysql_real_escape_string($title).'",
-			"'.mysql_real_escape_string($content).'",
-			'.mysql_real_escape_string(time()).'
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($nick).',
+			'.\util\mysql\sqlval($title).',
+			'.\util\mysql\sqlval($content).',
+			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -67,17 +69,17 @@ function lib_dal_news_save($title, $content, $uid, $nick)
  * @param String $changerNick
  * @return int
  */
-function lib_dal_news_update($nid, $title, $content, $changerUID, $changerNick)
+function update($nid, $title, $content, $changerUID, $changerNick)
 {
 	$sql = '
 		UPDATE dw_news
-		SET title = "'.mysql_real_escape_string($title).'",
-			text = "'.mysql_real_escape_string($content).'",
-			changed_uid = '.mysql_real_escape_string($changerUID).',
-			changed_nick = "'.mysql_real_escape_string($changerNick).'",
+		SET title = '.\util\mysql\sqlval($title).',
+			text = '.\util\mysql\sqlval($content).',
+			changed_uid = '.\util\mysql\sqlval($changerUID).',
+			changed_nick = '.\util\mysql\sqlval($changerNick).',
 			changed = changed + 1,
-			last_changed = '.mysql_real_escape_string(time()).'
-		WHERE nid = '.mysql_real_escape_string($nid).'
+			changed_datetime = NOW()
+		WHERE nid = '.\util\mysql\sqlval($nid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }

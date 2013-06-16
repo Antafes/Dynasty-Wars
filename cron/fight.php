@@ -1,31 +1,32 @@
 <?php
-/*
-include_once ("/var/www/dw/htdocs/lib/config.php");
-include_once ("/var/www/dw/htdocs/lib/util/mysql.php");
-include_once ("/var/www/dw/htdocs/lib/dal/unit.php");
-include_once ("/var/www/dw/htdocs/lib/dal/troops.php");
-include_once ("/var/www/dw/htdocs/lib/bl/unit.php");
-include_once ("/var/www/dw/htdocs/lib/bl/troops.php");
-*/
-include_once ("../dw/lib/config.php");
-include_once ('../dw/lib/util/mysql.php');
-include_once ("../dw/lib/dal/unit.php");
-include_once ("../dw/lib/dal/troops.php");
-include_once ("../dw/lib/bl/unit.php");
-include_once ("../dw/lib/bl/troops.php");
+require_once(dirname(__FILE__).'/../dw/lib/config.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/mysql.php');
+require_once(dirname(__FILE__).'/../dw/lib/dal/unit.php');
+require_once(dirname(__FILE__).'/../dw/lib/dal/troops.php');
+require_once(dirname(__FILE__).'/../dw/lib/bl/unit.php');
+require_once(dirname(__FILE__).'/../dw/lib/bl/troops.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/dateTime.php');
+require_once(dirname(__FILE__).'/../dw/lib/util/dateInterval.php');
 
-$moving_troops = lib_dal_troops_getAllMovingTroops();
-$time = time();
+$con = @mysql_connect($server, $seruser, $serpw);
+mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 
-foreach ($moving_troops as $moving_troop)
+$moving_troops = dal\troops\getAllMovingTroops();
+
+if ($moving_troops)
 {
-	if ($moving_troop['endtime'] <= $time)
+	foreach ($moving_troops as $moving_troop)
 	{
-		lib_bl_troops_endMoving ($moving_troop['tid']);
-		
-		if ($moving_troop['type'] > 2)
+		$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $moving_troop['endtime']);
+		$now = new \DWDateTime();
+		if ($endtime <= $now)
 		{
-			lib_bl_troops_fight($moving_troop['tid'], $moving_troop['tx'].':'.$moving_troop['ty']);
+			bl\troops\endMoving ($moving_troop['tid']);
+
+			if ($moving_troop['type'] > 2)
+			{
+				bl\troops\fight($moving_troop['tid'], $moving_troop['tx'].':'.$moving_troop['ty']);
+			}
 		}
 	}
 }

@@ -1,4 +1,3 @@
 <?php
-include_once('lib/dal/log.php');
-include_once('lib/bl/log.php');
-?>
+require_once(__DIR__.'/../dal/log.php');
+require_once(__DIR__.'/../bl/log.php');

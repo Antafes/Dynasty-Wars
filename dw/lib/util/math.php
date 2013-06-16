@@ -1,8 +1,5 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace util\math;
 
 /**
  * Calculates the percentage of $fragment in $total
@@ -11,7 +8,7 @@
  * @param <float> $fragment the fragment that should be represented as percentage
  * @return <float> percentage
  */
-function lib_util_math_calcPercentage($total, $fragment) {
+function calcPercentage($total, $fragment) {
     return $fragment * 100 / $total;
 }
 
@@ -21,7 +18,7 @@ function lib_util_math_calcPercentage($total, $fragment) {
  * @param <float> $percentage the percentage
  * @return <float> the fragment calculated from the percentage of total
  */
-function lib_util_math_calcFragment($total, $percentage) {
+function calcFragment($total, $percentage) {
     return $percentage / 100 * $total;
 }
 
@@ -33,10 +30,9 @@ function lib_util_math_calcFragment($total, $percentage) {
  * @param int $decimals
  * @return string
  */
-function lib_util_math_numberFormat($number, $decimals = 2)
+function numberFormat($number, $decimals = 2)
 {
 	global $lang;
 
 	return number_format($number, $decimals, $lang['decimal'], $lang['thousands']);
 }
-?>

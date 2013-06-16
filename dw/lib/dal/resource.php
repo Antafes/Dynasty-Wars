@@ -6,41 +6,45 @@
  *
  */
 
+namespace dal\resource;
+
 /**
- * Will add the amout specified as $value to $uid's resource inventory of
- * $resource. This function accepts negative values as well so that it can be
- * used to remove units from the resource stock as well.
+ * Will add the amout specified as $value to the user at position $x:$y resource
+ * inventory of $resource. This function accepts negative values as well so that
+ * it can be used to remove units from the resource stock as well.
  * @author siyb
- * @param <int> $uid
  * @param <String> $resource
  * @param <float> $value
+ * @param <int> $x
+ * @param <int> $y
  */
-function lib_dal_resource_addToResources($resource, $value, $x, $y)
+function addToResources($resource, $value, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
-		SET `'.mysql_real_escape_string($resource).'` = `'.mysql_real_escape_string($resource).'` + '.mysql_real_escape_string($value).'
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		SET `'.\util\mysql\sqlval($resource, false).'` = `'.\util\mysql\sqlval($resource, false).'` + '.\util\mysql\sqlval($value).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-    lib_util_mysqlQuery($sql);
+    \util\mysql\query($sql);
 }
 
 /**
  * Returns the amount of $resource that is currently in the stock of the user
- * whose id is $uid
- * @param <type> $uid
- * @param <type> $resource
+ * whose position is $x:$y
+ * @param <int> $x
+ * @param <int> $y
+ * @param <int> $resource
  * @return float
  */
-function lib_dal_resource_returnResourceAmount($x, $y, $resource)
+function returnResourceAmount($x, $y, $resource)
 {
 	$sql = '
-		SELECT `'.mysql_real_escape_string($resource).'` FROM `dw_res`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		SELECT `'.\util\mysql\sqlval($resource, false).'` FROM `dw_res`
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-    return lib_util_mysqlQuery($sql);
+    return \util\mysql\query($sql);
 }
 
 /**
@@ -51,14 +55,14 @@ function lib_dal_resource_returnResourceAmount($x, $y, $resource)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getUpgrLvl($kind, $x, $y)
+function getUpgradeLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `upgrade_lvl` FROM `dw_buildings`
-		WHERE `kind` = "'.mysql_real_escape_string($kind).'"
-			AND `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `kind` = '.\util\mysql\sqlval($kind).'
+			AND `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -68,13 +72,13 @@ function lib_dal_resource_getUpgrLvl($kind, $x, $y)
  * @param int $type
  * @return int
  */
-function lib_dal_resource_getResearchLvl($uid, $type)
+function getResearchLevel($uid, $type)
 {
 	$sql = 'SELECT `lvl` FROM `dw_research`
-		WHERE `uid` = "'.mysql_real_escape_string($uid).'"
-			AND `type` = "'.mysql_real_escape_string($type).'"
+		WHERE `uid` = '.\util\mysql\sqlval($uid).'
+			AND `type` = '.\util\mysql\sqlval($type).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -85,40 +89,39 @@ function lib_dal_resource_getResearchLvl($uid, $type)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getLvl($kind, $x, $y)
+function getLevel($kind, $x, $y)
 {
 	$sql = 'SELECT `lvl` FROM `dw_buildings`
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
-			AND `kind` = "'.mysql_real_escape_string($kind).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
+			AND `kind` = '.\util\mysql\sqlval($kind).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
  * update the users resources
  * @author Neithan
  * @param array $res array([food], [wood], [rock], [iron], [paper], [koku])
- * @param int $time datetime in seconds
  * @param int $x
  * @param int $y
  * @return int
  */
-function lib_dal_resource_updateAll($res, $time, $x, $y)
+function updateAll($res, $x, $y)
 {
 	$sql = '
 		UPDATE `dw_res`
-		SET `last_time` = "'.mysql_real_escape_string($time).'",
-			`food` = "'.mysql_real_escape_string($res['food']).'",
-			`wood` = "'.mysql_real_escape_string($res['wood']).'",
-			`rock` = "'.mysql_real_escape_string($res['rock']).'",
-			`iron` = "'.mysql_real_escape_string($res['iron']).'",
-			`paper` = "'.mysql_real_escape_string($res['paper']).'",
-			`koku` = "'.mysql_real_escape_string($res['koku']).'"
-		WHERE `map_x` = '.mysql_real_escape_string($x).'
-			AND `map_y` = '.mysql_real_escape_string($y).'
+		SET `last_datetime` = NOW(),
+			`food` = '.\util\mysql\sqlval($res['food']).',
+			`wood` = '.\util\mysql\sqlval($res['wood']).',
+			`rock` = '.\util\mysql\sqlval($res['rock']).',
+			`iron` = '.\util\mysql\sqlval($res['iron']).',
+			`paper` = '.\util\mysql\sqlval($res['paper']).',
+			`koku` = '.\util\mysql\sqlval($res['koku']).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -128,14 +131,14 @@ function lib_dal_resource_updateAll($res, $time, $x, $y)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_getPaperPercent($x, $y)
+function getPaperPercent($x, $y)
 {
 	$sql = '
 		SELECT paper_prod FROM dw_res
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -146,14 +149,15 @@ function lib_dal_resource_getPaperPercent($x, $y)
  * @param int $y
  * @return int
  */
-function lib_dal_resource_changePaperPercent($percent, $x, $y)
+function changePaperPercent($percent, $x, $y)
 {
 	$sql = '
-		UPDATE dw_res SET paper_prod="'.mysql_real_escape_string($percent).'"
-		WHERE `map_x` = "'.mysql_real_escape_string($x).'"
-			AND `map_y` = "'.mysql_real_escape_string($y).'"
+		UPDATE dw_res
+		SET paper_prod = '.\util\mysql\sqlval($percent).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -163,14 +167,13 @@ function lib_dal_resource_changePaperPercent($percent, $x, $y)
  * @param int $y
  * @return array
  */
-function lib_dal_resource_getResourceBuildings($x, $y)
+function getResourceBuildings($x, $y)
 {
 	$sql = '
 		SELECT kind, lvl FROM dw_buildings
-		WHERE map_x = '.mysql_real_escape_string($x).'
-			AND map_y = '.mysql_real_escape_string($y).'
+		WHERE map_x = '.\util\mysql\sqlval($x).'
+			AND map_y = '.\util\mysql\sqlval($y).'
 			AND kind BETWEEN 1 AND 6
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
-?>

@@ -6,5 +6,5 @@
  *
  */
 include('lib/bl/mapincludes.php');
-lib_bl_map_createPNGMap($con, "pictures/dynamic_map.png", 2);
+bl\map\createPNGMap($con, "pictures/dynamic_map.png", 2);
 ?>

@@ -1,5 +1,5 @@
 <?php
-lib_bl_general_loadLanguageFile('clans', 'acp');
+bl\general\loadLanguageFile('clans', 'acp');
 $smarty->assign('lang', $lang);
 
 if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2)
@@ -17,9 +17,9 @@ if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() ==
 				FROM dw_user u
 				JOIN dw_clan_rank cr USING (rankid)
 				JOIN dw_clan_rankname crn USING (rnid)
-				WHERE u.cid = '.mysql_real_escape_string($_GET['cid']).'
+				WHERE u.cid = '.util\mysql\sqlval($_GET['cid']).'
 			';
-			$smarty->assign('memberList', lib_util_mysqlQuery($sql, true));
+			$smarty->assign('memberList', util\mysql\query($sql, true));
 		}
 		else
 		{
@@ -38,20 +38,20 @@ if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() ==
 							AND NOT deactivated
 					) AS memberCount
 				FROM dw_clan
-				WHERE cid = '.mysql_real_escape_string($_GET['cid']).'
+				WHERE cid = '.util\mysql\sqlval($_GET['cid']).'
 				ORDER BY cid
 			';
-			$clan = lib_util_mysqlQuery($sql);
+			$clan = util\mysql\query($sql);
 			$sql = '
 				SELECT sum(p.unit_points) + sum(p.building_points) + sum(p.unit_points + p.building_points) AS points
 				FROM dw_clan c
 				LEFT JOIN dw_user u USING (cid)
 				LEFT JOIN dw_points p USING (uid)
-				WHERE c.cid = '.mysql_real_escape_string($_GET['cid']).'
+				WHERE c.cid = '.util\mysql\sqlval($_GET['cid']).'
 					AND NOT u.deactivated
 				GROUP BY c.cid
 			';
-			$clan['points'] = lib_util_mysqlQuery($sql);
+			$clan['points'] = util\mysql\query($sql);
 
 			$smarty->assign('clan', $clan);
 		}
@@ -66,7 +66,7 @@ if ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() ==
 				clantag
 			FROM dw_clan
 		';
-		$data = lib_util_mysqlQuery($sql, true);
+		$data = util\mysql\query($sql, true);
 		$GLOBALS['firePHP']->log($data);
 		$smarty->assign('clanList', $data);
 	}

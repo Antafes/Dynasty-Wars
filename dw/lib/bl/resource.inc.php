@@ -1,4 +1,3 @@
 <?php
-	include_once("lib/dal/resource.php");
-	include_once("lib/bl/resource.php");
-?>
+require_once(__DIR__.'/../dal/resource.php');
+require_once(__DIR__.'/../bl/resource.php');

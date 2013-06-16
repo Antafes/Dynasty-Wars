@@ -1,12 +1,15 @@
 <?php
+namespace bl\troops;
+
 /**
  * get the troop of the defined user
  * @author Neithan
  * @param int $tid
  * @return array
  */
-function lib_bl_troops_getTroop($tid) {
-	return lib_dal_troops_getTroop($tid);
+function getTroop($tid)
+{
+	return \dal\troops\getTroop($tid);
 }
 
 /**
@@ -16,9 +19,9 @@ function lib_bl_troops_getTroop($tid) {
  * @param int $kind
  * @return array
  */
-function lib_bl_troops_getPos($uid, $kind="troops")
+function getPosition($uid, $kind="troops")
 {
-	$pos = lib_dal_troops_getPos($uid, $kind);
+	$pos = \dal\troops\getPosition($uid, $kind);
 
 	if ($pos)
 	{
@@ -39,23 +42,26 @@ function lib_bl_troops_getPos($uid, $kind="troops")
  * @param int $uid
  * @param int $posx
  * @param int $posy
- * @param int $kind default "troops"
+ * @param String $kind default 'troops'
+ * @param bool $getAll default false
+ * @param String $orderBy default 'unid'
  * @return array
  */
-function lib_bl_troops_getAtPos($uid, $posx, $posy, $kind="troops", $get_all = false, $order_by = 'unid')
+function getAtPosition($uid, $posx, $posy, $kind="troops", $getAll = false, $orderBy = 'unid')
 {
-	return lib_dal_troops_getAtPos($uid, $posx, $posy, $kind, $get_all, $order_by);
+	return \dal\troops\getAtPosition($uid, $posx, $posy, $kind, $getAll, $orderBy);
 }
 
 /**
  * get the units that are in this troop
  * @author Neithan
  * @param int $tid
+ * @param String $orderBy default null
  * @return array
  */
-function lib_bl_troops_getTroopUnits($tid, $order_by = null)
+function getTroopUnits($tid, $orderBy = null)
 {
-	return lib_dal_troops_getTroopUnits($tid, $order_by);
+	return \dal\troops\getTroopUnits($tid, $orderBy);
 }
 
 /**
@@ -64,12 +70,15 @@ function lib_bl_troops_getTroopUnits($tid, $order_by = null)
  * @param int $tid
  * @return int
  */
-function lib_bl_troops_countTroopUnits($tid) {
-	$lines = lib_bl_troops_getTroopUnits($tid);
+function countTroopUnits($tid)
+{
+	$lines = getTroopUnits($tid);
+
 	$count = 0;
 	foreach ($lines as $line)
 		$count += $line['count'];
-	return lib_util_math_numberFormat($count, 0);
+
+	return \util\math\numberFormat($count, 0);
 }
 
 /**
@@ -79,9 +88,9 @@ function lib_bl_troops_countTroopUnits($tid) {
  * @param int $tid
  * @return int
  */
-function lib_bl_troops_addUnits($unid, $tid)
+function addUnits($unid, $tid)
 {
-	return lib_dal_troops_addUnits($unid, $tid);
+	return \dal\troops\addUnits($unid, $tid);
 }
 
 /**
@@ -89,27 +98,31 @@ function lib_bl_troops_addUnits($unid, $tid)
  * @author Neithan
  * @param array $unids
  * @param int $tid
- * @return <int> returns 1 on succes, otherwise 0
+ * @return int returns 1 on succes, otherwise 0
  */
-function lib_bl_troops_addNewUnits($unids, $tid)
+function addNewUnits($unids, $tid)
 {
 	$check = 0;
+
 	foreach ($unids as $unid)
 	{
-		$troop = lib_dal_troops_getUnitCount($unid);
-		$in_troop = lib_dal_troops_checkTroopUnits($troop['kind'], $tid);
+		$troop = \dal\troops\getUnitCount($unid);
+		$in_troop = \dal\troops\checkTroopUnits($troop['kind'], $tid);
+
 		if ($in_troop)
 		{
-			$added = lib_dal_unit_train_addUnit($troop['count'], $in_troop);
-			lib_dal_unit_deleteUnit($unid);
+			$added = \dal\unit\train\addUnit($troop['count'], $in_troop);
+			\dal\unit\deleteUnit($unid);
 		}
 		else
 		{
-			$added = lib_bl_troops_addUnits($unid, $tid);
+			$added = addUnits($unid, $tid);
 		}
+
 		if ($added)
 			$check++;
 	}
+
 	if ($check == count($unids))
 		return 1;
 	else
@@ -124,16 +137,18 @@ function lib_bl_troops_addNewUnits($unids, $tid)
  * @param int $posy
  * @param array $unids
  * @param string $name
- * @return <int> return 1 on success, otherwise 0
+ * @return int return 1 on success, otherwise 0
  */
-function lib_bl_troops_createTroop($uid, $posx, $posy, $unids, $name)
+function createTroop($uid, $posx, $posy, $unids, $name)
 {
-	$tid = lib_dal_troops_createTroop($uid, $posx, $posy, $name);
+	$tid = \dal\troops\createTroop($uid, $posx, $posy, $name);
 	$newname = $name." ".$tid;
-	lib_dal_troops_rename($tid, $newname);
+	\dal\troops\rename($tid, $newname);
+
 	foreach ($unids as $unid)
-		$added = lib_bl_troops_addUnits($unid, $tid);
-	if ($tid and $added)
+		$added = addUnits($unid, $tid);
+
+	if ($tid && $added)
 		return 1;
 	else
 		return 0;
@@ -149,24 +164,23 @@ function lib_bl_troops_createTroop($uid, $posx, $posy, $unids, $name)
  * @param int $uid
  * @return int
  */
-function lib_bl_troops_checkComplete($unid, $posx, $posy, $count, $uid)
+function checkComplete($unid, $posx, $posy, $count, $uid)
 {
-	$troop = lib_dal_troops_getUnitCount($unid);
-	$GLOBALS['firePHP']->log($troop, 'checkComplete->troop');
+	$troop = \dal\troops\getUnitCount($unid);
+
 	if ($count != $troop['count'])
 	{
-		$newunid = lib_dal_unit_train_checkPos($uid, $posx, $posy, $troop['kind']);
-		$GLOBALS['firePHP']->log($newunid, 'checkComplete->1');
+		$newunid = \dal\unit\train\checkPosition($uid, $posx, $posy, $troop['kind']);
+
 		if (!$newunid)
-		{
-			$newunid = lib_dal_unit_train_newUnit($uid, $troop['kind'], $count, $posx, $posy);
-			$GLOBALS['firePHP']->log($newunid, 'checkComplete->1');
-		}
+			$newunid = \dal\unit\train\newUnit($uid, $troop['kind'], $count, $posx, $posy);
 		else
-			lib_dal_unit_train_addUnit($count, $newunid);
-		lib_dal_troops_removeFromUNID($unid, $troop['count'] - $count);
+			\dal\unit\train\addUnit($count, $newunid);
+
+		\dal\troops\removeFromUNID($unid, $troop['count'] - $count);
 		return $newunid;
-	} else
+	}
+	else
 		return $unid;
 }
 
@@ -175,21 +189,21 @@ function lib_bl_troops_checkComplete($unid, $posx, $posy, $count, $uid)
  * @author Neithan
  * @return int
  */
-function lib_bl_troops_checkCanAttack()
+function checkCanAttack()
 {
-	return lib_dal_troops_checkCanAttack();
+	return \dal\troops\checkCanAttack();
 }
 
 /**
- * check if there is a user on thie position
+ * check if there is a user on this position
  * @author Neithan
  * @param int $tx
  * @param int $ty
  * @return int
  */
-function lib_bl_troops_checkTarget($tx, $ty)
+function checkTarget($tx, $ty)
 {
-	return lib_dal_troops_checkTarget($tx, $ty);
+	return \dal\troops\checkTarget($tx, $ty);
 }
 
 /**
@@ -198,18 +212,20 @@ function lib_bl_troops_checkTarget($tx, $ty)
  * @param int $tuid
  * @param int $cid
  * @param int $type
- * @return <int> returns on 1 if the target is in the users clan, otherwise 0
+ * @return int returns on 1 if the target is in the users clan, otherwise 0
  */
-function lib_bl_troops_checkTargetClan($tuid, $cid, $type)
+function checkTargetClan($tuid, $cid, $type)
 {
 	if ($type > 2)
 	{
-		$tcid = lib_dal_troops_checkTargetClan($tuid);
+		$tcid = \dal\troops\checkTargetClan($tuid);
+
 		if ($tcid == $cid)
 			return 1;
 		else
 			return 0;
-	} else
+	}
+	else
 		return 0;
 }
 
@@ -222,23 +238,25 @@ function lib_bl_troops_checkTargetClan($tuid, $cid, $type)
  * @param int $type
  * @param string $res default ''
  * @param int $count default 0
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_troops_sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
+function sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
 {
-	$troop = lib_bl_troops_getTroop($tid);
-//	$checkisle = lib_bl_troops_checkisle($posx, $posy, $tx, $ty);
+	$troop = getTroop($tid);
+//	$checkisle = checkIsle($posx, $posy, $tx, $ty);
 //	if ($checkisle)
-		$sendtime = lib_bl_unit_move_aStar($troop["pos_x"], $troop["pos_y"], $tx, $ty);
+		$sendtime = \bl\unit\move\aStar($troop["pos_x"], $troop["pos_y"], $tx, $ty);
 /*
 	else
 //not yet implemented
 */
-	$endtime = intval(time()+$sendtime);
-	$erg1 = lib_dal_troops_sendTroop(intval($tid), intval($tx), intval($ty), intval($type), $endtime);
-	if ($res and $count) {
-		$erg2 = lib_dal_troops_addResToTroop(intval($tid), $res, intval($count));
-	}
+	$endtime = new \DWDateTime();
+	$endtime->add(new DateInterval('PT'.$sendtime.'S'));
+	$erg1 = \dal\troops\sendTroop(intval($tid), intval($tx), intval($ty), intval($type), $endtime);
+
+	if ($res && $count)
+		\dal\troops\addResourceToTroop(intval($tid), $res, intval($count));
+
 	if ($erg1)
 		return 1;
 	else
@@ -252,13 +270,14 @@ function lib_bl_troops_sendTroop($tid, $tx, $ty, $type, $res='', $count=0)
  * @param int $posy
  * @param int $tx
  * @param int $ty
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 if the unit will leave the current isle, otherwise 0
  */
-function lib_bl_troops_checkIsle($posx, $posy, $tx, $ty)
+function checkIsle($posx, $posy, $tx, $ty)
 {
-	$tisle = lib_dal_troops_getIsle($tx, $ty);
-	$posisle = lib_dal_troops_getIsle($posx, $posy);
-	if ($tisle == $posisle)
+	$targetIsle = \dal\troops\getIsle($tx, $ty);
+	$currentIsle = \dal\troops\getIsle($posx, $posy);
+
+	if ($targetIsle != $currentIsle)
 		return 1;
 	else
 		return 0;
@@ -270,10 +289,9 @@ function lib_bl_troops_checkIsle($posx, $posy, $tx, $ty)
  * @param int $tuid
  * @return array
  */
-function lib_bl_troops_checkTroops($tuid)
+function checkTroops($tuid)
 {
-	$tids = lib_dal_troops_checkTroops($tuid);
-	$GLOBALS['firePHP']->log($tids, 'checkTroops-TIDS');
+	$tids = \dal\troops\checkTroops($tuid);
 
 	$return = array();
 	if ($tids)
@@ -289,49 +307,43 @@ function lib_bl_troops_checkTroops($tuid)
  * @param int $tid
  * @return array
  */
-function lib_bl_troops_checkTroop($tid)
+function checkTroop($tid)
 {
-	return lib_dal_troops_checkTroop($tid);
-}
+	$troop = \dal\troops\checkTroop($tid);
 
-/**
- * format the time for usage in the jscript timer
- * @author Neithan
- * @param int $time
- * @param int $tid
- * @return array
- */
-function lib_bl_troops_timerFormat($time, $tid)
-{
-	$timediff = $time - time();
-	$timer["h"] = lib_bl_general_formatTime($timediff, "h");
-	$timer["m"] = lib_bl_general_formatTime($timediff, "m");
-	$timer["s"] = lib_bl_general_formatTime($timediff, "s");
-	$timer["tid"] = $tid;
-	return $timer;
+	if ($troop)
+		$troop['end_datetime'] = \DWDateTime::createFromFormat('Y-m-d H:i:s', $troop['end_datetime']);
+
+	return $troop;
 }
 
 /**
  * has the troop reached the target?
  * @author Neithan
  * @param int $tuid
- * @return <int> returns 1 if the target is reached, otherwise 0
+ * @return int returns 1 if the target is reached, otherwise 0
  */
-function lib_bl_troops_checkMoving($tuid)
+function checkMoving($tuid)
 {
-	$tids = lib_bl_troops_checkTroops($tuid);
-	$time = time();
+	$tids = checkTroops($tuid);
+	$now = new \DWDateTime();
+
 	if (count($tids) > 0)
 	{
-		foreach ($tids as $tid) {
-			$moveinfo = lib_bl_troops_checkTroop($tid);
-			if ($moveinfo["endtime"] < $time and count($moveinfo) > 0) {
-				lib_dal_troops_changeTroopPosition($tid, $moveinfo["tx"], $moveinfo["ty"]);
-				lib_dal_troops_changeUnitsPosition($tid, $moveinfo["tx"], $moveinfo["tx"]);
-				lib_bl_troops_endMoving($tid);
+		foreach ($tids as $tid)
+		{
+			$moveinfo = checkTroop($tid);
+
+			if ($moveinfo["end_datetime"] < $now && count($moveinfo) > 0)
+			{
+				\dal\troops\changeTroopPosition($tid, $moveinfo["tx"], $moveinfo["ty"]);
+				\dal\troops\changeUnitsPosition($tid, $moveinfo["tx"], $moveinfo["tx"]);
+				endMoving($tid);
 			}
 		}
-		$tids2 = lib_bl_troops_checkTroops($tuid);
+
+		$tids2 = checkTroops($tuid);
+
 		if (count($tids2) > 0)
 			return 1;
 		else
@@ -345,11 +357,12 @@ function lib_bl_troops_checkMoving($tuid)
  * remove the troop from dw_troops_move
  * @author Neithan
  * @param int $tid
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_troops_endMoving($tid)
+function endMoving($tid)
 {
-	$erg1 = lib_dal_troops_endMoving($tid);
+	$erg1 = \dal\troops\endMoving($tid);
+
 	if ($erg1)
 		return 1;
 	else
@@ -360,21 +373,22 @@ function lib_bl_troops_endMoving($tid)
  * calculate the maximum transport capacity of this troop
  * @author Neithan
  * @param int $tid
+ * @param bool $formatted default true
  * @return int
  */
-function lib_bl_troops_maxCapacity($tid, $formatted = true)
+function maxCapacity($tid, $formatted = true)
 {
-	$troop = lib_bl_troops_getTroopUnits($tid);
-	$cap = lib_bl_troops_getCaps();
+	$troop = getTroopUnits($tid);
+	$cap = getCapacities();
 
-	unset($maxcap);
+	$maxCapacity = 0;
 	foreach ($troop as $part)
-		$maxcap += $cap[$part['kind']] * $part['count'];
+		$maxCapacity += $cap[$part['kind']] * $part['count'];
 
 	if ($formatted)
-		return lib_util_math_numberFormat($maxcap, 0);
+		return \util\math\numberFormat($maxCapacity, 0);
 	else
-		return $maxcap;
+		return $maxCapacity;
 }
 
 /**
@@ -382,7 +396,8 @@ function lib_bl_troops_maxCapacity($tid, $formatted = true)
  * @author Neithan
  * @return array
  */
-function lib_bl_troops_getCaps() {
+function getCapacities()
+{
 	$cap0 = 10;
 	$cap1 = 20;
 	$cap2 = 30;
@@ -401,23 +416,24 @@ function lib_bl_troops_getCaps() {
  * @param int $tid
  * @return array
  */
-function lib_bl_troops_loaded($tid)
+function loaded($tid)
 {
-	return lib_dal_troops_loaded($tid);
+	return \dal\troops\loaded($tid);
 }
 
 /**
  * check if the maximum capacity of this troop is not enough
  * @author Neithan
- * @param int $cap
+ * @param int $capacity
  * @param int $tid
- * @return <int> returns 1 if there is less or equal load of the capacity, otherwise 0
+ * @return int returns 1 if there is less or equal load of the capacity, otherwise 0
  */
-function lib_bl_troops_checkCap($cap, $tid)
+function checkCapacity($capacity, $tid)
 {
-	$load = lib_bl_troops_loaded($tid);
-	$maxcap = lib_bl_troops_maxCapacity($tid);
-	if ($cap > $maxcap-$load["amount"])
+	$load = loaded($tid);
+	$maxCapacity = maxCapacity($tid);
+
+	if ($capacity > $maxCapacity - $load['amount'])
 		return 0;
 	else
 		return 1;
@@ -430,9 +446,9 @@ function lib_bl_troops_checkCap($cap, $tid)
  * @param string $name
  * @return void
  */
-function lib_bl_troops_rename($tid, $name)
+function rename($tid, $name)
 {
-	lib_dal_troops_rename(intval($tid), $name);
+	\dal\troops\rename(intval($tid), $name);
 }
 
 /**
@@ -440,27 +456,31 @@ function lib_bl_troops_rename($tid, $name)
  * @author Neithan
  * @param int $tid
  * @param int $uid
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_troops_deleteTroop($tid, $uid)
+function deleteTroop($tid, $uid)
 {
-	$troop = lib_bl_troops_getTroop($tid);
-	lib_dal_troops_deleteTroop($tid);
-	$troop_units = lib_bl_troops_getTroopUnits($tid);
+	$troop = getTroop($tid);
+	\dal\troops\deleteTroop($tid);
+	$troop_units = getTroopUnits($tid);
+
 	if (count($troop_units) > 0)
 	{
 		foreach ($troop_units as $unit)
 		{
-			$unid = lib_dal_unit_train_checkPos($uid, $troop["pos_x"], $troop["pos_y"], $unit['kind']);
+			$unid = \dal\unit\train\checkPosition($uid, $troop["pos_x"], $troop["pos_y"], $unit['kind']);
+
 			if ($unid)
 			{
-				lib_dal_unit_train_addUnit($unit['count'], $unid);
-				lib_dal_troops_delunit($unit['unid']);
+				\dal\unit\train\addUnit($unit['count'], $unid);
+				\dal\troops\deleteUnit($unit['unid']);
 			}
 		}
-		lib_dal_troops_resetTID($tid);
+
+		\dal\troops\resetTID($tid);
 		return 1;
-	} else
+	}
+	else
 		return 0;
 }
 
@@ -470,33 +490,35 @@ function lib_bl_troops_deleteTroop($tid, $uid)
  * @param int $tid the troops id
  * @param int $uid the users id
  * @param string $lng
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_troops_unload($tid, $uid, $lng)
+function unload($tid, $uid, $lng)
 {
 	$lang["lang"] = $lng;
 	include ("language/".$lang["lang"]."/ingame/units.php");
 	include ("language/".$lang["lang"]."/ingame/main.php");
-	$troop = lib_bl_troops_getTroop($tid);
-	$tuid = lib_dal_user_getUIDFromMapPosition($troop["pos_x"], $troop["pos_y"]);
-	lib_dal_resource_addToResources($troop["res"], $troop["amount"], $troop["pos_x"], $troop["pos_y"]);
-	$erg1 = lib_dal_troops_addResToTroop($tid, "", 0);
+	$troop = getTroop($tid);
+	$tuid = \dal\user\getUIDFromMapPosition($troop["pos_x"], $troop["pos_y"]);
+	\dal\resource\addToResources($troop["res"], $troop["amount"], $troop["pos_x"], $troop["pos_y"]);
+	$erg1 = \dal\troops\addResourceToTroop($tid, "", 0);
+
 	if ($erg1)
 	{
-		lib_bl_general_sendMessage(
+		\bl\general\sendMessage(
 			$uid,
 			$tuid,
 			$lang["unloadtitle"],
 			sprintf(
 				$lang["unloadmsg"],
-				lib_dal_user_uid2nick($uid),
+				\dal\user\uid2nick($uid),
 				$troop["amount"],
 				$lang[$troop["res"]]
 			),
 			3
 		);
 		return 1;
-	} else
+	}
+	else
 		return 0;
 }
 
@@ -507,31 +529,31 @@ function lib_bl_troops_unload($tid, $uid, $lng)
  * @param string $target
  * @return array
  */
-function lib_bl_troops_fight($tid, $target, $type)
+function fight($tid, $target, $type)
 {
 	global $lang;
 	$target_exp = explode(':', $target);
-	$troop = lib_bl_troops_getTroop($tid);
+	$troop = getTroop($tid);
 
 	if ($troop['pos_x'].':'.$troop['pos_y'] != $target)
 		return false;
 
-	$target_uid = lib_dal_user_getUIDFromMapPosition($target_exp[0], $target_exp[1]);
-	$target_units = lib_bl_troops_getAtPos($target_uid, $target_exp[0], $target_exp[1], 'units', true, 'kind');
-	$grouped_units = array(
-		'target' => new grouped_units(),
-		'attacker' => new grouped_units(),
+	$target_uid = \dal\user\getUIDFromMapPosition($target_exp[0], $target_exp[1]);
+	$target_units = getAtPosition($target_uid, $target_exp[0], $target_exp[1], 'units', true, 'kind');
+	$groupedUnits = array(
+		'target' => new GroupedUnits(),
+		'attacker' => new GroupedUnits(),
 	);
 
-	$grouped_units['target']->sortUnits($target_units);
-	$grouped_units['target']->setCityDefense($target_exp[0], $target_exp[1]);
-	$grouped_units['target']->setCityAttack($target_exp[0], $target_exp[1]);
+	$groupedUnits['target']->sortUnits($target_units);
+	$groupedUnits['target']->setCityDefense($target_exp[0], $target_exp[1]);
+	$groupedUnits['target']->setCityAttack($target_exp[0], $target_exp[1]);
 
-	$attacker_units = lib_bl_troops_getTroopUnits($tid, 'kind');
-	$grouped_units['attacker']->sortUnits($attacker_units);
+	$attacker_units = getTroopUnits($tid, 'kind');
+	$groupedUnits['attacker']->sortUnits($attacker_units);
 
-	$attacker_speed = $grouped_units['attacker']->getSpeed();
-	$target_speed = $grouped_units['target']->getSpeed();
+	$attacker_speed = $groupedUnits['attacker']->getSpeed();
+	$target_speed = $groupedUnits['target']->getSpeed();
 
 	//calculate, which player hits first
 	$init = rand(1, $attacker_speed + $target_speed);
@@ -542,7 +564,7 @@ function lib_bl_troops_fight($tid, $target, $type)
 		$init = 0;
 
 	//the order of unit types, which the units are attacking
-	$attack_order = array(
+	$attackOrder = array(
 		'range' => array('near', 'range', 'rider'),
 		'near' => array('rider', 'near', 'range'),
 		'rider' => array('range', 'rider', 'near'),
@@ -556,78 +578,80 @@ function lib_bl_troops_fight($tid, $target, $type)
 	{
 		$city = array(
 			'attack' => 0,
-			'defense' => $grouped_units['target']->getCityDefense(),
+			'defense' => $groupedUnits['target']->getCityDefense(),
 		);
 		$all_escaping_attacker = false;
-/*
-		$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][0], $attack_order[$key][0], $city);
-		$grouped_units['attacker']->$key = $r['attacker'];
-		$grouped_units['target']->$attack_order[$key][0] = $r['target'];
-*/
-		for($i = 0; $i <= 2 and !$r['out']; $i++)
+
+//		$r = attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][0], $attack_order[$key][0], $city);
+//		$grouped_units['attacker']->$key = $r['attacker'];
+//		$grouped_units['target']->$attack_order[$key][0] = $r['target'];
+
+		for($i = 0; $i <= 2 && !$r['out']; $i++)
 		{
-			$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
-			$grouped_units['attacker']->$key = $r['attacker'];
-			$grouped_units['target']->$attack_order[$key][$i] = $r['target'];
-		}
-/*
-		if (!$r['out'])
-		{
-			$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][1], $attack_order[$key][1], $city);
-			$grouped_units['attacker']->$key = $r['attacker'];
-			$grouped_units['target']->$attack_order[$key][1] = $r['target'];
+			$r = attack($groupedUnits['attacker']->getUnitAmountByType($key), $key,
+				$groupedUnits['target']->getUnitAmountByType($attackOrder[$key][$i]), $attackOrder[$key][$i], $city);
+			$groupedUnits['attacker']->setUnitAmountByType($key, $r['attacker']);
+			$groupedUnits['target']->setUnitAmountByType($attackOrder[$key][$i], $r['target']);
 		}
 
-		if (!$r['out'])
-		{
-			$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][2], $attack_order[$key][2], $city);
-			$grouped_units['attacker']->$key = $r['attacker'];
-			$grouped_units['target']->$attack_order[$key][2] = $r['target'];
-		}
-*/
+//		if (!$r['out'])
+//		{
+//			$r = attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][1], $attack_order[$key][1], $city);
+//			$grouped_units['attacker']->$key = $r['attacker'];
+//			$grouped_units['target']->$attack_order[$key][1] = $r['target'];
+//		}
+//
+//		if (!$r['out'])
+//		{
+//			$r = attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][2], $attack_order[$key][2], $city);
+//			$grouped_units['attacker']->$key = $r['attacker'];
+//			$grouped_units['target']->$attack_order[$key][2] = $r['target'];
+//		}
+
 		foreach ($r['lost_units'] as $lost_units_history)
-			$grouped_units['target']->addLostUnits(0, $lost_units_history);
+			$groupedUnits['target']->addLostUnits(0, $lost_units_history);
 
-		$all_escaping_target = $grouped_units['target']->checkForAllEscaping();
+		$all_escaping_target = $groupedUnits['target']->checkForAllEscaping();
 	}
 	else
 	{
 		$city = array(
-			'attack' => $grouped_units['target']->getCityAttack(),
+			'attack' => $groupedUnits['target']->getCityAttack(),
 			'defense' => 0,
 		);
 		$all_escaping_target = false;
 
-		for($i = 0; $i <= 2 and !$r['out']; $i++)
+		for($i = 0; $i <= 2 && !$r['out']; $i++)
 		{
-			$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
-			$grouped_units['target']->$key = $r['target'];
-			$grouped_units['attacker']->$attack_order[$key][$i] = $r['attacker'];
+			$r = attack($groupedUnits['target']->getUnitAmountByType($key), $key,
+				$groupedUnits['attacker']->getUnitAmountByType($attackOrder[$key][$i]), $attackOrder[$key][$i], $city);
+			$groupedUnits['target']->setUnitAmountByType($key, $r['attacker']);
+			$groupedUnits['attacker']->setUnitAmountByType($attackOrder[$key][$i], $r['target']);
 		}
-/*
-		$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][0], $attack_order[$key][0], $city);
-		$grouped_units['target']->$key = $r['attacker'];
-		$grouped_units['attacker']->$attack_order[$key][0] = $r['target'];
-		if (!$r['out'])
-		{
-			$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][1], $attack_order[$key][1], $city);
-			$grouped_units['target']->$key = $r['attacker'];
-			$grouped_units['attacker']->$attack_order[$key][1] = $r['target'];
-		}
-		if (!$r['out'])
-		{
-			$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][2], $attack_order[$key][2], $city);
-			$grouped_units['target']->$key = $r['attacker'];
-			$grouped_units['attacker']->$attack_order[$key][2] = $r['target'];
-		}
-*/
-		foreach ($r['lost_units'] as $lost_units_history)
-			$grouped_units['attacker']->addLostUnits(0, $lost_units_history);
 
-		$all_escaping_attacker = $grouped_units['attacker']->checkForAllEscaping();
+//		$r = attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][0], $attack_order[$key][0], $city);
+//		$grouped_units['target']->$key = $r['attacker'];
+//		$grouped_units['attacker']->$attack_order[$key][0] = $r['target'];
+//		if (!$r['out'])
+//		{
+//			$r = attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][1], $attack_order[$key][1], $city);
+//			$grouped_units['target']->$key = $r['attacker'];
+//			$grouped_units['attacker']->$attack_order[$key][1] = $r['target'];
+//		}
+//		if (!$r['out'])
+//		{
+//			$r = attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][2], $attack_order[$key][2], $city);
+//			$grouped_units['target']->$key = $r['attacker'];
+//			$grouped_units['attacker']->$attack_order[$key][2] = $r['target'];
+//		}
+
+		foreach ($r['lost_units'] as $lost_units_history)
+			$groupedUnits['attacker']->addLostUnits(0, $lost_units_history);
+
+		$all_escaping_attacker = $groupedUnits['attacker']->checkForAllEscaping();
 	}
 
-	if (!$all_escaping_target and !$all_escaping_attacker)
+	if (!$all_escaping_target && !$all_escaping_attacker)
 	{
 		//round based attacking
 		$old_init = $init;
@@ -637,40 +661,41 @@ function lib_bl_troops_fight($tid, $target, $type)
 
 			if ($init)
 			{
-				foreach ($grouped_units['attacker'] as $key => &$attacker)
+				foreach ($groupedUnits['attacker'] as $key => &$attacker)
 				{
 					$city = array(
 						'attack' => 0,
-						'defense' => $grouped_units['target']->getCityDefense(),
+						'defense' => $groupedUnits['target']->getCityDefense(),
 					);
 
-					for($i = 0; $i <= 2 and !$r['out']; $i++)
+					for($i = 0; $i <= 2 && !$r['out']; $i++)
 					{
-						$r = lib_bl_troops_attack($grouped_units['attacker']->$key, $key, $grouped_units['target']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
-						$grouped_units['attacker']->$key = $r['attacker'];
-						$grouped_units['target']->$attack_order[$key][$i] = $r['target'];
+						$r = attack($groupedUnits['attacker']->getUnitAmountByType($key), $key,
+							$groupedUnits['target']->getUnitAmountByType($attackOrder[$key][$i]), $attackOrder[$key][$i], $city);
+						$groupedUnits['attacker']->setUnitAmountByType($key, $r['attacker']);
+						$groupedUnits['target']->setUnitAmountByType($attackOrder[$key][$i], $r['target']);
 					}
-/*
-					$r = lib_bl_troops_attack($attacker, $key, $grouped_units['target']->$attack_order[$key][0], $attack_order[$key][0], $city);
-					$attacker = $r['attacker'];
-					$grouped_units['target']->$attack_order[$key][0] = $r['target'];
-					if (!$r['out'])
-					{
-						$r = lib_bl_troops_attack($attacker, $key, $grouped_units['target']->$attack_order[$key][1], $attack_order[$key][1], $city);
-						$attacker = $r['attacker'];
-						$grouped_units['target']->$attack_order[$key][1] = $r['target'];
-					}
-					if (!$r['out'])
-					{
-						$r = lib_bl_troops_attack($attacker, $key, $grouped_units['target']->$attack_order[$key][2], $attack_order[$key][2], $city);
-						$attacker = $r['attacker'];
-						$grouped_units['target']->$attack_order[$key][2] = $r['target'];
-					}
-*/
-					foreach ($r['lost_units'] as $lost_units_history)
-						$grouped_units['target']->addLostUnits($i, $lost_units_history);
 
-					$all_escaping_target = $grouped_units['target']->checkForAllEscaping();
+//					$r = attack($attacker, $key, $grouped_units['target']->$attack_order[$key][0], $attack_order[$key][0], $city);
+//					$attacker = $r['attacker'];
+//					$grouped_units['target']->$attack_order[$key][0] = $r['target'];
+//					if (!$r['out'])
+//					{
+//						$r = attack($attacker, $key, $grouped_units['target']->$attack_order[$key][1], $attack_order[$key][1], $city);
+//						$attacker = $r['attacker'];
+//						$grouped_units['target']->$attack_order[$key][1] = $r['target'];
+//					}
+//					if (!$r['out'])
+//					{
+//						$r = attack($attacker, $key, $grouped_units['target']->$attack_order[$key][2], $attack_order[$key][2], $city);
+//						$attacker = $r['attacker'];
+//						$grouped_units['target']->$attack_order[$key][2] = $r['target'];
+//					}
+
+					foreach ($r['lost_units'] as $lost_units_history)
+						$groupedUnits['target']->addLostUnits($i, $lost_units_history);
+
+					$all_escaping_target = $groupedUnits['target']->checkForAllEscaping();
 
 					if ($all_escaping_target)
 						break 2;
@@ -680,40 +705,41 @@ function lib_bl_troops_fight($tid, $target, $type)
 			}
 			else
 			{
-				foreach ($grouped_units['target'] as $key => &$target)
+				foreach ($groupedUnits['target'] as $key => &$target)
 				{
 					$city = array(
-						'attack' => $grouped_units['target']->getCityAttack(),
+						'attack' => $groupedUnits['target']->getCityAttack(),
 						'defense' => 0,
 					);
 
-					for($i = 0; $i <= 2 and !$r['out']; $i++)
+					for($i = 0; $i <= 2 && !$r['out']; $i++)
 					{
-						$r = lib_bl_troops_attack($grouped_units['target']->$key, $key, $grouped_units['attacker']->$attack_order[$key][$i], $attack_order[$key][$i], $city);
-						$grouped_units['target']->$key = $r['target'];
-						$grouped_units['attacker']->$attack_order[$key][$i] = $r['attacker'];
+						$r = attack($groupedUnits['target']->getUnitAmountByType($key), $key,
+							$groupedUnits['attacker']->getUnitAmountByType($attackOrder[$key][$i]), $attackOrder[$key][$i], $city);
+						$groupedUnits['target']->setUnitAmountByType($key, $r['attacker']);
+						$groupedUnits['attacker']->setUnitAmountByType($attackOrder[$key][$i], $r['target']);
 					}
-/*
-					$r = lib_bl_troops_attack($target, $key, $grouped_units['attacker']->$attack_order[$key][0], $attack_order[$key][0], $city);
-					$target = $r['attacker'];
-					$grouped_units['attacker']->$attack_order[$key][0] = $r['target'];
-					if (!$r['out'])
-					{
-						$r = lib_bl_troops_attack($target, $key, $grouped_units['attacker']->$attack_order[$key][1], $attack_order[$key][1], $city);
-						$target = $r['attacker'];
-						$grouped_units['attacker']->$attack_order[$key][1] = $r['target'];
-					}
-					if (!$r['out'])
-					{
-						$r = lib_bl_troops_attack($target, $key, $grouped_units['attacker']->$attack_order[$key][2], $attack_order[$key][2], $city);
-						$target = $r['attacker'];
-						$grouped_units['attacker']->$attack_order[$key][2] = $r['target'];
-					}
-*/
-					foreach ($r['lost_units'] as $lost_units_history)
-						$grouped_units['attacker']->addLostUnits($i, $lost_units_history);
 
-					$all_escaping_attacker = $grouped_units['attacker']->checkForAllEscaping();
+//					$r = attack($target, $key, $grouped_units['attacker']->$attack_order[$key][0], $attack_order[$key][0], $city);
+//					$target = $r['attacker'];
+//					$grouped_units['attacker']->$attack_order[$key][0] = $r['target'];
+//					if (!$r['out'])
+//					{
+//						$r = attack($target, $key, $grouped_units['attacker']->$attack_order[$key][1], $attack_order[$key][1], $city);
+//						$target = $r['attacker'];
+//						$grouped_units['attacker']->$attack_order[$key][1] = $r['target'];
+//					}
+//					if (!$r['out'])
+//					{
+//						$r = attack($target, $key, $grouped_units['attacker']->$attack_order[$key][2], $attack_order[$key][2], $city);
+//						$target = $r['attacker'];
+//						$grouped_units['attacker']->$attack_order[$key][2] = $r['target'];
+//					}
+
+					foreach ($r['lost_units'] as $lost_units_history)
+						$groupedUnits['attacker']->addLostUnits($i, $lost_units_history);
+
+					$all_escaping_attacker = $groupedUnits['attacker']->checkForAllEscaping();
 
 					if ($all_escaping_attacker)
 						break 2;
@@ -724,13 +750,13 @@ function lib_bl_troops_fight($tid, $target, $type)
 			}
 		}
 	}
-	$all_escaping_attacker = $grouped_units['attacker']->checkForAllEscaping();
+	$all_escaping_attacker = $groupedUnits['attacker']->checkForAllEscaping();
 
-	$all_escaping_target = $grouped_units['target']->checkForAllEscaping();
+	$all_escaping_target = $groupedUnits['target']->checkForAllEscaping();
 
 	//creating the fight result message
-	$attacker_lost_units = $grouped_units['attacker']->getLostUnits();
-	$target_lost_units = $grouped_units['target']->getLostUnits();
+	$attacker_lost_units = $groupedUnits['attacker']->getLostUnits();
+	$target_lost_units = $groupedUnits['target']->getLostUnits();
 
 /* yet not used
 	if ($old_init)
@@ -747,56 +773,56 @@ function lib_bl_troops_fight($tid, $target, $type)
 
 	$msg_html = '[html]';
 	$msg_html .= '<div class="fight_result">';
-	$msg_html .= lib_bl_troops_drawFightMessageRow($lang['unit'], true);
-	$msg_html .= lib_bl_troops_drawFightMessageRow($attacker_units);
-	$msg_html .= lib_bl_troops_drawFightMessageRow($attacker_lost_units);
+	$msg_html .= drawFightMessageRow($lang['unit'], true);
+	$msg_html .= drawFightMessageRow($attacker_units);
+	$msg_html .= drawFightMessageRow($attacker_lost_units);
 	$msg_html .= '</div>';
 	$msg_html .= '[/html]';
 
-	if ($grouped_units['target']->getAllUnitsDead())
+	if ($groupedUnits['target']->getAllUnitsDead())
 		$result = $lang['fight']['glorious_win'];
 	elseif ($all_escaping_target)
 		$result = $lang['fight']['win'];
-	elseif ($grouped_units['attacker']->getAllUnitsDead())
+	elseif ($groupedUnits['attacker']->getAllUnitsDead())
 		$result = $lang['fight']['smash'];
 	elseif ($all_escaping_attacker)
 		$result = $lang['fight']['lose'];
 
-	lib_bl_general_sendMessage(-1, $troop['uid'], $lang['fight']['topic'], sprintf(
+	\bl\general\sendMessage(-1, $troop['uid'], $lang['fight']['topic'], sprintf(
 		$lang['fight']['message'],
-		lib_dal_user_uid2nick($troop['uid']),
-		lib_dal_user_uid2nick($target_uid),
+		\dal\user\uid2nick($troop['uid']),
+		\dal\user\uid2nick($target_uid),
 		$result,
 		$msg_html
 	), 4);
 
 	$msg_html = '[html]';
 	$msg_html .= '<div class="fight_result">';
-	$msg_html .= lib_bl_troops_drawFightMessageRow($lang['unit'], true);
-	$msg_html .= lib_bl_troops_drawFightMessageRow($target_units);
-	$msg_html .= lib_bl_troops_drawFightMessageRow($target_lost_units);
+	$msg_html .= drawFightMessageRow($lang['unit'], true);
+	$msg_html .= drawFightMessageRow($target_units);
+	$msg_html .= drawFightMessageRow($target_lost_units);
 	$msg_html .= '</div>';
 	$msg_html .= '[/html]';
 
-	if ($grouped_units['attacker']->getAllUnitsDead())
+	if ($groupedUnits['attacker']->getAllUnitsDead())
 		$result = $lang['fight']['glorious_win'];
 	elseif ($all_escaping_attacker)
 		$result = $lang['fight']['win'];
-	elseif ($grouped_units['target']->getAllUnitsDead())
+	elseif ($groupedUnits['target']->getAllUnitsDead())
 		$result = $lang['fight']['smash'];
 	elseif ($all_escaping_target)
 		$result = $lang['fight']['lose'];
 
-	lib_bl_general_sendMessage(-1, $target_uid, $lang['fight']['topic'], sprintf(
+	\bl\general\sendMessage(-1, $target_uid, $lang['fight']['topic'], sprintf(
 		$lang['fight']['message'],
-		lib_dal_user_uid2nick($target_uid),
-		lib_dal_user_uid2nick($troop['uid']),
+		\dal\user\uid2nick($target_uid),
+		\dal\user\uid2nick($troop['uid']),
 		$result,
 		$msg_html
 	), 4);
 
-	$grouped_units['attacker']->reduceUnits();
-	$grouped_units['target']->reduceUnits();
+	$groupedUnits['attacker']->reduceUnits();
+	$groupedUnits['target']->reduceUnits();
 
 	return array('attacker' => ($all_escaping_attacker ? false : true), 'target' => ($all_escaping_target ? false : true));
 }
@@ -810,7 +836,7 @@ function lib_bl_troops_fight($tid, $target, $type)
  * @param array $city
  * @return array
  */
-function lib_bl_troops_attack($attacker, $attacker_type, $target, $target_type, $city)
+function attack($attacker, $attacker_type, $target, $target_type, $city)
 {
 	$out = false;
 
@@ -818,17 +844,17 @@ function lib_bl_troops_attack($attacker, $attacker_type, $target, $target_type, 
 	{
 		case 'range':
 		{
-			$fight_result = lib_bl_troops_unitFight($attacker, $target, $city);
+			$fight_result = unitFight($attacker, $target, $city);
 			break;
 		}
 		case 'near':
 		{
-			$fight_result = lib_bl_troops_unitFight($attacker, $target, $city);
+			$fight_result = unitFight($attacker, $target, $city);
 			break;
 		}
 		case 'rider':
 		{
-			$fight_result = lib_bl_troops_unitFight($attacker, $target, $city);
+			$fight_result = unitFight($attacker, $target, $city);
 			break;
 		}
 	}
@@ -843,14 +869,14 @@ function lib_bl_troops_attack($attacker, $attacker_type, $target, $target_type, 
  * @param object $target
  * @return array
  */
-function lib_bl_troops_unitFight($attacker, $target, $city)
+function unitFight($attacker, $target, $city)
 {
 	$out = false;
 	$lost_units_history = array();
 
-	if (is_array($attacker) and count($attacker) > 0)
+	if (is_array($attacker) && count($attacker) > 0)
 	{
-		if (is_array($target) and count($target) > 0)
+		if (is_array($target) && count($target) > 0)
 		{
 			foreach ($attacker as $attacker_key => &$attacker_unit)
 			{
@@ -899,9 +925,9 @@ function lib_bl_troops_unitFight($attacker, $target, $city)
 						$lost_units = 0;
 						foreach ($target as $key => &$target_unit)
 						{
-							if ($key !== 'total_count' and $target_unit['count'] > 0)
+							if ($key !== 'total_count' && $target_unit['count'] > 0)
 							{
-								$stats = lib_dal_troops_getUnitStats($target_unit['kind']);
+								$stats = \dal\troops\getUnitStats($target_unit['kind']);
 
 								if (!$target_unit['escaping'])
 								{
@@ -959,7 +985,7 @@ function lib_bl_troops_unitFight($attacker, $target, $city)
  * @param boolean $is_lang
  * @return string
  */
-function lib_bl_troops_drawFightMessageRow($valuelist, $is_lang = false)
+function drawFightMessageRow($valuelist, $is_lang = false)
 {
 	$html = '<div class="row">';
 	for ($i = 0; $i < 19; $i++)
@@ -993,11 +1019,11 @@ function lib_bl_troops_drawFightMessageRow($valuelist, $is_lang = false)
  * grouping of the units
  * @author Neithan
  */
-class grouped_units
+class GroupedUnits
 {
-	var $near = array();
-	var $range = array();
-	var $rider = array();
+	private $near = array();
+	private $range = array();
+	private $rider = array();
 	private $unit_groups = array(
 		'near' => array(2, 3, 5, 6, 7, 11, 12, 13, 14, 18),
 		'range' => array(1, 4, 9, 16, 17),
@@ -1044,7 +1070,7 @@ class grouped_units
 				elseif (in_array($unit['kind'], $this->unit_groups['rider']))
 					$type = 'rider';
 
-				$unit['stats'] = lib_dal_troops_getUnitStats($unit['kind']);
+				$unit['stats'] = \dal\troops\getUnitStats($unit['kind']);
 
 				foreach ($unit['stats'] as $key => &$stat)
 					if ($key != 'usid')
@@ -1068,11 +1094,11 @@ class grouped_units
 
 		foreach ($this as $key => $value)
 		{
-			if ($key !== 'unit_groups' and $key !== 'lost_units' and $key !== 'city_defense' and $key !== 'city_attack' and $key !== 'factor')
+			if ($key !== 'unit_groups' && $key !== 'lost_units' && $key !== 'city_defense' && $key !== 'city_attack' && $key !== 'factor')
 			{
 				foreach ($value as $key2 => $part)
 				{
-					$stats = lib_dal_troops_getUnitStats($part['kind']);
+					$stats = \dal\troops\getUnitStats($part['kind']);
 					$speed += (int) $stats['speed'];
 				}
 			}
@@ -1090,15 +1116,15 @@ class grouped_units
 		$near = $range = $rider = 0;
 		foreach ($this as $key => $value)
 		{
-			if ($key == 'near' and $key == 'range' and $key == 'rider' and count($value) > 0)
+			if ($key == 'near' && $key == 'range' && $key == 'rider' && count($value) > 0)
 			{
 				foreach ($value as $key2 => $part)
 				{
-					if ($part['escaping'] or $part['count'] == 0)
+					if ($part['escaping'] || $part['count'] == 0)
 						$$key++;
 				}
 			}
-			elseif ($key !== 'unit_groups' and count($value) === 0 and $$key === 0)
+			elseif ($key !== 'unit_groups' && count($value) === 0 && $$key === 0)
 				$$key--;
 		}
 
@@ -1150,13 +1176,13 @@ class grouped_units
 	 */
 	function setCityDefense($x, $y)
 	{
-		$defense_buildings = lib_dal_buildings_getDefense($x, $y);
+		$defense_buildings = \dal\buildings\getDefense($x, $y);
 
 		$this->city_defense = (int) 75;
 
 		foreach ($defense_buildings as $defense)
 		{
-			$values = lib_dal_buildings_getStats($defense['kind'], $defense['upgrade_lvl']);
+			$values = \dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
 			$this->city_defense += (int) $values['defense'] + ($defense['lvl'] * $values['defense'] * $this->factor);
 		}
 	}
@@ -1177,11 +1203,11 @@ class grouped_units
 	 */
 	function setCityAttack($x, $y)
 	{
-		$defense_buildings = lib_dal_buildings_getDefense($x, $y);
+		$defense_buildings = \dal\buildings\getDefense($x, $y);
 
 		foreach ($defense_buildings as $defense)
 		{
-			$values = lib_dal_buildings_getStats($defense['kind'], $defense['upgrade_lvl']);
+			$values = \dal\buildings\getStats($defense['kind'], $defense['upgrade_lvl']);
 			$this->city_attack += (int) $values['attack'] + ($defense['lvl'] * $values['attack'] * $this->factor);
 		}
 	}
@@ -1206,9 +1232,9 @@ class grouped_units
 		foreach ($units as $unit)
 		{
 			if ($unit['count'] > 0)
-				lib_dal_troops_updateUnitCount($unit['unid'], $unit['count']);
+				\dal\troops\updateUnitCount($unit['unid'], $unit['count']);
 			else
-				lib_dal_troops_deleteUnit($unit['unid']);
+				\dal\troops\deleteUnit($unit['unid']);
 		}
 	}
 
@@ -1227,6 +1253,28 @@ class grouped_units
 
 		return $all_dead;
 	}
+
+	/**
+	 * get the current amount of units of the specified type
+	 * @author Neithan
+	 * @param String $type
+	 * @return int
+	 */
+	function getUnitAmountByType($type)
+	{
+		return $this->$type;
+	}
+
+	/**
+	 * set the amount of units of the specified type
+	 * @author Neithan
+	 * @param String $type
+	 * @param int $amount
+	 */
+	function setUnitAmountByType($type, $amount)
+	{
+		$this->$type = $amount;
+	}
 }
 
 /**
@@ -1235,8 +1283,7 @@ class grouped_units
  * @param int $unid
  * @return int
  */
-function lib_bl_troops_removeFromTroop($unid)
+function removeFromTroop($unid)
 {
-	return lib_dal_troops_removeFromTroop($unid);
+	return \dal\troops\removeFromTroop($unid);
 }
-?>

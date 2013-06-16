@@ -14,5 +14,5 @@ include('lib/dal/user.php');
 include('lib/dal/clan.php');
 include('lib/dal/map.php');
 include('lib/bl/map.php');
-lib_bl_map_createPNGMap($con, "pictures/dynamic_map.png", 2); // display the map to the user
+bl\map\createPNGMap($con, "pictures/dynamic_map.png", 2); // display the map to the user
 ?>

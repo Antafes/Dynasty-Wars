@@ -10,7 +10,7 @@
 				</div>
 				<div>
 					Marian "Neithan" Pollzien<br/>
-					Nordwalder Straße 94<br/>
+					Nordwalder Stra&szlig;e 94<br/>
 					48268 Greven Westf.<br/>
 					<a href="mailto:{$mailNeithan|escape: 'hex'}">E-Mail</a>
 				</div>

@@ -1,17 +1,19 @@
 <?php
+namespace dal\tribunal;
+
 /**
  * returns all open hearings
  * @author Neithan
  * @return array
  */
-function lib_dal_tribunal_getAllHearings()
+function getAllHearings()
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
-		WHERE decision_date = 0
+		WHERE decision_datetime = 0
 			AND !deleted
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -20,14 +22,14 @@ function lib_dal_tribunal_getAllHearings()
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllCauses($lang)
+function getAllCauses($lang)
 {
 	$sql = '
 		SELECT tcid, cause FROM dw_tribunal_causes
-		WHERE language = '.mysql_real_escape_string($lang).'
+		WHERE language = '.\util\mysql\sqlval($lang).'
 		ORDER BY sort
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -36,16 +38,16 @@ function lib_dal_tribunal_getAllCauses($lang)
  * @param int $uid
  * @return array
  */
-function lib_dal_tribunal_getAllMessages($uid)
+function getAllMessages($uid)
 {
 	$sql = '
 		SELECT msgid, title FROM dw_message
-		WHERE uid_recipient = '.mysql_real_escape_string($uid).'
-			AND ((date_read >= '.(time()-(14*24*60*60)).'
-				OR date_read = 0)
+		WHERE uid_recipient = '.\util\mysql\sqlval($uid).'
+			AND ((read_datetime >= NOW()
+				OR read_datetime = 0)
 				OR archive = 1)
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -54,16 +56,16 @@ function lib_dal_tribunal_getAllMessages($uid)
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllRules($lang)
+function getAllRules($lang)
 {
 	$sql = '
 		SELECT ruid, paragraph, title
 		FROM dw_tribunal_rules
-		WHERE lang = "'.mysql_real_escape_string($lang).'"
+		WHERE lang = '.\util\mysql\sqlval($lang).'
 			AND !deleted
 		ORDER BY paragraph ASC
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -72,7 +74,7 @@ function lib_dal_tribunal_getAllRules($lang)
  * @param string $lang
  * @return array
  */
-function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
+function getAllRuleTexts($ruid, $lang)
 {
 	$sql = '
 		SELECT
@@ -81,12 +83,12 @@ function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
 			subclause,
 			description
 		FROM dw_tribunal_rules_texts
-		WHERE ruid = '.mysql_real_escape_string($ruid).'
-			AND lang = "'.mysql_real_escape_string($lang).'"
+		WHERE ruid = '.\util\mysql\sqlval($ruid).'
+			AND lang = '.\util\mysql\sqlval($lang).'
 			AND !deleted
 		ORDER BY clause, subclause
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -97,7 +99,7 @@ function lib_dal_tribunal_getAllRuleTexts($ruid, $lang)
  * @param string $title
  * @return int
  */
-function lib_dal_tribunal_insertRule($language, $paragraph, $title)
+function insertRule($language, $paragraph, $title)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_rules (
@@ -105,12 +107,12 @@ function lib_dal_tribunal_insertRule($language, $paragraph, $title)
 			paragraph,
 			title
 		) VALUES (
-			"'.mysql_real_escape_string($language).'",
-			'.mysql_real_escape_string($paragraph).',
-			"'.mysql_real_escape_string($title).'"
+			'.\util\mysql\sqlval($language).',
+			'.\util\mysql\sqlval($paragraph).',
+			'.\util\mysql\sqlval($title).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -122,7 +124,7 @@ function lib_dal_tribunal_insertRule($language, $paragraph, $title)
  * @param string $text
  * @return int
  */
-function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
+function insertRuleText($ruid, $language, $clause, $text, $subclause = 0)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_rules_texts (
@@ -132,14 +134,14 @@ function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subc
 			subclause,
 			description
 		) VALUES (
-			'.mysql_real_escape_string($ruid).',
-			"'.mysql_real_escape_string($language).'",
-			'.mysql_real_escape_string($clause).',
-			'.mysql_real_escape_string($subclause).',
-			"'.mysql_real_escape_string($text).'"
+			'.\util\mysql\sqlval($ruid).',
+			'.\util\mysql\sqlval($language).',
+			'.\util\mysql\sqlval($clause).',
+			'.\util\mysql\sqlval($subclause).',
+			'.\util\mysql\sqlval($text).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -150,14 +152,14 @@ function lib_dal_tribunal_insertRuleText($ruid, $language, $clause, $text, $subc
  * @param int $key
  * @return int
  */
-function lib_dal_tribunal_deleteRule($table, $field, $key)
+function deleteRule($table, $field, $key)
 {
 	$sql = '
-		UPDATE '.mysql_real_escape_string($table).'
+		UPDATE '.\util\mysql\sqlval($table, false).'
 		SET deleted = 1
-		WHERE '.mysql_real_escape_string($field).' = '.mysql_real_escape_string($key).'
+		WHERE '.\util\mysql\sqlval($field, false).' = '.\util\mysql\sqlval($key).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -169,7 +171,7 @@ function lib_dal_tribunal_deleteRule($table, $field, $key)
  * @param string $description
  * @return int
  */
-function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
+function insertHearing($suitor, $accused, $cause, $description)
 {
 	$sql = '
 		INSERT INTO dw_tribunal (
@@ -177,16 +179,16 @@ function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
 			accused,
 			cause,
 			description,
-			date
+			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($suitor).',
-			'.mysql_real_escape_string($accused).',
-			"'.mysql_real_escape_string($cause).'",
-			"'.mysql_real_escape_string($description).'",
-			'.time().'
+			'.\util\mysql\sqlval($suitor).',
+			'.\util\mysql\sqlval($accused).',
+			'.\util\mysql\sqlval($cause).',
+			'.\util\mysql\sqlval($description).',
+			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -197,22 +199,22 @@ function lib_dal_tribunal_insertHearing($suitor, $accused, $cause, $description)
  * @param string $from
  * @return int
  */
-function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
+function insertArgument($tid, $msgid, $from)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_arguments (
 			tid,
 			msgid,
 			`from`,
-			date_added
+			added_datetime
 		) VALUES (
-			'.mysql_real_escape_string($tid).',
-			'.mysql_real_escape_string($msgid).',
-			"'.mysql_real_escape_string($from).'",
-			'.time().'
+			'.\util\mysql\sqlval($tid).',
+			'.\util\mysql\sqlval($msgid).',
+			'.\util\mysql\sqlval($from).',
+			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -222,14 +224,14 @@ function lib_dal_tribunal_insertArgument($tid, $msgid, $from)
  * @param int $lang_id
  * @return array
  */
-function lib_dal_tribunal_getCause($tcid, $lang_id)
+function getCause($tcid, $lang_id)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_causes
-		WHERE tcid = '.mysql_real_escape_string($tcid).'
-			AND language = '.mysql_real_escape_string($lang_id).'
+		WHERE tcid = '.\util\mysql\sqlval($tcid).'
+			AND language = '.\util\mysql\sqlval($lang_id).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -238,13 +240,13 @@ function lib_dal_tribunal_getCause($tcid, $lang_id)
  * @param int $tid
  * @return array
  */
-function lib_dal_tribunal_getHearing($tid)
+function getHearing($tid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -254,16 +256,17 @@ function lib_dal_tribunal_getHearing($tid)
  * @param bool $approved
  * @return array
  */
-function lib_dal_tribunal_getArguments($tid, $approved)
+function getArguments($tid, $approved)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	if ($approved == false)
 		$sql .= '		AND approved = 1
 	';
-	return lib_util_mysqlQuery($sql, true);
+
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -273,14 +276,14 @@ function lib_dal_tribunal_getArguments($tid, $approved)
  * @param int $approved
  * @return int
  */
-function lib_dal_tribunal_approveArgument($aid, $approved)
+function approveArgument($aid, $approved)
 {
 	$sql = '
 		UPDATE dw_tribunal_arguments
-		SET approved = '.mysql_real_escape_string($approved).'
-		WHERE aid = '.mysql_real_escape_string($aid).'
+		SET approved = '.\util\mysql\sqlval($approved).'
+		WHERE aid = '.\util\mysql\sqlval($aid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -289,15 +292,15 @@ function lib_dal_tribunal_approveArgument($aid, $approved)
  * @param int $tid
  * @return int
  */
-function lib_dal_tribunal_recallHearing($tid, $uid)
+function recallHearing($tid, $uid)
 {
 	$sql = '
 		UPDATE dw_tribunal
 		SET deleted = 1,
-			deleted_by = '.mysql_real_escape_string($uid).'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+			deleted_by = '.\util\mysql\sqlval($uid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -306,13 +309,13 @@ function lib_dal_tribunal_recallHearing($tid, $uid)
  * @param int $aid
  * @return array
  */
-function lib_dal_tribunal_getArgument($aid)
+function getArgument($aid)
 {
 	$sql = '
 		SELECT * FROM dw_tribunal_arguments
-		WHERE aid = '.mysql_real_escape_string($aid).'
+		WHERE aid = '.\util\mysql\sqlval($aid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -323,16 +326,16 @@ function lib_dal_tribunal_getArgument($aid)
  * @param string $reason
  * @return int
  */
-function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
+function makeDecision($tid, $decision, $reason)
 {
 	$sql = '
 		UPDATE dw_tribunal
-		SET decision = "'.mysql_real_escape_string($decision).'",
-			reason = "'.mysql_real_escape_string($reason).'",
-			decision_date = '.time().'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET decision = '.\util\mysql\sqlval($decision).',
+			reason = '.\util\mysql\sqlval($reason).',
+			decision_datetime = NOW()
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -342,14 +345,14 @@ function lib_dal_tribunal_makeDecision($tid, $decision, $reason)
  * @param int $block
  * @return int
  */
-function lib_dal_tribunal_blockComments($tid, $block)
+function blockComments($tid, $block)
 {
 	$sql = '
 		UPDATE dw_tribunal
-		SET block_comments = '.mysql_real_escape_string($block).'
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		SET block_comments = '.\util\mysql\sqlval($block).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -358,23 +361,23 @@ function lib_dal_tribunal_blockComments($tid, $block)
  * @param int $tid
  * @return array
  */
-function lib_dal_tribunal_getComments($tid)
+function getComments($tid)
 {
 	$sql = '
 		SELECT
 			tcoid,
 			writer,
 			comment,
-			date_added,
+			create_datetime,
 			last_changed_from,
-			date_last_changed,
+			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
-		WHERE tid = '.mysql_real_escape_string($tid).'
+		WHERE tid = '.\util\mysql\sqlval($tid).'
 			AND !deleted
-		ORDER BY date_added
+		ORDER BY create_datetime
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -385,22 +388,22 @@ function lib_dal_tribunal_getComments($tid)
  * @param string $comment
  * @return int
  */
-function lib_dal_tribunal_saveComment($tid, $uid, $comment)
+function saveComment($tid, $uid, $comment)
 {
 	$sql = '
 		INSERT INTO dw_tribunal_comments (
 			tid,
 			writer,
 			comment,
-			date_added
+			create_datetime
 		) VALUES (
-			'.mysql_real_escape_string($tid).',
-			'.mysql_real_escape_string($uid).',
-			"'.mysql_real_escape_string($comment).'",
-			'.time().'
+			'.\util\mysql\sqlval($tid).',
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($comment).',
+			NOW()
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -409,14 +412,14 @@ function lib_dal_tribunal_saveComment($tid, $uid, $comment)
  * @param int $tcoid
  * @return int
  */
-function lib_dal_tribunal_deleteComment($tcoid)
+function deleteComment($tcoid)
 {
 	$sql = '
 		UPDATE dw_tribunal_comments
 		SET deleted = 1
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -427,17 +430,17 @@ function lib_dal_tribunal_deleteComment($tcoid)
  * @param int $uid
  * @return int
  */
-function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
+function editComment($tcoid, $comment, $uid)
 {
 	$sql = '
 		UPDATE dw_tribunal_comments
-		SET comment = "'.mysql_real_escape_string($comment).'",
-			last_changed_from = '.mysql_real_escape_string($uid).',
-			date_last_changed = '.time().',
+		SET comment = '.\util\mysql\sqlval($comment).',
+			last_changed_from = '.\util\mysql\sqlval($uid).',
+			changed_datetime = NOW(),
 			changed_count = changed_count + 1
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -445,22 +448,21 @@ function lib_dal_tribunal_editComment($tcoid, $comment, $uid)
  * @param int $tcoid
  * @return array
  */
-function lib_dal_tribunal_getComment($tcoid)
+function getComment($tcoid)
 {
 	$sql = '
 		SELECT
 			tcoid,
 			writer,
 			comment,
-			date_added,
+			create_datetime,
 			last_changed_from,
-			date_last_changed,
+			changed_datetime,
 			changed_count
 		FROM dw_tribunal_comments
-		WHERE tcoid = '.mysql_real_escape_string($tcoid).'
+		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 			AND !deleted
-		ORDER BY date_added
+		ORDER BY create_datetime
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
-?>

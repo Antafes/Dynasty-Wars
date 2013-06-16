@@ -6,12 +6,12 @@ if ($_POST['citychange'])
 	if ($_SESSION['lid'])
 	{
 		$_SESSION["city"] = $_POST['citychange'];
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => $_GET['chose']), true));
+		bl\general\redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 	elseif ($_COOKIE['lid'])
 	{
 		setcookie("city", $_POST['citychange'], time()-604800, "", ".dynasty-wars.de");
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => $_GET['chose']), true));
+		bl\general\redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 }
 if ($_SESSION["lid"]) {
@@ -22,14 +22,14 @@ if ($_SESSION["lid"]) {
 	$lang['lang'] = $_COOKIE['language'];
 }
 //selection of the user informations
-$nick = lib_bl_general_uid2nick($_SESSION['user']->getUID());
-$admin = lib_bl_general_getGameRank($_SESSION['user']->getUID());
+$nick = bl\general\uid2nick($_SESSION['user']->getUID());
+$admin = bl\general\getGameRank($_SESSION['user']->getUID());
 //language
 if (!$lang['lang'])
-	$lang['lang'] = lib_bl_general_getLanguage($_SESSION['user']->getUID());
+	$lang['lang'] = bl\general\getLanguageByUID($_SESSION['user']->getUID());
 
-lib_bl_general_loadLanguageFile('main');
-lib_bl_general_loadLanguageFile('general', null);
+bl\general\loadLanguageFile('main');
+bl\general\loadLanguageFile('general', null);
 
 $smarty->assign('userInfos', array(
 	'city' => $city,
@@ -39,58 +39,27 @@ $smarty->assign('userInfos', array(
 ));
 
 include('lib/bl/resource.inc.php');
-$gameOptions = lib_util_mysqlQuery('SELECT board, adminmail, version FROM dw_game');
+$gameOptions = util\mysql\query('SELECT board, adminmail, version FROM dw_game');
 
-if ($_GET['chose'] == 'buildings')
-{
-	include('lib/bl/buildings.inc.php');
-//check for running build
-	if ($_GET['chose'] == 'buildings' && !$_GET['buildplace'])
-		$is_building = lib_bl_buildings_checkBuild($_SESSION['user']->getUID(), $city);
-}
-elseif ($_GET['chose'] == 'units')
-{
-	include('lib/bl/unit.inc.php');
-	$train_check = lib_bl_unit_train_checkTraining($_SESSION['user']->getUID(), $city);
-}
 //new messages
 $sql = '
 	SELECT COUNT(msgid) FROM dw_message
-	WHERE uid_recipient = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+	WHERE uid_recipient = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 		AND unread
 ';
-$new_msg = lib_util_mysqlQuery($sql);
+$new_msg = util\mysql\query($sql);
 if (!$new_msg)
 	$new_msg = 0;
 
-if ($_GET['chose'] == 'market')
-	$smarty->assign('marketCSS', '<link rel="stylesheet" type="text/css" href="css/market.css" />');
-
-if ($_GET['chose'] == 'map')
-{
-	$mapJS = '<script language="javascript" type="text/javascript" src="lib/js/map.js"></script>';
-	$smarty->assign('mapJS', $mapJS);
-}
-elseif ($_GET['chose'] == 'buildings' || $_GET['chose'] == 'units')
-{
-	if ($_GET['chose'] == 'units')
-		$smarty->assign('unitsJS', '<script language="javascript" type="text/javascript" src="lib/js/unit.js"></script>');
-
-	if (($_GET['chose'] == 'units' && (!$_GET['sub'] || $_GET['sub'] == 'build')) || $_GET['chose'] == 'buildings')
-		$smarty->assign('timerJS', '<script language="javascript" type="text/javascript" src="lib/js/timer.js"></script>');
-}
-elseif ($_GET['chose'] == 'tribunal')
-	$smarty->assign('tribunalAjaxJS', '<script language="javascript" type="text/javascript" src="lib/js/tribunal_ajax.js"></script>');
-
 //actualising the ressources
-$res_buildings = lib_bl_resource_getResourceBuildings($city);
-if (count($res_buildings) > 0)
+$res_buildings = bl\resource\getResourceBuildings($city);
+if ($res_buildings)
 {
 	foreach ($res_buildings as $res_building)
 	{
 		switch($res_building['kind']){
 			case 1:
-				$ricefield = $res_building['lvl'];
+				$paddy = $res_building['lvl'];
 				break;
 			case 2:
 				$lumberjack = $res_building['lvl'];
@@ -109,8 +78,8 @@ if (count($res_buildings) > 0)
 				break;
 		}
 	}
-	if (!$ricefield)
-		$ricefield = 0;
+	if (!$paddy)
+		$paddy = 0;
 	if (!$lumberjack)
 		$lumberjack = 0;
 	if (!$quarry)
@@ -122,61 +91,46 @@ if (count($res_buildings) > 0)
 	if (!$tradepost)
 		$tradepost = 0;
 }
-$max_storage = lib_bl_general_getMaxStorage($city);
-$ressources = lib_bl_resource_newRes($ricefield, $lumberjack, $quarry, $ironmine, $papermill, $tradepost, $city);
-$food = $ressources['food'];
-$wood = $ressources['wood'];
-$rock = $ressources['rock'];
-$iron = $ressources['iron'];
-$paper = $ressources['paper'];
-$koku = $ressources['koku'];
-$troops_moving = lib_bl_troops_checkMoving($_SESSION['user']->getUID());
-$tids = lib_bl_troops_checkTroops($_SESSION['user']->getUID());
+$max_storage = bl\general\getMaxStorage($city);
+$resources = bl\resource\newResources($city);
+$food = $resources['food'];
+$wood = $resources['wood'];
+$rock = $resources['rock'];
+$iron = $resources['iron'];
+$paper = $resources['paper'];
+$koku = $resources['koku'];
+
 $bodyonload = sprintf('r(%d, %d, %d, %d, %d, %d, %f, %f, %f, %f, %f, %f, %f);'."\n", $food, $wood, $rock, $iron, $paper, $koku,
-	lib_bl_resource_income(1, 's', $ricefield, $city), lib_bl_resource_income(2, 's', $lumberjack, $city), lib_bl_resource_income(3, 's', $quarry, $city),
-	lib_bl_resource_income(4, 's', $ironmine, $city), lib_bl_resource_income(5, 's', $papermill, $city), lib_bl_resource_income(6, 's', $tradepost, $city),
+	bl\resource\income(1, 's', $paddy, $city), bl\resource\income(2, 's', $lumberjack, $city), bl\resource\income(3, 's', $quarry, $city),
+	bl\resource\income(4, 's', $ironmine, $city), bl\resource\income(5, 's', $papermill, $city), bl\resource\income(6, 's', $tradepost, $city),
 	$max_storage
 );
-if ($is_building)
-	foreach ($is_building as $build)
-		$bodyonload .= sprintf('timer(\'%s\', \'%s\', \'b%u\');'."\n", date('F d, Y H:i:s', $build['endtime']), date('F d, Y H:i:s'), $build['bid']);
 
-if ($_GET['chose'] == 'units' && $train_check['ok'] && $_GET['sub'] != 'move')
-	$bodyonload .= sprintf('timer(\'%s\', \'%s\', %u);'."\n", date('F d, Y H:i:s', $train_check['endtime']), date('F d, Y H:i:s'), $train_check['kind']);
-elseif ($_GET['chose'] == 'units' && $_GET['sub'] == 'move' && $troops_moving && !$_GET['mode'])
-{
-	foreach ($tids as $tid)
-	{
-		$troop = lib_bl_troops_checkTroop($tid);
-		$bodyonload .= sprintf('timer(%u, %u);'."\n", date('F d, Y H:i:s', $troop['endtime']), date('F d, Y H:i:s'), $tid);
-	}
-}
-
-$smarty->assign('readyJS', lib_util_html_createReadyScript($bodyonload));
+\util\html\load_js_ready_script($bodyonload);
 
 //selection of the map position
-$cities = lib_util_mysqlQuery('
+$cities = util\mysql\query('
 	SELECT
 		CONCAT(map_x, ":", map_y) coords,
 		city
 	FROM dw_map
-	WHERE uid = '.mysql_real_escape_string($_SESSION['user']->getUID()).'
+	WHERE uid = '.util\mysql\sqlval($_SESSION['user']->getUID()).'
 	ORDER BY `city`
 ', true);
 $smarty->assign('cities', $cities);
 foreach ($cities as &$cities_part)
 	$cities_part['city'] = htmlentities ($cities_part['city']);
 
-$menuEntries = lib_bl_gameoptions_getAllEntries();
+$menuEntries = bl\gameOptions\getAllMenuEntries();
 $block_entry = $menuEntries[count($menuEntries)-3];
 $block = 1;
 
 $menu = '';
 foreach ($menuEntries as $menu_entry)
 {
-	if (($menu_entry['menu_name'] == 'home' or $menu_entry['menu_name'] == 'logout' or $menu_entry['menu_name'] == 'acp'))
+	if (($menu_entry['menu_name'] == 'home' || $menu_entry['menu_name'] == 'logout' || $menu_entry['menu_name'] == 'acp'))
 	{
-		if (($menu_entry['menu_name'] == 'acp' and ($_SESSION['user']->getGameRank() == 1 or $_SESSION['user']->getGameRank() == 2) and !$own_uid) or $menu_entry['menu_name'] != 'acp')
+		if (($menu_entry['menu_name'] == 'acp' && ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2) && !$own_uid) || $menu_entry['menu_name'] != 'acp')
 		{
 			$menu .= '<div class="menu3';
 			if ($menu_entry['menu_name'] == 'home')
@@ -184,7 +138,7 @@ foreach ($menuEntries as $menu_entry)
 			$menu .= '">';
 			if ($menu_entry['active'] == 1)
 				$menu .= '<a href="index.php?chose='.$menu_entry['menu_name'].'" class="a2">';
-			$menu .= htmlentities($lang[$menu_entry['menu_name']]);
+			$menu .= $lang[$menu_entry['menu_name']];
 			if ($menu_entry['active'] == 1)
 				$menu .= '</a>';
 			$menu .= '</div>';
@@ -213,7 +167,7 @@ foreach ($menuEntries as $menu_entry)
 
 		if ($menu_entry['active'] == 1)
 			$menu .= '<a href="'.$link.'" class="a2">';
-		$menu .= htmlentities(($lang[$menu_entry['menu_name']] ? $lang[$menu_entry['menu_name']] : $menu_entry['menu_name']));
+		$menu .= ($lang[$menu_entry['menu_name']] ? $lang[$menu_entry['menu_name']] : $menu_entry['menu_name']);
 		if ($menu_entry['active'] == 1)
 			$menu .= '</a>';
 
@@ -228,16 +182,16 @@ foreach ($menuEntries as $menu_entry)
 	}
 }
 $smarty->assign('menu', $menu);
-if ($own_uid or $_SESSION['user']->getGameRank())
+if ($own_uid || $_SESSION['user']->getGameRank())
 {
 	$special_line = '<div class="add_info">';
 	if ($own_uid)
 	{
-		$own_nick = lib_bl_general_uid2nick($own_uid);
-		$special_line .= htmlentities($own_nick).' eingeloggt als '.htmlentities($nick).'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
+		$own_nick = bl\general\uid2nick($own_uid);
+		$special_line .= $own_nick.' eingeloggt als '.$nick.'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
 	}
 	if ($_SESSION['user']->getGameRank() >= 1)
-		$special_line .= htmlentities($lang['gameRank'][$_SESSION['user']->getGameRank()]);
+		$special_line .= $lang['gameRank'][$_SESSION['user']->getGameRank()];
 	else
 		$special_line .= '&nbsp;';
 	$special_line .= '</div>';
@@ -252,12 +206,23 @@ $smarty->assign('ressources', array(
 	'paper' => $lang['paper'],
 	'koku' => $lang['koku'],
 	'storage' => $lang['storage'],
-	'food_escaped' => htmlentities($lang['food']),
-	'wood_escaped' => htmlentities($lang['wood']),
-	'rock_escaped' => htmlentities($lang['rock']),
-	'iron_escaped' => htmlentities($lang['iron']),
-	'paper_escaped' => htmlentities($lang['paper']),
-	'koku_escaped' => htmlentities($lang['koku']),
-	'storage_escaped' => htmlentities($lang['storage']),
+	'food_escaped' => $lang['food'],
+	'wood_escaped' => $lang['wood'],
+	'rock_escaped' => $lang['rock'],
+	'iron_escaped' => $lang['iron'],
+	'paper_escaped' => $lang['paper'],
+	'koku_escaped' => $lang['koku'],
+	'storage_escaped' => $lang['storage'],
 ));
 $smarty->assign('storage', $max_storage);
+
+// load css files
+\util\html\load_css('jquery-ui-1.10.3.custom');
+\util\html\load_css('main');
+
+// load js files
+\util\html\load_js('jquery-1.9.1.min');
+\util\html\load_js('jquery-ui-1.10.3.custom.min');
+\util\html\load_js('res');
+\util\html\load_js('several');
+\util\html\load_js('ajax_helper');

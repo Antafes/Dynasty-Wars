@@ -1,4 +1,3 @@
 <?php
-include_once('lib/dal/gameoptions.php');
-include_once('lib/bl/gameoptions.php');
-?>
+require_once(__DIR__.'/../dal/gameoptions.php');
+require_once(__DIR__.'/../bl/gameoptions.php');

@@ -1,33 +1,36 @@
 <?php
+namespace dal\gameOptions;
+
 /**
  * get the specified menu entry
  * @author Neithan
  * @param string $entryName
  * @return array
  */
-function lib_dal_gameoptions_getEntry($entryName)
+function getMenuEntry($entryName)
 {
 	$sql = '
 		SELECT *
 		FROM dw_game_menu
-		WHERE menu_name = "'.mysql_real_escape_string($entryName).'"
+		WHERE menu_name = '.\util\mysql\sqlval($entryName).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
+
 /**
  * get all menu entries
  * @author Neithan
  * @param boolean $visible (optional)
  * @return array
  */
-function lib_dal_gameoptions_getAllEntries($visible = true)
+function getAllMenuEntries($visible = true)
 {
 	$sql = '
 		SELECT *
 		FROM dw_game_menu
 		'.($visible ? 'WHERE visible = 1' : '').'
 		ORDER BY sort ASC';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -37,16 +40,16 @@ function lib_dal_gameoptions_getAllEntries($visible = true)
  * @param int $active
  * @return int
  */
-function lib_dal_gameoptions_setEntry($game_menu_id, $active, $sort, $visible)
+function setMenuEntry($game_menu_id, $active, $sort, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
-		SET active = '.mysql_real_escape_string($active).',
-			sort = '.mysql_real_escape_string($sort).',
-			visible = '.mysql_real_escape_string($visible).'
-		WHERE game_menu_id = '.mysql_real_escape_string($game_menu_id).'
+		SET active = '.\util\mysql\sqlval($active).',
+			sort = '.\util\mysql\sqlval($sort).',
+			visible = '.\util\mysql\sqlval($visible).'
+		WHERE game_menu_id = '.\util\mysql\sqlval($game_menu_id).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -56,13 +59,23 @@ function lib_dal_gameoptions_setEntry($game_menu_id, $active, $sort, $visible)
  * @param int $visible
  * @return int
  */
-function lib_dal_gameoptions_setAllEntries($active, $visible)
+function setAllMenuEntries($active, $visible)
 {
 	$sql = '
 		UPDATE dw_game_menu
-		SET active = '.mysql_real_escape_string($active).',
-			visible = '.mysql_real_escape_string($visible).'
+		SET active = '.\util\mysql\sqlval($active).',
+			visible = '.\util\mysql\sqlval($visible).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
-?>
+
+/**
+ * get the game options
+ * @author Neithan
+ * @return array
+ */
+function getGameOptions()
+{
+	$sql = 'SELECT * FROM dw_game';
+	return \util\mysql\query($sql);
+}

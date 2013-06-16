@@ -2,7 +2,7 @@
 $lang += array(
 //menue
 	'home' => 'Home',
-	'buildings' => 'Gebäude',
+	'buildings' => 'GebÃ¤ude',
 	'defense' => 'Verteidigung',
 	'palace' => 'Palast',
 	'units' => 'Einheiten',
@@ -31,9 +31,9 @@ $lang += array(
 //not logged in
 	'nologin' => 'Du hast dich nicht eingeloggt.',
 //directions
-	'back' => 'Zurück',
+	'back' => 'ZurÃ¼ck',
 //errors
-	'nodb' => 'Es wurde keine Datenbank gefunden. Sollte das Problem länger dauern, schreibe bitte eine E-Mail an die folgende Adresse.',
+	'nodb' => 'Es wurde keine Datenbank gefunden. Sollte das Problem lÃ¤nger dauern, schreibe bitte eine E-Mail an die folgende Adresse.',
 //
 	'details' => 'Details',
 //game ranks

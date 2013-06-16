@@ -1,4 +1,6 @@
 <?php
+namespace bl\general;
+
 /**
  * get the ressource amounts of the defined user
  * @author Neithan
@@ -6,15 +8,9 @@
  * @param int $y
  * @return array
  */
-function lib_bl_general_getRes($x, $y)
+function getResources($x, $y)
 {
-	$resources = lib_dal_general_getRes($x, $y);
-	foreach ($resources as $key => $res)
-	{
-		if (!is_numeric($key))
-			$resource[$key] = $res;
-	}
-	return $resource;
+	return \dal\general\getResources($x, $y);
 }
 
 /**
@@ -23,13 +19,24 @@ function lib_bl_general_getRes($x, $y)
  * @param int $uid default = ''
  * @return string
  */
-function lib_bl_general_getLanguage($uid = '')
+function getLanguageByUID($uid = '')
 {
 	if ($uid)
-		$language = lib_dal_general_getLanguage($uid);
+		$language = \dal\general\getLanguageByUID($uid);
 	else
 		$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	return $language;
+}
+
+/**
+ * get all languages
+ * @author Neithan
+ * @param boolean $active (default: true) if true, only usable languages are returned
+ * @return array
+ */
+function getLanguages($active = true)
+{
+	return \dal\general\getLanguages($active);
 }
 
 /**
@@ -39,7 +46,7 @@ function lib_bl_general_getLanguage($uid = '')
  * @param string $format
  * @return number|string returns a number or a string, depending on the format
  */
-function lib_bl_general_formatTime($time, $format)
+function formatTime($time, $format)
 {
 	$d = floor($time / 86400);
 	$time_h = $time - $d * 86400;
@@ -47,47 +54,55 @@ function lib_bl_general_formatTime($time, $format)
 	$time_m = $time_h - $h * 3600;
 	$m = floor($time_m / 60);
 	$s = floor($time_m - $m * 60);
+
 	if ($d == 0)
 		$d = '';
-	if ($format == 'd')
-		return $d;
-	if ($format == "h")
-		return $h;
-	elseif ($format == "m")
-	{
-		if ($m < 10)
-			return "0".$m;
-		else
-			return $m;
-	}
-	elseif ($format == "s")
-	{
-		if ($s < 10)
-			return "0".$s;
-		else
-			return $s;
-	}
-	elseif ($format == "h:m:s")
-	{
-		if ($m < 10)
-			$m = "0".$m;
-		if ($s < 10)
-			$s = "0".$s;
-		return $h.":".$m.":".$s;
-	}
-	elseif ($format == 'd h:m:s')
-	{
-		unset($tf);
-		if ($d)
-			$tf = $d.'d ';
-		if ($h < 10)
-			$h = '0'.$h;
-		if ($m < 10)
-			$m = '0'.$m;
-		if ($s < 10)
-			$s = '0'.$s;
-		$tf .= $h.":".$m.":".$s;
-		return $tf;
+
+	switch ($format) {
+		case 'd':
+			return $d;
+			break;
+		case 'h':
+			return $h;
+			break;
+		case 'm':
+			if ($m < 10)
+				return '0'.$m;
+			else
+				return $m;
+			break;
+		case 's':
+			if ($s < 10)
+				return '0'.$s;
+			else
+				return $s;
+			break;
+		case 'h:m:s':
+			if ($m < 10)
+				$m = '0'.$m;
+
+			if ($s < 10)
+				$s = '0'.$s;
+
+			return $h.':'.$m.':'.$s;
+			break;
+		case 'd h:m:s':
+			$th = '';
+
+			if ($d)
+				$tf .= $d.'d ';
+
+			if ($h < 10)
+				$h = '0'.$h;
+
+			if ($m < 10)
+				$m = '0'.$m;
+
+			if ($s < 10)
+				$s = '0'.$s;
+
+			return $tf.$h.':'.$m.':'.$s;
+			break;
 	}
 }
 
@@ -96,9 +111,9 @@ function lib_bl_general_formatTime($time, $format)
  * @author Neithan
  * @return int
  */
-function lib_bl_general_getSeason()
+function getSeason()
 {
-	return lib_dal_general_getSeason();
+	return \dal\general\getSeason();
 }
 
 /**
@@ -107,14 +122,16 @@ function lib_bl_general_getSeason()
  * @param string $city
  * @return int
  */
-function lib_bl_general_getMaxStorage($city)
+function getMaxStorage($city)
 {
 	$cityexp = explode(':', $city);
-	$storage_building = lib_dal_buildings_getBuildingByKind(22, $cityexp[0], $cityexp[1]);
+	$storage_building = \dal\buildings\getBuildingByKind(22, $cityexp[0], $cityexp[1]);
 	$storage_lvl = $storage_building['lvl'];
+
 	$storage = 10000;
 	for ($i = 1; $i <= $storage_lvl; $i++)
-		$storage = $storage*1.25;
+		$storage = $storage * 1.25;
+
 	return (int)floor($storage);
 }
 
@@ -123,7 +140,7 @@ function lib_bl_general_getMaxStorage($city)
  * @author Neithan
  * @return string
  */
-function lib_bl_general_alpRand()
+function alpRand()
 {
 	$x = rand(1, 26);
 	$alp = array(
@@ -139,10 +156,10 @@ function lib_bl_general_alpRand()
  * @author Neithan
  * @return string
  */
-function lib_bl_general_signRand()
+function signRand()
 {
 	$x = rand(1, 5);
-	$sign = array(1 => "!", 2 => "ง", 3 => "$", 4 => "(", 5 => ")");
+	$sign = array(1 => "!", 2 => "ยง", 3 => "$", 4 => "(", 5 => ")");
 	return $sign[$x];
 }
 
@@ -154,19 +171,18 @@ function lib_bl_general_signRand()
  * @param string $title
  * @param string $message
  * @param int $type
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_general_sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
+function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
 	if (is_numeric($uid_recipient) && is_numeric($uid_sender))
 	{
-		$date = time();
-		$msgerg = lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title, $message, $type);
-		if ($msgerg) {
+		$msgerg = \dal\general\sendMessage($uid_sender, $uid_recipient, $title, $message, $type);
+
+		if ($msgerg)
 			return 1;
-		} else {
+		else
 			return 0;
-		}
 	}
 }
 
@@ -174,37 +190,39 @@ function lib_bl_general_sendMessage($uid_sender, $uid_recipient, $title, $messag
  * deleting user
  * @author Neithan
  * @param int $reguid
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_general_delUser($reguid)
+function deleteUser($reguid)
 {
-	$helperg = lib_dal_user_getClanRank($reguid);
+	$helperg = \dal\user\getClanRank($reguid);
 
-	if (count($helperg) > 0) {
+	if (count($helperg) > 0)
+	{
 		$regcid = $helperg['cid'];
 		$rankid = $helperg['rankid'];
 	}
 
-	if ($rankid == 1) {
-		$helperg = lib_dal_user_getUIDFromCID($regcid);
+	if ($rankid == 1)
+	{
+		$helperg = \dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = lib_dal_clan_getAllUser($regcid);
+			$clan_user = \dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = lib_dal_general_setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = \dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
 
-	$erg1 = lib_dal_general_deleteFrom('dw_user', 'uid = '.$reguid);
-	$erg2 = lib_dal_general_deleteFrom('dw_res', 'uid = '.$reguid);
-	$erg3 = lib_dal_general_updateMap($reguid);
-	$erg4 = lib_dal_general_deleteBuildings($reguid);
-	$erg5 = lib_dal_general_deleteFrom('dw_message', 'uid_recipient = '.$reguid);
-	$erg6 = lib_dal_general_deleteFrom('dw_points', 'uid = '.$reguid);
-	$erg7 = lib_dal_general_deleteFrom('dw_clan_applications', 'uid = '.$reguid);
-	$erg8 = lib_dal_general_deleteFrom('dw_research', 'uid = '.$reguid);
+	$erg1 = \dal\general\deleteFrom('dw_user', 'uid = '.$reguid);
+	$erg2 = \dal\general\deleteFrom('dw_res', 'uid = '.$reguid);
+	$erg3 = \dal\general\updateMap($reguid);
+	$erg4 = \dal\general\deleteBuildings($reguid);
+	$erg5 = \dal\general\deleteFrom('dw_message', 'uid_recipient = '.$reguid);
+	$erg6 = \dal\general\deleteFrom('dw_points', 'uid = '.$reguid);
+	$erg7 = \dal\general\deleteFrom('dw_clan_applications', 'uid = '.$reguid);
+	$erg8 = \dal\general\deleteFrom('dw_research', 'uid = '.$reguid);
 
-	if ($erg1 and $erg2 and $erg3 and $erg4 and $erg5 and $erg6 and $erg7 and $erg8)
+	if ($erg1 && $erg2 && $erg3 && $erg4 && $erg5 && $erg6 && $erg7 && $erg8)
 		return 1;
 	else
 		return 0;
@@ -215,26 +233,26 @@ function lib_bl_general_delUser($reguid)
  * @author Neithan
  * @param int $uid
  * @param int $state
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_general_deactivateUser($uid, $state)
+function deactivateUser($uid, $state)
 {
-	$helperg = lib_dal_user_getClanRank($reguid);
+	$helperg = \dal\user\getClanRank($reguid);
 	if (count($helperg) > 0) {
 		$regcid = $helperg['cid'];
 		$rankid = $helperg['rankid'];
 	}
 	if ($rankid == 1) {
-		$helperg = lib_dal_user_getUIDFromCID($regcid);
+		$helperg = \dal\user\getClanLeaders($regcid);
 		if (count($helperg) <= 0)
 		{
-			$clan_user = lib_dal_clan_getAllUser($regcid);
+			$clan_user = \dal\clan\getAllUser($regcid);
 			$new_leader = rand(0, count($clan_user) - 1);
-			$leaderg = lib_dal_general_setClanLeader($clan_user[$new_leader]['uid']);
+			$leaderg = \dal\general\setClanLeader($clan_user[$new_leader]['uid']);
 		}
 	}
-	$erg1 = lib_dal_general_deactivateUser($uid, $state);
-	if ($erg1 > 0 and $leaderg > 0)
+	$erg1 = \dal\general\deactivateUser($uid, $state);
+	if ($erg1 > 0 && $leaderg > 0)
 		return 1;
 	else
 		return 0;
@@ -247,29 +265,31 @@ function lib_bl_general_deactivateUser($uid, $state)
  * @param int $x
  * @param int $y
  * @param string $city
- * @return <int> returns 1 on success
+ * @return int returns 1 on success
  * 		2 if there is a user at the selected coordinates and the uid's don't match
  * 		3 if the selected coordinates are not on the map or the terrain is 1 (water) or 5 (not walkable)
  * 		4 if the queries didn't return something
  */
-function lib_bl_general_changePos($uid, $x, $y, $city)
+function changePosition($uid, $x, $y, $city)
 {
-	if ($x < 293 and $y < 91)
+	if ($x < 293 && $y < 91)
 		return 3;
 	else
 	{
-		$reguid = lib_dal_user_getUIDFromMapPosition($x, $y);
+		$reguid = \dal\user\getUIDFromMapPosition($x, $y);
+
 		if ($reguid != $uid)
 			return 2;
 		else
 		{
-			$terrain = lib_dal_map_getTerrain($x, $y);
-			if ($terrain != 1 and $terrain != 5)
+			$terrain = \dal\map\getTerrain($x, $y);
+			if ($terrain != 1 && $terrain != 5)
 			{
-				$erg3 = lib_dal_general_changePosition('uid = '.$uid);
-				$where = 'map_x='.mysql_real_escape_string($x).' AND map_y='.mysql_real_escape_string($y);
-				$erg4 = lib_dal_general_changePosition($where, $uid, $city);
-				if ($erg3 and $erg4)
+				$erg3 = \dal\general\changePosition('uid = '.$uid);
+				$where = 'map_x='.\util\mysql\sqlval($x).' AND map_y='.\util\mysql\sqlval($y);
+				$erg4 = \dal\general\changePosition($where, $uid, $city);
+
+				if ($erg3 && $erg4)
 					return 1;
 				else
 					return 4;
@@ -289,13 +309,15 @@ function lib_bl_general_changePos($uid, $x, $y, $city)
  * @param string $sender [optional]
  * @return bool
  */
-function lib_bl_general_sendMail($recipient, $subject, $message, $sender = 'support@dynasty-wars.de')
+function sendMail($recipient, $subject, $message, $sender = 'support@dynasty-wars.de')
 {
 	$mailer = new PHPMailer(true);
 	$mailer->AddReplyTo($recipient);
 	$mailer->From($sender);
+
 	if ($sender == 'support@dynasty-wars.de')
 		$mailer->FromName('Dynasty Wars');
+
 	$mailer->Subject = $subject;
 	$mailer->AltBody = strip_tags($message);
 	$mailer->MsgHTML($message);
@@ -309,9 +331,10 @@ function lib_bl_general_sendMail($recipient, $subject, $message, $sender = 'supp
  * @param string $entry_name
  * @return int
  */
-function lib_bl_general_checkMenuEntry($entry_name)
+function checkMenuEntry($entry_name)
 {
-	$check = lib_dal_general_checkMenuEntry($entry_name);
+	$check = \dal\general\checkMenuEntry($entry_name);
+
 	if ($check < 1)
 		header('Location: index.php?chose=home');
 	else
@@ -324,9 +347,9 @@ function lib_bl_general_checkMenuEntry($entry_name)
  * @param int $uid
  * @return int
  */
-function lib_bl_general_getGameRank($uid)
+function getGameRank($uid)
 {
-	$user = lib_dal_login_getAllData($uid);
+	$user = \dal\login\getAllData($uid);
 	return $user['game_rank'];
 }
 
@@ -336,9 +359,9 @@ function lib_bl_general_getGameRank($uid)
  * @param int $uid
  * @return string
  */
-function lib_bl_general_uid2nick($uid)
+function uid2nick($uid)
 {
-	return lib_dal_user_uid2nick($uid);
+	return \dal\user\uid2nick($uid);
 }
 
 /**
@@ -347,24 +370,9 @@ function lib_bl_general_uid2nick($uid)
  * @param String $nick
  * @return ind
  */
-function lib_bl_general_nick2uid($nick)
+function nick2uid($nick)
 {
-	return lib_dal_user_nick2uid($nick);
-}
-
-/**
- * get the specified message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_bl_general_getMessage($msgid)
-{
-	$parser = new wikiparser;
-	$msg = lib_dal_general_getMsgInfos($msgid);
-	$msg['message'] = preg_replace('#(\\\\r\\\\n|\\\\\\\\r\\\\\\\\n|\\\\n|\\\\\\\\n)#', "\r\n", $msg['message']);
-	$msg['message'] = $parser->parseIt($msg['message']);
-	return $msg;
+	return \dal\user\nick2uid($nick);
 }
 
 /**
@@ -375,7 +383,7 @@ function lib_bl_general_getMessage($msgid)
  * @param string $parameters
  * @return string
  */
-function lib_bl_general_createPageLinks($chose, $pages, $parameters)
+function createPageLinks($chose, $pages, $parameters)
 {
 	$html = '';
 	$parameters = preg_replace('/\&/', '&amp;', $parameters);
@@ -390,32 +398,34 @@ function lib_bl_general_createPageLinks($chose, $pages, $parameters)
  * @param string $target
  * @return void
  */
-function lib_bl_general_redirect($target)
+function redirect($target)
 {
-	header('Location: '.$target);
+	die(header('Location: '.$target));
 }
 
 /**
- * returns a text shortened to the given number of signs
+ * returns a text shortened to the given number of characters
  * @author Neithan
  * @param string $text
- * @param int $signs
+ * @param int $characters
  * @return string
  */
-function lib_bl_general_cutOffText($text, $signs)
+function cutOffText($text, $characters)
 {
 	$text = trim($text);
-	if (strlen($text) > $signs)
+	if (strlen($text) > $characters)
 	{
 		$exp_text = explode(' ', $text);
 		$text_array = array();
 		foreach($exp_text as $part)
 		{
 			 $text_array[] = $part;
-			 $signs -= strlen($part) + 1;
-			 if ($signs <= 0)
+			 $characters -= strlen($part) + 1;
+
+			 if ($characters <= 0)
 			 	break;
 		}
+
 		return implode(' ', $text_array).'...';
 	}
 	else
@@ -428,9 +438,9 @@ function lib_bl_general_cutOffText($text, $signs)
  * @param int $recipient
  * @return int
  */
-function lib_bl_general_getUnreadMessageCount($recipient)
+function getUnreadMessageCount($recipient)
 {
-	$msgs = lib_dal_general_getUnreadMessagesCount($recipient);
+	$msgs = \dal\general\getUnreadMessagesCount($recipient);
 	if (!$msgs)
 		$msgs = 0;
 	return (int)$msgs;
@@ -442,9 +452,10 @@ function lib_bl_general_getUnreadMessageCount($recipient)
  * @param int $uid
  * @return boolean
  */
-function lib_bl_general_getMissionary($uid)
+function getMissionary($uid)
 {
-	$missionary = lib_dal_general_getMissionary($uid);
+	$missionary = \dal\general\getMissionary($uid);
+
 	if ($missionary > 0)
 		return true;
 	else
@@ -453,18 +464,51 @@ function lib_bl_general_getMissionary($uid)
 
 /**
  * loads a language file depending on the chosen language using the given page
- * and the location (default = ingame)
+ * and the location (default = ingame), if the chosen language is not active or
+ * not existing, the fallback language will be loaded
  * @author Neithan
  * @param String $page
  * @param String $location
  * @param boolean $isAjax
+ * @param String $userLang if set, $lang will be returned
+ * @return void/array
  */
-function lib_bl_general_loadLanguageFile($page, $location = 'loggedin', $isAjax = false)
+function loadLanguageFile($page, $location = 'loggedin', $userLang = null)
 {
 	global $lang;
-	$path = '';
-	if ($isAjax)
-		$path .= '../../';
-	$path .= 'language/'.$lang['lang'].'/'.($location ? $location.'/' : '');
+
+	$usedLang = $lang['lang'];
+
+	if($userLang)
+		$usedLang = $userLang;
+
+	if (!\dal\general\checkLanguageIsActive($usedLang))
+		$usedLang = \dal\general\getFallbackLanguage();
+
+	$path = __DIR__.'/../../language/'.$usedLang.'/'.($location ? $location.'/' : '');
 	include_once($path.$page.'.php');
+
+	if ($userLang)
+		return $lang;
+}
+
+/**
+ * wrapper for json_decode
+ * @param String $json
+ * @param bool $assoc
+ * @return array
+ */
+function jsonDecode($json, $assoc = false)
+{
+	return json_decode($json, $assoc);
+}
+
+/**
+ * wrapper for json_encode
+ * @param mixed $value
+ * @return String
+ */
+function jsonEncode($value)
+{
+	return json_encode($value);
 }

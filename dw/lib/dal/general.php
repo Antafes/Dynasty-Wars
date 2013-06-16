@@ -1,4 +1,6 @@
 <?php
+namespace dal\general;
+
 /**
  * get the ressource amounts of the defined user
  * @author Neithan
@@ -6,14 +8,14 @@
  * @param int $y
  * @return array
  */
-function lib_dal_general_getRes($x, $y)
+function getResources($x, $y)
 {
 	$sql = '
 		SELECT * FROM `dw_res`
-		WHERE `map_x` = '.mysql_real_escape_string($x).'
-			AND `map_y` = '.mysql_real_escape_string($y).'
+		WHERE `map_x` = '.\util\mysql\sqlval($x).'
+			AND `map_y` = '.\util\mysql\sqlval($y).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -22,20 +24,44 @@ function lib_dal_general_getRes($x, $y)
  * @param int $uid
  * @return string
  */
-function lib_dal_general_getLanguage($uid)
+function getLanguageByUID($uid)
 {
-	$sql = 'SELECT language FROM dw_user WHERE uid='.mysql_real_escape_string($uid);
-	return lib_util_mysqlQuery($sql);
+	$sql = 'SELECT language FROM dw_user WHERE uid='.\util\mysql\sqlval($uid);
+	return \util\mysql\query($sql);
 }
+
+/**
+ * get all languages
+ * @author Neithan
+ * @param boolean $active if true, only usable languages are returned
+ * @return array
+ */
+function getLanguages($active)
+{
+	$sql = '
+		SELECT
+			language,
+			name
+		FROM dw_languages
+	';
+
+	if ($active)
+		$sql .= '
+			WHERE active
+		';
+
+	return \util\mysql\query($sql, true);
+}
+
 /**
  * get the actual season
  * @author Neithan
  * @return int
  */
-function lib_dal_general_getSeason()
+function getSeason()
 {
 	$sql = 'SELECT season FROM dw_game';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -43,44 +69,31 @@ function lib_dal_general_getSeason()
  * @author Neithan
  * @param int $uid_sender
  * @param int $uid_recipient
- * @param int $date
  * @param string $title
  * @param string $message
  * @param int $type
  * @return int
  */
-function lib_dal_general_sendMessage($uid_sender, $uid_recipient, $date, $title, $message, $type)
+function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
 	$sql = '
 		INSERT INTO dw_message (
 			uid_sender,
 			uid_recipient,
-			date,
+			create_datetime,
 			title,
 			message,
 			type
 		) VALUES (
-			'.mysql_real_escape_string($uid_sender).',
-			'.mysql_real_escape_string($uid_recipient).',
-			'.mysql_real_escape_string($date).',
-			"'.mysql_real_escape_string($title).'",
-			"'.mysql_real_escape_string($message).'",
-			'.mysql_real_escape_string($type).'
+			'.\util\mysql\sqlval($uid_sender).',
+			'.\util\mysql\sqlval($uid_recipient).',
+			NOW(),
+			'.\util\mysql\sqlval($title).',
+			'.\util\mysql\sqlval($message).',
+			'.\util\mysql\sqlval($type).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
-}
-
-/**
- * get all information according to the message
- * @author Neithan
- * @param int $msgid
- * @return array
- */
-function lib_dal_general_getMsgInfos($msgid)
-{
-	$sql = 'SELECT * FROM dw_message WHERE msgid='.mysql_real_escape_string($msgid);
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -90,10 +103,10 @@ function lib_dal_general_getMsgInfos($msgid)
  * @param int $state
  * @return int
  */
-function lib_dal_general_deactivateUser($uid, $state)
+function deactivateUser($uid, $state)
 {
-	$sql = 'UPDATE dw_user SET deactivated = '.mysql_real_escape_string($state).' WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	$sql = 'UPDATE dw_user SET deactivated = '.\util\mysql\sqlval($state).' WHERE uid = '.\util\mysql\sqlval($uid).'';
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -102,10 +115,10 @@ function lib_dal_general_deactivateUser($uid, $state)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_setClanLeader($uid)
+function setClanLeader($uid)
 {
-	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	$sql = 'UPDATE dw_user SET rankid = 1 WHERE uid = '.\util\mysql\sqlval($uid).'';
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -115,13 +128,13 @@ function lib_dal_general_setClanLeader($uid)
  * @param string $where
  * @return int
  */
-function lib_dal_general_deleteFrom($table, $where)
+function deleteFrom($table, $where)
 {
 	$sql = '
-		DELETE FROM '.mysql_real_escape_string($table).'
-		WHERE '.mysql_real_escape_string($where).'
+		DELETE FROM '.\util\mysql\sqlval($table, false).'
+		WHERE '.\util\mysql\sqlval($where).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -130,10 +143,10 @@ function lib_dal_general_deleteFrom($table, $where)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_updateMap($uid)
+function updateMap($uid)
 {
-	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.mysql_real_escape_string($uid).'';
-	return lib_util_mysqlQuery($sql);
+	$sql = 'UPDATE dw_map SET uid = 0, city = "" WHERE uid = '.\util\mysql\sqlval($uid).'';
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -142,14 +155,14 @@ function lib_dal_general_updateMap($uid)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_deleteBuildings($uid)
+function deleteBuildings($uid)
 {
 	$sql = '
 		DELETE FROM dw_buildings, dw_build
 		USING dw_buildings LEFT JOIN dw_build USING (bid)
-		WHERE dw_buildings.uid = '.mysql_real_escape_string($uid).'
+		WHERE dw_buildings.uid = '.\util\mysql\sqlval($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -160,14 +173,14 @@ function lib_dal_general_deleteBuildings($uid)
  * @param string $city default = ''
  * @return int
  */
-function lib_dal_general_changePosition($where, $uid = 0, $city = '')
+function changePosition($where, $uid = 0, $city = '')
 {
 	$sql = '
 		UPDATE dw_map
-		SET uid = '.mysql_real_escape_string($uid).',
-			city = "'.mysql_real_escape_string($city).'"
-		WHERE '.mysql_real_escape_string($where);
-	return lib_util_mysqlQuery($sql);
+		SET uid = '.\util\mysql\sqlval($uid).',
+			city = '.\util\mysql\sqlval($city).'
+		WHERE '.\util\mysql\sqlval($where);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -176,13 +189,13 @@ function lib_dal_general_changePosition($where, $uid = 0, $city = '')
  * @param string $entry_name
  * @return int
  */
-function lib_dal_general_checkMenuEntry($entry_name)
+function checkMenuEntry($entry_name)
 {
 	$sql = '
 		SELECT active FROM dw_game_menu
-		WHERE menu_name = "'.mysql_real_escape_string($entry_name).'"
+		WHERE menu_name = '.\util\mysql\sqlval($entry_name).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -191,16 +204,16 @@ function lib_dal_general_checkMenuEntry($entry_name)
  * @param int $recipient
  * @return int
  */
-function lib_dal_general_getUnreadMessagesCount($recipient)
+function getUnreadMessagesCount($recipient)
 {
 	$sql = '
 		SELECT COUNT(msgid) msg_count
 		FROM dw_message
-		WHERE uid_recipient = '.mysql_real_escape_string($recipient).'
+		WHERE uid_recipient = '.\util\mysql\sqlval($recipient).'
 			AND unread = 1
 			AND !del_recipient
 	';
-	return (int)lib_util_mysqlQuery($sql);
+	return (int)\util\mysql\query($sql);
 }
 
 /**
@@ -209,42 +222,58 @@ function lib_dal_general_getUnreadMessagesCount($recipient)
  * @param int $uid
  * @return int
  */
-function lib_dal_general_getMissionary($uid)
+function getMissionary($uid)
 {
 	$sql = '
 		SELECT COUNT(*)
 		FROM dw_missionary
-		WHERE uid='.mysql_real_escape_string($uid).'
+		WHERE uid='.\util\mysql\sqlval($uid).'
 	';
-	return (int)lib_util_mysqlQuery($sql);
+	return (int)\util\mysql\query($sql);
 }
 
 /**
- * check if the users language is active
+ * check if the users language is existing and active
  * @param string $language
  * @return boolean
  */
-function lib_dal_general_checkLanguageIsActive($language)
+function checkLanguageIsActive($language)
 {
 	$sql = '
 		SELECT language
 		FROM dw_languages
-		WHERE language = "'.mysql_real_escape_string($language).'"
+		WHERE language = '.\util\mysql\sqlval($language).'
 			AND active
 	';
-	return (bool)lib_util_mysqlQuery($sql);
+	return (bool)\util\mysql\query($sql);
 }
 
 /**
  * get the fallback language
  * @return string
  */
-function lib_dal_general_getFallbackLanguage()
+function getFallbackLanguage()
 {
 	$sql = '
 		SELECT language
-		FROM dw_language
+		FROM dw_languages
 		WHERE fallback
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
+}
+
+/**
+ * get the language id to the given language code
+ * @author Neithan
+ * @param String $code
+ * @return int
+ */
+function getLanguageIDByCode($code)
+{
+	$sql = '
+		SELECT language_id
+		FROM dw_languages
+		WHERE language = '.\util\mysql\sqlval($code).'
+	';
+	return \util\mysql\query($sql);
 }

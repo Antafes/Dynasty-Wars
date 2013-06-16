@@ -1,16 +1,25 @@
 <?php
+namespace bl\unit\train;
+
 /**
  * check if an unit producing building is build
  * @author Neithan
  * @param string $city
  * @return array
  */
-function lib_bl_unit_train_checkBuildings($city)
+function checkBuildings($city)
 {
 	$kinds = array(7,8,9,10,11,12,15,17,18,20,21);
-	unset($buildings);
+
+	$buildings = array();
 	foreach($kinds as $kind)
-		$buildings[$kind] = lib_bl_buildings_getBuildingByKind($kind, $city);
+	{
+		$building = \bl\buildings\getBuildingByKind($kind, $city);
+
+		if ($building)
+			$buildings[$kind] = $building;
+	}
+
 	return $buildings;
 }
 
@@ -20,13 +29,23 @@ function lib_bl_unit_train_checkBuildings($city)
  * @param int $kind
  * @return array
  */
-function lib_bl_unit_train_unitPrices($kind)
+function unitPrices($kind)
 {
-	global $lang;
-	$prices = lib_dal_unit_train_unitPrices($kind);
+	$prices = \dal\unit\train\unitPrices($kind);
+
+	$mainCity = $_SESSION['user']->getMainCity();
+	$mainbuilding = \dal\buildings\getBuildingByKind(19, $mainCity['map_x'], $mainCity['map_y']);
+	$paper = \dal\buildings\getBuildingByKind(5, $mainCity['map_x'], $mainCity['map_y']);
+	$koku = \dal\buildings\getBuildingByKind(6, $mainCity['map_x'], $mainCity['map_y']);
+
+	if ($paper['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
+		$prices['paper'] = 0;
+
+	if ($koku['lvl'] == 0 && $mainbuilding['ulvl'] <= 1)
+		$prices['koku'] = 0;
 
 	foreach ($prices as $key => $value)
-		$prices[$key.'_formatted'] = lib_util_math_numberFormat($value, 0);
+		$prices[$key.'_formatted'] = \util\math\numberFormat($value, 0);
 
 	return $prices;
 }
@@ -38,13 +57,13 @@ function lib_bl_unit_train_unitPrices($kind)
  * @param string $city
  * @return int
  */
-function lib_bl_unit_train_maxUnits($kind, $city)
+function maxUnits($kind, $city)
 {
 	$cityexp = explode(":", $city);
 	$x = intval($cityexp[0]);
 	$y = intval($cityexp[1]);
-	$costs = lib_bl_unit_train_unitPrices($kind);
-	$res = lib_bl_general_getRes($x, $y);
+	$costs = unitPrices($kind);
+	$res = \bl\general\getResources($x, $y);
 	if ($costs["food"])
 		$units["food"] = floor($res["food"]/$costs["food"]);
 	if ($costs["wood"])
@@ -57,7 +76,7 @@ function lib_bl_unit_train_maxUnits($kind, $city)
 		$units["paper"] = floor($res["paper"]/$costs["paper"]);
 	if ($costs["koku"])
 		$units["koku"] = floor($res["koku"]/$costs["koku"]);
-	array_walk($units, lib_bl_unit_train_maxUnitsHelper);
+	array_walk($units, '\bl\unit\train\maxUnitsHelper');
 	return min($units);
 }
 
@@ -67,7 +86,7 @@ function lib_bl_unit_train_maxUnits($kind, $city)
  * @param int $value
  * @return void
  */
-function lib_bl_unit_train_maxUnitsHelper(&$value)
+function maxUnitsHelper(&$value)
 {
 	if ($value < 0)
         $value = 0;
@@ -79,9 +98,9 @@ function lib_bl_unit_train_maxUnitsHelper(&$value)
  * @param int $kind
  * @return string
  */
-function lib_bl_unit_train_trainTime($kind)
+function trainTime($kind)
 {
-	return lib_dal_unit_train_trainTime($kind);
+	return \dal\unit\train\trainTime($kind);
 }
 
 /**
@@ -91,29 +110,28 @@ function lib_bl_unit_train_trainTime($kind)
  * @param int $count
  * @param int $uid
  * @param string $city
- * @return <int> returns 1 on success, otherwise 0
+ * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_unit_train_train($kind, $count, $uid, $city)
+function train($kind, $count, $uid, $city)
 {
-	$cityexp = explode(":", $city);
-	$map_x = intval($cityexp[0]);
-	$map_y = intval($cityexp[1]);
 	if ($count)
 	{
-		$max_units = lib_bl_unit_train_maxUnits($kind, $city);
+		$max_units = maxUnits($kind, $city);
 		if ($count > $max_units)
 			$count = $max_units;
-		$prices = lib_bl_unit_train_unitPrices($kind);
+		$prices = unitPrices($kind);
 		$sum_prices["food"] = $prices["food"]*$count;
 		$sum_prices["wood"] = $prices["wood"]*$count;
 		$sum_prices["rock"] = $prices["rock"]*$count;
 		$sum_prices["iron"] = $prices["iron"]*$count;
 		$sum_prices["paper"] = $prices["paper"]*$count;
 		$sum_prices["koku"] = $prices["koku"]*$count;
-		$endtime = time()+(lib_bl_unit_train_trainTime($kind)*$count);
-		$erg1 = lib_dal_unit_train_removeRes($sum_prices, $uid);
-		$erg2 = lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city);
-		if ($erg1 and $erg2)
+		$endTime = new \DWDateTime();
+		$endTime->add(new \DateInterval('PT'.(trainTime($kind) * $count).'S'));
+		$erg1 = \dal\unit\train\removeResources($sum_prices, $uid);
+		$erg2 = \dal\unit\train\startTrain($kind, $uid, $count, $endTime, $city);
+
+		if ($erg1 && $erg2)
 			return 1;
 		else
 			return 0;
@@ -129,24 +147,25 @@ function lib_bl_unit_train_train($kind, $count, $uid, $city)
  * @param string $city
  * @return array
  */
-function lib_bl_unit_train_checkTraining($uid, $city)
+function checkTraining($uid, $city)
 {
-	$units = lib_dal_unit_train_checkTraining($uid, $city);
+	$units = \dal\unit\train\checkTraining($uid, $city);
 
 	if ($units)
 	{
 		foreach ($units as $unit)
 		{
-			if (time() >= $unit['endtime'])
+			$endtime = \DWDateTime::createFromFormat('Y-m-d H:i:s', $unit['end_datetime']);
+			$now = new \DWDateTime();
+			if ($now >= $endtime)
 			{
 				$unit['uid'] = $uid;
-				lib_bl_unit_train_trainComplete($unit);
+				trainComplete($unit);
 			}
 			else
 			{
 				if ($city == $unit['city'])
 				{
-					$endtime = $unit['endtime'];
 					$running = array(
 						'endtime' => $endtime,
 						'kind' => $unit['kind'],
@@ -155,10 +174,12 @@ function lib_bl_unit_train_checkTraining($uid, $city)
 				}
 			}
 		}
+
 		if ($running["kind"])
 			$running["ok"] = 1;
 		else
 			$running["ok"] = 0;
+
 		return $running;
 	}
 	else
@@ -171,18 +192,18 @@ function lib_bl_unit_train_checkTraining($uid, $city)
  * @param array $valuelist
  * @return int returns 1 on success, otherwise 0
  */
-function lib_bl_unit_train_trainComplete($valuelist)
+function trainComplete($valuelist)
 {
 	$cityexp = explode(":", $valuelist['city']);
 	$map_x = intval($cityexp[0]);
 	$map_y = intval($cityexp[1]);
-	lib_dal_unit_train_removeComplete($valuelist['tid']);
-	$unid = lib_dal_unit_train_checkPos($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
+	\dal\unit\train\removeFromTrainList($valuelist['tid']);
+	$unid = \dal\unit\train\checkPosition($valuelist['uid'], $map_x, $map_y, $valuelist['kind']);
 	if ($unid)
-		$erg3 = lib_dal_unit_train_addUnit($valuelist['count'], $unid);
+		$erg3 = \dal\unit\train\addUnit($valuelist['count'], $unid);
 	else
-		$erg3 = lib_dal_unit_train_newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
-	if ($erg1 and $erg3)
+		$erg3 = \dal\unit\train\newUnit($valuelist['uid'], $valuelist['kind'], $valuelist['count'], $map_x, $map_y);
+	if ($erg1 && $erg3)
 		return 1;
 	else
 		return 0;
@@ -195,7 +216,7 @@ function lib_bl_unit_train_trainComplete($valuelist)
  * @param int $ulvl
  * @return string
  */
-function lib_bl_unit_train_getUnitPicture($kind)
+function getUnitPicture($kind)
 {
 	$picturesArray = array(
 		1 => 'ashigaru_archer',
@@ -222,4 +243,18 @@ function lib_bl_unit_train_getUnitPicture($kind)
 		return $picturesArray[$kind];
 	else
 		return 'no_picture';
+}
+
+/**
+ * get the amount of currently trained units
+ * @param int $uid
+ * @param String $city
+ * @return int
+ */
+function getTrainingUnits($uid, $city, $kind)
+{
+	if (is_array($city))
+		$city = $city['map_x'].':'.$city['map_y'];
+
+	return \dal\unit\train\getTrainingUnits($uid, $city, $kind);
 }

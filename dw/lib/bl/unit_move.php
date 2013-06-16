@@ -1,4 +1,5 @@
 <?php
+namespace bl\unit\move;
 /**
  * a-star algorithm
  * @author Neithan
@@ -8,12 +9,12 @@
  * @param int $target_y
  * @return int
  */
-function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
+function aStar($start_x, $start_y, $target_x, $target_y)
 {
 	//creating the openlist
-	$openlist = new openList;
+	$openlist = new \bl\unit\OpenList;
 	//creating the closedlist
-	$closedlist = new closedList;
+	$closedlist = new \bl\unit\ClosedList;
 	/*
 	* setting the g values for each terrain type
 	* the g value is the "weight" of the field
@@ -31,12 +32,12 @@ function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
 		unset($add);
 		$lc_count = $closedlist->getLength();
 		//search the surrounding fields
-   		$add = lib_bl_unit_move_giveSurrounding($closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1]);
+   		$add = giveSurrounding($closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1]);
 		//remove the fields from $add that are in the closedlist
-   		$add = lib_bl_unit_move_checkClosedList($add, $closedlist);
+   		$add = checkClosedList($add, $closedlist);
    		if ($m > 1)
 			//if this is the second loop, check whether the coordinates are allready in the openlist
-    		$openlist = lib_bl_unit_move_checkOpenList($add, $openlist, $closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1], $openlist->getLength());
+    		$openlist = checkOpenList($add, $openlist, $closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1], $openlist->getLength());
    		$count = count($add);
 		$o_count = $openlist->getLength();
    		$n = 0;
@@ -68,7 +69,7 @@ function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
 		* search for the smallest f value
 		* f = g + h
 		*/
-   		$sf = lib_bl_unit_moveSearchF($openlist, $closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1]);
+   		$sf = searchF($openlist, $closedlist->x[$lc_count-1], $closedlist->y[$lc_count-1]);
 		//adding the coordinates with the smallest f value to the closedlist
 		$closedlist->x[$m] = $openlist->x[$sf];
 		$closedlist->y[$m] = $openlist->y[$sf];
@@ -79,18 +80,18 @@ function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
 		$closedlist->py[$m] = $openlist->py[$sf];
 		$m++;
 		//remove the coordinates with the smallest f value from the openlist
-   		$openlist = lib_bl_unit_move_removeFromList($openlist, $sf);
+   		$openlist = removeFromList($openlist, $sf);
    		$c_count = $closedlist->getLength();
 		//check whether the target is reached
-   		if ($target_x == $closedlist->x[$c_count-1] and $target_y == $closedlist->y[$c_count-1])
+   		if ($target_x == $closedlist->x[$c_count-1] && $target_y == $closedlist->y[$c_count-1])
    		{
     		$finish = 1;
 			//sum up the g values of all coordinates in the closedlist
-    		$g_move = lib_bl_unit_move_calculateG($closedlist);
+    		$g_move = calculateG($closedlist);
    		}
   	}
 	//calculate the time (in s) needed to get from A to B
-  	return lib_bl_unit_move_calcTime($g_move);
+  	return calcTime($g_move);
 }
 
 /**
@@ -100,14 +101,14 @@ function lib_bl_unit_move_aStar($start_x, $start_y, $target_x, $target_y)
  * @param int $y
  * @return array
  */
-function lib_bl_unit_move_giveSurrounding($x, $y)
+function giveSurrounding($x, $y)
 {
   	$lx = $x-1;
   	$hx = $x+1;
   	$ly = $y-1;
   	$hy = $y+1;
 	//getting the sql-query with the surrounding fields
-  	$surrounding = lib_dal_troops_surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
+  	$surrounding = \dal\troops\surrounding(intval($x-1), intval($x+1), intval($y-1), intval($y+1), intval($x), intval($y));
   	if (count($surrounding) > 0)
   	{
 		foreach ($surrounding as &$part)
@@ -127,7 +128,7 @@ function lib_bl_unit_move_giveSurrounding($x, $y)
  * @param int $y
  * @return int
  */
-function lib_bl_unit_moveSearchF($openlist, $x, $y)
+function searchF($openlist, $x, $y)
 {
 	if (is_array($openlist->x))
 	{
@@ -136,7 +137,7 @@ function lib_bl_unit_moveSearchF($openlist, $x, $y)
 		$small_f = $keys[0];
 	  	for ($n = 0; $n < $count; $n++)
 	  	{
-			if (($x-1 <= $openlist->x[$keys[$n]] and $x+1 >= $openlist->y[$keys[$n]]) and ($y-1 <= $openlist->y[$keys[$n]] and $y+1 >= $openlist->y[$keys[$n]]))
+			if (($x-1 <= $openlist->x[$keys[$n]] && $x+1 >= $openlist->y[$keys[$n]]) && ($y-1 <= $openlist->y[$keys[$n]] && $y+1 >= $openlist->y[$keys[$n]]))
 				if ($openlist->f[$keys[$small_f]] > $openlist->f[$keys[$n]])
 		    		$small_f = $keys[$n];
 	  	}
@@ -151,7 +152,7 @@ function lib_bl_unit_moveSearchF($openlist, $x, $y)
  * @param string $rkey
  * @return object
  */
-function lib_bl_unit_move_removeFromList($openlist, $rkey)
+function removeFromList($openlist, $rkey)
 {
   	$count = $openlist->getlength();
   	$o_keys = $openlist->getkeys();
@@ -191,7 +192,7 @@ function lib_bl_unit_move_removeFromList($openlist, $rkey)
  * @param object $closedlist
  * @return array
  */
-function lib_bl_unit_move_checkClosedList($add, $closedlist)
+function checkClosedList($add, $closedlist)
 {
   	$c_count = $closedlist->getlength();
   	$keys = $closedlist->getkeys();
@@ -199,8 +200,8 @@ function lib_bl_unit_move_checkClosedList($add, $closedlist)
   	{
    		for ($m = 0; $m < $c_count; $m++)
    		{
-    		if (($part['x'] == $closedlist->x[$keys[$m]]) or ($part['y'] == $closedlist->y[$keys[$m]]))
-				if (($part['x'] == $return[$r_count-1]["x"]) or ($part['y'] == $return[$r_count-1]["y"]))
+    		if (($part['x'] == $closedlist->x[$keys[$m]]) || ($part['y'] == $closedlist->y[$keys[$m]]))
+				if (($part['x'] == $return[$r_count-1]["x"]) || ($part['y'] == $return[$r_count-1]["y"]))
 					unset($part);
     		else
      			$m = $m+$c_count;
@@ -220,7 +221,7 @@ function lib_bl_unit_move_checkClosedList($add, $closedlist)
  * @param int $o_count
  * @return object
  */
-function lib_bl_unit_move_checkOpenList($add, $openlist, $cx, $cy, $o_count)
+function checkOpenList($add, $openlist, $cx, $cy, $o_count)
 {
 	if ($o_count)
 	  	$o_keys = $openlist->getkeys();
@@ -229,7 +230,7 @@ function lib_bl_unit_move_checkOpenList($add, $openlist, $cx, $cy, $o_count)
    		$r_count = count($return);
    		for ($m = 0; $m < $o_count; $m++)
    		{
-			if (($part["x"] == $openlist->x[$o_keys[$m]]) and ($part["y"] == $openlist->y[$o_keys[$m]]))
+			if (($part["x"] == $openlist->x[$o_keys[$m]]) && ($part["y"] == $openlist->y[$o_keys[$m]]))
 			{
 				$openlist->px[$o_keys[$m]] = $cx;
      			$openlist->py[$o_keys[$m]] = $cy;
@@ -245,7 +246,7 @@ function lib_bl_unit_move_checkOpenList($add, $openlist, $cx, $cy, $o_count)
  * @param object $closedlist
  * @return int
  */
-function lib_bl_unit_move_calculateG($closedlist)
+function calculateG($closedlist)
 {
   	$count = $closedlist->getlength()-1;
   	$keys = $closedlist->getkeys();
@@ -260,7 +261,7 @@ function lib_bl_unit_move_calculateG($closedlist)
  * @param int $g
  * @return int
  */
-function lib_bl_unit_move_calcTime($g)
+function calcTime($g)
 {
 	return $g*150;
 }

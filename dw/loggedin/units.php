@@ -1,7 +1,9 @@
 <?php
 include('loggedin/header.php');
 
-lib_bl_general_loadLanguageFile('units');
+bl\general\loadLanguageFile('units');
+\util\html\load_js('timer');
+\util\html\load_js('unit');
 
 $smarty->assign('lang', $lang);
 

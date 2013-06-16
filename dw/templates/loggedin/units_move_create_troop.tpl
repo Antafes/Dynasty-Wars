@@ -1,18 +1,18 @@
 <div class="subheading">
-	{$create_troop|htmlentities}
+	{$create_troop}
 </div>
 {if $troopCreated}
 <div class="info">
-	{$troopCreated|htmlentities}
+	{$troopCreated}
 </div>
 {/if}
 <div class="create_troop">
 	<div class="row">
 		<div class="left bold">
-			{$units|htmlentities}
+			{$units}
 		</div>
 		<div class="right bold" style="width: 150px;">
-			{$quantity|htmlentities}
+			{$quantity}
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -29,7 +29,7 @@
 		{foreach from=$position.units item=unit key=i}
 		<div class="row">
 			<div class="left">
-				{$unit.name|htmlentities}
+				{$unit.name}
 			</div>
 			<div class="middle">
 				<input type="text" name="id{$i}" size="5" value="0" />
@@ -45,7 +45,7 @@
 		{/foreach}
 		<div class="row">
 			<div class="both">
-				<input type="submit" name="create" value="{$create|htmlentities}" />
+				<input type="submit" name="create" value="{$create}" />
 				<input type="hidden" name="ids" value="{$i + 1}" />
 			</div>
 		</div>
@@ -54,13 +54,13 @@
 	{else}
 	<div class="row">
 		<div class="both">
-			{$noUnits|htmlentities}
+			{$noUnits}
 		</div>
 	</div>
 	{/if}
 	<div class="row">
 		<div class="both">
-			<a href="index.php?chose=units&amp;sub=move">{$back|htmlentities}</a>
+			<a href="index.php?chose=units&amp;sub=move">{$back}</a>
 		</div>
 	</div>
 </div>

@@ -1,4 +1,5 @@
 <?php
+namespace bl\user;
 
 /**
  * Description of UserCls
@@ -28,18 +29,18 @@ class UserCls {
 	}
 
 	function loadByUID($UID){
-		$sql = 'SELECT * FROM dw_user WHERE uid="'.mysql_real_escape_string($UID).'"';
+		$sql = 'SELECT * FROM dw_user WHERE uid = '.\util\mysql\sqlval($UID).'';
 		return $this->fill($sql);
 	}
 
 	function loadByUserName($userName){
-		$sql = 'SELECT * FROM dw_user where nick="'.mysql_real_escape_string($userName).'"';
+		$sql = 'SELECT * FROM dw_user where nick = '.\util\mysql\sqlval($userName).'';
 		return $this->fill($sql);
 	}
 
 	private function fill($sql){
 
-		$result = lib_util_mysqlQuery($sql);
+		$result = \util\mysql\query($sql);
 		if (!$result){
 			return false;
 		}
@@ -67,9 +68,9 @@ class UserCls {
 				city,
 				maincity
 			FROM dw_map
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
-		$this->cities = lib_util_mysqlQuery($sql, true);
+		$this->cities = \util\mysql\query($sql, true);
 
 		return true;
 	}
@@ -87,37 +88,54 @@ class UserCls {
 		return $this->pw;
 	}
 
-	public function setPW($newPW){
-		$newPW = md5($newPW);
-		$PWResult = false;
+	public function setPW($newPW, $repeatedPassword = null)
+	{
+		if (!isset($repeatedPassword) || $newPW === $repeatedPassword)
+		{
+			$newPW = md5($newPW);
+			$PWResult = false;
 
-		lib_util_mysql_TransactionBegin();
-		$SQL = 'UPDATE dw_user SET password = "'.mysql_real_escape_string($newPW).'"
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"
-			AND password = "'.mysql_real_escape_string($this->pw).'"';
+			\util\mysql\transactionBegin();
+			$SQL = '
+				UPDATE dw_user
+				SET password = '.\util\mysql\sqlval($newPW).'
+				WHERE uid = '.\util\mysql\sqlval($this->uid).'
+					AND password = '.\util\mysql\sqlval($this->pw).'
+			';
 
-		$result = lib_util_mysqlQuery($SQL);
+			$result = \util\mysql\query($SQL);
 
-		if($result){
-			$SQL = 'SELECT password FROM dw_user WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-			$result = lib_util_mysqlQuery($SQL);
+			if($result)
+			{
+				$SQL = '
+					SELECT password FROM dw_user
+					WHERE uid = '.\util\mysql\sqlval($this->uid).'
+				';
+				$result = \util\mysql\query($SQL);
 
-			if ($result == $newPW){
-			lib_util_mysql_TransactionCommit();
-			$PWResult = True;
-			}else{
-			lib_util_mysql_TransactionRollback();
+				if ($result == $newPW)
+				{
+					\util\mysql\transactionCommit();
+					$PWResult = True;
+				}
+				else
+					\util\mysql\transactionRollback();
 			}
-		}else{
-			lib_util_mysql_TransactionRollback();
+			else
+			{
+				\util\mysql\transactionRollback();
+			}
+
+			return $PWResult;
+			/*
+			* if ($_SESSION['lid'])
+			$_SESSION['lid'] = $id;
+			else
+			setcookie("lid", $id, time()+604800, "", ".dynasty-wars.de");
+			*/
 		}
-		return $PWResult;
-		/*
-		* if ($_SESSION['lid'])
-		$_SESSION['lid'] = $id;
 		else
-		setcookie("lid", $id, time()+604800, "", ".dynasty-wars.de");
-		*/
+			return false;
 	}
 
 	public function getEMail(){
@@ -125,10 +143,13 @@ class UserCls {
 	}
 
 	public function setMail($newMail){
-		$sql = 'UPDATE dw_user SET email = "'.mysql_real_escape_string($newMail).'"
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"
-			AND email = "'.mysql_real_escape_string($this->email).'"';
-		return (bool)(lib_util_mysqlQuery($sql));
+		$sql = '
+			UPDATE dw_user
+			SET email = '.\util\mysql\sqlval($newMail).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+				AND email = '.\util\mysql\sqlval($this->email).'
+		';
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getBlocked(){
@@ -140,10 +161,10 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user
 			SET blocked = 1
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
 		$this->blocked = 1;
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function unsetBlocked()
@@ -151,14 +172,19 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user
 			SET blocked = 0
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
 		$this->blocked = 0;
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
-	public function getRegDate(){
-		return $this->regdate;
+	public function getRegDate()
+	{
+		global $lang;
+
+		$date = \DWDateTime::createFromFormat('Y-m-d H:i:s', $this->regdate);
+
+		return $date->format($lang['timeformat']);
 	}
 
 	public function getGameRank(){
@@ -169,11 +195,11 @@ class UserCls {
 	{
 		$sql = '
 			UPDATE dw_user
-			SET game_rank = '.mysql_real_escape_string($rank).'
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			SET game_rank = '.\util\mysql\sqlval($rank).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
 		$this->game_rank = $rank;
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getRankID(){
@@ -184,10 +210,10 @@ class UserCls {
 	{
 		$sql = '
 			UPDATE dw_user
-			SET rankid = '.mysql_real_escape_string($id).'
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			SET rankid = '.\util\mysql\sqlval($id).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getCID(){
@@ -198,10 +224,10 @@ class UserCls {
 	{
 		$sql = '
 			UPDATE dw_user
-			SET cid = '.mysql_real_escape_string($cid).'
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			SET cid = '.\util\mysql\sqlval($cid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getClanObj(){
@@ -212,18 +238,30 @@ class UserCls {
 		}
 	}
 
-	public function getDescription(){
+	public function getDescription()
+	{
 		return $this->description;
 	}
 
-	public function setDescription($NewValue){
-		$sql = 'UPDATE dw_user SET email = "'.mysql_real_escape_string($NewValue).'"
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(lib_util_mysqlQuery($sql));
+	public function setDescription($newValue)
+	{
+		$sql = '
+			UPDATE dw_user
+			SET description = '.\util\mysql\sqlval($newValue).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		$this->description = $newValue;
+
+		return \util\mysql\query($sql) > 0 ? true : false;
 	}
 
-	public function getLastLogin(){
-		return $this->last_login;
+	public function getLastLogin()
+	{
+		global $lang;
+
+		$date = \DWDateTime::createFromFormat('Y-m-d H:i:s', $this->last_login);
+
+		return $date->format($lang['timeformat']);
 	}
 
 	public function setLastLogin()
@@ -231,9 +269,9 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user
 			SET last_login_datetime = NOW()
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	/**
@@ -246,13 +284,11 @@ class UserCls {
 	 */
 	public function checkLastLogin()
 	{
-		$lastLogin = new DateTime($this->last_login);
-		$interval5 = new DateInterval('P5D');
-		$interval14 = new DateInterval('P14D');
-		$tmp = new DateTime();
-		$sub1 = $tmp->sub($interval5);
-		$tmp = new DateTime();
-		$sub2 = $tmp->sub($interval14);
+		$lastLogin = new \DWDateTime($this->last_login);
+		$tmp = new \DWDateTime();
+		$sub1 = $tmp->sub(new \DateInterval('P5D'));
+		$tmp = new \DWDateTime();
+		$sub2 = $tmp->sub(new \DateInterval('P14D'));
 
 		if ($lastLogin < $sub2)
 			return 'red';
@@ -270,11 +306,11 @@ class UserCls {
 	{
 		$sql = '
 			UPDATE dw_user
-			SET status = '.mysql_real_escape_string($status).'
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			SET status = '.\util\mysql\sqlval($status).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
 		$this->status = $status;
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function unsetStatus()
@@ -282,30 +318,33 @@ class UserCls {
 		$sql = '
 			UPDATE dw_user
 			SET status = ""
-			WHERE uid = '.mysql_real_escape_string($this->uid).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
 		';
 		$this->status = '';
-		return lib_util_mysqlQuery($sql);
+		return \util\mysql\query($sql);
 	}
 
 	public function getLanguage()
 	{
-		$check = lib_dal_general_checkLanguageIsActive($this->language);
+		$check = \dal\general\checkLanguageIsActive($this->language);
 
 		if (!$check)
-			$this->language = lib_dal_general_getFallbackLanguage();
+			$this->language = \dal\general\getFallbackLanguage();
 
 		return $this->language;
 	}
 
-	public function setLanguage($NewValue){
-		$sql = 'UPDATE dw_user SET language = "'.mysql_real_escape_string($NewValue).'"
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(lib_util_mysqlQuery($sql));
+	public function setLanguage($newValue){
+		$sql = '
+			UPDATE dw_user
+			SET language = '.\util\mysql\sqlval($newValue).'
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getReligion(){
-		return $this->religion;
+		return (int) $this->religion;
 	}
 
 	public function getDeactivated(){
@@ -313,15 +352,20 @@ class UserCls {
 	}
 
 	public function setDeactivated(){
-		$sql = 'UPDATE dw_user SET deactivated = 1
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return (bool)(lib_util_mysqlQuery($sql));
+		$sql = '
+			UPDATE dw_user
+			SET deactivated = 1
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		return (bool)(\util\mysql\query($sql));
 	}
 
 	public function getPoints(){
-		$sql = 'SELECT unit_points, building_points FROM dw_user
-			WHERE uid = "'.mysql_real_escape_string($this->uid).'"';
-		return lib_util_mysqlQuery($sql);
+		$sql = '
+			SELECT unit_points, building_points FROM dw_points
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		return \util\mysql\query($sql);
 	}
 
 
@@ -329,7 +373,7 @@ class UserCls {
 		$uidPos = rand(1, 9);
 		$uidLen = strlen($this->uid);
 		$id = substr($this->pw, 0, $uidPos);
-		$id .= $uid;
+		$id .= $this->uid;
 		$id .= substr($this->pw, $uidPos, -3);
 		$id .= $uidPos;
 		if ($uidLen < 10) {
@@ -340,13 +384,15 @@ class UserCls {
 		return $id;
 	}
 
-	public function checkId(){
+	public function checkId($id)
+	{
 		$uidPos = substr($id, -6, 1);
 		$uidLen = substr($id, -5, 2);
 		$pw = substr($id, 0, $uidPos);
 		$pw .= substr($id, $uidPos+$uidLen, -6);
 		$pw .= substr($id, -3);
-		$uid = substr($id, $uidPos, $uidLen);
+		$this->uid = substr($id, $uidPos, $uidLen);
+
 		if ($pw === $this->pw) {
 			return 1;
 		} else {
@@ -377,5 +423,32 @@ class UserCls {
 			if ($city['maincity'])
 				return $city;
 	}
+
+	public function setReligionToChristianity()
+	{
+		//set the new religion
+		$sql = '
+			UPDATE dw_user
+			SET religion = 2
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+		';
+		\util\mysql\query($sql);
+
+		//remove all built buddhist temples
+		$sql = '
+			DELETE FROM dw_buildings
+			WHERE uid = '.\util\mysql\sqlval($this->uid).'
+				AND kind = 18
+		';
+		\util\mysql\query($sql);
+	}
+
+	public function checkCity($x, $y)
+	{
+		foreach ($this->cities as $city)
+			if ($city['map_x'] == $x && $city['map_y'] == $y)
+				return true;
+
+		return false;
+	}
 }
-?>

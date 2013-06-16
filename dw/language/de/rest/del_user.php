@@ -1,4 +1,4 @@
 <?php
 $lang += array(
-	'del_user' => 'Dein Account wurde erfolgreich gelˆscht.',
+	'del_user' => 'Dein Account wurde erfolgreich gel√∂scht.',
 );

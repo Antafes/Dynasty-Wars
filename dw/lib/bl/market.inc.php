@@ -7,11 +7,10 @@
  */
 
 // all includes needed for the market :)
-include_once('lib/util/mysql.php');
-include_once('lib/util/math.php');
-include_once('lib/dal/market.php');
-include_once('lib/dal/resource.php');
-include_once('lib/dal/user.php');
-include_once('lib/dal/map.php');
-include_once('lib/bl/market.php');
-?>
+require_once(__DIR__.'/../util/mysql.php');
+require_once(__DIR__.'/../util/math.php');
+require_once(__DIR__.'/../dal/market.php');
+require_once(__DIR__.'/../dal/resource.php');
+require_once(__DIR__.'/../dal/user.php');
+require_once(__DIR__.'/../dal/map.php');
+require_once(__DIR__.'/../bl/market.php');

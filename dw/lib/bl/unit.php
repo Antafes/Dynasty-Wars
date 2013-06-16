@@ -6,11 +6,14 @@
  *
  */
 
+namespace bl\unit;
+
 /**
  * openlist for a-star algorithm
  * @author Neithan
  */
-class openList extends closedList{
+class OpenList extends ClosedList
+{
 	/**
 	 * clears the openlist
 	 * @author Neithan
@@ -26,7 +29,8 @@ class openList extends closedList{
  * closedlist for a-star algorithm
  * @author Neithan
  */
-class closedList{
+class ClosedList
+{
 	var $x;
 	var $y;
 	var $g;
@@ -57,14 +61,14 @@ class closedList{
 }
 
 /**
- * A wrapper for lib_dal_unit_calcUnitPoints, please use this function instead
+ * A wrapper for \dal\unit\calcUnitPoints, please use this function instead
  * of the dal one.
  * @author siyb
- * @return <array> containing nick and points already calculated
+ * @return array containing nick and points already calculated
  */
-function lib_bl_unit_calcUnitPoints()
+function calcUnitPoints()
 {
-    return lib_dal_unit_calcUnitPoints();
+    return \dal\unit\calcUnitPoints();
 }
 
 /**
@@ -75,7 +79,7 @@ function lib_bl_unit_calcUnitPoints()
  * @param <boolean> $type the type of resource, must be true for food or false for koku
  * @return <float> the hourly cost of koku or food
  */
-function lib_bl_unit_calcFoodOrKoku($unitType, $amount, $type)
+function calcFoodOrKoku($unitType, $amount, $type)
 {
     // hours of the day
     $hotd = 24;
@@ -127,48 +131,47 @@ function lib_bl_unit_calcFoodOrKoku($unitType, $amount, $type)
  * @param <int> $uid the userid of the user
  * @return <int> total food cost per hour for all units
  */
-function lib_bl_unit_calcTotalFoodCost($uid)
+function calcTotalFoodCost($uid)
 {
-    if (!lib_dal_calculateUnitCosts()) return 0;
-    $result = lib_dal_getUnitCount($uid);
+    if (!\dal\unit\calculateUnitCosts()) return 0;
+    $result = \dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
     {
 	    foreach ($result as $row)
-	        $total += lib_bl_unit_calcFoodOrKoku($row['kind'], $row['count'], true);
+	        $total += calcFoodOrKoku($row['kind'], $row['count'], true);
     }
     elseif (count($result) == 1)
-    	$total = lib_bl_unit_calcFoodOrKoku($result['kind'], $result['count'], true);
+    	$total = calcFoodOrKoku($result['kind'], $result['count'], true);
 
-	if ($total > 0 and $total < 1)
+	if ($total > 0 && $total < 1)
 		$total = ceil($total);
 
     return $total;
 }
 
 /**
- * Does the same as lib_bl_unit_calcTotalFoodCost() for koku
+ * Does the same as calcTotalFoodCost() for koku
  * @author siyb
  * @param <int> $uid the userid of the user
  * @return <int> total koku cost per hour for all units
  */
-function lib_bl_unit_calcTotalKokuCost(
-$uid)
+function calcTotalKokuCost($uid)
 {
-    if (!lib_dal_calculateUnitCosts()) return 0;
-    $result = lib_dal_getUnitCount($uid);
+    if (!\dal\unit\calculateUnitCosts()) return 0;
+    $result = \dal\unit\getUnitCount($uid);
     $total = 0;
 
     if (count($result) > 1)
     {
 	    foreach ($result as $row)
-        	$total += lib_bl_unit_calcFoodOrKoku($row['kind'], $row['count'], false);
+        	$total += calcFoodOrKoku($row['kind'], $row['count'], false);
     }
     elseif (count($result) == 1)
-    	$total = lib_bl_unit_calcFoodOrKoku($result['kind'], $result['count'], false);
+    	$total = calcFoodOrKoku($result['kind'], $result['count'], false);
 
-	if ($total > 0 and $total < 1)
+	if ($total > 0 && $total < 1)
 		$total = ceil($total);
 
     return $total;
@@ -181,9 +184,9 @@ $uid)
  * @param int $uid
  * @return array
  */
-function lib_bl_unit_getUnits($kind, $uid)
+function getUnits($kind, $uid)
 {
-  	return lib_dal_unit_getUnits($kind, $uid);
+  	return \dal\unit\getUnits($kind, $uid);
 }
 
 /**
@@ -192,16 +195,17 @@ function lib_bl_unit_getUnits($kind, $uid)
  * @param int $uid
  * @return void
  */
-function lib_bl_unit_checkDaimyo($uid)
+function checkDaimyo($uid)
 {
-	if (!lib_dal_unit_checkDaimyo($uid)) {
-		$pos = lib_dal_login_getMainCity($uid);
+	if (!\dal\unit\checkDaimyo($uid))
+	{
+		$pos = \dal\login\getMainCity($uid);
+
 		if (count($pos) > 0)
 		{
 			$pos_x = $pos['map_x'];
 			$pos_y = $pos['map_y'];
 		}
-		lib_dal_unit_createDaimyo($uid, $pos_x, $pos_y);
+		\dal\unit\createDaimyo($uid, $pos_x, $pos_y);
 	}
 }
-?>

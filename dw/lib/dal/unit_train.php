@@ -1,14 +1,19 @@
 <?php
+namespace dal\unit\train;
+
 /**
  * get the prices per unit
  * @author Neithan
  * @param int $kind
  * @return array
  */
-function lib_dal_unit_train_unitPrices($kind)
+function unitPrices($kind)
 {
-	$sql = 'SELECT * FROM dw_costs_u WHERE kind = '.$kind;
-	return lib_util_mysqlQuery($sql);
+	$sql = '
+		SELECT * FROM dw_costs_u
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+	';
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -17,10 +22,13 @@ function lib_dal_unit_train_unitPrices($kind)
  * @param int $kind
  * @return int
  */
-function lib_dal_unit_train_trainTime($kind)
+function trainTime($kind)
 {
-	$sql = 'SELECT btime FROM dw_buildtimes_unit WHERE kind = '.$kind;
-	return lib_util_mysqlQuery($sql);
+	$sql = '
+		SELECT btime FROM dw_buildtimes_unit
+		WHERE kind = '.\util\mysql\sqlval($kind).'
+	';
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -30,19 +38,19 @@ function lib_dal_unit_train_trainTime($kind)
  * @param int $uid
  * @return int
  */
-function lib_dal_unit_train_removeRes($valuelist, $uid)
+function removeResources($valuelist, $uid)
 {
 	$sql = '
 		UPDATE dw_res
-		SET food = food-'.$valuelist['food'].',
-			wood = wood-'.$valuelist['wood'].',
-			rock = rock-'.$valuelist['rock'].',
-			iron = iron-'.$valuelist['iron'].',
-			paper = paper-'.$valuelist['paper'].',
-			koku = koku-'.$valuelist['koku'].'
-		WHERE uid = '.$uid.'
+		SET food = food - '.\util\mysql\sqlval($valuelist['food']).',
+			wood = wood - '.\util\mysql\sqlval($valuelist['wood']).',
+			rock = rock - '.\util\mysql\sqlval($valuelist['rock']).',
+			iron = iron - '.\util\mysql\sqlval($valuelist['iron']).',
+			paper = paper - '.\util\mysql\sqlval($valuelist['paper']).',
+			koku = koku - '.\util\mysql\sqlval($valuelist['koku']).'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -51,30 +59,30 @@ function lib_dal_unit_train_removeRes($valuelist, $uid)
  * @param int $kind
  * @param int $uid
  * @param int $count
- * @param int $endtime datetim in seconds
+ * @param \DWDateTime $endTime
  * @param string $city
  * @return int
  */
-function lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city)
+function startTrain($kind, $uid, $count, \DWDateTime $endTime, $city)
 {
 	$sql = '
 		INSERT INTO dw_build_unit (
 			kind,
 			uid,
 			count,
-			starttime,
-			endtime,
+			start_datetime,
+			end_datetime,
 			city
 		) VALUES (
-			'.$kind.',
-			'.mysql_real_escape_string($uid).',
-			'.$count.',
-			'.time().',
-			'.$endtime.',
-			"'.mysql_real_escape_string($city).'"
+			'.\util\mysql\sqlval($kind).',
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($count).',
+			NOW(),
+			'.\util\mysql\sqlval($endTime->format()).',
+			'.\util\mysql\sqlval($city).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -84,20 +92,20 @@ function lib_dal_unit_train_startTrain($kind, $uid, $count, $endtime, $city)
  * @param string $city
  * @return array
  */
-function lib_dal_unit_train_checkTraining($uid, $city)
+function checkTraining($uid, $city)
 {
 	$sql = '
 		SELECT
 			tid,
 			count,
-			endtime,
+			end_datetime,
 			city,
 			kind
 		FROM dw_build_unit
-		WHERE uid = '.mysql_real_escape_string($uid).'
-			AND city = "'.mysql_real_escape_string($city).'"
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND city = '.\util\mysql\sqlval($city).'
 	';
-	return lib_util_mysqlQuery($sql, true);
+	return \util\mysql\query($sql, true);
 }
 
 /**
@@ -105,10 +113,10 @@ function lib_dal_unit_train_checkTraining($uid, $city)
  * @author Neithan
  * @param int $tid
  */
-function lib_dal_unit_train_removeComplete($tid)
+function removeFromTrainList($tid)
 {
-	$sql = 'DELETE FROM dw_build_unit WHERE tid='.$tid;
-	lib_util_mysqlQuery($sql);
+	$sql = 'DELETE FROM dw_build_unit WHERE tid = '.\util\mysql\sqlval($tid).'';
+	\util\mysql\query($sql);
 }
 
 /**
@@ -120,17 +128,17 @@ function lib_dal_unit_train_removeComplete($tid)
  * @param int $kind
  * @return int
  */
-function lib_dal_unit_train_checkPos($uid, $map_x, $map_y, $kind)
+function checkPosition($uid, $map_x, $map_y, $kind)
 {
 	$sql = '
 		SELECT unid FROM dw_units
-		WHERE uid = '.$uid.'
-			AND pos_x = '.$map_x.'
-			AND pos_y = '.$map_y.'
-			AND kind = '.$kind.'
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND pos_x = '.\util\mysql\sqlval($map_x).'
+			AND pos_y = '.\util\mysql\sqlval($map_y).'
+			AND kind = '.\util\mysql\sqlval($kind).'
 			AND NOT tid
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
 /**
@@ -140,10 +148,14 @@ function lib_dal_unit_train_checkPos($uid, $map_x, $map_y, $kind)
  * @param int $unid
  * @return int
  */
-function lib_dal_unit_train_addUnit($count, $unid)
+function addUnit($count, $unid)
 {
-	$sql = 'UPDATE dw_units SET count = count + '.$count.' WHERE unid = '.$unid;
-	return lib_util_mysqlQuery($sql);;
+	$sql = '
+		UPDATE dw_units
+		SET count = count + '.\util\mysql\sqlval($count).'
+		WHERE unid = '.\util\mysql\sqlval($unid).'
+	';
+	return \util\mysql\query($sql);;
 }
 
 /**
@@ -156,7 +168,7 @@ function lib_dal_unit_train_addUnit($count, $unid)
  * @param int $map_y
  * @return int
  */
-function lib_dal_unit_train_newUnit($uid, $kind, $count, $map_x, $map_y)
+function newUnit($uid, $kind, $count, $map_x, $map_y)
 {
 	$sql = '
 		INSERT INTO dw_units (
@@ -166,21 +178,30 @@ function lib_dal_unit_train_newUnit($uid, $kind, $count, $map_x, $map_y)
 			pos_x,
 			pos_y
 		) VALUES (
-			'.mysql_real_escape_string($uid).',
-			'.$kind.',
-			'.$count.',
-			'.$map_x.',
-			'.$map_y.'
+			'.\util\mysql\sqlval($uid).',
+			'.\util\mysql\sqlval($kind).',
+			'.\util\mysql\sqlval($count).',
+			'.\util\mysql\sqlval($map_x).',
+			'.\util\mysql\sqlval($map_y).'
 		)
 	';
-	return lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }
 
-function lib_dal_unit_deleteUnit($unid)
+/**
+ * get the amount of currently trained units
+ * @param int $uid
+ * @param String $city
+ * @param int $kind
+ * @return int
+ */
+function getTrainingUnits($uid, $city, $kind)
 {
 	$sql = '
-		DELETE FROM dw_units
-		WHERE unid = '.mysql_real_escape_string($unid).'
+		SELECT count FROM dw_build_unit
+		WHERE uid = '.\util\mysql\sqlval($uid).'
+			AND city = '.\util\mysql\sqlval($city).'
+			AND kind = '.\util\mysql\sqlval($kind).'
 	';
-	lib_util_mysqlQuery($sql);
+	return \util\mysql\query($sql);
 }

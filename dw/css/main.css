@@ -1,6 +1,18 @@
-body {
+body
+{
 	font-family: "Times New Roman", Times, serif;
 	background-color: #FFFFFF;
+	color: #980E23;
+}
+
+.ui-widget
+{
+	font-family: "Times New Roman", Times, serif;
+	font-size: 1em;
+}
+
+.ui-widget-content
+{
 	color: #980E23;
 }
 
@@ -326,6 +338,11 @@ span.news2 {
 	position: relative;
 }
 
+.buildings #build_dialog
+{
+	display: none;
+}
+
 .heading {
 	text-align: center;
 	font-weight: bold;
@@ -337,12 +354,6 @@ span.news2 {
 	clear: both;
 	position: relative;
 	margin: 0px 100px;
-}
-
-.building .res {
-	position: relative;
-	margin-top: 20px;
-	clear: both;
 }
 
 .build_button {
@@ -361,17 +372,6 @@ span.news2 {
 	left: 300px;
 	text-align: center;
 	vertical-align: middle;
-}
-
-.building .res_pics {
-	text-align: center;
-	vertical-align: top;
-	height: 24px;
-	width: 75px;
-}
-
-.building .res_pic {
-	max-width: 20px;
 }
 
 .building_pic
@@ -411,9 +411,11 @@ span.news2 {
 	position: absolute;
 }
 
-.build_list {
+.build_list
+{
+	display: none;
 	width: 600px;
-	margin: 0px 30px;
+	margin: 10px 30px 0;
 	text-align: center;
 	vertical-align: top;
 }
@@ -448,20 +450,28 @@ span.news2 {
 	background-color: #7a8be4;
 }
 
+.build_list #build_list_dummy
+{
+	display: none;
+}
+
 input {
 	background-color: #fcdf7e;
 	color: #980E23;
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px !important;
 }
 
-input[disabled='disabled'] {
+input[disabled='disabled'],
+input:disabled {
 	background-color: #d1bc79;
 	color: #888888;
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px;
 }
 
 select {
@@ -470,6 +480,7 @@ select {
 	border-style: solid;
 	border-color: #990000;
 	border-width: 1px;
+	font-size: 13px !important;
 }
 
 .s1 {
@@ -565,6 +576,11 @@ textarea {
 	width: 100%;
 }
 
+.tribunal .inner_content
+{
+	width: 630px;
+}
+
 #new_hearing
 {
 	width: 500px;
@@ -574,7 +590,7 @@ textarea {
 .hearing_column
 {
 	float: left;
-	width: 196px;
+	width: 194px;
 	min-height: 150px;
 	border: 1px solid #990000;
 	padding: 2px;
@@ -667,6 +683,16 @@ textarea {
 }
 
 #new_rule input
+{
+	margin-top: 5px;
+}
+
+.sub_menu
+{
+	margin-bottom: 10px;
+}
+
+.sub_menu form
 {
 	margin-top: 5px;
 }
@@ -1312,7 +1338,7 @@ textarea {
 	margin: 20px auto 0;
 }
 
-.backlink
+.backlink, .center_text
 {
 	text-align: center;
 }
@@ -1446,6 +1472,14 @@ textarea {
 	height: 352px;
 }
 
+.map .map_body .navi_top img,
+.map .map_body .navi_bottom img,
+.map .map_body .navi_left img,
+.map .map_body .navi_right img
+{
+	cursor: pointer;
+}
+
 .map .map_body .viewport
 {
 	float: left;
@@ -1551,7 +1585,8 @@ textarea {
 }
 
 .acp_content .submenu,
-.acp_content .subheading
+.acp_content .subheading,
+.tribunal .subheading
 {
 	margin-bottom: 10px;
 }
@@ -1591,4 +1626,158 @@ textarea {
 .acp_content .newsList .row
 {
 	text-align: center;
+}
+
+.messageContent .messageMenu
+{
+	width: 200px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.messageContent .messageList
+{
+	width: 400px;
+	margin: 0 auto;
+}
+
+.messageContent .messageList table
+{
+	width: 100%;
+}
+
+.messageContent .messageList table .sender
+{
+	width: 150px;
+}
+
+.messageContent .messageList table .delete
+{
+	width: 65px;
+	text-align: center;
+}
+
+.messageContent .readMessage,
+.messageContent .readEventMessage,
+.userDetails
+{
+	width: 350px;
+	margin: 0 auto;
+}
+
+.messageContent .readMessage table,
+.messageContent .readEventMessage table,
+.userDetails table
+{
+	width: 100%;
+}
+
+.messageContent .readMessage .messageLinks .link
+{
+	float: left;
+	margin-right: 50px;
+}
+
+.messageContent .readMessage .messageLinks .lastLink
+{
+	margin-right: 0;
+}
+
+.ranking_content
+{
+    margin: 0 80px 100px;
+}
+
+.ranking_content .left_head
+{
+    float: left;
+    text-align: center;
+    width: 50%;
+}
+
+.ranking_content .right_head
+{
+    float: right;
+    text-align: center;
+    width: 50%;
+}
+
+.ranking_content .div_breaker
+{
+    margin-top: 20px;
+    clear: both;
+}
+
+.ranking_content a.message
+{
+	text-decoration: none;
+}
+
+.options .optionsContent
+{
+	width: 350px;
+	margin: 0 auto;
+}
+
+.options .optionsContent .option
+{
+	margin-bottom: 10px;
+}
+
+.options .optionsContent .option table
+{
+	width: 100%;
+}
+
+.options .optionsContent .option table .title
+{
+	width: 165px;
+}
+
+.build_dialog
+{
+	background-color: #ffff66;
+}
+
+.build_dialog .res_pics
+{
+	text-align: center;
+	vertical-align: top;
+	height: 24px;
+	width: 75px;
+}
+
+.build_dialog .res_pic
+{
+	max-width: 20px;
+}
+
+.build_dialog .res
+{
+	position: relative;
+	margin-top: 20px;
+	clear: both;
+}
+
+.build_dialog .close
+{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.build_dialog .not_yet_buildable
+{
+	margin-bottom: 5px;
+}
+
+.buildings .ui-widget-overlay
+{
+	position: absolute;
+}
+
+.buildings .ui-widget-content
+{
+	background: none;
+	background-color: #ffff66;
 }

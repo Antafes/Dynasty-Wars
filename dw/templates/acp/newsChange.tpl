@@ -1,39 +1,39 @@
 <div class="subheading">
 	{if !$smarty.get.nid}
-		{$lang.writeNews|htmlentities}
+		{$lang.writeNews}
 	{else}
-		{$lang.changeNews|htmlentities}
+		{$lang.changeNews}
 	{/if}
 </div>
 <form method="post" action="index.php?chose=acp&amp;sub=news&amp;nmode={$smarty.get.nmode}&amp;nid={$smarty.get.nid}">
 	{if $message}
-		<div class="infoMessage">{$message|htmlentities}</div>
+		<div class="infoMessage">{$message}</div>
 	{/if}
 	<div class="newsChange">
 		<table>
 			<tr>
-				<th style="width: 50px;">{$lang.title|htmlentities}:</th>
+				<th style="width: 50px;">{$lang.title}:</th>
 				<td>
-					<input type="text" name="title" value="{$newsEntry.title|htmlentities}" />
+					<input type="text" name="title" value="{$newsEntry.title}" />
 				</td>
 			</tr>
 			<tr>
-				<th colspan="2">{$lang.text|htmlentities}:</th>
+				<th colspan="2">{$lang.text}:</th>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<textarea name="news" cols="50" rows="10">{$newsEntry.text|htmlentities}</textarea>
+					<textarea name="news" cols="50" rows="10">{$newsEntry.text}</textarea>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align: center;">
-					<input type="submit" value="{$lang.save|htmlentities}" />
+					<input type="submit" value="{$lang.save}" />
 				</td>
 			</tr>
 		</table>
 		{if $smarty.get.nid}
 		<div class="backlink">
-			<a href="index.php?chose=acp&amp;sub=news&amp;nmode=1">{$lang.back|htmlentities}</a>
+			<a href="index.php?chose=acp&amp;sub=news&amp;nmode=1">{$lang.back}</a>
 		</div>
 		{/if}
 	</div>

@@ -8,15 +8,15 @@
 
 /**
  * Spy algorithm explanation:
- * 
+ *
  * 1) Calculate the total defense of the victim -> (number of spies) + DEF_STANDARD + (DEF_TOWERFACT * towerlevel)
  * 2) Calculate the disclosure chance -> (sum of all requested LOOKFOR) / (sum of all LOOKFORS)
  * 3) Calculate the ratio of attacking spies and defending spies
  * 4) Calculate how many spies will be riskchecked  -> (amount of attacking spies) * (ratio calculated in 3)
  * 5) Calculate enemy spy survivors -> (amount of spies that are riskchecked) * (disclosure chance)
- * 
+ *
  */
- namespace dwars\lib\bl;
+ namespace bl\spy;
 
 //include "../dal/user.php";
 //include "../bl/resource.php";
@@ -39,7 +39,7 @@ const MF_BUILDINGS_DEFENSE = 1.5;
 const MF_BUILDINGS_SCIENCE = 1.2;
 const MF_RESOURCES = 1.1;
 
-define('dwars\lib\bl\MF_TOTAL', namespace\MF_UNITS + namespace\MF_BUILDINGS_ECONOMY + namespace\MF_BUILDINGS_MILITARY + namespace\MF_BUILDINGS_DEFENSE + namespace\MF_BUILDINGS_SCIENCE + namespace\MF_RESOURCES);
+define('\bl\spy\MF_TOTAL', namespace\MF_UNITS + namespace\MF_BUILDINGS_ECONOMY + namespace\MF_BUILDINGS_MILITARY + namespace\MF_BUILDINGS_DEFENSE + namespace\MF_BUILDINGS_SCIENCE + namespace\MF_RESOURCES);
 
 // constant defensive values
 const DEF_STANDARD = 50; // counts as extra spies for the player defending against a spy attack
@@ -50,19 +50,19 @@ const INITIAL_COST = 1000;
 
 function spyOn($uid, $numberOfSpies, $x, $y, $lookFor) {
         if (!hasEnoughSpies($uid, $numberOfSpies, $x, $y)) return 0;
-	
+
 	$spyCost = calculateSpyCost($lookFor) * numberOfSpies;
-	
-	if (!lib_bl_resource_hasEnoughOf($x, $y, "koku", $spyCost)) return -1;
-	
-	$victimUid = lib_dal_user_getUIDFromMapPosition($x, $y);
-	
+
+	if (!\bl\resource\hasEnoughOf($x, $y, "koku", $spyCost)) return -1;
+
+	$victimUid = \dal\user\getUIDFromMapPosition($x, $y);
+
 	$noSpiesOfVictim = calculateTotalDefense($victimUid, $x, $y);
-	
+
 	$remainingSpies = doRiskChecks($numberOfSpies, $noSpiesOfVictim, $lookFor);
-	
+
 	if ($remainingSpies <= 0) return -2; // all spies are dead, no intelligence data for you!
-	
+
 	generateSpyReport($victim, $x, $y, $lookFor);
 	return 1;
 }
@@ -145,7 +145,7 @@ function calculateDisclosureChance($lookFor) {
  * @param int y
  */
 function calculateTotalDefense($uid, $x, $y) {
-	$towerInfo = lib_bl_buildings_getBuildingByKind(24, $x.":".$y);
+	$towerInfo = \bl\buildings\getBuildingByKind(24, $x.":".$y);
 	return noOfSpiesAtLocation($victimUid, $x, $y) + DEF_STANDARD + ($towerInfo['lvl'] * DEF_TOWERFACTOR);
 }
 
@@ -190,7 +190,7 @@ function getAttackerVictimSpyRatio($attackerNoSpies, $victimNoSpies) {
  * @param int y
  */
 function noOfSpiesAtLocation($uid, $x, $y) {
-	return lib_dal_unit_getUnitCountByCoordinates(3, $uid, $x, $y);
+	return \dal\unit\getUnitCountByCoordinates(3, $uid, $x, $y);
 }
 
 /**
@@ -212,5 +212,3 @@ function hasEnoughSpies($uid, $numberOfSpies, $x, $y) {
  */
 function generateSpyReport($victim, $x, $y, $lookFor) {
 }
-
-?>

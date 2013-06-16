@@ -1,7 +1,7 @@
 <?php
 include ('loggedout/header.php');
-lib_bl_general_loadLanguageFile('login', 'loggedout');
-unset ($err);
+bl\general\loadLanguageFile('login', 'loggedout');
+
 $login = $_POST['login'];
 $user = $_POST['nick'];
 $pw = $_POST['pw'];
@@ -13,7 +13,7 @@ $smarty->assign('login', $login);
 
 if ($login == 1)
 {
-	$login = lib_bl_login_getAllData($user);
+	$login = bl\login\getAllData($user);
 	$uid = $login['uid'];
 	$reguser = $login['nick'];
 	$regpw = $login['password'];
@@ -22,26 +22,32 @@ if ($login == 1)
 	$admin = $login['game_rank'];
 	$lang['lang'] = $login['language'];
 	$deactivated = $login['deactivated'];
-	$login_closed = lib_bl_login_checkLogin();
+	$login_closed = bl\login\checkLogin();
 	if ($status)
 		$err['status'] = 1;
+
 	if ($blocked)
 		$err['blocked'] = 1;
-	if (($login_closed == 1) and ($_SESSION['user']->getGameRank() < 1))
-		$err['login_closed'] = 1;
-	elseif (($login_closed == 2) and ($_SESSION['user']->getGameRank() < 2))
-		$err['login_closed'] = 2;
+
+	if (is_object($_SESSION['user']))
+	{
+		if (($login_closed == 1) && ($_SESSION['user']->getGameRank() < 1))
+			$err['login_closed'] = 1;
+		elseif (($login_closed == 2) && ($_SESSION['user']->getGameRank() < 2))
+			$err['login_closed'] = 2;
+	}
+
 	if (
-		(strcasecmp($user, $reguser) == 0 and $pws === $regpw)
-		and !$err['status']
-		and !$err['blocked']
-		and !$err['login_closed']
-		and !$deactivated
+		(strcasecmp($user, $reguser) == 0 && $pws === $regpw)
+		&& !$err['status']
+		&& !$err['blocked']
+		&& !$err['login_closed']
+		&& !$deactivated
 	)
 	{
-		lib_bl_login_setLastLogin($uid);
-		$city = lib_bl_login_getMainCity($uid);
-		$id = lib_bl_login_createId($uid);
+		bl\login\setLastLogin($uid);
+		$city = bl\login\getMainCity($uid);
+		$id = bl\login\createID($uid);
 		if ($save_login)
 		{
 			setcookie('lid', $id, time()+604800, '', '.dynasty-wars.de');
@@ -53,37 +59,37 @@ if ($login == 1)
 			$_SESSION['city'] = $city;
 			$_SESSION['language'] = $lang['lang'];
 		}
-		lib_bl_general_redirect(lib_util_html_createLink(array('chose' => 'home'), true));
+		bl\general\redirect(util\html\createLink(array('chose' => 'home'), true));
 	}
 	else
 	{
-		if (strcasecmp($user, $reguser) != 0 or $pws !== $regpw)
+		if (strcasecmp($user, $reguser) != 0 || $pws !== $regpw)
 			$err['failed_login'] = true;
 
 		if ($err['failed_login'])
-			$error = htmlentities($lang['loginfailed']);
+			$error = $lang['loginfailed'];
 		elseif ($err['status'])
-			$error = nl2br(htmlentities($lang['noactivation']));
+			$error = nl2br($lang['noactivation']);
 		elseif ($err['blocked'])
-			$error = nl2br(htmlentities($lang['blocked']));
+			$error = nl2br($lang['blocked']);
 		elseif ($err['login_closed'] == 1)
-			$error = htmlentities($lang['onlyadmin']);
+			$error = $lang['onlyadmin'];
 		elseif ($err['login_closed'] == 2)
-			$error = htmlentities($lang['loginclosed']);
+			$error = $lang['loginclosed'];
 		elseif ($deactivated)
-			$error = nl2br(htmlentities($lang['deactivated']));
+			$error = nl2br($lang['deactivated']);
 
 		$smarty->assign('error', $error);
-		$smarty->assign('back', htmlentities($lang['back']));
+		$smarty->assign('back', $lang['back']);
 	}
 }
 else
 {
-	$smarty->assign('name', htmlentities($lang['name']));
-	$smarty->assign('password', htmlentities($lang['password']));
-	$smarty->assign('remind_login', htmlentities($lang['remindlogin']));
-	$smarty->assign('login_button', htmlentities($lang['login']));
-	$smarty->assign('lost_password', htmlentities($lang['lost_password']));
+	$smarty->assign('name', $lang['name']);
+	$smarty->assign('password', $lang['password']);
+	$smarty->assign('remind_login', $lang['remindlogin']);
+	$smarty->assign('login_button', $lang['login']);
+	$smarty->assign('lost_password', $lang['lost_password']);
 }
 
 include ('loggedout/footer.php');

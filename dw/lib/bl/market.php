@@ -6,6 +6,8 @@
  *
  */
 
+namespace bl\market;
+
 /**
  * Places resources on the market.
  * @author siyb
@@ -17,7 +19,7 @@
  * @return <int> 0 if the user does not have the disired amount of the resource
  * 1 if the goods have been places on the market successfully
  */
-function lib_bl_market_placeResourceOnMarket($uid, $sellResource, $sellAmount,
+function placeResourceOnMarket($uid, $sellResource, $sellAmount,
 	$exchangeResource, $exchangeAmount, $tax, $city)
 {
 	$cityexp = explode(":", $city);
@@ -25,15 +27,14 @@ function lib_bl_market_placeResourceOnMarket($uid, $sellResource, $sellAmount,
 	$y = $cityexp[1];
 
 	// check if the user has enough resources
-	if (lib_dal_resource_returnResourceAmount($x, $y, $sellResource) < $sellAmount) {
+	if (\dal\resource\returnResourceAmount($x, $y, $sellResource) < $sellAmount)
 		return 0;
-	}
 
 	// remove the specified amount of the resource from the user
-	lib_dal_resource_addToResources($sellResource, $sellAmount * -1, $x, $y);
+	\dal\resource\addToResources($sellResource, $sellAmount * -1, $x, $y);
 
 	// place resource on market
-	lib_dal_market_placeOnMarket(
+	\dal\market\placeOnMarket(
 		$uid,
 		$x,
 		$y,
@@ -59,33 +60,35 @@ function lib_bl_market_placeResourceOnMarket($uid, $sellResource, $sellAmount,
  * chase was successful
  */
 
-function lib_bl_market_buy($uid, $mid, $city)
+function buy($uid, $mid, $city)
 {
 	$cityexp = explode(":", $city);
 	$x = $cityexp[0];
 	$y = $cityexp[1];
-	if (lib_dal_market_getOwner($mid) == $uid) // check if the user owns the offer
+
+	if (\dal\market\getOwner($mid) == $uid) // check if the user owns the offer
 		return 0;
-	if (!lib_dal_market_isOpen($mid)) // check if the offer is still open
+
+	if (!\dal\market\isOpen($mid)) // check if the offer is still open
 		return -1;
-	$offerDetails = lib_dal_market_getOfferDetails($mid);
-	if (!$offerDetails['sx'] or !$offerDetails['sy'])
+
+	$offerDetails = \dal\market\getOfferDetails($mid);
+
+	if (!$offerDetails['sx'] || !$offerDetails['sy'])
 	{
-		$seller = lib_dal_map_getUsersMainCity($offerDetails['sid']);
+		$seller = \dal\map\getUsersMainCity($offerDetails['sid']);
 		$offerDetails['sx'] = $seller['map_x'];
 		$offerDetails['sy'] = $seller['map_y'];
 	}
 
 	// check if the buyer has enough resourses to pay for the offer
-	if (lib_dal_resource_returnResourceAmount($x, $y, $offerDetails['e_resource'])
-		< $offerDetails['e_amount']) {
+	if (\dal\resource\returnResourceAmount($x, $y, $offerDetails['e_resource']) < $offerDetails['e_amount'])
 		return -2;
-	}
 
-	lib_dal_market_removeFromMarket($mid, $uid); // change the offer's flag to finished
+	\dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
 
 	// transfer the goods to the buyer
-	lib_dal_resource_addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['s_resource'],
 		$offerDetails['s_amount'] - $offerDetails['tax'],
 		$x,
@@ -93,7 +96,7 @@ function lib_bl_market_buy($uid, $mid, $city)
 	);
 
 	// remove the payment from the buyers account
-	lib_dal_resource_addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['e_resource'],
 		$offerDetails['e_amount'] * -1,
 		$x,
@@ -101,7 +104,7 @@ function lib_bl_market_buy($uid, $mid, $city)
 	);
 
 	// ... and transfer it to the seller
-	lib_dal_resource_addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['e_resource'],
 		$offerDetails['e_amount'],
 		$offerDetails['sx'],
@@ -109,20 +112,21 @@ function lib_bl_market_buy($uid, $mid, $city)
 	);
 
 	// send a message to the seller
-	$userlang = lib_bl_general_getLanguage($offerDetails['sid']);
-	include("language/".$userlang."/ingame/event_messages.php");
-	include("language/".$userlang."/ingame/main.php");
-	lib_bl_general_sendMessage(
+	$userlang = \bl\general\getLanguageByUID($offerDetails['sid']);
+	$lang = array();
+	$lang += \bl\general\loadLanguageFile('event_messages', 'loggedin', false, $userlang);
+	$lang += \bl\general\loadLanguageFile('main', 'loggedin', false, $userlang);
+	\bl\general\sendMessage(
 		0,
 		$offerDetails['sid'],
 		$lang["buy_title"],
 		sprintf(
 			$lang["buy_msg"],
-			lib_dal_user_uid2nick($uid),
+			\dal\user\uid2nick($uid),
 			$offerDetails['s_amount'],
-			htmlentities($lang[$offerDetails['s_resource']]),
+			$lang[$offerDetails['s_resource']],
 			$offerDetails['e_amount'],
-			htmlentities($lang[$offerDetails['e_resource']])
+			$lang[$offerDetails['e_resource']]
 		),
 		3
 	);
@@ -137,18 +141,21 @@ function lib_bl_market_buy($uid, $mid, $city)
  * @return <int> 0 if the user doesn't owe the offer, -1 if the offer is closed
  * 1 if the anullment was successful
  */
-function lib_bl_market_anull($uid, $mid, $city)
+function anull($uid, $mid, $city)
 {
 	$city_exp = explode(':', $city);
-	if (lib_dal_market_getOwner($mid) != $uid)
+
+	if (\dal\market\getOwner($mid) != $uid)
 		return 0; // check if the user owns the offer
-	if (!lib_dal_market_isOpen($mid))
+
+	if (!\dal\market\isOpen($mid))
 		return -1; // check if the offer is still open
-	$offerDetails = lib_dal_market_getOfferDetails($mid);
-	lib_dal_market_removeFromMarket($mid, $uid); // change the offer's flag to finished
+
+	$offerDetails = \dal\market\getOfferDetails($mid);
+	\dal\market\removeFromMarket($mid, $uid); // change the offer's flag to finished
 
 	// lets transfer the offers resources back to the owner
-	lib_dal_resource_addToResources(
+	\dal\resource\addToResources(
 		$offerDetails['s_resource'],
 		$offerDetails['s_amount'],
 		$city_exp[0],
@@ -158,7 +165,7 @@ function lib_bl_market_anull($uid, $mid, $city)
 }
 
 /**
- * Just a wrapper for the lib_dal_market_userOffers() function that seperates the
+ * Just a wrapper for the \dal\market\userOffers() function that seperates the
  * display layer from the data access layer
  * @author siyb
  * @param <int> $uid the uid of the user
@@ -168,9 +175,9 @@ function lib_bl_market_anull($uid, $mid, $city)
  * case sensitive
  * @return <array> containing all results
  */
-function lib_bl_market_userOffers($uid, $filter, $order)
+function userOffers($uid, $filter, $order)
 {
-	return lib_dal_market_userOffers($uid, $filter, $order);
+	return \dal\market\userOffers($uid, $filter, $order);
 }
 
 /**
@@ -181,8 +188,8 @@ function lib_bl_market_userOffers($uid, $filter, $order)
  * @param <int> $amount the amount of the resource
  * @return <float> the tax
  */
-function lib_bl_market_calculateTax($resource, $amount) {
-	$res = lib_dal_market_sales();
+function calculateTax($resource, $amount) {
+	$res = \dal\market\sales();
 	$total = 0;
 	foreach ($res as $row)
 	{
@@ -195,35 +202,38 @@ function lib_bl_market_calculateTax($resource, $amount) {
 	 * in a specific timeframe. Take this percentage and use it on $amount to
 	 * calulate the tax that has to be payed
 	*/
-	$tax = lib_util_math_calcPercentage($total, $fragment);
-	if ($tax > 49) $tax = 49;
-	return lib_util_math_calcFragment($amount, $tax);
+	$tax = \util\math\calcPercentage($total, $fragment);
+
+	if ($tax > 49)
+		$tax = 49;
+
+	return \util\math\calcFragment($amount, $tax);
 }
 
 /**
- * Just a wrapper for the lib_dal_market_search() function that seperates the
+ * Just a wrapper for the \dal\market\search() function that seperates the
  * display layer from the data access layer
  * @author siyb
  * @author Neithan
  * @global array $lang
- * @global array $user
- * @param <type> $Sresource
- * @param <type> $SvalueRangeStart
- * @param <type> $SvalueRangeEnd
- * @param <type> $Eresource
- * @param <type> $EvalueRangeStart
- * @param <type> $EvalueRangeEnd
- * @param <type> $complete
- * @param <type> $seller
- * @return <type>
+ * @param <String> $Sresource
+ * @param <int> $SvalueRangeStart
+ * @param <int> $SvalueRangeEnd
+ * @param <Stromg> $Eresource
+ * @param <int> $EvalueRangeStart
+ * @param <int> $EvalueRangeEnd
+ * @param <int> $complete
+ * @param <String> $seller
+ * @return <array>
  */
-function lib_bl_market_search(
+function search(
 	$Sresource, $SvalueRangeStart, $SvalueRangeEnd,
 	$Eresource, $EvalueRangeStart, $EvalueRangeEnd,
 	$complete, $seller)
 {
-	global $lang, $user;
-	$offers = lib_dal_market_search(
+	global $lang;
+
+	$offers = \dal\market\search(
 		$Sresource,
 		$SvalueRangeStart,
 		$SvalueRangeEnd,
@@ -239,12 +249,12 @@ function lib_bl_market_search(
 	{
 		$result[] = array(
 			'mid' => $offer['mid'],
-			'seller' => lib_dal_user_uid2nick($offer['sid']),
+			'seller' => \dal\user\uid2nick($offer['sid']),
 			'soldResource' => $lang[$offer['s_resource']],
-			'soldAmount' => lib_util_math_numberFormat($offer['s_amount'], 0),
+			'soldAmount' => \util\math\numberFormat($offer['s_amount'], 0),
 			'requestedResource' => $lang[$offer['e_resource']],
-			'requestedAmount' => lib_util_math_numberFormat($offer['e_amount'], 0),
-			'tax' => lib_util_math_numberFormat($offer['tax'], 0),
+			'requestedAmount' => \util\math\numberFormat($offer['e_amount'], 0),
+			'tax' => \util\math\numberFormat($offer['tax'], 0),
 			'ownOffer' => ($offer['sid'] == $_SESSION['user']->getUID() ? 1 : 0),
 		);
 	}
@@ -256,13 +266,13 @@ function lib_bl_market_search(
  * returns a mapped array with all active offers
  * @author Neithan
  * @global array $lang
- * @global object $user
  * @return array
  */
-function lib_bl_market_returnAllOffers()
+function returnAllOffers()
 {
-	global $lang, $user;
-	$allOffers = lib_dal_market_returnAllOffers();
+	global $lang;
+
+	$allOffers = \dal\market\returnAllOffers();
 
 	$result = array();
 	if ($allOffers)
@@ -271,16 +281,27 @@ function lib_bl_market_returnAllOffers()
 		{
 			$result[] = array(
 				'mid' => $offer['mid'],
-				'seller' => lib_dal_user_uid2nick($offer['sid']),
+				'seller' => \dal\user\uid2nick($offer['sid']),
 				'soldResource' => $lang[$offer['s_resource']],
-				'soldAmount' => lib_util_math_numberFormat($offer['s_amount'], 0),
+				'soldAmount' => \util\math\numberFormat($offer['s_amount'], 0),
 				'requestedResource' => $lang[$offer['e_resource']],
-				'requestedAmount' => lib_util_math_numberFormat($offer['e_amount'], 0),
-				'tax' => lib_util_math_numberFormat($offer['tax'], 0),
+				'requestedAmount' => \util\math\numberFormat($offer['e_amount'], 0),
+				'tax' => \util\math\numberFormat($offer['tax'], 0),
 				'ownOffer' => ($offer['sid'] == $_SESSION['user']->getUID() ? 1 : 0),
 			);
 		}
 	}
 
 	return $result;
+}
+
+/**
+ * Checks if an offer is open
+ * @author Neithan
+ * @param int $mid
+ * @return bool
+ */
+function isOpen($mid)
+{
+	return \dal\market\isOpen($mid) > 0;
 }

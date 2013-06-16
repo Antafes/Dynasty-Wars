@@ -1,5 +1,5 @@
 {if !$smarty.session.user->getGameRank()}
-	{$lang.noadmin|htmlentities|nl2br}
+	{$lang.noadmin|nl2br}
 {else}
 	{if !$smarty.get.reguid}
 		{include file='../acp/userList.tpl'}
