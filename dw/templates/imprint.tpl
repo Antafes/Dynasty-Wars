@@ -10,8 +10,8 @@
 				</div>
 				<div>
 					Marian "Neithan" Pollzien<br/>
-					Nordwalder Stra&szlig;e 94<br/>
-					48268 Greven Westf.<br/>
+					Leipziger Stra&szlig;e 29<br/>
+					04420 Markranst&auml;dt<br/>
 					<a href="mailto:{$mailNeithan|escape: 'hex'}">E-Mail</a>
 				</div>
 				<div class="subheading">
