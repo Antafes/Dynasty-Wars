@@ -8,6 +8,7 @@ $DB_MIGRATION = array(
 
 	'up' => function ($migration_metadata) {
 		require_once(__DIR__.'/../../dw/lib/bl/buildings.inc.php');
+		require_once(__DIR__.'/../../dw/lib/bl/resource.inc.php');
 
 		$results = array();
 
