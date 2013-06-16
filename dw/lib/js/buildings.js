@@ -84,6 +84,12 @@ function fillBuildplace(dialog, buildPlace, building)
 	dialog.children('.building_pic').html(building.buildingPicture);
 	dialog.children('.description').text(building.buildingDescription);
 
+	if (building.kind === 1)
+	{
+		dialog.children('.building_pic').css('width', 195);
+		dialog.children('.description').css('width', 260);
+	}
+
 	if (!building.notYetBuildable)
 		dialog.children('.not_yet_buildable').hide();
 	else
