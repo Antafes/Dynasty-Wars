@@ -46,10 +46,7 @@ if ($_GET['buildPlace'])
 				$building['buildingName'] = $lang['building_names'][$building['kind']][$has_harbour];
 
 			if (bl\buildings\checkBuildable($_SESSION['user']->getUID(), $building['kind'], $cityExp[0], $cityExp[1]))
-			{
 				$building['level'] = $lang['level'].' '.$building['lvl'];
-				unset($building['lvl']);
-			}
 
 			$building['buildPlace'] = $_GET['buildPlace'];
 
