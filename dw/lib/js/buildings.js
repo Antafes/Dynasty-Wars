@@ -143,12 +143,12 @@ function fillBuildplace(dialog, buildPlace, building)
 	else
 	{
 		var resources = dialog.children('form').children('.res.upgrade').children('table').children('tbody');
-		resources.children('tr:first').children('td.food').text(building.buildingResources.food);
-		resources.children('tr:first').children('td.wood').text(building.buildingResources.wood);
-		resources.children('tr:first').children('td.rock').text(building.buildingResources.rock);
-		resources.children('tr:last').children('td.iron').text(building.buildingResources.iron);
-		resources.children('tr:last').children('td.paper').text(building.buildingResources.paper);
-		resources.children('tr:last').children('td.koku').text(building.buildingResources.koku);
+		resources.children('tr:first').children('td.food').text(building.upgradePrices.food);
+		resources.children('tr:first').children('td.wood').text(building.upgradePrices.wood);
+		resources.children('tr:first').children('td.rock').text(building.upgradePrices.rock);
+		resources.children('tr:last').children('td.iron').text(building.upgradePrices.iron);
+		resources.children('tr:last').children('td.paper').text(building.upgradePrices.paper);
+		resources.children('tr:last').children('td.koku').text(building.upgradePrices.koku);
 
 
 		if (!building.canUpgrade || !building.freeBuildPosition)
@@ -174,7 +174,7 @@ function fillBuildplace(dialog, buildPlace, building)
 					$('.build_list').show();
 					timer(response.timer.endTime, response.timer.now, 'b' + response.timer.bid);
 
-					$('.build_dialog').dialog('close');
+					$('.build_dialog').not('#build_dialog').dialog('close');
 				}
 
 				hideAjaxLoading();
@@ -221,4 +221,5 @@ function addBuildListItem(item)
 	buildListClone.children('span').text(item.text + ':');
 	buildListClone.children('strong').children().attr('id', 'b' + item.bid);
 	$('.build_list').children('.content').append(buildListClone);
+	setBorderHeight();
 }
