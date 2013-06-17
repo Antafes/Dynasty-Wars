@@ -212,6 +212,7 @@ function insertBuilding($uid, $x, $y, $kind, $position)
  */
 function startBuilding($bid, $upgrade, \DWDateTime $endTime)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO `dw_build` (
 			`bid`,
@@ -221,7 +222,7 @@ function startBuilding($bid, $upgrade, \DWDateTime $endTime)
 		) VALUES (
 			'.\util\mysql\sqlval($bid).',
 			'.\util\mysql\sqlval($upgrade).',
-			NOW(),
+			'.\util\mysql\sqlval($now->format()).',
 			'.\util\mysql\sqlval($endTime->format()).'
 		)
 	';
