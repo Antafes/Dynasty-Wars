@@ -452,7 +452,7 @@ function checkBuildable($uid, $kind, $x, $y)
  * @author Neithan
  * @param int $kind
  * @param string $city
- * @return int returns 1 if the building can be upgraded, otherwise 0
+ * @return bool returns true if the building can be upgraded, otherwise false
  */
 function checkUpgradeable($kind, $city)
 {
@@ -463,64 +463,72 @@ function checkUpgradeable($kind, $city)
 	if ($kind == 19)
 	{
 		if (floor($building['lvl']/10) >= $building['ulvl'])
-			return 1;
+			return true;
 		else
-			return 0;
+			return false;
 	}
 	elseif ($kind != 19)
 	{
+		$upgradeMatrix = array(
+			1 => array(),
+			2 => array(
+				7 => 1,
+				9 => 1,
+			),
+			3 => array(
+				8 => 1,
+				10 => 1,
+				24 => 1,
+			),
+			4 => array(
+				7 => 2,
+				14 => 1,
+				16 => 1,
+				17 => 1,
+				23 => 1,
+				25 => 1,
+			),
+			5 => array(
+				8 => 2,
+				9 => 2,
+				10 => 2,
+				14 => 2,
+				16 => 2,
+				17 => 2,
+				18 => 1,
+				20 => 2,
+				23 => 2,
+				24 => 2,
+			),
+			6 => array(
+				7 => 3,
+				8 => 3,
+				16 => 3,
+				17 => 3,
+				18 => 2,
+				20 => 2,
+				21 => 1,
+				23 => 3,
+				24 => 3,
+				25 => 3,
+			),
+		);
 		$main = \dal\buildings\getBuildingByKind(19, $x, $y);
-		switch ($main['ulvl'])
+
+		$return = false;
+		if (\floor($building['lvl']/10) >= $building['ulvl'])
 		{
-			case 1:
+			for ($i = $main['ulvl']; $i > 0; $i--)
 			{
-				return 0;
-				break;
-			}
-			case 2:
-			{
-				if (($kind == 7 || $kind == 9) && floor($building['lvl']/10) >= $building['ulvl'])
-					return 1;
-				else
-					return 0;
-				break;
-			}
-			case 3:
-			{
-				if (($kind == 8 || $kind == 9 || $kind == 10 || $kind == 24) && floor($building['lvl']/10) >= $building['ulvl'])
-					return 1;
-				else
-					return 0;
-				break;
-			}
-			case 4:
-			{
-				if (($kind == 7 || $kind == 14 || $kind == 16 || $kind == 17 || $kind == 23 || $kind == 25)
-					&& floor($building['lvl']/10) >= $building['ulvl'])
-					return 1;
-				else
-					return 0;
-				break;
-			}
-			case 5:
-			{
-				if (($kind == 8 || $kind == 9 || $kind == 10 || $kind == 14 || $kind == 16 || $kind == 17 || $kind == 18 || $kind == 20 || $kind == 23 || $kind == 24)
-					&& floor($building['lvl']/10) >= $building['ulvl'])
-					return 1;
-				else
-					return 0;
-				break;
-			}
-			case 6:
-			{
-				if (($kind == 7 || $kind == 8 || $kind == 16 || $kind == 17 || $kind == 18 || $kind == 20 || $kind == 21 || $kind == 23 || $kind == 24 || $kind == 25)
-					&& floor($building['lvl']/10) >= $building['ulvl'])
-					return 1;
-				else
-					return 0;
-				break;
+				if ($upgradeMatrix[$i][$kind] && $upgradeMatrix[$i][$kind] <= $building['ulvl'])
+				{
+					$return = true;
+					break;
+				}
 			}
 		}
+
+		return $return;
 	}
 }
 
@@ -529,7 +537,7 @@ function checkUpgradeable($kind, $city)
  * @author Neithan
  * @param array $valuelist array([food], [wood], [rock], [iron], [paper], [koku],
  * 		[price_food], [price_wood], [price_rock], [price_iron], [price_paper], [price_koku])
- * @return int returns 1 if there are enough resources to build
+ * @return bool returns true if there are enough resources to build
  */
 function resourceCheck($valuelist)
 {
@@ -540,9 +548,9 @@ function resourceCheck($valuelist)
 	$paper_n = $valuelist['res_paper'] - $valuelist['paper'];
 	$koku_n = $valuelist['res_koku'] - $valuelist['koku'];
 	if (($food_n >= 0) && ($wood_n >= 0) && ($rock_n >= 0) && ($iron_n >= 0) && ($paper_n >= 0) && ($koku_n >= 0))
-		return 1;
+		return true;
 	else
-		return 0;
+		return false;
 }
 
 /**
