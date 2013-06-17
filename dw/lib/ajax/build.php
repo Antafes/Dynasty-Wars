@@ -39,14 +39,17 @@ if (!$response['error'])
 	{
 		foreach ($is_building as $build)
 		{
-			$response['timer'] = array(
-				'endTime' => $build['endtime']->format('F d, Y H:i:s'),
-				'now' => date('F d, Y H:i:s'),
-				'bid' => $build['bid'],
-				'kind' => $build['kind'],
-				'position' => $build['position'],
-				'text' => $lang['building_names'][$build['kind']][$build['ulvl']],
-			);
+			if ($build['kind'] == $_POST['kind'])
+			{
+				$response['timer'] = array(
+					'endTime' => $build['endtime']->format('F d, Y H:i:s'),
+					'now' => date('F d, Y H:i:s'),
+					'bid' => $build['bid'],
+					'kind' => $build['kind'],
+					'position' => $build['position'],
+					'text' => $lang['building_names'][$build['kind']][$build['ulvl']],
+				);
+			}
 		}
 	}
 }
