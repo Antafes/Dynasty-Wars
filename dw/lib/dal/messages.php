@@ -74,10 +74,11 @@ function markAsDeleted($msgid, $deleteFor, $forceDeletion)
  */
 function markRead($msgid)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_message
 		SET unread = 0,
-			read_datetime = NOW()
+			read_datetime = '.\util\mysql\sqlval($now->format()).'
 		WHERE msgid = '.\util\mysql\sqlval($msgid).'
 	';
 	return \util\mysql\query($sql);

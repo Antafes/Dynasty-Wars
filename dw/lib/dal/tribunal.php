@@ -40,10 +40,11 @@ function getAllCauses($lang)
  */
 function getAllMessages($uid)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		SELECT msgid, title FROM dw_message
 		WHERE uid_recipient = '.\util\mysql\sqlval($uid).'
-			AND ((read_datetime >= NOW()
+			AND ((read_datetime >= '.\util\mysql\sqlval($now->format()).'
 				OR read_datetime = 0)
 				OR archive = 1)
 	';
@@ -173,20 +174,14 @@ function deleteRule($table, $field, $key)
  */
 function insertHearing($suitor, $accused, $cause, $description)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_tribunal (
-			suitor,
-			accused,
-			cause,
-			description,
-			create_datetime
-		) VALUES (
-			'.\util\mysql\sqlval($suitor).',
-			'.\util\mysql\sqlval($accused).',
-			'.\util\mysql\sqlval($cause).',
-			'.\util\mysql\sqlval($description).',
-			NOW()
-		)
+		SET suitor = '.\util\mysql\sqlval($suitor).',
+			accused = '.\util\mysql\sqlval($accused).',
+			cause = '.\util\mysql\sqlval($cause).',
+			description = '.\util\mysql\sqlval($description).',
+			create_datetime = '.\util\mysql\sqlval($now->format()).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -201,18 +196,13 @@ function insertHearing($suitor, $accused, $cause, $description)
  */
 function insertArgument($tid, $msgid, $from)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_tribunal_arguments (
-			tid,
-			msgid,
-			`from`,
-			added_datetime
-		) VALUES (
-			'.\util\mysql\sqlval($tid).',
-			'.\util\mysql\sqlval($msgid).',
-			'.\util\mysql\sqlval($from).',
-			NOW()
-		)
+		SET tid = '.\util\mysql\sqlval($tid).',
+			msgid = '.\util\mysql\sqlval($msgid).',
+			`from` = '.\util\mysql\sqlval($from).',
+			added_datetime = '.\util\mysql\sqlval($now->format()).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -328,11 +318,12 @@ function getArgument($aid)
  */
 function makeDecision($tid, $decision, $reason)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_tribunal
 		SET decision = '.\util\mysql\sqlval($decision).',
 			reason = '.\util\mysql\sqlval($reason).',
-			decision_datetime = NOW()
+			decision_datetime = '.\util\mysql\sqlval($now->format()).'
 		WHERE tid = '.\util\mysql\sqlval($tid).'
 	';
 	return \util\mysql\query($sql);
@@ -390,18 +381,13 @@ function getComments($tid)
  */
 function saveComment($tid, $uid, $comment)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_tribunal_comments (
-			tid,
-			writer,
-			comment,
-			create_datetime
-		) VALUES (
-			'.\util\mysql\sqlval($tid).',
-			'.\util\mysql\sqlval($uid).',
-			'.\util\mysql\sqlval($comment).',
-			NOW()
-		)
+		SET tid = '.\util\mysql\sqlval($tid).',
+			writer = '.\util\mysql\sqlval($uid).',
+			comment = '.\util\mysql\sqlval($comment).',
+			create_datetime = '.\util\mysql\sqlval($now->format()).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -432,11 +418,12 @@ function deleteComment($tcoid)
  */
 function editComment($tcoid, $comment, $uid)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_tribunal_comments
 		SET comment = '.\util\mysql\sqlval($comment).',
 			last_changed_from = '.\util\mysql\sqlval($uid).',
-			changed_datetime = NOW(),
+			changed_datetime = '.\util\mysql\sqlval($now->format()).',
 			changed_count = changed_count + 1
 		WHERE tcoid = '.\util\mysql\sqlval($tcoid).'
 	';

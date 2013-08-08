@@ -129,11 +129,11 @@ function buildingsIncome($type, $basic, $lvl, $city)
 	if ($type == 5)
 		$rate = getPaperPercent($x, $y);
 
-	return floor(($basic+(($lvl*2)*($rate/100)))*(($lvl/5)*($rate/100)));
+	return floor(($basic + (($lvl * 2) * ($rate / 100))) * (($lvl / 5) * ($rate / 100)));
 }
 
 /**
- * calculating the income per hour or per day
+ * calculating the income per seconds, hour or day
  * @author Neithan
  * @param int $type
  * @param string $cycle s = seconds, h = hours, d = days
@@ -167,7 +167,8 @@ function income($type, $cycle, $lvl, $city)
 			break;
 	}
 
-	$income = $income+($income*($upgrade/100));
+	$income += $income * ($upgrade/100);
+
 	if ($income < 0)
 		$income = 0;
 

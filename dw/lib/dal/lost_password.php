@@ -23,18 +23,12 @@ function checkRecoveries($uid)
  */
 function insertRecovery($id, $time, $uid)
 {
+	$now = new \DWDateTime();
 	$sql = '
-		INSERT INTO dw_lostpw (
-			mailid,
-			sent_datetime,
-			uid
-		)
-		VALUES
-		(
-			'.\util\mysql\sqlval($id).',
-			NOW(),
-			'.\util\mysql\sqlval($uid).'
-		)
+		INSERT INTO dw_lostpw
+		SET mailid = '.\util\mysql\sqlval($id).',
+			sent_datetime = '.\util\mysql\sqlval($now->format()).',
+			uid = '.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -48,10 +42,11 @@ function insertRecovery($id, $time, $uid)
  */
 function updateRecovery($id, $time)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_lostpw
 		SET mailid = '.\util\mysql\sqlval($id).',
-			sent_time = NOW()
+			sent_time = '.\util\mysql\sqlval($now->format()).'
 	';
 	return \util\mysql\query($sql);
 }

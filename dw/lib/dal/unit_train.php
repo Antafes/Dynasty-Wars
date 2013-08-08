@@ -65,22 +65,15 @@ function removeResources($valuelist, $uid)
  */
 function startTrain($kind, $uid, $count, \DWDateTime $endTime, $city)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_build_unit (
-			kind,
-			uid,
-			count,
-			start_datetime,
-			end_datetime,
-			city
-		) VALUES (
-			'.\util\mysql\sqlval($kind).',
-			'.\util\mysql\sqlval($uid).',
-			'.\util\mysql\sqlval($count).',
-			NOW(),
-			'.\util\mysql\sqlval($endTime->format()).',
-			'.\util\mysql\sqlval($city).'
-		)
+		SET kind = '.\util\mysql\sqlval($kind).',
+			uid = '.\util\mysql\sqlval($uid).',
+			count = '.\util\mysql\sqlval($count).',
+			start_datetime = '.\util\mysql\sqlval($now->format()).',
+			end_datetime = '.\util\mysql\sqlval($endTime->format()).',
+			city = '.\util\mysql\sqlval($city).'
 	';
 	return \util\mysql\query($sql);
 }

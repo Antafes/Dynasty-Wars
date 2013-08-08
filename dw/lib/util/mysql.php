@@ -205,6 +205,11 @@ function connect()
 		}
 	}
 
+	$timezone = $mysql->query('SELECT @@session.time_zone');
+
+	if ($timezone == 'SYSTEM')
+		$mysql->query('SET time_zone = "+00:00"');
+
 	return $mysql;
 }
 
