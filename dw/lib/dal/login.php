@@ -46,9 +46,10 @@ function checkLogin()
  */
 function setLastLogin($uid)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_user
-		SET last_login_datetime = NOW()
+		SET last_login_datetime = '.\util\mysql\sqlval($now->format()).'
 		WHERE uid='.\util\mysql\sqlval($uid).'
 	';
 	return \util\mysql\query($sql);

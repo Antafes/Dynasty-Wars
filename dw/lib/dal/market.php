@@ -21,6 +21,7 @@ function placeOnMarket(
 	$uid, $x, $y, $sellResource, $sellAmount,
 	$exchangeResource, $exchangeAmount, $tax)
 {
+	$new = new \DWDateTime();
 	\util\mysql\query(
 		sprintf(
 			'
@@ -34,7 +35,7 @@ function placeOnMarket(
 				`e_amount` = %s,
 				`tax` = %s,
 				`complete` = %s,
-				`create_datetime` = NOW()
+				`create_datetime` = '.\util\mysql\sqlval($now->format()).'
 			',
 			\util\mysql\sqlval($uid),
 			\util\mysql\sqlval($x),

@@ -41,20 +41,14 @@ function getEntry($nid)
  */
 function save($title, $content, $uid, $nick)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_news (
-			uid,
-			nick,
-			title,
-			text,
-			create_datetime
-		) VALUES (
-			'.\util\mysql\sqlval($uid).',
-			'.\util\mysql\sqlval($nick).',
-			'.\util\mysql\sqlval($title).',
-			'.\util\mysql\sqlval($content).',
-			NOW()
-		)
+		SET uid = '.\util\mysql\sqlval($uid).',
+			nick = '.\util\mysql\sqlval($nick).',
+			title = '.\util\mysql\sqlval($title).',
+			text = '.\util\mysql\sqlval($content).',
+			create_datetime = '.\util\mysql\sqlval($now->format()).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -71,6 +65,7 @@ function save($title, $content, $uid, $nick)
  */
 function update($nid, $title, $content, $changerUID, $changerNick)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE dw_news
 		SET title = '.\util\mysql\sqlval($title).',
@@ -78,7 +73,7 @@ function update($nid, $title, $content, $changerUID, $changerNick)
 			changed_uid = '.\util\mysql\sqlval($changerUID).',
 			changed_nick = '.\util\mysql\sqlval($changerNick).',
 			changed = changed + 1,
-			changed_datetime = NOW()
+			changed_datetime = '.\util\mysql\sqlval($now->format()).'
 		WHERE nid = '.\util\mysql\sqlval($nid).'
 	';
 	return \util\mysql\query($sql);
