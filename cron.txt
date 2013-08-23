@@ -1,2 +1,0 @@
-0 0 * * * /var/www/dw/cron/missionary.php
-0 */1 * * * /var/www/dw/cron/points.php
