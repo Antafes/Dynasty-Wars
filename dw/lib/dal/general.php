@@ -76,6 +76,7 @@ function getSeason()
  */
 function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_message (
 			uid_sender,
@@ -87,7 +88,7 @@ function sendMessage($uid_sender, $uid_recipient, $title, $message, $type)
 		) VALUES (
 			'.\util\mysql\sqlval($uid_sender).',
 			'.\util\mysql\sqlval($uid_recipient).',
-			NOW(),
+			'.\util\mysql\sqlval($now->format()).',
 			'.\util\mysql\sqlval($title).',
 			'.\util\mysql\sqlval($message).',
 			'.\util\mysql\sqlval($type).'

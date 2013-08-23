@@ -12,6 +12,7 @@ namespace dal\log;
  */
 function saveLog($type, $actor, $concerned, $extra)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_log (
 			log_datetime,
@@ -20,7 +21,7 @@ function saveLog($type, $actor, $concerned, $extra)
 			extra,
 			type
 		) VALUES (
-			NOW(),
+			'.\util\mysql\sqlval($now->format()).',
 			'.\util\mysql\sqlval($actor).',
 			'.\util\mysql\sqlval($concerned).',
 			'.\util\mysql\sqlval($extra).',

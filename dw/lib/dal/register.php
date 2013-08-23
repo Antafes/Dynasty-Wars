@@ -54,22 +54,15 @@ function updateCoordinates($uid, $city, $x, $y)
  */
 function insertUser($nick, $pws, $email, $random, $language)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_user (
-			nick,
-			password,
-			email,
-			registration_datetime,
-			status,
-			language
-		) VALUES (
-			'.\util\mysql\sqlval($nick).',
-			'.\util\mysql\sqlval($pws).',
-			'.\util\mysql\sqlval($email).',
-			NOW(),
-			'.\util\mysql\sqlval($random).',
-			'.\util\mysql\sqlval($language).'
-		)
+		SET nick = '.\util\mysql\sqlval($nick).',
+			password = '.\util\mysql\sqlval($pws).',
+			email = '.\util\mysql\sqlval($email).',
+			registration_datetime = '.\util\mysql\sqlval($now->format()).',
+			status = '.\util\mysql\sqlval($random).',
+			language = '.\util\mysql\sqlval($language).'
 	';
 	return \util\mysql\query($sql);
 }
@@ -82,10 +75,11 @@ function insertUser($nick, $pws, $email, $random, $language)
  */
 function insertResources($uid, $x, $y)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		INSERT INTO dw_res
 		SET uid = '.\util\mysql\sqlval($uid).',
-			last_datetime = NOW(),
+			last_datetime = '.\util\mysql\sqlval($now->format()).',
 			map_x = '.\util\mysql\sqlval($x).',
 			map_y = '.\util\mysql\sqlval($y).'
 	';

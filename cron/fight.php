@@ -8,8 +8,6 @@ require_once(dirname(__FILE__).'/../dw/lib/bl/troops.php');
 require_once(dirname(__FILE__).'/../dw/lib/util/dateTime.php');
 require_once(dirname(__FILE__).'/../dw/lib/util/dateInterval.php');
 
-$con = @mysql_connect($server, $seruser, $serpw);
-mysql_select_db($serdb, $con) || die("Fehler, keine Datenbank!");
 
 $moving_troops = dal\troops\getAllMovingTroops();
 

@@ -109,9 +109,10 @@ function getLevel($kind, $x, $y)
  */
 function updateAll($res, $x, $y)
 {
+	$now = new \DWDateTime();
 	$sql = '
 		UPDATE `dw_res`
-		SET `last_datetime` = NOW(),
+		SET `last_datetime` = '.\util\mysql\sqlval($now->format()).',
 			`food` = '.\util\mysql\sqlval($res['food']).',
 			`wood` = '.\util\mysql\sqlval($res['wood']).',
 			`rock` = '.\util\mysql\sqlval($res['rock']).',

@@ -1,5 +1,6 @@
 <?php
 ob_start();
+
 //requesting of get and post variables
 if ($_POST['citychange'])
 {
@@ -14,6 +15,7 @@ if ($_POST['citychange'])
 		bl\general\redirect(util\html\createLink(array('chose' => $_GET['chose']), true));
 	}
 }
+
 if ($_SESSION["lid"]) {
 	$city = $_SESSION['city'];
 	$lang['lang'] = $_SESSION['language'];
@@ -21,9 +23,11 @@ if ($_SESSION["lid"]) {
 	$city = $_COOKIE['city'];
 	$lang['lang'] = $_COOKIE['language'];
 }
+
 //selection of the user informations
 $nick = bl\general\uid2nick($_SESSION['user']->getUID());
 $admin = bl\general\getGameRank($_SESSION['user']->getUID());
+
 //language
 if (!$lang['lang'])
 	$lang['lang'] = bl\general\getLanguageByUID($_SESSION['user']->getUID());
@@ -78,19 +82,27 @@ if ($res_buildings)
 				break;
 		}
 	}
+
 	if (!$paddy)
 		$paddy = 0;
+
 	if (!$lumberjack)
 		$lumberjack = 0;
+
 	if (!$quarry)
 		$quarry = 0;
+
 	if (!$ironmine)
 		$ironmine = 0;
+
 	if (!$papermill)
 		$papermill = 0;
+
 	if (!$tradepost)
 		$tradepost = 0;
+
 }
+
 $max_storage = bl\general\getMaxStorage($city);
 $resources = bl\resource\newResources($city);
 $food = $resources['food'];
@@ -133,14 +145,19 @@ foreach ($menuEntries as $menu_entry)
 		if (($menu_entry['menu_name'] == 'acp' && ($_SESSION['user']->getGameRank() == 1 || $_SESSION['user']->getGameRank() == 2) && !$own_uid) || $menu_entry['menu_name'] != 'acp')
 		{
 			$menu .= '<div class="menu3';
+
 			if ($menu_entry['menu_name'] == 'home')
 				$menu .= ' first_menu';
+
 			$menu .= '">';
 			if ($menu_entry['active'] == 1)
 				$menu .= '<a href="index.php?chose='.$menu_entry['menu_name'].'" class="a2">';
+
 			$menu .= $lang[$menu_entry['menu_name']];
+
 			if ($menu_entry['active'] == 1)
 				$menu .= '</a>';
+
 			$menu .= '</div>';
 		}
 	}
@@ -152,14 +169,19 @@ foreach ($menuEntries as $menu_entry)
 				$max_block = 4;
 			else
 				$max_block = 3;
+
 			$menu .= '<div class="menu';
+
 			if ($block_entry['sort']-$menu_entry['sort'] > 4)
 				$menu .= '1';
 			else
 				$menu .= '2';
+
 			$menu .= '">';
 		}
+
 		$link = 'index.php?chose='.$menu_entry['menu_name'];
+
 		if ($menu_entry['menu_name'] == 'clan')
 			$link .= '&amp;cid='.$_SESSION['user']->getCID();
 		elseif ($menu_entry['menu_name'] == 'board')
@@ -167,7 +189,9 @@ foreach ($menuEntries as $menu_entry)
 
 		if ($menu_entry['active'] == 1)
 			$menu .= '<a href="'.$link.'" class="a2">';
+
 		$menu .= ($lang[$menu_entry['menu_name']] ? $lang[$menu_entry['menu_name']] : $menu_entry['menu_name']);
+
 		if ($menu_entry['active'] == 1)
 			$menu .= '</a>';
 
@@ -181,19 +205,24 @@ foreach ($menuEntries as $menu_entry)
 			$menu .= '<br />';
 	}
 }
+
 $smarty->assign('menu', $menu);
+
 if ($own_uid || $_SESSION['user']->getGameRank())
 {
 	$special_line = '<div class="add_info">';
+
 	if ($own_uid)
 	{
 		$own_nick = bl\general\uid2nick($own_uid);
 		$special_line .= $own_nick.' eingeloggt als '.$nick.'. <a href="index.php?chose=acp&amp;sub=userlist&amp;change=back">Zur&uuml;ck wechseln.</a>';
 	}
+
 	if ($_SESSION['user']->getGameRank() >= 1)
 		$special_line .= $lang['gameRank'][$_SESSION['user']->getGameRank()];
 	else
 		$special_line .= '&nbsp;';
+
 	$special_line .= '</div>';
 	$smarty->assign('special_line', $special_line);
 }
