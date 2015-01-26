@@ -30,6 +30,17 @@ class DWDateTime extends DateTime
 	}
 
 	/**
+	 * adjusted diff method that returns a DWDateInterval object
+	 * @param DateTime $datetime
+	 * @return \DWDateInterval
+	 */
+	public function diff(DateTime $datetime)
+	{
+		$diff = parent::diff($datetime);
+		return new \DWDateInterval($diff->format('P%YY%mM%dDT%hH%iM%sS'));
+	}
+
+	/**
 	 * overridden method to return a DWDateTime object
 	 * @param String $format
 	 * @param String $time
