@@ -32,11 +32,12 @@ class DWDateTime extends DateTime
 	/**
 	 * adjusted diff method that returns a DWDateInterval object
 	 * @param DateTime $datetime
+	 * @param boolean  $absolute
 	 * @return \DWDateInterval
 	 */
-	public function diff(DateTime $datetime)
+	public function diff(DateTime $datetime, $absolute = false)
 	{
-		$diff = parent::diff($datetime);
+		$diff = parent::diff($datetime, $absolute);
 		return new \DWDateInterval($diff->format('P%YY%mM%dDT%hH%iM%sS'));
 	}
 
