@@ -17,7 +17,7 @@ class DWDateTime extends DateTime
 	 * @param DateTimeZone $object
 	 * @return DWDateTime
 	 */
-	public function __construct($time = 'now', $object = null)
+	public function __construct($time = 'now', DateTimeZone $object = null)
 	{
 		//manually set the timezone to UTC https://bugs.php.net/bug.php?id=52480
 		date_default_timezone_set('UTC');
@@ -27,17 +27,6 @@ class DWDateTime extends DateTime
 
 		parent::__construct($time, $object);
 		return $this;
-	}
-
-	/**
-	 * adjusted diff method that returns a DWDateInterval object
-	 * @param DateTime $datetime
-	 * @return \DWDateInterval
-	 */
-	public function diff(DateTime $datetime)
-	{
-		$diff = parent::diff($datetime);
-		return new \DWDateInterval($diff);
 	}
 
 	/**
