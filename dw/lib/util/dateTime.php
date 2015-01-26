@@ -37,7 +37,7 @@ class DWDateTime extends DateTime
 	public function diff(DateTime $datetime)
 	{
 		$diff = parent::diff($datetime);
-		return new \DWDateInterval($diff);
+		return new \DWDateInterval($diff->format('P%YY%mM%dDT%hH%iM%sS'));
 	}
 
 	/**
