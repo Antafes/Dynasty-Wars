@@ -1,5 +1,5 @@
 <?php
-include ('loggedout/header.php');
+include (__DIR__ . '/header.php');
 bl\general\loadLanguageFile('home', 'loggedout');
 bl\general\loadLanguageFile('news', 'loggedout');
 $parser = new bl\wikiParser\WikiParser();
@@ -50,7 +50,10 @@ if ($news_home)
 	$smarty->assign('news_from', $lang['from']);
 }
 else
+{
 	$smarty->assign('no_news', $lang['nonews']);
-include ('loggedout/footer.php');
+}
+
+include (__DIR__ . '/footer.php');
 
 $smarty->display($smarty->template_dir[0].'home.tpl');

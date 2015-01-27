@@ -3,7 +3,7 @@
  * no namespace, because of the global character of this class!
  * @author Neithan
  */
-class DWDateTime extends DateTime
+class DWDateTime extends \DateTime
 {
 	/**
 	 * default time format
@@ -35,7 +35,7 @@ class DWDateTime extends DateTime
 	 * @param boolean  $absolute
 	 * @return \DWDateInterval
 	 */
-	public function diff(DateTime $datetime, $absolute = false)
+	public function diff($datetime, $absolute = null)
 	{
 		$diff = parent::diff($datetime, $absolute);
 		return new \DWDateInterval($diff->format('P%YY%mM%dDT%hH%iM%sS'));

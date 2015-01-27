@@ -3,7 +3,7 @@
  * no namespace, because of the global character of this class!
  * @author Neithan
  */
-class DWDateInterval extends DateInterval
+class DWDateInterval extends \DateInterval
 {
 	/**
 	 * Get the seconds of the date interval.
